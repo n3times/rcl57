@@ -1,5 +1,6 @@
 #include "cpu57.h"
 
+#include <assert.h>
 #include <string.h>
 
 
@@ -29,7 +30,7 @@ static int get_base(state_t *s, int lo)
 
 /** dest = left + right. */
 static void add(reg_t *dest, reg_t *left, reg_t *right,
-                state_t *s, int lo, int hi) 
+                state_t *s, int lo, int hi)
 {
     reg_t temp;
     int base = get_base(s, lo);
@@ -54,7 +55,7 @@ static void add(reg_t *dest, reg_t *left, reg_t *right,
 
 /** dest = left - right. */
 static void subtract(reg_t *dest, reg_t *left, reg_t *right,
-                     state_t *s, int lo, int hi) 
+                     state_t *s, int lo, int hi)
 {
     reg_t temp;
     int base = get_base(s, lo);
@@ -100,12 +101,12 @@ static void right_shift(reg_t *reg, state_t *s, int lo, int hi)
 }
 
 /** left <=> right. */
-static void exchange(reg_t *left, reg_t *right, state_t *s, int lo, int hi) 
+static void exchange(reg_t *left, reg_t *right, state_t *s, int lo, int hi)
 {
     for (int i = lo; i <= hi; i++) {
         unsigned char d = (*left)[i];
         (*left)[i] = (*right)[i];
-        (*right)[i] = d; 
+        (*right)[i] = d;
     }
 
     update_R5(right, s, lo, hi);
@@ -177,7 +178,7 @@ static void op_flag(state_t *s, opcode_t opcode)
     int f = opcode & 0x0003;         // function
 
     reg_t *O[] = {&s->A, &s->B, &s->C, &s->D};
-    unsigned char *digit = (unsigned char *)O[j] + d + 12;    
+    unsigned char *digit = (unsigned char *)O[j] + d + 12;
 
     switch(f) {
     case 0: *digit |= 1 << b; break;
@@ -253,7 +254,7 @@ static void op_mask(state_t *s, opcode_t opcode) {
 
     if (lo < 0 || hi < 0) return;
 
-    left = O[j]; 
+    left = O[j];
 
     if (k < 4) {
         right = O[k];
@@ -351,6 +352,9 @@ void key_release(state_t *s)
 
 void key_press(state_t *s, int row, int col)
 {
+    assert(0 <= row && row <= 7);
+    assert(0 <= col && col <= 4);
+
     s->key_pressed = TRUE;
     s->row = row;
     s->col = col;
@@ -358,7 +362,7 @@ void key_press(state_t *s, int row, int col)
 
 char *get_display(state_t *s, char *str)
 {
-    static char digits[] = "0123456789AbCdEF";
+    static char digits[] = "0123456789ABCDEF";
     int k = 0;
 
     for (int i = 11; i >= 0; i--) {

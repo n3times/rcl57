@@ -1,12 +1,17 @@
-/** API for clients that want to implement a TI-57 emulator. */
+#ifndef CPU57_H
+#define CPU57_H
 
+/** API for clients that want to implement a TI-57 emulator. */
 
 #define TRUE 1
 #define FALSE 0
 
 typedef unsigned char bool_t;
 
-/** A register composed of 16 digits, decimal (0-9) or hexadecimal (0-f). */
+/**
+ * An internal register composed of 16 4-bit digits, decimal (0-9) or
+ * hexadecimal (0-f).
+ */
 typedef unsigned char reg_t[16];
 
 /** An 11-bit long address. */
@@ -37,11 +42,13 @@ void init(state_t *s);
 /** Executes 'n' instructions starting at s->pc. */
 void burst(state_t *s, int n, opcode_t *rom);
 
-/** Called when a key is pressed (row in 0..7, col in 0..4.). */
+/** Should be called when a key is pressed (row in 0..7, col in 0..4.). */
 void key_press(state_t *s, int row, int col);
 
-/** Called when a key is released. */
+/** Should be called when a key is released. */
 void key_release(state_t *s);
 
-/** Returns the display as a string (str should be at least 25-char long). */
+/** Returns the display as a string ('str' should be at least 25-char long). */
 char *get_display(state_t *s, char *str);
+
+#endif  /* !CPU57_H */
