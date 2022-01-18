@@ -55,7 +55,7 @@ bool_t is_inv(state_t *s)
 
 bool_t is_error(state_t *s)
 {
-    if (get_mode(s) == RUN) return FALSE;
+    if (get_mode(s) != EVAL) return FALSE;
 
     return (s->B[15] & 0x2) != 0;
 }
@@ -70,6 +70,50 @@ bool_t is_number_edit(state_t *s)
     return (s->B[15] & 0x1) != 0;
 }
 
+bool_t is_blinking(state_t *s)
+{
+    return is_error(s) && !s->key_pressed;
+}
+
+bool_t is_trace(state_t *s)
+{
+    if (get_mode(s) != RUN) return FALSE;
+
+    return s->key_pressed && (s->row == 2) && (s->col == 0);
+}
+
+bool_t is_stop(state_t *s)
+{
+    if (get_mode(s) != RUN) return FALSE;
+
+    return s->key_pressed && (s->row == 7) && (s->col == 0);
+}
+
+static bool_t is_pc_in(state_t *s, int lo, int hi)
+{
+   return (s->pc >= lo && s->pc <= hi)
+       || (s->stack[0] >= lo && s->stack[0] <= hi)
+       || (s->stack[1] >= lo && s->stack[1] <= hi);
+}
+
+bool_t is_paused(state_t *s)
+{
+    // The subroutine that executes 'Pause' appears to be called at 0x0109.
+    return s->stack[0] == 0x010a || s->stack[1] == 0x010a;
+}
+
+bool_t is_lrn_edit(state_t *s)
+{
+    bool_t is_ins = is_pc_in(s, 0x00fd, 0x0105);
+    bool_t is_del = is_pc_in(s, 0x010c, 0x0116);
+
+    return is_ins || is_del;
+}
+
+bool_t is_idle(state_t *s)
+{
+    return is_pc_in(s, 0x04a3, 0x04a9);
+}
 
 /*******************************************************************************
  *

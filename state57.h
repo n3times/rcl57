@@ -79,11 +79,31 @@ bool_t is_inv(state_t *s);
 /** Scientific notation is on. */
 bool_t is_sci(state_t *s);
 
-/** An error occurred and the display is blinking. */
+/** An error has occurred. */
 bool_t is_error(state_t *s);
 
 /** A number is being edited on the display. */
 bool_t is_number_edit(state_t *s);
+
+/** The display is blinking. */
+bool_t is_blinking(state_t *s);
+
+/** Mode is RUN and SST is pressed. */
+bool_t is_trace(state_t *s);
+
+/** Mode is RUN and R/S is pressed. */
+bool_t is_stop(state_t *s);
+
+/** A 'Pause' instruction is being executed (RUN or EVAL mode). */
+bool_t is_paused(state_t *s);
+
+/** An 'Ins' or 'Del' instruction is being executed (LRN mode). */
+bool_t is_lrn_edit(state_t *s);
+
+/**
+ * The calculator is waiting for input, possibly blinking (LRN or EVAL mode).
+ */
+bool_t is_idle(state_t *s);
 
 
 /*******************************************************************************

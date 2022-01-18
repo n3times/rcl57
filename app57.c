@@ -137,12 +137,18 @@ static void print_state(state_t *s)
 
 static void run(state_t *s, opcode_t *ROM, key_t *keys, int n)
 {
-    burst(s, 200, ROM);
+    for (int i = 0; i < 200; i++) {
+        burst(s, 1, ROM);
+    }
     for (int i = 0; i < n; i++) {
         key_press(s, keys[i] / 10, keys[i] % 10);
-        burst(s, 4000, ROM);
+        for (int j = 0; j < 20000; j++) {
+            burst(s, 1, ROM);
+        }
         key_release(s);
-        burst(s, 4000, ROM);
+        for (int j = 0; j < 4000; j++) {
+            burst(s, 1, ROM);
+        }
     }
 }
 
