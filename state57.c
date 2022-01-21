@@ -4,34 +4,32 @@
 #include <assert.h>
 #include <stdio.h>
 
-
 /*******************************************************************************
  *
  * MODES
  *
  ******************************************************************************/
 
-mode_t get_mode(state_t *s)
+ti57_mode_t ti57_get_mode(ti57_state_t *s)
 {
-    if ((s->C[15] & 0x1) != 0) return LRN;
-    if ((s->C[15] & 0x8) != 0) return RUN;
+    if ((s->C[15] & 0x1) != 0) return TI57_LRN;
+    if ((s->C[15] & 0x8) != 0) return TI57_RUN;
 
-    return EVAL;
+    return TI57_EVAL;
 }
 
-trig_t get_trig(state_t *s)
+ti57_trig_t ti57_get_trig(ti57_state_t *s)
 {
-    if ((s->X[4][15] & 0xC) == 0xC) return GRAD;
-    if ((s->X[4][15] & 0xC) == 0x4) return RAD;
+    if ((s->X[4][15] & 0xC) == 0xC) return TI57_GRAD;
+    if ((s->X[4][15] & 0xC) == 0x4) return TI57_RAD;
 
-    return DEG;
+    return TI57_DEG;
 }
 
-int get_fix(state_t *s)
+int ti57_get_fix(ti57_state_t *s)
 {
     return 9 - s->X[4][14];
 }
-
 
 /*******************************************************************************
  *
@@ -39,80 +37,88 @@ int get_fix(state_t *s)
  *
  ******************************************************************************/
 
-bool_t is_2nd(state_t *s)
+bool ti57_is_2nd(ti57_state_t *s)
 {
-    if (get_mode(s) == RUN) return FALSE;
+    if (ti57_get_mode(s) == TI57_RUN) return false;
 
     return (s->C[14] & 0x8) != 0;
 }
 
-bool_t is_inv(state_t *s)
+bool ti57_is_inv(ti57_state_t *s)
 {
-    if (get_mode(s) == RUN) return FALSE;
+    if (ti57_get_mode(s) == TI57_RUN) return false;
 
     return (s->B[15] & 0x4) != 0;
 }
 
-bool_t is_error(state_t *s)
+bool ti57_is_error(ti57_state_t *s)
 {
-    if (get_mode(s) != EVAL) return FALSE;
+    if (ti57_get_mode(s) != TI57_EVAL) return false;
 
     return (s->B[15] & 0x2) != 0;
 }
 
-bool_t is_sci(state_t *s)
+bool ti57_is_sci(ti57_state_t *s)
 {
     return (s->B[15] & 0x8) != 0;
 }
 
-bool_t is_number_edit(state_t *s)
+bool ti57_is_number_edit(ti57_state_t *s)
 {
     return (s->B[15] & 0x1) != 0;
 }
 
-bool_t is_blinking(state_t *s)
+bool ti57_is_blinking(ti57_state_t *s)
 {
-    return is_error(s) && !s->key_pressed;
+    return ti57_is_error(s) && !s->key_pressed;
 }
 
-bool_t is_trace(state_t *s)
+bool ti57_is_trace(ti57_state_t *s)
 {
-    if (get_mode(s) != RUN) return FALSE;
+    if (ti57_get_mode(s) != TI57_RUN) return false;
 
     return s->key_pressed && (s->row == 2) && (s->col == 0);
 }
 
-bool_t is_stop(state_t *s)
+bool ti57_is_stopping(ti57_state_t *s)
 {
-    if (get_mode(s) != RUN) return FALSE;
+    if (ti57_get_mode(s) != TI57_RUN) return false;
 
     return s->key_pressed && (s->row == 7) && (s->col == 0);
 }
 
-static bool_t is_pc_in(state_t *s, int lo, int hi)
+static bool is_pc_in(ti57_state_t *s, int lo, int hi, int depth)
 {
-   return (s->pc >= lo && s->pc <= hi)
-       || (s->stack[0] >= lo && s->stack[0] <= hi)
-       || (s->stack[1] >= lo && s->stack[1] <= hi);
+   if (s->pc >= lo && s->pc <= hi) return true;
+
+   for (int i = 0; i <= depth; i++) {
+       if (s->stack[i] >= lo && s->stack[i] <= hi)
+           return true;
+   }
+   return false;
 }
 
-bool_t is_paused(state_t *s)
+bool ti57_is_paused(ti57_state_t *s)
 {
     // The subroutine that executes 'Pause' appears to be called at 0x0109.
     return s->stack[0] == 0x010a || s->stack[1] == 0x010a;
 }
 
-bool_t is_lrn_edit(state_t *s)
+bool ti57_is_lrn_edit(ti57_state_t *s)
 {
-    bool_t is_ins = is_pc_in(s, 0x00fd, 0x0105);
-    bool_t is_del = is_pc_in(s, 0x010c, 0x0116);
+    bool ti57_is_ins = is_pc_in(s, 0x00fd, 0x0105, 1);
+    bool ti57_is_del = is_pc_in(s, 0x010c, 0x0116, 1);
 
-    return is_ins || is_del;
+    return ti57_is_ins || ti57_is_del;
 }
 
-bool_t is_idle(state_t *s)
+bool ti57_is_idle(ti57_state_t *s)
 {
-    return is_pc_in(s, 0x04a3, 0x04a9);
+    bool waiting_key_press = is_pc_in(s, 0x04a6, 0x04a9, 0);
+    bool waiting_key_release = s->key_pressed
+        && (is_pc_in(s, 0x01fc, 0x01fe, -1) || is_pc_in(s, 0x04a3, 0x04a5, -1));
+
+    return waiting_key_press || waiting_key_release;
 }
 
 /*******************************************************************************
@@ -121,7 +127,7 @@ bool_t is_idle(state_t *s)
  *
  ******************************************************************************/
 
-char *get_aos_stack(state_t *s, char *str)
+char *ti57_get_aos_stack(ti57_state_t *s, char *str)
 {
     int k = 0;
     int num_operands = 0;
@@ -138,7 +144,7 @@ char *get_aos_stack(state_t *s, char *str)
 
     // List of [operand, operator, parentheses]
     for (int i = 0; i < num_operands; i++) {
-        bool_t inv = (s->X[i][13] & 0x4) != 0;
+        bool inv = (s->X[i][13] & 0x4) != 0;
         str[k++] = '0' + i;
         switch(s->X[i][14]) {
             case 2: str[k++] = inv ? '-' : '+'; break;
@@ -154,12 +160,11 @@ char *get_aos_stack(state_t *s, char *str)
     if (s->B[15] & 0x1)
         str[k++] = 'd';
     else if ((s->C[14] & 0x2) == 0)
-        str[k++] = 'C';
+        str[k++] = 'X';
 
     str[k++] = 0;
     return str;
 }
-
 
 /*******************************************************************************
  *
@@ -167,7 +172,7 @@ char *get_aos_stack(state_t *s, char *str)
  *
  ******************************************************************************/
 
-reg_t *get_reg(state_t *s, int i)
+ti57_reg_t *ti57_get_reg(ti57_state_t *s, int i)
 {
     assert(0 <= i && i <= 7);
 
@@ -184,17 +189,16 @@ reg_t *get_reg(state_t *s, int i)
     }
 }
 
-reg_t *get_regX(state_t *s)
+ti57_reg_t *ti57_get_regX(ti57_state_t *s)
 {
     // TODO: is this correct?
     return &s->C;
 }
 
-reg_t *get_regT(state_t *s)
+ti57_reg_t *ti57_get_regT(ti57_state_t *s)
 {
     return &s->X[4];
 }
-
 
 /*******************************************************************************
  *
@@ -202,19 +206,19 @@ reg_t *get_regT(state_t *s)
  *
  ******************************************************************************/
 
-static instruction_t ALL_INSTRUCTIONS[256];
+static ti57_instruction_t ALL_INSTRUCTIONS[256];
 
 static void init_instructions()
 {
-    static bool_t inited = FALSE;
+    static bool inited = false;
 
     if (inited) return;
 
     for (int i = 0; i <= 0xff; i++) {
-        instruction_t *instruction = &ALL_INSTRUCTIONS[i];
+        ti57_instruction_t *instruction = &ALL_INSTRUCTIONS[i];
         if (i < 0x10) {
             // Digits.
-            instruction->inv = FALSE;
+            instruction->inv = false;
             instruction->key = i;
             instruction->d = -1;
         } else if (i < 0xb0) {
@@ -224,7 +228,7 @@ static void init_instructions()
             instruction->d = -1;
         } else {
             // Register ops: RCL, PRD, SUM, EXC and STO.
-            static key_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
+            static ti57_key_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
             instruction->inv = (i & 0x08) != 0;
             instruction->key = keys[(i >> 4) - 0xb];
             instruction->d = i & 0x07;
@@ -233,37 +237,37 @@ static void init_instructions()
 
     // LBL, GTO, SBR and FIX.
     static int start_indices[] = {0x27, 0x2f, 0x77, 0x7f};
-    static key_t keys[] = {0x86, 0x51, 0x61, 0x48};
+    static ti57_key_t keys[] = {0x86, 0x51, 0x61, 0x48};
     static int offsets[] = {0, -1, 15, 31, -2, 14, 30, -3, 13, 29};
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 10; j++) {
-            instruction_t *instruction =
+            ti57_instruction_t *instruction =
                 &ALL_INSTRUCTIONS[start_indices[i] + offsets[j]];
-            instruction->inv = FALSE;
+            instruction->inv = false;
             instruction->key = keys[i];
             instruction->d = j;
         }
     }
 
-    inited = TRUE;
+    inited = true;
 }
 
-int get_pc(state_t *s)
+int ti57_get_pc(ti57_state_t *s)
 {
     return (s->X[5][15] << 4) + s->X[5][14];
 }
 
-int get_ret(state_t *s, int i)
+int ti57_get_ret(ti57_state_t *s, int i)
 {
     assert(0 <= i && i <= 1);
 
     return (s->X[6 + i][15] << 4) + s->X[6 + i][14];
 }
 
-instruction_t *get_instruction(state_t *s, int step)
+ti57_instruction_t *ti57_get_instruction(ti57_state_t *s, int step)
 {
     int i;
-    reg_t *reg;
+    ti57_reg_t *reg;
 
     assert(0 <= step && step <= 49);
 

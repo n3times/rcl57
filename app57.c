@@ -5,9 +5,9 @@
 #include "state57.h"
 #include "support57.h"
 
-static opcode_t ROM[2048];
+static ti57_opcode_t ROM[2048];
 
-static void load_rom(opcode_t *rom)
+static void load_rom(ti57_opcode_t *rom)
 {
     unsigned char buf[4096];
     FILE *f;
@@ -24,14 +24,14 @@ static void load_rom(opcode_t *rom)
     }
 }
 
-static char *get_aos(state_t *s, char *str)
+static char *get_aos(ti57_state_t *s, char *str)
 {
     char stack[20];
     int k = 0;
 
-    get_aos_stack(s, stack);
+    ti57_get_aos_stack(s, stack);
     for (int i = 0; ; i++) {
-        reg_t *reg = 0;
+        ti57_reg_t *reg = 0;
         char part[25];
         char c = stack[i];
 
@@ -42,14 +42,15 @@ static char *get_aos(state_t *s, char *str)
         case '1': reg = &s->X[1]; break;
         case '2': reg = &s->X[2]; break;
         case '3': reg = &s->X[3]; break;
-        case 'C': reg = &s->C; break;
+        case 'X': reg = ti57_get_regX(s); break;
         }
         if (reg) {
-            user_reg_to_str(reg, part, ROM);
+            ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part,
+                                 ROM);
         } else if (c == 'd') {
             char display[25];
-            get_display(s, display);
-            strcpy(part, trim(display));
+            ti57_get_display(s, display);
+            strcpy(part, ti57_trim(display));
         } else {
             int j = 0;
             if (c != '(') part[j++] = ' ';
@@ -65,35 +66,35 @@ static char *get_aos(state_t *s, char *str)
     return str;
 }
 
-static char *get_instruction_str(state_t *s, int step, char *str)
+static char *get_instruction_str(ti57_state_t *s, int step, char *str)
 {
-    instruction_t *instruction = get_instruction(s, step);
+    ti57_instruction_t *instruction = ti57_get_instruction(s, step);
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
-            get_keyname(instruction->key),
+            ti57_get_keyname(instruction->key),
             (instruction->d >= 0) ? '0' + instruction->d : ' ');
     return str;
 }
 
-static void print_state(state_t *s)
+static void print_state(ti57_state_t *s)
 {
     static char *MODES[] = {"EVAL", "LRN", "RUN"};
     static char *TRIGS[] = {"DEG", "RAD", "GRAD"};
     char str[1000];
 
     printf("INTERNAL STATE\n");
-    printf("  A  = %s\n", reg_to_str(s->A, str));
-    printf("  B  = %s\n", reg_to_str(s->B, str));
-    printf("  C  = %s\n", reg_to_str(s->C, str));
-    printf("  D  = %s\n", reg_to_str(s->D, str));
+    printf("  A  = %s\n", ti57_reg_to_str(s->A, str));
+    printf("  B  = %s\n", ti57_reg_to_str(s->B, str));
+    printf("  C  = %s\n", ti57_reg_to_str(s->C, str));
+    printf("  D  = %s\n", ti57_reg_to_str(s->D, str));
     printf("\n");
 
     for (int i = 0; i < 8; i++)
-        printf("  X%d = %s\n", i, reg_to_str(s->X[i], str));
+        printf("  X%d = %s\n", i, ti57_reg_to_str(s->X[i], str));
     printf("\n");
     for (int i = 0; i < 8; i++)
-        printf("  Y%d = %s\n", i, reg_to_str(s->Y[i], str));
+        printf("  Y%d = %s\n", i, ti57_reg_to_str(s->Y[i], str));
     printf("\n");
 
     printf("  R5=x%02x   RAB=%d\n", s->R5, s->RAB);
@@ -103,67 +104,73 @@ static void print_state(state_t *s)
     char disp[25];
 
     printf("\nMODES\n  %s %s Fix=%d\n",
-           MODES[get_mode(s)], TRIGS[get_trig(s)], get_fix(s));
+           MODES[ti57_get_mode(s)], TRIGS[ti57_get_trig(s)], ti57_get_fix(s));
 
     printf("\nFLAGS\n  2nd[%s] Inv[%s] Sci[%s] Err[%s] NumEdit[%s]\n",
-           is_2nd(s) ? "x" : " ",
-           is_inv(s) ? "x" : " ",
-           is_sci(s) ? "x" : " ",
-           is_error(s) ? "x" : " ",
-           is_number_edit(s) ? "x" : " ");
+           ti57_is_2nd(s) ? "x" : " ",
+           ti57_is_inv(s) ? "x" : " ",
+           ti57_is_sci(s) ? "x" : " ",
+           ti57_is_error(s) ? "x" : " ",
+           ti57_is_number_edit(s) ? "x" : " ");
 
     printf("\nREGISTERS\n");
-    printf("  X  = %s\n", user_reg_to_str(get_regX(s), str, ROM));
-    printf("  T  = %s\n", user_reg_to_str(get_regT(s), str, ROM));
+    printf("  X  = %s\n",
+           ti57_user_reg_to_str(ti57_get_regX(s), false, 9, str, ROM));
+    printf("  T  = %s\n",
+           ti57_user_reg_to_str(ti57_get_regT(s), false, 9, str, ROM));
     for (int i = 0; i <= 7; i++) {
-        printf("  R%d = %s\n", i, user_reg_to_str(get_reg(s, i), str, ROM));
+        printf("  R%d = %s\n", i,
+               ti57_user_reg_to_str(ti57_get_reg(s, i), false, 9, str, ROM));
     }
 
     printf("\nAOS\n");
-    printf("  aos_stack = %s\n", get_aos_stack(s, str));
+    printf("  aos_stack = %s\n", ti57_get_aos_stack(s, str));
     printf("  aos = %s\n", get_aos(s, str));
 
     int last_step = 49;
-    while (last_step >= 0 && get_instruction(s, last_step)->key == 0)
+    while (last_step >= 0 && ti57_get_instruction(s, last_step)->key == 0)
         last_step -= 1;
 
     printf("\nPROGRAM (%d steps)\n", last_step + 1);
     for (int i = 0; i <= last_step; i++)
         printf("  %02d %s\n", i, get_instruction_str(s, i, str));
-    printf("  pc=%d\n", get_pc(s));
+    printf("  pc=%d\n", ti57_get_pc(s));
 
-    printf("\nDISP = [%s]\n", get_display(s, disp));
+    printf("\nDISP = [%s]\n", ti57_get_display(s, disp));
 }
 
-static void run(state_t *s, opcode_t *ROM, key_t *keys, int n)
+static void run(ti57_state_t *s, ti57_opcode_t *ROM, ti57_key_t *keys, int n)
 {
-    for (int i = 0; i < 200; i++) {
-        burst(s, 1, ROM);
-    }
+    // Init.
+    while (!ti57_is_idle(s))
+        ti57_burst(s, 1, ROM);
+
     for (int i = 0; i < n; i++) {
-        key_press(s, keys[i] / 10, keys[i] % 10);
-        for (int j = 0; j < 20000; j++) {
-            burst(s, 1, ROM);
-        }
-        key_release(s);
-        for (int j = 0; j < 4000; j++) {
-            burst(s, 1, ROM);
-        }
+        // Key Press.
+        ti57_key_press(s, keys[i] / 10, keys[i] % 10);
+        for (int j = 0; j < 10; j++) ti57_burst(s, 1, ROM);
+        while (!ti57_is_idle(s))
+            ti57_burst(s, 1, ROM);
+        // Key Release.
+        ti57_key_release(s);
+        for (int j = 0; j < 10; j++) ti57_burst(s, 1, ROM);
+        while (!ti57_is_idle(s))
+            ti57_burst(s, 1, ROM);
     }
 }
 
 int main(void)
 {
-    key_t keys[] =
+    ti57_key_t keys[] =
         {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
         // {61, 64, 62, 44, 63, 24, 51, 74};  // 1 + 2 * 3 ^ 4 =
         // {52, 21, 52};  // 5 STO 5
-    state_t s;
+    ti57_state_t s;
 
     load_rom(ROM);
-    init(&s);
+    ti57_init(&s);
 
-    run(&s, ROM, keys, sizeof(keys)/sizeof(key_t));
+    run(&s, ROM, keys, sizeof(keys)/sizeof(ti57_key_t));
     print_state(&s);
 }

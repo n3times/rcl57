@@ -5,25 +5,24 @@
  * API for decoding the internal registers of the TI-57.
  */
 
-
 /**
  * Calculator modes:
  * - RUN: user program is running
  * - LRN: user program is being edited
  * - EVAL otherwise
  */
-typedef enum mode_e {
-    EVAL,
-    LRN,
-    RUN
-} mode_t;
+typedef enum ti57_mode_e {
+    TI57_EVAL,
+    TI57_LRN,
+    TI57_RUN
+} ti57_mode_t;
 
 /** Units for trigometric functions. */
 typedef enum trig_e {
-    DEG,
-    RAD,
-    GRAD,
-} trig_t;
+    TI57_DEG,
+    TI57_RAD,
+    TI57_GRAD,
+} ti57_trig_t;
 
 /**
  * Encodes one of the keys of the keyboard.
@@ -34,19 +33,18 @@ typedef enum trig_e {
  * - least significant 4 bits: column in 1..5 for primary keys and in 6..A for
  *   secondary keys
  */
-typedef unsigned char key_t;
+typedef unsigned char ti57_key_t;
 
 /**
  * An instruction with an optional inverse modifier and an optional paramater.
  *
  * The parameter 'd' is in 0..9 (-1 means there is no parameter).
  */
-typedef struct instruction_s {
-    bool_t inv;
-    key_t key;
+typedef struct ti57_instruction_s {
+    bool inv;
+    ti57_key_t key;
     signed char d;
-} instruction_t;
-
+} ti57_instruction_t;
 
 /*******************************************************************************
  *
@@ -55,14 +53,13 @@ typedef struct instruction_s {
  ******************************************************************************/
 
 /** Main mode: EVAL, LRN or RUN. */
-mode_t get_mode(state_t *s);
+ti57_mode_t ti57_get_mode(ti57_state_t *s);
 
 /** One of the 3 trigonometric units. */
-trig_t get_trig(state_t *s);
+ti57_trig_t ti57_get_trig(ti57_state_t *s);
 
 /** Number of decimals after the decimal point. */
-int get_fix(state_t *s);
-
+int ti57_get_fix(ti57_state_t *s);
 
 /*******************************************************************************
  *
@@ -71,40 +68,39 @@ int get_fix(state_t *s);
  ******************************************************************************/
 
 /** The '2nd' key has been pressed. */
-bool_t is_2nd(state_t *s);
+bool ti57_is_2nd(ti57_state_t *s);
 
 /** The 'INV' key has been pressed. */
-bool_t is_inv(state_t *s);
+bool ti57_is_inv(ti57_state_t *s);
 
 /** Scientific notation is on. */
-bool_t is_sci(state_t *s);
+bool ti57_is_sci(ti57_state_t *s);
 
 /** An error has occurred. */
-bool_t is_error(state_t *s);
+bool ti57_is_error(ti57_state_t *s);
 
 /** A number is being edited on the display. */
-bool_t is_number_edit(state_t *s);
+bool ti57_is_number_edit(ti57_state_t *s);
 
 /** The display is blinking. */
-bool_t is_blinking(state_t *s);
+bool ti57_is_blinking(ti57_state_t *s);
 
 /** Mode is RUN and SST is pressed. */
-bool_t is_trace(state_t *s);
+bool ti57_is_trace(ti57_state_t *s);
 
 /** Mode is RUN and R/S is pressed. */
-bool_t is_stop(state_t *s);
+bool ti57_is_stopping(ti57_state_t *s);
 
 /** A 'Pause' instruction is being executed (RUN or EVAL mode). */
-bool_t is_paused(state_t *s);
+bool ti57_is_paused(ti57_state_t *s);
 
 /** An 'Ins' or 'Del' instruction is being executed (LRN mode). */
-bool_t is_lrn_edit(state_t *s);
+bool ti57_is_lrn_edit(ti57_state_t *s);
 
 /**
  * The calculator is waiting for input, possibly blinking (LRN or EVAL mode).
  */
-bool_t is_idle(state_t *s);
-
+bool ti57_is_idle(ti57_state_t *s);
 
 /*******************************************************************************
  *
@@ -116,7 +112,7 @@ bool_t is_idle(state_t *s);
  * Returns the arithmetic stack coded as a sequence of characters:
  *   operands:
  *     '0'..'3': X[0]..X[3]
- *     'C': register C
+ *     'X': X register
  *     'd': value on display
  *   straight operators:
  *     '+', '*' and '^'
@@ -129,8 +125,7 @@ bool_t is_idle(state_t *s);
  * 'str' must hold 45 characters at least.
  * Returns 'str'.
  */
-char *get_aos_stack(state_t *s, char *str);
-
+char *ti57_get_aos_stack(ti57_state_t *s, char *str);
 
 /*******************************************************************************
  *
@@ -139,14 +134,13 @@ char *get_aos_stack(state_t *s, char *str);
  ******************************************************************************/
 
 /** One of the 8 user registers (i in 0..7). */
-reg_t *get_reg(state_t *s, int i);
+ti57_reg_t *ti57_get_reg(ti57_state_t *s, int i);
 
 /** The X register. */
-reg_t *get_regX(state_t *s);
+ti57_reg_t *ti57_get_regX(ti57_state_t *s);
 
 /** The T register, same as user register 7. */
-reg_t *get_regT(state_t *s);
-
+ti57_reg_t *ti57_get_regT(ti57_state_t *s);
 
 /*******************************************************************************
  *
@@ -155,12 +149,12 @@ reg_t *get_regT(state_t *s);
  ******************************************************************************/
 
 /** Program counter. */
-int get_pc(state_t *s);
+int ti57_get_pc(ti57_state_t *s);
 
 /** Subroutine return addresses (i in 0..1). */
-int get_ret(state_t *s, int i);
+int ti57_get_ret(ti57_state_t *s, int i);
 
 /** Instruction at a given step (step in 0..49). */
-instruction_t *get_instruction(state_t *s, int step);
+ti57_instruction_t *ti57_get_instruction(ti57_state_t *s, int step);
 
 #endif  /* !STATE57_H */

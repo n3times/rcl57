@@ -1,10 +1,10 @@
 #include "cpu57.h"
 #include "state57.h"
+#include "support57.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-
 
 static char *DIGIT_KEYS[]  = {
     "0", "1", "2", "3", "4", "5", "6", "7",
@@ -33,11 +33,10 @@ static char *SECONDARY_KEYS[] = {
     "LBL",     0, "SIG", "AVG", "VAR",
 };
 
-
-char *get_keyname(key_t key)
+char *ti57_get_keyname(ti57_key_t key)
 {
     int row, col;
-    bool_t sec;
+    bool sec;
 
     if (key < 0x10) return DIGIT_KEYS[key];
 
@@ -48,7 +47,7 @@ char *get_keyname(key_t key)
                : PRIMARY_KEYS[row * 5 + col];
 }
 
-char *trim(char *str)
+char *ti57_trim(char *str)
 {
     char *begin, *end;
 
@@ -63,7 +62,7 @@ char *trim(char *str)
     return str;
 }
 
-char *reg_to_str(reg_t reg, char *str)
+char *ti57_reg_to_str(ti57_reg_t reg, char *str)
 {
     static char digits[] = "0123456789ABCDEF";
 
@@ -73,28 +72,63 @@ char *reg_to_str(reg_t reg, char *str)
     return str;
 }
 
-char *user_reg_to_str(reg_t *reg, char *str, opcode_t *ROM)
+char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
+                           ti57_opcode_t *ROM)
 {
-    state_t s;
-    reg_t *T;
+    ti57_state_t s;
+    ti57_reg_t *T;
 
-    init(&s);
-    burst(&s, 200, ROM);
+    ti57_init(&s);
+    s.pc = 0x04a6;
+    s.stack[0] = 0x0396;
 
-    T = get_regT(&s);
+    T = ti57_get_regT(&s);
     for (int i = 0; i <= 13; i++)
         (*T)[i] = (*reg)[i];
+    s.X[4][14] = 9 - fix;
+    if (sci)
+        s.B[15] = 0x8;
 
-    key_press(&s, 1, 1);
-    burst(&s, 400, ROM);
-    key_release(&s);
-    burst(&s, 100, ROM);
-
+    ti57_key_press(&s, 1, 1);
+    ti57_burst(&s, 10, ROM);
+    while (!ti57_is_idle(&s)) {
+        ti57_burst(&s, 1, ROM);
+    }
+    ti57_burst(&s, 10, ROM);
+    ti57_key_release(&s);
+    while (!ti57_is_idle(&s)) {
+        ti57_burst(&s, 1, ROM);
+    }
     char display[25];
-    get_display(&s, display);
-    strcpy(str, trim(display));
+    ti57_get_display(&s, display);
+    strcpy(str, ti57_trim(display));
     char *last = str + strlen(str) - 1;
     if (*last == '.')
         *last = 0;
     return str;
+}
+
+ti57_speed_t ti57_get_speed(ti57_state_t *s)
+{
+    switch(ti57_get_mode(s)) {
+    case TI57_EVAL:
+        if (ti57_is_blinking(s))
+            return TI57_SLOW;
+        else if (ti57_is_idle(s))
+            return TI57_IDLE;
+        return TI57_FAST;
+    case TI57_LRN:
+        if (ti57_is_idle(s))
+            return TI57_IDLE;
+        return TI57_FAST;
+    case TI57_RUN:
+        if (ti57_is_stopping(s))
+            // This solves an issue with the original TI-57 where stopping
+            // execution takes up to 1 second in RUN mode.
+            return TI57_FAST;
+        else if (ti57_is_trace(s) || ti57_is_paused(s))
+            return TI57_SLOW;
+        else
+            return TI57_FAST;
+    }
 }
