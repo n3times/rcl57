@@ -7,9 +7,9 @@
 
 /**
  * Calculator modes:
- * - RUN: user program is running
- * - LRN: user program is being edited
- * - EVAL otherwise
+ * - TI57_EVAL: executing or ready to execute user instructions
+ * - TI57_LRN: user program is being edited
+ * - TI57_RUN: user program is running
  */
 typedef enum ti57_mode_e {
     TI57_EVAL,
@@ -18,11 +18,29 @@ typedef enum ti57_mode_e {
 } ti57_mode_t;
 
 /** Units for trigometric functions. */
-typedef enum trig_e {
+typedef enum ti57_trig_e {
     TI57_DEG,
     TI57_RAD,
     TI57_GRAD,
 } ti57_trig_t;
+
+/**
+ * Activities:
+ * - TI57_POLL: in a tight loop, polling for using input (key press or key
+ *   release)
+ * - TI57_BLINK: similar to TI57_POLL but, in addition, the display blinking
+ *   due to an error
+ * - TI57_PAUSE: 'Pause' is being executed for ~1s
+ * - TI57_LONG_EDIT: 'Del' or 'Ins' being executed in LRN mode
+ * - TI57_BUSY: default, running or executing some operation
+ */
+typedef enum ti57_activity_e {
+    TI57_POLL,
+    TI57_BLINK,
+    TI57_PAUSE,
+    TI57_LONG_EDIT,
+    TI57_BUSY,
+} ti57_activity_t;
 
 /**
  * Encodes one of the keys of the keyboard.
@@ -52,10 +70,10 @@ typedef struct ti57_instruction_s {
  *
  ******************************************************************************/
 
-/** Main mode: EVAL, LRN or RUN. */
+/** Current mode. */
 ti57_mode_t ti57_get_mode(ti57_state_t *s);
 
-/** One of the 3 trigonometric units. */
+/** Current trigonometric unit. */
 ti57_trig_t ti57_get_trig(ti57_state_t *s);
 
 /** Number of decimals after the decimal point. */
@@ -67,10 +85,10 @@ int ti57_get_fix(ti57_state_t *s);
  *
  ******************************************************************************/
 
-/** The '2nd' key has been pressed. */
+/** The '2nd' key has been pressed in EVAL or LRN mode. */
 bool ti57_is_2nd(ti57_state_t *s);
 
-/** The 'INV' key has been pressed. */
+/** The 'INV' key has been pressed in EVAL or LRN mode. */
 bool ti57_is_inv(ti57_state_t *s);
 
 /** Scientific notation is on. */
@@ -82,25 +100,14 @@ bool ti57_is_error(ti57_state_t *s);
 /** A number is being edited on the display. */
 bool ti57_is_number_edit(ti57_state_t *s);
 
-/** The display is blinking. */
-bool ti57_is_blinking(ti57_state_t *s);
-
-/** Mode is RUN and SST is pressed. */
+/** 'SST' is pressed while in RUN mode. */
 bool ti57_is_trace(ti57_state_t *s);
 
-/** Mode is RUN and R/S is pressed. */
+/** 'R/S' is pressed while in RUN mode. */
 bool ti57_is_stopping(ti57_state_t *s);
 
-/** A 'Pause' instruction is being executed (RUN or EVAL mode). */
-bool ti57_is_paused(ti57_state_t *s);
-
-/** An 'Ins' or 'Del' instruction is being executed (LRN mode). */
-bool ti57_is_lrn_edit(ti57_state_t *s);
-
-/**
- * The calculator is waiting for input, possibly blinking (LRN or EVAL mode).
- */
-bool ti57_is_idle(ti57_state_t *s);
+/** Reports the current activity. */
+ti57_activity_t ti57_get_activity(ti57_state_t *s);
 
 /*******************************************************************************
  *

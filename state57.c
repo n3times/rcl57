@@ -68,11 +68,6 @@ bool ti57_is_number_edit(ti57_state_t *s)
     return (s->B[15] & 0x1) != 0;
 }
 
-bool ti57_is_blinking(ti57_state_t *s)
-{
-    return ti57_is_error(s) && !s->key_pressed;
-}
-
 bool ti57_is_trace(ti57_state_t *s)
 {
     if (ti57_get_mode(s) != TI57_RUN) return false;
@@ -98,27 +93,30 @@ static bool is_pc_in(ti57_state_t *s, int lo, int hi, int depth)
    return false;
 }
 
-bool ti57_is_paused(ti57_state_t *s)
+ti57_activity_t ti57_get_activity(ti57_state_t *s)
 {
-    // The subroutine that executes 'Pause' appears to be called at 0x0109.
-    return s->stack[0] == 0x010a || s->stack[1] == 0x010a;
-}
+    if (is_pc_in(s, 0x00fd, 0x0105, 1) ||  // 'Ins'
+        is_pc_in(s, 0x010c, 0x0116, 1)) {  // 'Del'
+        return TI57_LONG_EDIT;
+    }
 
-bool ti57_is_lrn_edit(ti57_state_t *s)
-{
-    bool ti57_is_ins = is_pc_in(s, 0x00fd, 0x0105, 1);
-    bool ti57_is_del = is_pc_in(s, 0x010c, 0x0116, 1);
+    if (s->stack[0] == 0x010a || s->stack[1] == 0x010a) {  // 'Pause'
+        return TI57_PAUSE;
+    }
 
-    return ti57_is_ins || ti57_is_del;
-}
+    if (s->key_pressed) {
+        if (is_pc_in(s, 0x01fc, 0x01fe, -1) ||   // Waiting for 'R/S' release 
+            is_pc_in(s, 0x04a3, 0x04a5, -1)) {   // Waiting for other release
+            return TI57_POLL;
+        }
+    }
 
-bool ti57_is_idle(ti57_state_t *s)
-{
-    bool waiting_key_press = is_pc_in(s, 0x04a6, 0x04a9, 0);
-    bool waiting_key_release = s->key_pressed
-        && (is_pc_in(s, 0x01fc, 0x01fe, -1) || is_pc_in(s, 0x04a3, 0x04a5, -1));
+    if (!s->key_pressed) {
+        if (is_pc_in(s, 0x04a6, 0x04a9, 0))      // Waiting for key press
+            return ti57_is_error(s) ? TI57_BLINK : TI57_POLL;
+    }
 
-    return waiting_key_press || waiting_key_release;
+    return TI57_BUSY;
 }
 
 /*******************************************************************************

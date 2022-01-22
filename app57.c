@@ -139,23 +139,28 @@ static void print_state(ti57_state_t *s)
     printf("\nDISP = [%s]\n", ti57_get_display(s, disp));
 }
 
+static void burst_until_idle(ti57_state_t *s, ti57_opcode_t *ROM)
+{
+   for ( ; ; ) {
+       ti57_activity_t activity = ti57_get_activity(s);
+       if (activity == TI57_POLL || activity == TI57_BLINK)
+           return;
+       ti57_burst(s, 1, ROM);
+   }
+}
+
 static void run(ti57_state_t *s, ti57_opcode_t *ROM, ti57_key_t *keys, int n)
 {
     // Init.
-    while (!ti57_is_idle(s))
-        ti57_burst(s, 1, ROM);
+    burst_until_idle(s, ROM);
 
     for (int i = 0; i < n; i++) {
         // Key Press.
         ti57_key_press(s, keys[i] / 10, keys[i] % 10);
-        for (int j = 0; j < 10; j++) ti57_burst(s, 1, ROM);
-        while (!ti57_is_idle(s))
-            ti57_burst(s, 1, ROM);
+        burst_until_idle(s, ROM);
         // Key Release.
         ti57_key_release(s);
-        for (int j = 0; j < 10; j++) ti57_burst(s, 1, ROM);
-        while (!ti57_is_idle(s))
-            ti57_burst(s, 1, ROM);
+        burst_until_idle(s, ROM);
     }
 }
 

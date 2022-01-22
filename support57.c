@@ -90,13 +90,11 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
         s.B[15] = 0x8;
 
     ti57_key_press(&s, 1, 1);
-    ti57_burst(&s, 10, ROM);
-    while (!ti57_is_idle(&s)) {
+    while (ti57_get_activity(&s) == TI57_BUSY) {
         ti57_burst(&s, 1, ROM);
     }
-    ti57_burst(&s, 10, ROM);
     ti57_key_release(&s);
-    while (!ti57_is_idle(&s)) {
+    while (ti57_get_activity(&s) == TI57_BUSY) {
         ti57_burst(&s, 1, ROM);
     }
     char display[25];
@@ -110,25 +108,23 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
 
 ti57_speed_t ti57_get_speed(ti57_state_t *s)
 {
+    ti57_activity_t activity = ti57_get_activity(s);
+
     switch(ti57_get_mode(s)) {
     case TI57_EVAL:
-        if (ti57_is_blinking(s))
-            return TI57_SLOW;
-        else if (ti57_is_idle(s))
-            return TI57_IDLE;
-        return TI57_FAST;
     case TI57_LRN:
-        if (ti57_is_idle(s))
-            return TI57_IDLE;
-        return TI57_FAST;
+        switch (activity) {
+        case TI57_POLL: return TI57_IDLE;
+        case TI57_BLINK: return TI57_SLOW;
+        default: return TI57_FAST;
+        }
     case TI57_RUN:
         if (ti57_is_stopping(s))
             // This solves an issue with the original TI-57 where stopping
             // execution takes up to 1 second in RUN mode.
             return TI57_FAST;
-        else if (ti57_is_trace(s) || ti57_is_paused(s))
+        else if (ti57_is_trace(s) || activity == TI57_PAUSE)
             return TI57_SLOW;
-        else
-            return TI57_FAST;
+        return TI57_FAST;
     }
 }
