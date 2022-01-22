@@ -1,6 +1,7 @@
 #ifndef SUPPORT57_H
 #define SUPPORT57_H
 
+#include "rom57.h"
 #include "state57.h"
 
 /**
@@ -46,8 +47,7 @@ char *ti57_reg_to_str(ti57_reg_t reg, char *str);
  * Note that digits of reg at 14 and 15, as well as the two higher bits at 13,
  * are ignored.
  */
-char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
-                           ti57_opcode_t *ROM);
+char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str);
 
 /** The current speed of the calculator. */
 ti57_speed_t ti57_get_speed(ti57_state_t *s);

@@ -5,25 +5,6 @@
 #include "state57.h"
 #include "support57.h"
 
-static ti57_opcode_t ROM[2048];
-
-static void load_rom(ti57_opcode_t *rom)
-{
-    unsigned char buf[4096];
-    FILE *f;
-
-    memset(buf, 0, sizeof(buf));
-    f = fopen("ti57.bin", "rb");
-    fread(buf, 4096, 1, f);
-    fclose(f);
-    for (int i = 0; i < 2048; i++) {
-        // little-endian.
-        unsigned short left = buf[2*i];
-        unsigned short right = buf[2*i + 1];
-        rom[i] = left << 8 | right;
-    }
-}
-
 static char *get_aos(ti57_state_t *s, char *str)
 {
     char stack[20];
@@ -45,8 +26,7 @@ static char *get_aos(ti57_state_t *s, char *str)
         case 'X': reg = ti57_get_regX(s); break;
         }
         if (reg) {
-            ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part,
-                                 ROM);
+            ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part);
         } else if (c == 'd') {
             char display[25];
             ti57_get_display(s, display);
@@ -115,12 +95,12 @@ static void print_state(ti57_state_t *s)
 
     printf("\nREGISTERS\n");
     printf("  X  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regX(s), false, 9, str, ROM));
+           ti57_user_reg_to_str(ti57_get_regX(s), false, 9, str));
     printf("  T  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regT(s), false, 9, str, ROM));
+           ti57_user_reg_to_str(ti57_get_regT(s), false, 9, str));
     for (int i = 0; i <= 7; i++) {
         printf("  R%d = %s\n", i,
-               ti57_user_reg_to_str(ti57_get_reg(s, i), false, 9, str, ROM));
+               ti57_user_reg_to_str(ti57_get_reg(s, i), false, 9, str));
     }
 
     printf("\nAOS\n");
@@ -139,28 +119,29 @@ static void print_state(ti57_state_t *s)
     printf("\nDISP = [%s]\n", ti57_get_display(s, disp));
 }
 
-static void burst_until_idle(ti57_state_t *s, ti57_opcode_t *ROM)
+static void burst_until_idle(ti57_state_t *s)
 {
    for ( ; ; ) {
        ti57_activity_t activity = ti57_get_activity(s);
-       if (activity == TI57_POLL || activity == TI57_BLINK)
+       if (activity == TI57_POLL || activity == TI57_BLINK) {
            return;
-       ti57_burst(s, 1, ROM);
+       }
+       ti57_next(s);
    }
 }
 
-static void run(ti57_state_t *s, ti57_opcode_t *ROM, ti57_key_t *keys, int n)
+static void run(ti57_state_t *s, ti57_key_t *keys, int n)
 {
     // Init.
-    burst_until_idle(s, ROM);
+    burst_until_idle(s);
 
     for (int i = 0; i < n; i++) {
         // Key Press.
         ti57_key_press(s, keys[i] / 10, keys[i] % 10);
-        burst_until_idle(s, ROM);
+        burst_until_idle(s);
         // Key Release.
         ti57_key_release(s);
-        burst_until_idle(s, ROM);
+        burst_until_idle(s);
     }
 }
 
@@ -173,9 +154,8 @@ int main(void)
         // {52, 21, 52};  // 5 STO 5
     ti57_state_t s;
 
-    load_rom(ROM);
     ti57_init(&s);
 
-    run(&s, ROM, keys, sizeof(keys)/sizeof(ti57_key_t));
+    run(&s, keys, sizeof(keys)/sizeof(ti57_key_t));
     print_state(&s);
 }

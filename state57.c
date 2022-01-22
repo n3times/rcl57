@@ -97,7 +97,7 @@ ti57_activity_t ti57_get_activity(ti57_state_t *s)
 {
     if (is_pc_in(s, 0x00fd, 0x0105, 1) ||  // 'Ins'
         is_pc_in(s, 0x010c, 0x0116, 1)) {  // 'Del'
-        return TI57_LONG_EDIT;
+        return TI57_LONG;
     }
 
     if (s->stack[0] == 0x010a || s->stack[1] == 0x010a) {  // 'Pause'

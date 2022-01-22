@@ -1,4 +1,5 @@
 #include "cpu57.h"
+#include "rom57.h"
 
 #include <assert.h>
 #include <string.h>
@@ -11,7 +12,7 @@
  *
  ******************************************************************************/
 
-/**  Updates R5 with the 2 least significant digits of reg. */
+/** Updates R5 with the 2 least significant digits of reg. */
 static void update_R5(ti57_reg_t *reg, ti57_state_t *s, int lo, int hi)
 {
     s->R5 = (*reg)[lo];
@@ -302,9 +303,21 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
     }
 }
 
-/** Executes the next instruction. */
-static bool execute(ti57_state_t *s, ti57_opcode_t opcode)
+/******************************************************************************
+ *
+ *  API IMPLEMENTATION
+ *
+ ******************************************************************************/
+
+void ti57_init(ti57_state_t *s)
 {
+    memset(s, 0, sizeof(ti57_state_t));
+}
+
+int ti57_next(ti57_state_t *s)
+{
+    ti57_opcode_t opcode = ROM[s->pc];
+
     if (opcode > 0x1fff) return false;
 
     s->pc += 1;
@@ -321,27 +334,9 @@ static bool execute(ti57_state_t *s, ti57_opcode_t opcode)
         op_mask(s, opcode);
     }
 
-    return true;
+    return ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
 }
 
-/******************************************************************************
- *
- *  API IMPLEMENTATION
- *
- ******************************************************************************/
-
-void ti57_init(ti57_state_t *s)
-{
-    memset(s, 0, sizeof(ti57_state_t));
-}
-
-void ti57_burst(ti57_state_t *s, int n, ti57_opcode_t *rom)
-{
-    for (int i = 0; i < n; i++) {
-        ti57_opcode_t opcode = rom[s->pc];
-        execute(s, opcode);
-    }
-}
 
 void ti57_key_release(ti57_state_t *s)
 {

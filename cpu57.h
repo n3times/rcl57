@@ -3,7 +3,13 @@
 
 #include <stdbool.h>
 
-/** API for clients that want to implement a TI-57 emulator. */
+/**
+ * API for clients that want to implement a TI-57 emulator.
+ *
+ * Clients should initialize the CPU with 'ti57_init' and call periodically
+ * 'ti57_next'. Input/Output is done through 'ti57_key_press',
+ * 'ti57_key_release' and 'ti57_get_display'.
+ */
 
 /**
  * An internal register composed of 16 4-bit digits, decimal (0-9) or
@@ -36,9 +42,12 @@ typedef struct state_s {
 void ti57_init(ti57_state_t *s);
 
 /**
- * Executes 'n' instructions starting at the current program counter address.
+ * Executes the instruction at the current program counter address.
+ *
+ * Returns the relative cost of the instruction. Most instructions have cost 1,
+ * but other ones, such as display operations, take longer to execute.
  */
-void ti57_burst(ti57_state_t *s, int n, ti57_opcode_t *rom);
+int ti57_next(ti57_state_t *s);
 
 /**
  * Function to be be called when a key is pressed (row in 0..7, col in 0..4.).

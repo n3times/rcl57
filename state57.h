@@ -26,19 +26,19 @@ typedef enum ti57_trig_e {
 
 /**
  * Activities:
- * - TI57_POLL: in a tight loop, polling for using input (key press or key
+ * - TI57_POLL: in a tight loop, polling for user input (key press or key
  *   release)
  * - TI57_BLINK: similar to TI57_POLL but, in addition, the display blinking
  *   due to an error
  * - TI57_PAUSE: 'Pause' is being executed for ~1s
- * - TI57_LONG_EDIT: 'Del' or 'Ins' being executed in LRN mode
+ * - TI57_LONG: Executing an expensive operation such as 'Del' and 'Ins'
  * - TI57_BUSY: default, running or executing some operation
  */
 typedef enum ti57_activity_e {
     TI57_POLL,
     TI57_BLINK,
     TI57_PAUSE,
-    TI57_LONG_EDIT,
+    TI57_LONG,
     TI57_BUSY,
 } ti57_activity_t;
 
@@ -85,10 +85,10 @@ int ti57_get_fix(ti57_state_t *s);
  *
  ******************************************************************************/
 
-/** The '2nd' key has been pressed in EVAL or LRN mode. */
+/** The '2nd' key has been registered in EVAL or LRN mode. */
 bool ti57_is_2nd(ti57_state_t *s);
 
-/** The 'INV' key has been pressed in EVAL or LRN mode. */
+/** The 'INV' key has been registered in EVAL or LRN mode. */
 bool ti57_is_inv(ti57_state_t *s);
 
 /** Scientific notation is on. */

@@ -72,15 +72,15 @@ char *ti57_reg_to_str(ti57_reg_t reg, char *str)
     return str;
 }
 
-char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
-                           ti57_opcode_t *ROM)
+char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str)
 {
     ti57_state_t s;
     ti57_reg_t *T;
 
     ti57_init(&s);
-    s.pc = 0x04a6;
-    s.stack[0] = 0x0396;
+    while (ti57_get_activity(&s) == TI57_BUSY) {
+        ti57_next(&s);
+    }
 
     T = ti57_get_regT(&s);
     for (int i = 0; i <= 13; i++)
@@ -91,11 +91,11 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str,
 
     ti57_key_press(&s, 1, 1);
     while (ti57_get_activity(&s) == TI57_BUSY) {
-        ti57_burst(&s, 1, ROM);
+        ti57_next(&s);
     }
     ti57_key_release(&s);
     while (ti57_get_activity(&s) == TI57_BUSY) {
-        ti57_burst(&s, 1, ROM);
+        ti57_next(&s);
     }
     char display[25];
     ti57_get_display(&s, display);
@@ -114,14 +114,17 @@ ti57_speed_t ti57_get_speed(ti57_state_t *s)
     case TI57_EVAL:
     case TI57_LRN:
         switch (activity) {
-        case TI57_POLL: return TI57_IDLE;
-        case TI57_BLINK: return TI57_SLOW;
-        default: return TI57_FAST;
+        case TI57_POLL:
+            return TI57_IDLE;
+        case TI57_BLINK:
+            return TI57_SLOW;
+        default:
+            return TI57_FAST;
         }
     case TI57_RUN:
         if (ti57_is_stopping(s))
             // This solves an issue with the original TI-57 where stopping
-            // execution takes up to 1 second in RUN mode.
+            // execution on 'Pause' takes up to 1 second in RUN mode.
             return TI57_FAST;
         else if (ti57_is_trace(s) || activity == TI57_PAUSE)
             return TI57_SLOW;
