@@ -1,9 +1,32 @@
 #ifndef STATE57_H
 #define STATE57_H
 
+#include <stdbool.h>
+
 /**
  * API for decoding the internal registers of the TI-57.
  */
+
+/** Internal register with 16 4-bit digits, decimal 0-9 or hexadecimal 0-F. */
+typedef unsigned char ti57_reg_t[16];
+
+/** An 11-bit address. */
+typedef unsigned short ti57_address_t;
+
+/** The state of a TI-57. */
+typedef struct state_s {
+    ti57_reg_t A, B, C, D;      // Operational Registers
+    ti57_reg_t X[8], Y[8];      // Storage Registers
+    unsigned char RAB;          // Register Address Buffer (3-bit)
+    unsigned char R5;           // Auxiliary 8-bit Register
+    ti57_address_t pc;          // Program Counter
+    ti57_address_t stack[3];    // Subroutine Stack
+    bool COND;                  // Conditional Latch
+    bool is_hex;                // Arithmetic done in base 16 instead of 10
+    bool key_pressed;           // A key is being pressed
+    int row, col;               // Row and Column of key
+    ti57_reg_t dA, dB;          // Copy of A and B for display purposes
+} ti57_state_t;
 
 /**
  * Calculator modes:

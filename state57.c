@@ -1,8 +1,8 @@
-#include "cpu57.h"
-#include "state57.h"
-
 #include <assert.h>
 #include <stdio.h>
+
+#include "cpu57.h"
+#include "state57.h"
 
 /*******************************************************************************
  *

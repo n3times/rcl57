@@ -7,7 +7,7 @@
 
 static char *get_aos(ti57_state_t *s, char *str)
 {
-    char stack[20];
+    char stack[45];
     int k = 0;
 
     ti57_get_aos_stack(s, stack);
@@ -19,11 +19,15 @@ static char *get_aos(ti57_state_t *s, char *str)
         if (c == 0) break;
 
         switch(c) {
-        case '0': reg = &s->X[0]; break;
-        case '1': reg = &s->X[1]; break;
-        case '2': reg = &s->X[2]; break;
-        case '3': reg = &s->X[3]; break;
-        case 'X': reg = ti57_get_regX(s); break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+            reg = &s->X[c - '0'];
+            break;
+        case 'X':
+            reg = ti57_get_regX(s);
+            break;
         }
         if (reg) {
             ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part);

@@ -1,8 +1,11 @@
+#include <assert.h>
+#include <string.h>
+
 #include "cpu57.h"
 #include "rom57.h"
 
-#include <assert.h>
-#include <string.h>
+/** A 13-bit opcode. */
+typedef unsigned short ti57_opcode_t;
 
 /******************************************************************************
  *
@@ -322,17 +325,16 @@ int ti57_next(ti57_state_t *s)
 
     s->pc += 1;
 
-    if ((opcode & 0x1800) == 0x1800) {
+    if ((opcode & 0x1800) == 0x1800)
         op_branch(s, opcode);
-    } else if ((opcode & 0x1800) == 0x1000) {
+    else if ((opcode & 0x1800) == 0x1000)
         op_call(s, opcode);
-    } else if ((opcode & 0x1f00) == 0x0e00) {
+    else if ((opcode & 0x1f00) == 0x0e00)
         op_misc(s, opcode);
-    } else if ((opcode & 0x1f00) == 0x0c00) {
+    else if ((opcode & 0x1f00) == 0x0c00)
         op_flag(s, opcode);
-    } else if ((opcode & 0x1000) == 0x0000){
+    else if ((opcode & 0x1000) == 0x0000)
         op_mask(s, opcode);
-    }
 
     return ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
 }

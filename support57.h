@@ -9,7 +9,7 @@
  */
 
 /**
- * The different activity levels of the calculator:
+ * The different apparent speeds of the calculator:
  * - TI57_IDLE: the display is static and the calculator is waiting for user
  *   input. The client can safely stop running the emulator until the next key
  *   press or key release.
@@ -19,6 +19,10 @@
  * - TI57_FAST: the calculator is fully busy and computing as fast as possible.
  *   The client may run the emulator faster than the actual calculator without
  *   the user losing any meaningful information.
+ *
+ * This can be used to implement an emulator more efficient than the actual
+ * TI-57 (TI57-IDLE), running much faster when possible (TI57_FAST), while
+ * running at the correct speed when needed (TI57_SLOW).
  */
 typedef enum ti57_speed_e {
     TI57_IDLE,

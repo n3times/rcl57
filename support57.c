@@ -1,10 +1,10 @@
-#include "cpu57.h"
-#include "state57.h"
-#include "support57.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "cpu57.h"
+#include "state57.h"
+#include "support57.h"
 
 static char *DIGIT_KEYS[]  = {
     "0", "1", "2", "3", "4", "5", "6", "7",
