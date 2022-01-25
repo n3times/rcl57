@@ -237,22 +237,22 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
     int lo = -1, hi = -1;
 
     switch(m) {
-    case 0:  lo = 12, hi = 12; break;
-    case 1:  lo =  0, hi = 15; break;
-    case 2:  lo =  2, hi = 12; break;
-    case 3:  lo =  0, hi = 12; break;
-    case 4:  lo =  2, hi =  2; break;
-    case 5:  lo =  0, hi =  1; break;
+    case 0:  lo = 12; hi = 12; break;
+    case 1:  lo =  0; hi = 15; break;
+    case 2:  lo =  2; hi = 12; break;
+    case 3:  lo =  0; hi = 12; break;
+    case 4:  lo =  2; hi =  2; break;
+    case 5:  lo =  0; hi =  1; break;
     case 6:  break;  // unused
-    case 7:  lo =  0, hi = 13; break;
-    case 8:  lo = 14, hi = 14; break;
-    case 9:  lo = 13, hi = 15; break;
-    case 10: lo = 14, hi = 15; break;
+    case 7:  lo =  0; hi = 13; break;
+    case 8:  lo = 14; hi = 14; break;
+    case 9:  lo = 13; hi = 15; break;
+    case 10: lo = 14; hi = 15; break;
     case 11: break;  // unused
     case 12: break;  // flag operation
-    case 13: lo = 13, hi = 13; break;
+    case 13: lo = 13; hi = 13; break;
     case 14: break;  // misc operation
-    case 15: lo = 15, hi = 15; break;
+    case 15: lo = 15; hi = 15; break;
     }
 
     if (lo < 0 || hi < 0) return;
@@ -358,9 +358,10 @@ void ti57_key_press(ti57_state_t *s, int row, int col)
     s->col = col;
 }
 
-char *ti57_get_display(ti57_state_t *s, char *str)
+char *ti57_get_display(ti57_state_t *s)
 {
     static char digits[] = "0123456789ABCDEF";
+    static char str[25];
     int k = 0;
 
     for (int i = 11; i >= 0; i--) {

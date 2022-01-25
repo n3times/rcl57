@@ -151,11 +151,8 @@ ti57_activity_t ti57_get_activity(ti57_state_t *s);
  *   open parenthesis:
  *     '('
  * For example "0+1*(2+d"
- *
- * 'str' must hold 45 characters at least.
- * Returns 'str'.
  */
-char *ti57_get_aos_stack(ti57_state_t *s, char *str);
+char *ti57_get_aos_stack(ti57_state_t *s);
 
 /*******************************************************************************
  *
@@ -178,7 +175,7 @@ ti57_reg_t *ti57_get_regT(ti57_state_t *s);
  *
  ******************************************************************************/
 
-/** Program counter. */
+/** Program counter (between 0 and 49). */
 int ti57_get_pc(ti57_state_t *s);
 
 /** Subroutine return addresses (i in 0..1). */

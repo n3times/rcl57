@@ -97,9 +97,7 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str)
     while (ti57_get_activity(&s) == TI57_BUSY) {
         ti57_next(&s);
     }
-    char display[25];
-    ti57_get_display(&s, display);
-    strcpy(str, ti57_trim(display));
+    strcpy(str, ti57_trim(ti57_get_display(&s)));
     char *last = str + strlen(str) - 1;
     if (*last == '.')
         *last = 0;

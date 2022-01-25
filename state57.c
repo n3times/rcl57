@@ -125,8 +125,9 @@ ti57_activity_t ti57_get_activity(ti57_state_t *s)
  *
  ******************************************************************************/
 
-char *ti57_get_aos_stack(ti57_state_t *s, char *str)
+char *ti57_get_aos_stack(ti57_state_t *s)
 {
+    static char str[45];
     int k = 0;
     int num_operands = 0;
 
@@ -252,7 +253,10 @@ static void init_instructions()
 
 int ti57_get_pc(ti57_state_t *s)
 {
-    return (s->X[5][15] << 4) + s->X[5][14];
+    int pc = (s->X[5][15] << 4) + s->X[5][14];
+
+    assert((0 <= pc) && (pc <= 49));
+    return pc;
 }
 
 int ti57_get_ret(ti57_state_t *s, int i)

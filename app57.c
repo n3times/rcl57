@@ -7,10 +7,10 @@
 
 static char *get_aos(ti57_state_t *s, char *str)
 {
-    char stack[45];
+    char *stack;
     int k = 0;
 
-    ti57_get_aos_stack(s, stack);
+    stack = ti57_get_aos_stack(s);
     for (int i = 0; ; i++) {
         ti57_reg_t *reg = 0;
         char part[25];
@@ -32,9 +32,7 @@ static char *get_aos(ti57_state_t *s, char *str)
         if (reg) {
             ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part);
         } else if (c == 'd') {
-            char display[25];
-            ti57_get_display(s, display);
-            strcpy(part, ti57_trim(display));
+            strcpy(part, ti57_trim(ti57_get_display(s)));
         } else {
             int j = 0;
             if (c != '(') part[j++] = ' ';
@@ -85,7 +83,6 @@ static void print_state(ti57_state_t *s)
     printf("  COND=%d   hex=%d\n", s->COND, s->is_hex);
     printf("  pc=x%03x  stack=[x%03x, x%03x, x%03x]\n",
            s->pc, s->stack[0], s->stack[1], s->stack[2]);
-    char disp[25];
 
     printf("\nMODES\n  %s %s Fix=%d\n",
            MODES[ti57_get_mode(s)], TRIGS[ti57_get_trig(s)], ti57_get_fix(s));
@@ -108,7 +105,7 @@ static void print_state(ti57_state_t *s)
     }
 
     printf("\nAOS\n");
-    printf("  aos_stack = %s\n", ti57_get_aos_stack(s, str));
+    printf("  aos_stack = %s\n", ti57_get_aos_stack(s));
     printf("  aos = %s\n", get_aos(s, str));
 
     int last_step = 49;
@@ -120,7 +117,7 @@ static void print_state(ti57_state_t *s)
         printf("  %02d %s\n", i, get_instruction_str(s, i, str));
     printf("  pc=%d\n", ti57_get_pc(s));
 
-    printf("\nDISP = [%s]\n", ti57_get_display(s, disp));
+    printf("\nDISP = [%s]\n", ti57_get_display(s));
 }
 
 static void burst_until_idle(ti57_state_t *s)
