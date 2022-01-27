@@ -39,10 +39,8 @@ char *ti57_trim(char *str);
 /**
  * A raw string representation of a given internal register. Characters in
  * '0'-'F'.
- *
- * 'str' must hold 17 characters at least.
  */
-char *ti57_reg_to_str(ti57_reg_t reg, char *str);
+char *ti57_reg_to_str(ti57_reg_t reg);
 
 /**
  * A string representation of the user register at 'reg'. For example:
@@ -51,9 +49,9 @@ char *ti57_reg_to_str(ti57_reg_t reg, char *str);
  * Note that digits of reg at 14 and 15, as well as the two higher bits at 13,
  * are ignored.
  */
-char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str);
+char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix);
 
 /** The current speed of the calculator. */
-ti57_speed_t ti57_get_speed(ti57_state_t *s);
+ti57_speed_t ti57_get_speed(ti57_t *ti57);
 
 #endif  /* !SUPPORT57_H */

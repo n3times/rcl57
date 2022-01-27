@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "cpu57.h"
+#include "ti57.h"
 #include "state57.h"
 #include "support57.h"
 
-static char *get_aos(ti57_state_t *s, char *str)
+static char *get_aos(ti57_t *ti57, char *str)
 {
     char *stack;
     int k = 0;
 
-    stack = ti57_get_aos_stack(s);
+    stack = ti57_get_aos_stack(ti57);
     for (int i = 0; ; i++) {
         ti57_reg_t *reg = 0;
         char part[25];
@@ -23,16 +23,19 @@ static char *get_aos(ti57_state_t *s, char *str)
         case '1':
         case '2':
         case '3':
-            reg = &s->X[c - '0'];
+            reg = &ti57->X[c - '0'];
             break;
         case 'X':
-            reg = ti57_get_regX(s);
+            reg = ti57_get_regX(ti57);
             break;
         }
         if (reg) {
-            ti57_user_reg_to_str(reg, ti57_is_sci(s), ti57_get_fix(s), part);
+            char *user_reg_str = ti57_user_reg_to_str(reg,
+                                                      ti57_is_sci(ti57),
+                                                      ti57_get_fix(ti57));
+            strcpy(part, user_reg_str);
         } else if (c == 'd') {
-            strcpy(part, ti57_trim(ti57_get_display(s)));
+            strcpy(part, ti57_trim(ti57_get_display(ti57)));
         } else {
             int j = 0;
             if (c != '(') part[j++] = ' ';
@@ -48,9 +51,9 @@ static char *get_aos(ti57_state_t *s, char *str)
     return str;
 }
 
-static char *get_instruction_str(ti57_state_t *s, int step, char *str)
+static char *get_instruction_str(ti57_t *ti57, int step, char *str)
 {
-    ti57_instruction_t *instruction = ti57_get_instruction(s, step);
+    ti57_instruction_t *instruction = ti57_get_instruction(ti57, step);
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
@@ -59,90 +62,92 @@ static char *get_instruction_str(ti57_state_t *s, int step, char *str)
     return str;
 }
 
-static void print_state(ti57_state_t *s)
+static void print_state(ti57_t *ti57)
 {
     static char *MODES[] = {"EVAL", "LRN", "RUN"};
     static char *TRIGS[] = {"DEG", "RAD", "GRAD"};
     char str[1000];
 
     printf("INTERNAL STATE\n");
-    printf("  A  = %s\n", ti57_reg_to_str(s->A, str));
-    printf("  B  = %s\n", ti57_reg_to_str(s->B, str));
-    printf("  C  = %s\n", ti57_reg_to_str(s->C, str));
-    printf("  D  = %s\n", ti57_reg_to_str(s->D, str));
+    printf("  A  = %s\n", ti57_reg_to_str(ti57->A));
+    printf("  B  = %s\n", ti57_reg_to_str(ti57->B));
+    printf("  C  = %s\n", ti57_reg_to_str(ti57->C));
+    printf("  D  = %s\n", ti57_reg_to_str(ti57->D));
     printf("\n");
 
     for (int i = 0; i < 8; i++)
-        printf("  X%d = %s\n", i, ti57_reg_to_str(s->X[i], str));
+        printf("  X%d = %s\n", i, ti57_reg_to_str(ti57->X[i]));
     printf("\n");
     for (int i = 0; i < 8; i++)
-        printf("  Y%d = %s\n", i, ti57_reg_to_str(s->Y[i], str));
+        printf("  Y%d = %s\n", i, ti57_reg_to_str(ti57->Y[i]));
     printf("\n");
 
-    printf("  R5=x%02x   RAB=%d\n", s->R5, s->RAB);
-    printf("  COND=%d   hex=%d\n", s->COND, s->is_hex);
+    printf("  R5=x%02x   RAB=%d\n", ti57->R5, ti57->RAB);
+    printf("  COND=%d   hex=%d\n", ti57->COND, ti57->is_hex);
     printf("  pc=x%03x  stack=[x%03x, x%03x, x%03x]\n",
-           s->pc, s->stack[0], s->stack[1], s->stack[2]);
+           ti57->pc, ti57->stack[0], ti57->stack[1], ti57->stack[2]);
 
     printf("\nMODES\n  %s %s Fix=%d\n",
-           MODES[ti57_get_mode(s)], TRIGS[ti57_get_trig(s)], ti57_get_fix(s));
+           MODES[ti57_get_mode(ti57)],
+           TRIGS[ti57_get_trig(ti57)],
+           ti57_get_fix(ti57));
 
     printf("\nFLAGS\n  2nd[%s] Inv[%s] Sci[%s] Err[%s] NumEdit[%s]\n",
-           ti57_is_2nd(s) ? "x" : " ",
-           ti57_is_inv(s) ? "x" : " ",
-           ti57_is_sci(s) ? "x" : " ",
-           ti57_is_error(s) ? "x" : " ",
-           ti57_is_number_edit(s) ? "x" : " ");
+           ti57_is_2nd(ti57) ? "x" : " ",
+           ti57_is_inv(ti57) ? "x" : " ",
+           ti57_is_sci(ti57) ? "x" : " ",
+           ti57_is_error(ti57) ? "x" : " ",
+           ti57_is_number_edit(ti57) ? "x" : " ");
 
     printf("\nREGISTERS\n");
     printf("  X  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regX(s), false, 9, str));
+           ti57_user_reg_to_str(ti57_get_regX(ti57), false, 9));
     printf("  T  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regT(s), false, 9, str));
+           ti57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
     for (int i = 0; i <= 7; i++) {
         printf("  R%d = %s\n", i,
-               ti57_user_reg_to_str(ti57_get_reg(s, i), false, 9, str));
+               ti57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
     }
 
     printf("\nAOS\n");
-    printf("  aos_stack = %s\n", ti57_get_aos_stack(s));
-    printf("  aos = %s\n", get_aos(s, str));
+    printf("  aos_stack = %s\n", ti57_get_aos_stack(ti57));
+    printf("  aos = %s\n", get_aos(ti57, str));
 
     int last_step = 49;
-    while (last_step >= 0 && ti57_get_instruction(s, last_step)->key == 0)
+    while (last_step >= 0 && ti57_get_instruction(ti57, last_step)->key == 0)
         last_step -= 1;
 
     printf("\nPROGRAM (%d steps)\n", last_step + 1);
     for (int i = 0; i <= last_step; i++)
-        printf("  %02d %s\n", i, get_instruction_str(s, i, str));
-    printf("  pc=%d\n", ti57_get_pc(s));
+        printf("  %02d %s\n", i, get_instruction_str(ti57, i, str));
+    printf("  pc=%d\n", ti57_get_pc(ti57));
 
-    printf("\nDISP = [%s]\n", ti57_get_display(s));
+    printf("\nDISP = [%s]\n", ti57_get_display(ti57));
 }
 
-static void burst_until_idle(ti57_state_t *s)
+static void burst_until_idle(ti57_t *ti57)
 {
    for ( ; ; ) {
-       ti57_activity_t activity = ti57_get_activity(s);
+       ti57_activity_t activity = ti57_get_activity(ti57);
        if (activity == TI57_POLL || activity == TI57_BLINK) {
            return;
        }
-       ti57_next(s);
+       ti57_next(ti57);
    }
 }
 
-static void run(ti57_state_t *s, ti57_key_t *keys, int n)
+static void run(ti57_t *ti57, ti57_key_t *keys, int n)
 {
     // Init.
-    burst_until_idle(s);
+    burst_until_idle(ti57);
 
     for (int i = 0; i < n; i++) {
         // Key Press.
-        ti57_key_press(s, keys[i] / 10, keys[i] % 10);
-        burst_until_idle(s);
+        ti57_key_press(ti57, keys[i] / 10, keys[i] % 10);
+        burst_until_idle(ti57);
         // Key Release.
-        ti57_key_release(s);
-        burst_until_idle(s);
+        ti57_key_release(ti57);
+        burst_until_idle(ti57);
     }
 }
 
@@ -153,10 +158,10 @@ int main(void)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
         // {61, 64, 62, 44, 63, 24, 51, 74};  // 1 + 2 * 3 ^ 4 =
         // {52, 21, 52};  // 5 STO 5
-    ti57_state_t s;
+    ti57_t ti57;
 
-    ti57_init(&s);
+    ti57_init(&ti57);
 
-    run(&s, keys, sizeof(keys)/sizeof(ti57_key_t));
-    print_state(&s);
+    run(&ti57, keys, sizeof(keys)/sizeof(ti57_key_t));
+    print_state(&ti57);
 }

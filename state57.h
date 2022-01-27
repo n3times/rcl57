@@ -13,8 +13,8 @@ typedef unsigned char ti57_reg_t[16];
 /** An 11-bit address. */
 typedef unsigned short ti57_address_t;
 
-/** The state of a TI-57. */
-typedef struct state_s {
+/** The internal state of a TI-57. */
+typedef struct ti57_s {
     ti57_reg_t A, B, C, D;      // Operational Registers
     ti57_reg_t X[8], Y[8];      // Storage Registers
     unsigned char RAB;          // Register Address Buffer (3-bit)
@@ -26,7 +26,7 @@ typedef struct state_s {
     bool key_pressed;           // A key is being pressed
     int row, col;               // Row and Column of key
     ti57_reg_t dA, dB;          // Copy of A and B for display purposes
-} ti57_state_t;
+} ti57_t;
 
 /**
  * Calculator modes:
@@ -53,7 +53,7 @@ typedef enum ti57_trig_e {
  *   release)
  * - TI57_BLINK: similar to TI57_POLL but, in addition, the display blinking
  *   due to an error
- * - TI57_PAUSE: 'Pause' is being executed for ~1s
+ * - TI57_PAUSE: 'Pause' is being executed for ~2s
  * - TI57_LONG: Executing an expensive operation such as 'Del' and 'Ins'
  * - TI57_BUSY: default, running or executing some operation
  */
@@ -94,13 +94,13 @@ typedef struct ti57_instruction_s {
  ******************************************************************************/
 
 /** Current mode. */
-ti57_mode_t ti57_get_mode(ti57_state_t *s);
+ti57_mode_t ti57_get_mode(ti57_t *ti57);
 
 /** Current trigonometric unit. */
-ti57_trig_t ti57_get_trig(ti57_state_t *s);
+ti57_trig_t ti57_get_trig(ti57_t *ti57);
 
 /** Number of decimals after the decimal point. */
-int ti57_get_fix(ti57_state_t *s);
+int ti57_get_fix(ti57_t *ti57);
 
 /*******************************************************************************
  *
@@ -109,28 +109,28 @@ int ti57_get_fix(ti57_state_t *s);
  ******************************************************************************/
 
 /** The '2nd' key has been registered in EVAL or LRN mode. */
-bool ti57_is_2nd(ti57_state_t *s);
+bool ti57_is_2nd(ti57_t *ti57);
 
 /** The 'INV' key has been registered in EVAL or LRN mode. */
-bool ti57_is_inv(ti57_state_t *s);
+bool ti57_is_inv(ti57_t *ti57);
 
 /** Scientific notation is on. */
-bool ti57_is_sci(ti57_state_t *s);
+bool ti57_is_sci(ti57_t *ti57);
 
 /** An error has occurred. */
-bool ti57_is_error(ti57_state_t *s);
+bool ti57_is_error(ti57_t *ti57);
 
 /** A number is being edited on the display. */
-bool ti57_is_number_edit(ti57_state_t *s);
+bool ti57_is_number_edit(ti57_t *ti57);
 
 /** 'SST' is pressed while in RUN mode. */
-bool ti57_is_trace(ti57_state_t *s);
+bool ti57_is_trace(ti57_t *ti57);
 
 /** 'R/S' is pressed while in RUN mode. */
-bool ti57_is_stopping(ti57_state_t *s);
+bool ti57_is_stopping(ti57_t *ti57);
 
 /** Reports the current activity. */
-ti57_activity_t ti57_get_activity(ti57_state_t *s);
+ti57_activity_t ti57_get_activity(ti57_t *ti57);
 
 /*******************************************************************************
  *
@@ -145,14 +145,14 @@ ti57_activity_t ti57_get_activity(ti57_state_t *s);
  *     'X': X register
  *     'd': value on display
  *   straight operators:
- *     '+', '*' and '^'
+ *     '+', '*' and '^' (exponentiation)
  *   inverse operators:
- *     '-', '/' and 'v'
+ *     '-', '/' and 'v' (root extraction)
  *   open parenthesis:
  *     '('
  * For example "0+1*(2+d"
  */
-char *ti57_get_aos_stack(ti57_state_t *s);
+char *ti57_get_aos_stack(ti57_t *ti57);
 
 /*******************************************************************************
  *
@@ -161,13 +161,13 @@ char *ti57_get_aos_stack(ti57_state_t *s);
  ******************************************************************************/
 
 /** One of the 8 user registers (i in 0..7). */
-ti57_reg_t *ti57_get_reg(ti57_state_t *s, int i);
+ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i);
 
 /** The X register. */
-ti57_reg_t *ti57_get_regX(ti57_state_t *s);
+ti57_reg_t *ti57_get_regX(ti57_t *ti57);
 
 /** The T register, same as user register 7. */
-ti57_reg_t *ti57_get_regT(ti57_state_t *s);
+ti57_reg_t *ti57_get_regT(ti57_t *ti57);
 
 /*******************************************************************************
  *
@@ -176,12 +176,12 @@ ti57_reg_t *ti57_get_regT(ti57_state_t *s);
  ******************************************************************************/
 
 /** Program counter (between 0 and 49). */
-int ti57_get_pc(ti57_state_t *s);
+int ti57_get_pc(ti57_t *ti57);
 
 /** Subroutine return addresses (i in 0..1). */
-int ti57_get_ret(ti57_state_t *s, int i);
+int ti57_get_ret(ti57_t *ti57, int i);
 
 /** Instruction at a given step (step in 0..49). */
-ti57_instruction_t *ti57_get_instruction(ti57_state_t *s, int step);
+ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step);
 
 #endif  /* !STATE57_H */

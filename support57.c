@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "cpu57.h"
+#include "ti57.h"
 #include "state57.h"
 #include "support57.h"
 
@@ -62,8 +62,9 @@ char *ti57_trim(char *str)
     return str;
 }
 
-char *ti57_reg_to_str(ti57_reg_t reg, char *str)
+char *ti57_reg_to_str(ti57_reg_t reg)
 {
+    static char str[17];
     static char digits[] = "0123456789ABCDEF";
 
     for (int i = 0; i < 16; i++)
@@ -72,43 +73,44 @@ char *ti57_reg_to_str(ti57_reg_t reg, char *str)
     return str;
 }
 
-char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix, char *str)
+char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
 {
-    ti57_state_t s;
+    static char str[25];
+    ti57_t ti57;
     ti57_reg_t *T;
 
-    ti57_init(&s);
-    while (ti57_get_activity(&s) == TI57_BUSY) {
-        ti57_next(&s);
+    ti57_init(&ti57);
+    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+        ti57_next(&ti57);
     }
 
-    T = ti57_get_regT(&s);
+    T = ti57_get_regT(&ti57);
     for (int i = 0; i <= 13; i++)
         (*T)[i] = (*reg)[i];
-    s.X[4][14] = 9 - fix;
+    ti57.X[4][14] = 9 - fix;
     if (sci)
-        s.B[15] = 0x8;
+        ti57.B[15] = 0x8;
 
-    ti57_key_press(&s, 1, 1);
-    while (ti57_get_activity(&s) == TI57_BUSY) {
-        ti57_next(&s);
+    ti57_key_press(&ti57, 1, 1);
+    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+        ti57_next(&ti57);
     }
-    ti57_key_release(&s);
-    while (ti57_get_activity(&s) == TI57_BUSY) {
-        ti57_next(&s);
+    ti57_key_release(&ti57);
+    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+        ti57_next(&ti57);
     }
-    strcpy(str, ti57_trim(ti57_get_display(&s)));
+    strcpy(str, ti57_trim(ti57_get_display(&ti57)));
     char *last = str + strlen(str) - 1;
     if (*last == '.')
         *last = 0;
     return str;
 }
 
-ti57_speed_t ti57_get_speed(ti57_state_t *s)
+ti57_speed_t ti57_get_speed(ti57_t *ti57)
 {
-    ti57_activity_t activity = ti57_get_activity(s);
+    ti57_activity_t activity = ti57_get_activity(ti57);
 
-    switch(ti57_get_mode(s)) {
+    switch(ti57_get_mode(ti57)) {
     case TI57_EVAL:
     case TI57_LRN:
         switch (activity) {
@@ -120,11 +122,11 @@ ti57_speed_t ti57_get_speed(ti57_state_t *s)
             return TI57_FAST;
         }
     case TI57_RUN:
-        if (ti57_is_stopping(s))
+        if (ti57_is_stopping(ti57))
             // This solves an issue with the original TI-57 where stopping
             // execution on 'Pause' takes up to 1 second in RUN mode.
             return TI57_FAST;
-        else if (ti57_is_trace(s) || activity == TI57_PAUSE)
+        else if (ti57_is_trace(ti57) || activity == TI57_PAUSE)
             return TI57_SLOW;
         return TI57_FAST;
     }

@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "cpu57.h"
+#include "ti57.h"
 #include "rom57.h"
 
 /** A 13-bit opcode. */
@@ -16,27 +16,27 @@ typedef unsigned short ti57_opcode_t;
  ******************************************************************************/
 
 /** Updates R5 with the 2 least significant digits of reg. */
-static void update_R5(ti57_reg_t *reg, ti57_state_t *s, int lo, int hi)
+static void update_R5(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
 {
-    s->R5 = (*reg)[lo];
+    ti57->R5 = (*reg)[lo];
     if (hi > lo)
-        s->R5 += (*reg)[lo + 1] << 4;
+        ti57->R5 += (*reg)[lo + 1] << 4;
 }
 
 /** Determines which base to use when doing arithmetic. */
-static int get_base(ti57_state_t *s, int lo)
+static int get_base(ti57_t *ti57, int lo)
 {
     bool flag_digits = lo >= 13;
 
-    return (flag_digits || s->is_hex) ? 16 : 10;
+    return (flag_digits || ti57->is_hex) ? 16 : 10;
 }
 
 /** dest = left + right. */
 static void add(ti57_reg_t *dest, ti57_reg_t *left, ti57_reg_t *right,
-                ti57_state_t *s, int lo, int hi)
+                ti57_t *ti57, int lo, int hi)
 {
     ti57_reg_t temp;
-    int base = get_base(s, lo);
+    int base = get_base(ti57, lo);
     int carry = 0;
 
     if (!dest)
@@ -52,16 +52,16 @@ static void add(ti57_reg_t *dest, ti57_reg_t *left, ti57_reg_t *right,
     }
 
     if (carry)
-        s->COND = 1;
-    update_R5(dest, s, lo, hi);
+        ti57->COND = 1;
+    update_R5(dest, ti57, lo, hi);
 }
 
 /** dest = left - right. */
 static void subtract(ti57_reg_t *dest, ti57_reg_t *left, ti57_reg_t *right,
-                     ti57_state_t *s, int lo, int hi)
+                     ti57_t *ti57, int lo, int hi)
 {
     ti57_reg_t temp;
-    int base = get_base(s, lo);
+    int base = get_base(ti57, lo);
     int borrow = 0;
 
     if (!dest)
@@ -77,34 +77,34 @@ static void subtract(ti57_reg_t *dest, ti57_reg_t *left, ti57_reg_t *right,
     }
 
     if (borrow)
-        s->COND = 1;
-    update_R5(dest, s, lo, hi);
+        ti57->COND = 1;
+    update_R5(dest, ti57, lo, hi);
 }
 
 /** reg = reg << 1. */
-static void left_shift(ti57_reg_t *reg, ti57_state_t *s, int lo, int hi)
+static void left_shift(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
 {
     for (int i = hi; i > lo; i--) {
         (*reg)[i] = (*reg)[i - 1];
     }
     (*reg)[lo] = 0;
 
-    update_R5(reg, s, lo, hi);
+    update_R5(reg, ti57, lo, hi);
 }
 
 /** reg = reg << 1. */
-static void right_shift(ti57_reg_t *reg, ti57_state_t *s, int lo, int hi)
+static void right_shift(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
 {
     for (int i = lo; i < hi; i++) {
         (*reg)[i] = (*reg)[i + 1];
     }
     (*reg)[hi] = 0;
 
-    update_R5(reg, s, lo, hi);
+    update_R5(reg, ti57, lo, hi);
 }
 
 /** left <=> right. */
-static void exchange(ti57_reg_t *left, ti57_reg_t *right, ti57_state_t *s,
+static void exchange(ti57_reg_t *left, ti57_reg_t *right, ti57_t *ti57,
                      int lo, int hi)
 {
     for (int i = lo; i <= hi; i++) {
@@ -113,18 +113,18 @@ static void exchange(ti57_reg_t *left, ti57_reg_t *right, ti57_state_t *s,
         (*right)[i] = d;
     }
 
-    update_R5(right, s, lo, hi);
+    update_R5(right, ti57, lo, hi);
 }
 
 /** dest = src. */
-static void store(ti57_reg_t *dest, ti57_reg_t *src, ti57_state_t *s,
+static void store(ti57_reg_t *dest, ti57_reg_t *src, ti57_t *ti57,
                   int lo, int hi)
 {
     for (int i = lo; i <= hi; i++) {
         (*dest)[i] = (*src)[i];
     }
 
-    update_R5(src, s, lo, hi);
+    update_R5(src, ti57, lo, hi);
 }
 
 /******************************************************************************
@@ -133,18 +133,18 @@ static void store(ti57_reg_t *dest, ti57_reg_t *src, ti57_state_t *s,
  *
  ******************************************************************************/
 
-static void stack_push(ti57_state_t *s, ti57_address_t val)
+static void stack_push(ti57_t *ti57, ti57_address_t val)
 {
-    s->stack[2] = s->stack[1];
-    s->stack[1] = s->stack[0];
-    s->stack[0] = val;
+    ti57->stack[2] = ti57->stack[1];
+    ti57->stack[1] = ti57->stack[0];
+    ti57->stack[0] = val;
 }
 
-static ti57_address_t stack_pop(ti57_state_t *s)
+static ti57_address_t stack_pop(ti57_t *ti57)
 {
-    ti57_address_t val = s->stack[0];
-    s->stack[0] = s->stack[1];
-    s->stack[1] = s->stack[2];
+    ti57_address_t val = ti57->stack[0];
+    ti57->stack[0] = ti57->stack[1];
+    ti57->stack[1] = ti57->stack[2];
     return val;
 }
 
@@ -155,68 +155,68 @@ static ti57_address_t stack_pop(ti57_state_t *s)
  ******************************************************************************/
 
 /** Branches conditionally. */
-static void op_branch(ti57_state_t *s, ti57_opcode_t opcode)
+static void op_branch(ti57_t *ti57, ti57_opcode_t opcode)
 {
     int COND = opcode >> 10 & 0x1;
 
-    if (COND == s->COND)
-        s->pc = (s->pc & 0x400) | (opcode & 0x3ff);
-    s->COND = 0;
+    if (COND == ti57->COND)
+        ti57->pc = (ti57->pc & 0x400) | (opcode & 0x3ff);
+    ti57->COND = 0;
 }
 
 /** Calls a subroutine unconditionally. */
-static void op_call(ti57_state_t *s, ti57_opcode_t opcode)
+static void op_call(ti57_t *ti57, ti57_opcode_t opcode)
 {
-    stack_push(s, s->pc);
-    s->pc = opcode & 0x7ff;
-    s->COND = 0;
+    stack_push(ti57, ti57->pc);
+    ti57->pc = opcode & 0x7ff;
+    ti57->COND = 0;
 }
 
 /** Performs a flag operation. */
-static void op_flag(ti57_state_t *s, ti57_opcode_t opcode)
+static void op_flag(ti57_t *ti57, ti57_opcode_t opcode)
 {
     int j = (opcode & 0x00c0) >> 6;  // register
     int d = (opcode & 0x0030) >> 4;  // digit
     int b = (opcode & 0x000c) >> 2;  // bit
     int f = opcode & 0x0003;         // function
 
-    ti57_reg_t *O[] = {&s->A, &s->B, &s->C, &s->D};
+    ti57_reg_t *O[] = {&ti57->A, &ti57->B, &ti57->C, &ti57->D};
     unsigned char *digit = (unsigned char *)O[j] + d + 12;
 
     switch(f) {
     case 0: *digit |= 1 << b; break;
     case 1: *digit &= ~(1 << b); break;
-    case 2: if (*digit & (1 << b)) s->COND = 1; break;
+    case 2: if (*digit & (1 << b)) ti57->COND = 1; break;
     case 3: *digit ^= 1 << b; break;
     }
 }
 
 /** Performs a miscellaneous operation. */
-static void op_misc(ti57_state_t *s, ti57_opcode_t opcode)
+static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
 {
     int q = (opcode & 0x00f0) >> 4;  // potential operand
     int p = opcode & 0x000f;         // instruction
 
     switch(p) {
-    case 0: memcpy(s->A, s->Y[s->RAB], sizeof(ti57_reg_t)); break;
-    case 1: s->RAB = q & 0x7; break;
-    case 2: s->pc = s->R5; break;
-    case 3: s->COND = 0;
-            s->pc = stack_pop(s);
+    case 0: memcpy(ti57->A, ti57->Y[ti57->RAB], sizeof(ti57_reg_t)); break;
+    case 1: ti57->RAB = q & 0x7; break;
+    case 2: ti57->pc = ti57->R5; break;
+    case 3: ti57->COND = 0;
+            ti57->pc = stack_pop(ti57);
             break;
-    case 4: memcpy(s->X[s->RAB], s->A, sizeof(ti57_reg_t)); break;
-    case 5: memcpy(s->A, s->X[s->RAB], sizeof(ti57_reg_t)); break;
-    case 6: memcpy(s->Y[s->RAB], s->A, sizeof(ti57_reg_t)); break;
-    case 7: if (s->key_pressed) {
-                s->R5 = (s->col + 1) << 4 | s->row;
-                s->COND = 1;
+    case 4: memcpy(ti57->X[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
+    case 5: memcpy(ti57->A, ti57->X[ti57->RAB], sizeof(ti57_reg_t)); break;
+    case 6: memcpy(ti57->Y[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
+    case 7: if (ti57->key_pressed) {
+                ti57->R5 = (ti57->col + 1) << 4 | ti57->row;
+                ti57->COND = 1;
             }
-            memcpy(s->dA, s->A, sizeof(ti57_reg_t));
-            memcpy(s->dB, s->B, sizeof(ti57_reg_t));
+            memcpy(ti57->dA, ti57->A, sizeof(ti57_reg_t));
+            memcpy(ti57->dB, ti57->B, sizeof(ti57_reg_t));
             break;
-    case 8: s->is_hex = false; break;
-    case 9: s->is_hex = true; break;
-    case 10: s->RAB = s->R5 & 0x7; break;
+    case 8: ti57->is_hex = false; break;
+    case 9: ti57->is_hex = true; break;
+    case 10: ti57->RAB = ti57->R5 & 0x7; break;
     }
 }
 
@@ -224,7 +224,7 @@ static void op_misc(ti57_state_t *s, ti57_opcode_t opcode)
  * Performs a mask operation, that is only on a subset of the digits of one or
  * more registers.
  */
-static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
+static void op_mask(ti57_t *ti57, ti57_opcode_t opcode) {
     int m = (opcode & 0x0f00) >> 8;  // mask
     int j = (opcode & 0x00c0) >> 6;  // left operand
     int k = (opcode & 0x0038) >> 3;  // right operand
@@ -232,7 +232,7 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
     int n = opcode & 0x0001;         // inverse op
 
     ti57_reg_t *dest, *left, *right, temp;
-    ti57_reg_t *O[] = {&s->A, &s->B, &s->C, &s->D};
+    ti57_reg_t *O[] = {&ti57->A, &ti57->B, &ti57->C, &ti57->D};
 
     int lo = -1, hi = -1;
 
@@ -267,21 +267,21 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
         right = &temp;
     } else if (k == 6) {
         memset(&temp, 0, sizeof(ti57_reg_t));
-        temp[lo] = s->R5 & 0xf;
+        temp[lo] = ti57->R5 & 0xf;
         right = &temp;
     } else if (k == 7) {
         memset(&temp, 0, sizeof(ti57_reg_t));
-        temp[lo] = s->R5 & 0xf;
-        if (hi > lo) temp[lo + 1] = (s->R5 & 0xf0) >> 4;
+        temp[lo] = ti57->R5 & 0xf;
+        if (hi > lo) temp[lo + 1] = (ti57->R5 & 0xf0) >> 4;
         right = &temp;
     }
 
     if (l <= 2) {
         if (k == 5) {
             if (n) {
-                right_shift(left, s, lo, hi);
+                right_shift(left, ti57, lo, hi);
             } else {
-                left_shift(left, s, lo, hi);
+                left_shift(left, ti57, lo, hi);
             }
         } else {
             if (l == 0) {
@@ -292,16 +292,16 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
                 dest = 0;
             }
             if (n) {
-                subtract(dest, left, right, s, lo, hi);
+                subtract(dest, left, right, ti57, lo, hi);
             } else {
-                add(dest, left, right, s, lo, hi);
+                add(dest, left, right, ti57, lo, hi);
             }
         }
     } else if (l == 3) {
         if (n) {
-            store(left, right, s, lo, hi);
+            store(left, right, ti57, lo, hi);
         } else {
-            exchange(&(s->A), right, s, lo, hi);
+            exchange(&(ti57->A), right, ti57, lo, hi);
         }
     }
 }
@@ -312,53 +312,53 @@ static void op_mask(ti57_state_t *s, ti57_opcode_t opcode) {
  *
  ******************************************************************************/
 
-void ti57_init(ti57_state_t *s)
+void ti57_init(ti57_t *ti57)
 {
-    memset(s, 0, sizeof(ti57_state_t));
+    memset(ti57, 0, sizeof(ti57_t));
 }
 
-int ti57_next(ti57_state_t *s)
+int ti57_next(ti57_t *ti57)
 {
-    ti57_opcode_t opcode = ROM[s->pc];
+    ti57_opcode_t opcode = ROM[ti57->pc];
 
     if (opcode > 0x1fff) return false;
 
-    s->pc += 1;
+    ti57->pc += 1;
 
     if ((opcode & 0x1800) == 0x1800)
-        op_branch(s, opcode);
+        op_branch(ti57, opcode);
     else if ((opcode & 0x1800) == 0x1000)
-        op_call(s, opcode);
+        op_call(ti57, opcode);
     else if ((opcode & 0x1f00) == 0x0e00)
-        op_misc(s, opcode);
+        op_misc(ti57, opcode);
     else if ((opcode & 0x1f00) == 0x0c00)
-        op_flag(s, opcode);
+        op_flag(ti57, opcode);
     else if ((opcode & 0x1000) == 0x0000)
-        op_mask(s, opcode);
+        op_mask(ti57, opcode);
 
     return ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
 }
 
 
-void ti57_key_release(ti57_state_t *s)
+void ti57_key_release(ti57_t *ti57)
 {
-    assert(s->key_pressed);
+    assert(ti57->key_pressed);
 
-    s->key_pressed = false;
+    ti57->key_pressed = false;
 }
 
-void ti57_key_press(ti57_state_t *s, int row, int col)
+void ti57_key_press(ti57_t *ti57, int row, int col)
 {
-    assert(!s->key_pressed);
+    assert(!ti57->key_pressed);
     assert(0 <= row && row <= 7);
     assert(0 <= col && col <= 4);
 
-    s->key_pressed = true;
-    s->row = row;
-    s->col = col;
+    ti57->key_pressed = true;
+    ti57->row = row;
+    ti57->col = col;
 }
 
-char *ti57_get_display(ti57_state_t *s)
+char *ti57_get_display(ti57_t *ti57)
 {
     static char digits[] = "0123456789ABCDEF";
     static char str[25];
@@ -366,14 +366,14 @@ char *ti57_get_display(ti57_state_t *s)
 
     for (int i = 11; i >= 0; i--) {
         char c;
-        if (s->dB[i] & 0x8)
+        if (ti57->dB[i] & 0x8)
             c = ' ';
-        else if (s->dB[i] & 0x1)
+        else if (ti57->dB[i] & 0x1)
             c = '-';
         else
-            c = digits[s->dA[i]];
+            c = digits[ti57->dA[i]];
         str[k++] = c;
-        if (s->dB[i] & 0x2)
+        if (ti57->dB[i] & 0x2)
             str[k++] = '.';
     }
     str[k] = 0;
