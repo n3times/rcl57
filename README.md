@@ -1,5 +1,5 @@
 # RCL-57
 
-Family of emulators for the classic TI-57 calculator.
+Emulators for TI-57 and Penta7.
 
-Currently, only the CPU has been implemented.
+TI-57 is a programmable calculator released in 1977. Penta7 is a modern version built on top of TI-57.
