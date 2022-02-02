@@ -342,14 +342,14 @@ int ti57_next(ti57_t *ti57)
 
 void ti57_key_release(ti57_t *ti57)
 {
-    assert(ti57->key_pressed);
+    ///assert(ti57->key_pressed);
 
     ti57->key_pressed = false;
 }
 
 void ti57_key_press(ti57_t *ti57, int row, int col)
 {
-    assert(!ti57->key_pressed);
+    ///assert(!ti57->key_pressed);
     assert(0 <= row && row <= 7);
     assert(0 <= col && col <= 4);
 

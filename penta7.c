@@ -5,27 +5,178 @@
 #include "penta7.h"
 #include "support57.h"
 
-static char *get_lrn_display(ti57_t *ti57)
+static char *get_lrn_display(penta7_t *penta7)
 {
     static char str[100];
-    int step = ti57_get_pc(ti57);
-    ti57_instruction_t *ins = ti57_get_instruction(ti57, step);
+    ti57_t *ti57 = &penta7->ti57;
+    int pc = ti57_get_pc(ti57);
+    bool pending = ti57->C[14] & 0x1;
+
+    if (pc == 0 && !pending)
+        return "    READY ";
+
+    if (!pending  && !penta7->at_end_program)
+        pc -= 1;
+
+    ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
 
     sprintf(str,
             "  %02d %s%3s  ",
-            step, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
+            pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
     if (ins->d >= 0)
         sprintf(str + 10, "%d ", ins->d);
-    else if (ti57->C[14] & 0x1)
+    else if (pending)
         sprintf(str + 10, "_ ");
     else
         sprintf(str + 10, "  ");
     return str;
 }
 
+static bool has_(penta7_t *penta7)
+{
+    ti57_t *ti57 = &penta7->ti57;
+
+    return ti57->C[14] & 0x1;
+}
+
+static void clear_(penta7_t *penta7)
+{
+    ti57_t *ti57 = &penta7->ti57;
+
+    ti57->C[14] &= 0xe;
+}
+
+static void burst_until_idle(ti57_t *ti57)
+{
+   for ( ; ; ) {
+       ti57_activity_t activity = ti57_get_activity(ti57);
+       if (activity == TI57_POLL || activity == TI57_BLINK) {
+           return;
+       }
+       ti57_next(ti57);
+   }
+}
+
+static void key(penta7_t *penta7, bool sec, int row, int col)
+{
+    ti57_t *ti57 = &penta7->ti57;
+
+    if (sec) {
+        ti57->C[14] |= 0x8;
+    } else {
+        ti57->C[14] &= 0x7;
+    }
+    ti57_key_press(ti57, row, col);
+    burst_until_idle(ti57);
+    ti57_key_release(ti57);
+    burst_until_idle(ti57);
+}
+
+static void key_lrn(penta7_t *penta7)
+{
+     key(penta7, false, 1, 0);
+}
+
+static void key_sst(penta7_t *penta7)
+{
+     key(penta7, false, 2, 0);
+}
+
+static void key_bst(penta7_t *penta7)
+{
+     key(penta7, false, 3, 0);
+}
+
+static void key_ins(penta7_t *penta7)
+{
+     key(penta7, true, 2, 1);
+}
+
+static void key_del(penta7_t *penta7)
+{
+     key(penta7, true, 3, 1);
+}
+
+static void bst(penta7_t *penta7)
+{
+    if (penta7->at_end_program) {
+        penta7->at_end_program = false;
+    } else if (has_(penta7)) {
+        clear_(penta7);
+    } else {
+        key_bst(penta7);
+    }
+}
+
+static void sst(penta7_t *penta7)
+{
+    ti57_t *ti57 = &penta7->ti57;
+
+    clear_(penta7);
+    if (ti57_get_pc(ti57) == 49) {
+        penta7->at_end_program = true;
+    } else {
+        key_sst(penta7);
+    }
+}
+
+static void del(penta7_t *penta7)
+{
+    ti57_t *ti57 = &penta7->ti57;
+
+    if (penta7->at_end_program) {
+        penta7->at_end_program = false;
+        key_del(penta7);
+    } else if (has_(penta7)) {
+        clear_(penta7);
+        key_del(penta7);
+    } else if (ti57_get_pc(ti57) > 0) {
+        key_bst(penta7);
+        key_del(penta7);
+    }
+}
+
+static void ins(penta7_t *penta7)
+{
+    if (!has_(penta7) && !penta7->at_end_program) {
+        key_ins(penta7);
+    }
+}
+
+static void key_press_in_lrn(penta7_t *penta7, int row, int col)
+{
+    ti57_t *ti57 = &penta7->ti57;
+    bool is_2nd = ti57_is_2nd(ti57);
+
+    if (!is_2nd && row == 3 && col == 0) {           // BST
+        return bst(penta7);
+    } else if (!is_2nd && row == 2 && col == 0) {    // SST
+        return sst(penta7);
+    } else if (is_2nd && row == 2 && col == 1) {     // INS
+        return ins(penta7);
+    } else if (is_2nd && row == 3 && col == 1) {     // DEL
+        return del(penta7);
+    } else if (!is_2nd && row == 1 && col == 0) {    // LRN
+        return key_lrn(penta7);
+    } else if (row == 0 && col == 0) {               // 2ND
+        return ti57_key_press(&penta7->ti57, 0, 0);
+    }
+
+    if (penta7->at_end_program) return;
+
+    key(penta7, is_2nd, row, col);
+    if (ti57_get_mode(ti57) == TI57_EVAL) {
+        key_lrn(penta7);
+        penta7->at_end_program = true;
+    }
+    return;
+}
+
+
 void penta7_init(penta7_t *penta7)
 {
     ti57_init(&penta7->ti57);
+    penta7->at_end_program = false;
 }
 
 void penta7_advance(penta7_t *penta7, int ms, int speedup)
@@ -56,6 +207,16 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
 
 void penta7_key_press(penta7_t *penta7, int row, int col)
 {
+    ti57_t *ti57 = &penta7->ti57;
+
+    if (ti57_get_pc(ti57) != 49) {
+        penta7->at_end_program = false;
+    }
+
+    if (ti57_get_mode(ti57) == TI57_LRN) {
+        return key_press_in_lrn(penta7, row, col);
+    }
+
     ti57_key_press(&penta7->ti57, row, col);
 }
 
@@ -68,13 +229,13 @@ char *penta7_get_display(penta7_t *penta7)
 {
     ti57_t *ti57 = &penta7->ti57;
 
-    if (ti57_get_mode(ti57) == TI57_RUN) {
-        if (ti57_get_speed(ti57) == TI57_FAST) {
-            return "[           ";
-        }
+    if (ti57_get_mode(ti57) == TI57_RUN
+     && ti57_get_speed(ti57) == TI57_FAST) {
+        return "[           ";
     } else if (ti57_get_mode(ti57) == TI57_LRN) {
-        return get_lrn_display(ti57);
-    } else if (ti57_get_mode(ti57) == TI57_EVAL) {
+        return get_lrn_display(penta7);
+    } else if (ti57_get_mode(ti57) == TI57_EVAL
+            || ti57_is_trace(ti57)) {
         char *stack = ti57_get_aos_stack(ti57);
         char top = stack[strlen(stack) - 1];
 

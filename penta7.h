@@ -18,6 +18,7 @@
 
 typedef struct penta7_s {
     ti57_t ti57;
+    bool at_end_program;
 } penta7_t;
 
 /** Initializes a Penta7. */
