@@ -51,6 +51,11 @@ void ti57_key_release(ti57_t *ti57);
  * The display is composed of 12 LEDs and each one is represented by 1
  * character (or 2 characters if there is an additional dot).
  *
+ * Characters:
+ * - blank character
+ * - numbers are represented using:  0..9 - (and dot)
+ * - A b C d E F may appear is rare situations
+ *
  * For example: "  -3.14159   ".
  */
 char *ti57_get_display(ti57_t *ti57);

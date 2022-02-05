@@ -4,13 +4,18 @@
 #include <stdbool.h>
 
 /**
- * API for decoding the internal registers of the TI-57.
+ * Internal state of a TI-57 and API to decode it.
  */
 
-/** Internal register with 16 4-bit digits, decimal 0-9 or hexadecimal 0-F. */
+/**
+ * Type for internal registers.
+ *
+ * Internal registers are composed of 16 4-bit digits which can be  decimal 0..9
+ * or hexadecimal 0-F.
+ */
 typedef unsigned char ti57_reg_t[16];
 
-/** An 11-bit address. */
+/** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
 
 /** The internal state of a TI-57. */
@@ -99,7 +104,7 @@ ti57_mode_t ti57_get_mode(ti57_t *ti57);
 /** Current trigonometric unit. */
 ti57_trig_t ti57_get_trig(ti57_t *ti57);
 
-/** Number of decimals after the decimal point. */
+/** Number of decimals after the decimal point (0..9). */
 int ti57_get_fix(ti57_t *ti57);
 
 /*******************************************************************************
@@ -175,7 +180,7 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57);
  *
  ******************************************************************************/
 
-/** Program counter (between 0 and 49). */
+/** Program counter: 0..50 even if only steps 0..49 are valid. */
 int ti57_get_pc(ti57_t *ti57);
 
 /** Subroutine return addresses (i in 0..1). */

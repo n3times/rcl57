@@ -360,7 +360,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
 
 char *ti57_get_display(ti57_t *ti57)
 {
-    static char digits[] = "0123456789ABCDEF";
+    static char digits[] = "0123456789AbCdEF";
     static char str[25];
     int k = 0;
 

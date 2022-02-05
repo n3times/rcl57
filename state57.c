@@ -68,6 +68,11 @@ bool ti57_is_number_edit(ti57_t *ti57)
     return (ti57->B[15] & 0x1) != 0;
 }
 
+bool ti57_is_instruction_edit(ti57_t *ti57)
+{
+    return (ti57->C[14] & 0x1) != 0;
+}
+
 bool ti57_is_trace(ti57_t *ti57)
 {
     if (ti57_get_mode(ti57) != TI57_RUN) return false;
@@ -105,7 +110,7 @@ ti57_activity_t ti57_get_activity(ti57_t *ti57)
     }
 
     if (ti57->key_pressed) {
-        if (is_pc_in(ti57, 0x01fc, 0x01fe, -1) ||   // Waiting for 'R/S' release 
+        if (is_pc_in(ti57, 0x01fc, 0x01fe, -1) ||   // Waiting for 'R/S' release
             is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {   // Waiting for other release
             return TI57_POLL;
         }
@@ -255,7 +260,9 @@ int ti57_get_pc(ti57_t *ti57)
 {
     int pc = (ti57->X[5][15] << 4) + ti57->X[5][14];
 
-    assert((0 <= pc) && (pc <= 49));
+    assert((0 <= pc) && (pc <= 50));
+
+    if (pc == 50) pc = 49;
     return pc;
 }
 

@@ -13,19 +13,19 @@ static char *DIGIT_KEYS[]  = {
 
 static char *PRIMARY_KEYS[] = {
     "2ND", "INV", "LNX", "CE ", "CLR",
-    "LRN", "X:T", "X^2", "vX ", "1/X",
+    "LRN", "X/T", "X^2", "vX ", "1/X",
     "SST", "STO", "RCL", "SUM", "Y^X",
     "BST", "EE ", " ( ", " ) ", " / ",
     "GTO",     0,     0,     0, " x ",
     "SBR",     0,     0,     0, " - ",
     "RST",     0,     0,     0, " + ",
-    "R/S",     0,   ".", "+/-", " = ",
+    "R/S",     0, " . ", "+/-", " = ",
 };
 
 static char *SECONDARY_KEYS[] = {
     "2N2", "IN2", "LOG",  "CT", "CL2",
-    "DMS", "P:R", "SIN", "COS", "TAN",
-    "PAU", "INS", "EXC", "PRD", "PI ",
+    "DMS", "P/R", "SIN", "COS", "TAN",
+    "PSE", "INS", "EXC", "PRD", "PI ",
     "NOP", "DEL", "FIX", "INT", "|X|",
     "DSZ",     0,     0,     0, "DEG",
     "X=T",     0,     0,     0, "RAD",
