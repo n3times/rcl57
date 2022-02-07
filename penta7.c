@@ -99,9 +99,11 @@ static void key_del(penta7_t *penta7)
 
 static void bst(penta7_t *penta7)
 {
+    ti57_t *ti57 = &penta7->ti57;
+
     if (penta7->at_end_program) {
         penta7->at_end_program = false;
-    } else if (ti57_is_instruction_edit(penta7)) {
+    } else if (ti57_is_instruction_edit(ti57)) {
         clear_(penta7);
     } else {
         key_bst(penta7);
@@ -127,7 +129,7 @@ static void del(penta7_t *penta7)
     if (penta7->at_end_program) {
         penta7->at_end_program = false;
         key_del(penta7);
-    } else if (ti57_is_instruction_edit(penta7)) {
+    } else if (ti57_is_instruction_edit(ti57)) {
         clear_(penta7);
         key_del(penta7);
     } else if (ti57_get_pc(ti57) > 0) {
@@ -138,7 +140,9 @@ static void del(penta7_t *penta7)
 
 static void ins(penta7_t *penta7)
 {
-    if (!ti57_is_instruction_edit(penta7) && !penta7->at_end_program) {
+    ti57_t *ti57 = &penta7->ti57;
+
+    if (!ti57_is_instruction_edit(ti57) && !penta7->at_end_program) {
         key_ins(penta7);
     }
 }

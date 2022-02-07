@@ -1,1 +1,5 @@
 a.out
+
+# Xcode
+xcuserdata/
+.DS_Store

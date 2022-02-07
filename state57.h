@@ -128,6 +128,9 @@ bool ti57_is_error(ti57_t *ti57);
 /** A number is being edited on the display. */
 bool ti57_is_number_edit(ti57_t *ti57);
 
+/** An instruction with a digit argument is being edited in LRN mode. */
+bool ti57_is_instruction_edit(ti57_t *ti57);
+
 /** 'SST' is pressed while in RUN mode. */
 bool ti57_is_trace(ti57_t *ti57);
 
