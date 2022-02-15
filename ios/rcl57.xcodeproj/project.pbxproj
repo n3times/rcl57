@@ -11,17 +11,14 @@
 		150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* CalcView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
 		150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */; };
-		150ED8DA27B08AAB00E01FC6 /* penta7.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8C027B08AAB00E01FC6 /* penta7.c */; };
-		150ED8DF27B08AAB00E01FC6 /* state57.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8CC27B08AAB00E01FC6 /* state57.c */; };
-		150ED8E027B08AAB00E01FC6 /* ti57.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8CD27B08AAB00E01FC6 /* ti57.c */; };
-		150ED8E127B08AAB00E01FC6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8CF27B08AAB00E01FC6 /* README.md */; };
-		150ED8E227B08AAB00E01FC6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8D027B08AAB00E01FC6 /* .gitignore */; };
-		150ED8E327B08AAB00E01FC6 /* ti57.bin in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8D127B08AAB00E01FC6 /* ti57.bin */; };
-		150ED8E427B08AAB00E01FC6 /* support57.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8D427B08AAB00E01FC6 /* support57.c */; };
-		150ED8E527B08AAB00E01FC6 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8D527B08AAB00E01FC6 /* rom57.c */; };
 		150ED8E927B08CC900E01FC6 /* Penta7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* Penta7.swift */; };
 		150ED8EC27B09E6400E01FC6 /* LEDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* LEDView.swift */; };
 		150ED8EF27B09F1C00E01FC6 /* leds.c in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EE27B09F1C00E01FC6 /* leds.c */; };
+		154B7A7B27BC65C900AE38F1 /* penta7.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7127BC65C900AE38F1 /* penta7.c */; };
+		154B7A7C27BC65C900AE38F1 /* state57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7327BC65C900AE38F1 /* state57.c */; };
+		154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7427BC65C900AE38F1 /* ti57.c */; };
+		154B7A7E27BC65C900AE38F1 /* support57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7827BC65C900AE38F1 /* support57.c */; };
+		154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7927BC65C900AE38F1 /* rom57.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,24 +27,21 @@
 		150ED8A327B089EF00E01FC6 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		150ED8A527B089F000E01FC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		150ED8C027B08AAB00E01FC6 /* penta7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = penta7.c; sourceTree = "<group>"; };
-		150ED8C127B08AAB00E01FC6 /* support57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = support57.h; sourceTree = "<group>"; };
-		150ED8CC27B08AAB00E01FC6 /* state57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = state57.c; sourceTree = "<group>"; };
-		150ED8CD27B08AAB00E01FC6 /* ti57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ti57.c; sourceTree = "<group>"; };
-		150ED8CE27B08AAB00E01FC6 /* rom57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rom57.h; sourceTree = "<group>"; };
-		150ED8CF27B08AAB00E01FC6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		150ED8D027B08AAB00E01FC6 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		150ED8D127B08AAB00E01FC6 /* ti57.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = ti57.bin; sourceTree = "<group>"; };
-		150ED8D227B08AAB00E01FC6 /* state57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = state57.h; sourceTree = "<group>"; };
-		150ED8D327B08AAB00E01FC6 /* penta7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = penta7.h; sourceTree = "<group>"; };
-		150ED8D427B08AAB00E01FC6 /* support57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = support57.c; sourceTree = "<group>"; };
-		150ED8D527B08AAB00E01FC6 /* rom57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rom57.c; sourceTree = "<group>"; };
-		150ED8D627B08AAB00E01FC6 /* ti57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ti57.h; sourceTree = "<group>"; };
 		150ED8E827B08CC900E01FC6 /* Penta7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Penta7.swift; sourceTree = "<group>"; };
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* LEDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDView.swift; sourceTree = "<group>"; };
 		150ED8ED27B09F1C00E01FC6 /* leds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = leds.h; sourceTree = "<group>"; };
 		150ED8EE27B09F1C00E01FC6 /* leds.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = leds.c; sourceTree = "<group>"; };
+		154B7A7127BC65C900AE38F1 /* penta7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = penta7.c; sourceTree = "<group>"; };
+		154B7A7227BC65C900AE38F1 /* support57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = support57.h; sourceTree = "<group>"; };
+		154B7A7327BC65C900AE38F1 /* state57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = state57.c; sourceTree = "<group>"; };
+		154B7A7427BC65C900AE38F1 /* ti57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ti57.c; sourceTree = "<group>"; };
+		154B7A7527BC65C900AE38F1 /* rom57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rom57.h; sourceTree = "<group>"; };
+		154B7A7627BC65C900AE38F1 /* state57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = state57.h; sourceTree = "<group>"; };
+		154B7A7727BC65C900AE38F1 /* penta7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = penta7.h; sourceTree = "<group>"; };
+		154B7A7827BC65C900AE38F1 /* support57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = support57.c; sourceTree = "<group>"; };
+		154B7A7927BC65C900AE38F1 /* rom57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rom57.c; sourceTree = "<group>"; };
+		154B7A7A27BC65C900AE38F1 /* ti57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ti57.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +58,8 @@
 		150ED89527B089EF00E01FC6 = {
 			isa = PBXGroup;
 			children = (
+				154B7A7027BC65C900AE38F1 /* engine */,
 				150ED8A027B089EF00E01FC6 /* rcl57 */,
-				150ED8BF27B08AAB00E01FC6 /* rcl57 */,
 				150ED89F27B089EF00E01FC6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,25 +96,22 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		150ED8BF27B08AAB00E01FC6 /* rcl57 */ = {
+		154B7A7027BC65C900AE38F1 /* engine */ = {
 			isa = PBXGroup;
 			children = (
-				150ED8C027B08AAB00E01FC6 /* penta7.c */,
-				150ED8C127B08AAB00E01FC6 /* support57.h */,
-				150ED8CC27B08AAB00E01FC6 /* state57.c */,
-				150ED8CD27B08AAB00E01FC6 /* ti57.c */,
-				150ED8CE27B08AAB00E01FC6 /* rom57.h */,
-				150ED8CF27B08AAB00E01FC6 /* README.md */,
-				150ED8D027B08AAB00E01FC6 /* .gitignore */,
-				150ED8D127B08AAB00E01FC6 /* ti57.bin */,
-				150ED8D227B08AAB00E01FC6 /* state57.h */,
-				150ED8D327B08AAB00E01FC6 /* penta7.h */,
-				150ED8D427B08AAB00E01FC6 /* support57.c */,
-				150ED8D527B08AAB00E01FC6 /* rom57.c */,
-				150ED8D627B08AAB00E01FC6 /* ti57.h */,
+				154B7A7127BC65C900AE38F1 /* penta7.c */,
+				154B7A7227BC65C900AE38F1 /* support57.h */,
+				154B7A7327BC65C900AE38F1 /* state57.c */,
+				154B7A7427BC65C900AE38F1 /* ti57.c */,
+				154B7A7527BC65C900AE38F1 /* rom57.h */,
+				154B7A7627BC65C900AE38F1 /* state57.h */,
+				154B7A7727BC65C900AE38F1 /* penta7.h */,
+				154B7A7827BC65C900AE38F1 /* support57.c */,
+				154B7A7927BC65C900AE38F1 /* rom57.c */,
+				154B7A7A27BC65C900AE38F1 /* ti57.h */,
 			);
-			name = rcl57;
-			path = ..;
+			name = engine;
+			path = ../engine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,9 +173,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */,
-				150ED8E127B08AAB00E01FC6 /* README.md in Resources */,
-				150ED8E327B08AAB00E01FC6 /* ti57.bin in Resources */,
-				150ED8E227B08AAB00E01FC6 /* .gitignore in Resources */,
 				150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,16 +184,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */,
-				150ED8DF27B08AAB00E01FC6 /* state57.c in Sources */,
 				150ED8EC27B09E6400E01FC6 /* LEDView.swift in Sources */,
-				150ED8E027B08AAB00E01FC6 /* ti57.c in Sources */,
+				154B7A7E27BC65C900AE38F1 /* support57.c in Sources */,
+				154B7A7B27BC65C900AE38F1 /* penta7.c in Sources */,
 				150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */,
 				150ED8EF27B09F1C00E01FC6 /* leds.c in Sources */,
-				150ED8E427B08AAB00E01FC6 /* support57.c in Sources */,
-				150ED8E527B08AAB00E01FC6 /* rom57.c in Sources */,
 				150ED8E927B08CC900E01FC6 /* Penta7.swift in Sources */,
-				150ED8DA27B08AAB00E01FC6 /* penta7.c in Sources */,
+				154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */,
+				154B7A7C27BC65C900AE38F1 /* state57.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
