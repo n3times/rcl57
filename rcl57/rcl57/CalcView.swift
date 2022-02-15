@@ -4,13 +4,13 @@ import AudioToolbox
 // The main view. It holds the calculator with its keyboard and display. It listens to key presses
 // events and runs the animation loop.
 struct CalcView: View {
-    private let pentaSeven: Penta7
+    private let penta7: Penta7
     @State private var displayText = "READY"
     @State private var isTapped = false
-    @State private var imageName = "pentaseven"
+    @State private var imageName = "primary"
 
-    init(pentaSeven: Penta7) {
-        self.pentaSeven = pentaSeven
+    init(penta7: Penta7) {
+        self.penta7 = penta7
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
@@ -54,10 +54,13 @@ struct CalcView: View {
         }
         CalcView.on = true
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-            NSLog("--")
-            self.pentaSeven.advance()
-            self.displayText = self.pentaSeven.display()
-            self.imageName = self.pentaSeven.is2nd() ? "secondary" : "primary"
+            self.penta7.advance()
+            self.displayText = self.penta7.display()
+            if (penta7.isInv()) {
+                self.imageName = self.penta7.is2nd() ? "secondary_inv" : "primary_inv"
+            } else {
+                self.imageName = self.penta7.is2nd() ? "secondary" : "primary"
+            }
         })
     }
 
@@ -105,15 +108,15 @@ struct CalcView: View {
                             if c != nil {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 self.isTapped = true;
-                                self.pentaSeven.pressKey(row:Int32(c!.x), col:Int32(c!.y))
-                                self.displayText = self.pentaSeven.display()
-                                self.pentaSeven.advance()
+                                self.penta7.pressKey(row:Int32(c!.x), col:Int32(c!.y))
+                                self.displayText = self.penta7.display()
+                                self.penta7.advance()
                             }
                         }
                         .onEnded {_ in
                             if (self.isTapped) {
-                                self.pentaSeven.pressRelease()
-                                self.pentaSeven.advance()
+                                self.penta7.pressRelease()
+                                self.penta7.advance()
                             }
                             self.isTapped = false
                         }
@@ -126,7 +129,7 @@ struct CalcView: View {
                        height: CGFloat(displayHeight),
                        alignment: .center)
                 .onAppear {
-                    self.displayText = self.pentaSeven.display()
+                    self.displayText = self.penta7.display()
                     self.runDisplayAnimationLoop()
                 }
         }
@@ -141,6 +144,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(pentaSeven: Penta7())
+        CalcView(penta7: Penta7())
     }
 }

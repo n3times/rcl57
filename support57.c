@@ -16,10 +16,10 @@ static char *PRIMARY_KEYS[] = {
     "LRN", "X/T", "X^2", "vX ", "1/X",
     "SST", "STO", "RCL", "SUM", "Y^X",
     "BST", "EE ", " ( ", " ) ", " / ",
-    "GTO",     0,     0,     0, " x ",
+    "GTO",     0,     0,     0, " * ",
     "SBR",     0,     0,     0, " - ",
     "RST",     0,     0,     0, " + ",
-    "R/S",     0, " . ", "+/-", " = ",
+    "R/S",     0,"  . ", "+/-", " = ",
 };
 
 static char *SECONDARY_KEYS[] = {
@@ -127,7 +127,7 @@ ti57_speed_t ti57_get_speed(ti57_t *ti57)
             // execution on 'Pause' takes up to 1 second in RUN mode.
             return TI57_FAST;
         else if (ti57_is_trace(ti57) || activity == TI57_PAUSE)
-            return TI57_SLOW;
+            return TI57_MEDIUM;
         return TI57_FAST;
     }
 }

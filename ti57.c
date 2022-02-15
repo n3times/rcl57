@@ -231,7 +231,7 @@ static void op_mask(ti57_t *ti57, ti57_opcode_t opcode) {
     int l = (opcode & 0x0006) >> 1;  // destination
     int n = opcode & 0x0001;         // inverse op
 
-    ti57_reg_t *dest, *left, *right, temp;
+    ti57_reg_t *dest = 0, *left = 0, *right = 0, temp;
     ti57_reg_t *O[] = {&ti57->A, &ti57->B, &ti57->C, &ti57->D};
 
     int lo = -1, hi = -1;

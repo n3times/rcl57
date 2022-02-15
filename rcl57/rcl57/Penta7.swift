@@ -9,7 +9,6 @@ class Penta7 {
     }
 
     deinit {
-        ///ti57_release(p7);
     }
 
     // Returns the calculator display.
@@ -21,20 +20,23 @@ class Penta7 {
     func pressKey(row: Int32, col: Int32) {
         penta7_key_press(&p7, row, col)
     }
-    
+
+    // Should be called whenever the user releases a calculator key.
     func pressRelease() {
         penta7_key_release(&p7)
     }
 
-    // Should be called every 10ms while 'isAnimating()' is true.
+    // Should be called every 50ms.
     func advance() {
         penta7_advance(&p7, 50, 1000)
     }
-    
+
+    // Whether the 2nd key is engaged.
     func is2nd() -> Bool {
         return ti57_is_2nd(&p7.ti57)
     }
-    
+
+    // Whether the INV key is engaged.
     func isInv() -> Bool {
         return ti57_is_inv(&p7.ti57)
     }

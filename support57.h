@@ -13,20 +13,21 @@
  * - TI57_IDLE: the display is static and the calculator is waiting for user
  *   input. The client can safely stop running the emulator until the next key
  *   press or key release.
- * - TI57_SLOW: the calculator is not IDLE and is showing some information on
- *   the display: pausing, tracing, or the display blinking. The client should
- *   run the emulator at a speed close to the original one.
- * - TI57_FAST: the calculator is fully busy and computing as fast as possible.
- *   The client may run the emulator faster than the actual calculator without
- *   the user losing any meaningful information.
+ * - TI57_SLOW/TI57_MEDIUM: the calculator is blinking (error), in trace mode or
+ *   being paused while running a program. The client should run the emulator at
+ *   a speed close to the original one. We suggest to run the emulator at 1x for
+ *   TI57_SLOW and 2x for TI57_MEDIUM.
+ * - TI57_FAST: the calculator is fully busy, computing or running a program.
+ *   The client may run the emulator as fast possible.
  *
  * This can be used to implement an emulator more efficient than the actual
  * TI-57 (TI57-IDLE), running much faster when possible (TI57_FAST), while
- * running at the correct speed when needed (TI57_SLOW).
+ * running at a reasonable speed when needed (TI57_SLOW/TI57_MEDIUM).
  */
 typedef enum ti57_speed_e {
     TI57_IDLE,
     TI57_SLOW,
+    TI57_MEDIUM,
     TI57_FAST,
 } ti57_speed_t;
 

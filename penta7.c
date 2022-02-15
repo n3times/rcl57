@@ -21,14 +21,14 @@ static char *get_lrn_display(penta7_t *penta7)
     ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
 
     sprintf(str,
-            "  %02d %s%3s  ",
+            "  %02d %s%s ",
             pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
     if (ins->d >= 0)
-        sprintf(str + 10, "%d ", ins->d);
+        sprintf(str + strlen(str), "%d ", ins->d);
     else if (pending)
-        sprintf(str + 10, "_ ");
+        sprintf(str + strlen(str), "_ ");
     else
-        sprintf(str + 10, "  ");
+        sprintf(str + strlen(str), "  ");
     return str;
 }
 
@@ -217,6 +217,9 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
         case TI57_SLOW:
             max_cycles -= n * speedup;
             break;
+        case TI57_MEDIUM:
+            max_cycles -= n * speedup / 2;
+            break;
         case TI57_IDLE:
             max_cycles = 0;
             break;
@@ -273,7 +276,7 @@ char *penta7_get_display(penta7_t *penta7)
         }
 
         int len = 0;
-        for (int i = strlen(stack) - 1; i >= 0; i--) {
+        for (int i = (int)strlen(stack) - 1; i >= 0; i--) {
             char c = stack[i];
             if (c == '(') {
                 len += 1;
