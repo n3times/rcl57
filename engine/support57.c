@@ -16,7 +16,7 @@ static char *PRIMARY_KEYS[] = {
     "LRN", "X/T", "X^2", "vX ", "1/X",
     "SST", "STO", "RCL", "SUM", "Y^X",
     "BST", "EE ", " ( ", " ) ", " / ",
-    "GTO",     0,     0,     0, " * ",
+    "GTO",     0,     0,     0, " x ",
     "SBR",     0,     0,     0, " - ",
     "RST",     0,     0,     0, " + ",
     "R/S",     0,"  . ", "+/-", " = ",
@@ -104,30 +104,4 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     if (*last == '.')
         *last = 0;
     return str;
-}
-
-ti57_speed_t ti57_get_speed(ti57_t *ti57)
-{
-    ti57_activity_t activity = ti57_get_activity(ti57);
-
-    switch(ti57_get_mode(ti57)) {
-    case TI57_EVAL:
-    case TI57_LRN:
-        switch (activity) {
-        case TI57_POLL:
-            return TI57_IDLE;
-        case TI57_BLINK:
-            return TI57_SLOW;
-        default:
-            return TI57_FAST;
-        }
-    case TI57_RUN:
-        if (ti57_is_stopping(ti57))
-            // This solves an issue with the original TI-57 where stopping
-            // execution on 'Pause' takes up to 1 second in RUN mode.
-            return TI57_FAST;
-        else if (ti57_is_trace(ti57) || activity == TI57_PAUSE)
-            return TI57_MEDIUM;
-        return TI57_FAST;
-    }
 }

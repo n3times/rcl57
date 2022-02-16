@@ -152,7 +152,7 @@ char *ti57_get_aos_stack(ti57_t *ti57)
         str[k++] = '0' + i;
         switch(ti57->X[i][14]) {
             case 2: str[k++] = inv ? '-' : '+'; break;
-            case 4: str[k++] = inv ? '/' : '*'; break;
+            case 4: str[k++] = inv ? '/' : 'x'; break;
             case 8: str[k++] = inv ? 'v' : '^'; break;
             default: str[k++] = '?';
         }
@@ -214,10 +214,6 @@ static ti57_instruction_t ALL_INSTRUCTIONS[256];
 
 static void init_instructions()
 {
-    static bool inited = false;
-
-    if (inited) return;
-
     for (int i = 0; i <= 0xff; i++) {
         ti57_instruction_t *instruction = &ALL_INSTRUCTIONS[i];
         if (i < 0x10) {
@@ -252,8 +248,6 @@ static void init_instructions()
             instruction->d = j;
         }
     }
-
-    inited = true;
 }
 
 int ti57_get_pc(ti57_t *ti57)
@@ -277,10 +271,14 @@ ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
 {
     int i;
     ti57_reg_t *reg;
+    static bool inited = false;
 
     assert(0 <= step && step <= 49);
 
-    init_instructions();
+    if (!inited) {
+        init_instructions();
+        inited = true;
+    }
     if (step == 49) {
         reg = &ti57->Y[7];
         i = 15;

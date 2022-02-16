@@ -61,7 +61,7 @@ void penta7_key_release(penta7_t *penta7);
  *
  * Characters:
  * - legacy from TI-57: 'blank character' 0..9 A b C d E F -
- * - additional common characters: B D G..Z ( ) + /
+ * - additional common characters: B D G..Z ( ) + / >
  * - multiply: x (different from X)
  * - square root: v
  * - up arrow: ^ (for exponentiation)

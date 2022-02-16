@@ -5,6 +5,34 @@
 #include "penta7.h"
 #include "support57.h"
 
+static double get_goal_speed(ti57_t *ti57)
+{
+    ti57_activity_t activity = ti57_get_activity(ti57);
+
+    switch(ti57_get_mode(ti57)) {
+    case TI57_EVAL:
+    case TI57_LRN:
+        switch (activity) {
+        case TI57_POLL:
+            return 0;
+        case TI57_BLINK:
+            return 1;
+        default:
+            return -1;
+        }
+    case TI57_RUN:
+        if (ti57_is_stopping(ti57)) {
+            // This solves an issue with the original TI-57 where stopping
+            // execution on 'Pause' takes up to 1 second in RUN mode.
+            return -1;
+        } else if (ti57_is_trace(ti57) || activity == TI57_PAUSE) {
+            // We find the actual TI-57 a bit sluggish here, so we go 2x.
+            return 2;
+        }
+        return -1;
+    }
+}
+
 static char *get_lrn_display(penta7_t *penta7)
 {
     static char str[100];
@@ -13,7 +41,7 @@ static char *get_lrn_display(penta7_t *penta7)
     bool pending = ti57->C[14] & 0x1;
 
     if (pc == 0 && !pending)
-        return "    READY ";
+        return "  LRN MODE  ";
 
     if (!pending  && !penta7->at_end_program)
         pc -= 1;
@@ -205,24 +233,16 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
 
     // An actual TI-57 executes 5000 cycles per second (speed 1).
     int max_cycles = 5 * ms * speedup;
-    ti57_speed_t current_speed;
 
     do {
         int n = ti57_next(&penta7->ti57);
-        current_speed = ti57_get_speed(&penta7->ti57);
-        switch (current_speed) {
-        case TI57_FAST:
+        double current_speed = get_goal_speed(&penta7->ti57);
+        if (current_speed < 0) {
             max_cycles -= n;
-            break;
-        case TI57_SLOW:
-            max_cycles -= n * speedup;
-            break;
-        case TI57_MEDIUM:
-            max_cycles -= n * speedup / 2;
-            break;
-        case TI57_IDLE:
+        } else if (current_speed == 0) {
             max_cycles = 0;
-            break;
+        } else {
+            max_cycles -= n * speedup / current_speed;
         }
     } while (max_cycles > 0);
 }
@@ -251,20 +271,24 @@ char *penta7_get_display(penta7_t *penta7)
 {
     ti57_t *ti57 = &penta7->ti57;
 
-    if (ti57_get_mode(ti57) == TI57_RUN
-     && ti57_get_speed(ti57) == TI57_FAST) {
-        return "[           ";
-    } else if (ti57_get_mode(ti57) == TI57_LRN) {
+    if (ti57_get_mode(ti57) == TI57_LRN) {
         return get_lrn_display(penta7);
-    } else if (ti57_get_mode(ti57) == TI57_EVAL
-            || ti57_is_trace(ti57)) {
+    }
+
+    if (ti57_get_mode(ti57) == TI57_RUN && get_goal_speed(ti57) < 0) {
+        return "[           ";
+    }
+
+    bool blinking_blank = ti57_is_error(ti57) && ti57->B[3] == 9;
+
+    if (!blinking_blank && (ti57_get_mode(ti57) == TI57_EVAL || ti57_is_trace(ti57))) {
         char *stack = ti57_get_aos_stack(ti57);
         char top = stack[strlen(stack) - 1];
 
         if (top == '+') {
             return "        +   ";
-        } else if (top == '*') {
-            return "        *   ";
+        } else if (top == 'x') {
+            return "        x   ";
         } else if (top == '^') {
             return "      X^Y   ";
         } else if (top == 'v') {

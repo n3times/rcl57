@@ -153,7 +153,7 @@ ti57_activity_t ti57_get_activity(ti57_t *ti57);
  *     'X': X register
  *     'd': value on display
  *   straight operators:
- *     '+', '*' and '^' (exponentiation)
+ *     '+', 'x' and '^' (exponentiation)
  *   inverse operators:
  *     '-', '/' and 'v' (root extraction)
  *   open parenthesis:
