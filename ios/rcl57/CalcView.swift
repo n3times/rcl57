@@ -5,7 +5,7 @@ import AudioToolbox
 // events and runs the animation loop.
 struct CalcView: View {
     private let penta7: Penta7
-    @State private var displayText = "READY"
+    @State private var displayText = ""
     @State private var isTapped = false
     @State private var imageName = "primary"
 
