@@ -5,7 +5,12 @@ class Penta7 {
     var p7 = penta7_t()
 
     init() {
+        let options = PENTA7_FASTER_PAUSE_FLAG |
+                      PENTA7_FAST_STOP_WHEN_RUNNING_FLAG |
+                      PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG;
+        
         penta7_init(&p7)
+        penta7_set_options(&p7,options);
     }
 
     deinit {

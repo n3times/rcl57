@@ -29,9 +29,17 @@
  *
  ******************************************************************************/
 
+/* Option flags. */
+#define PENTA7_FASTER_PAUSE_FLAG                 0x01
+#define PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG  0x02
+#define PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x04
+#define PENTA7_FAST_STOP_WHEN_RUNNING_FLAG       0x08
+#define PENTA7_IMPROVED_LRN_MODE_FLAG            0x10
+
 typedef struct penta7_s {
     ti57_t ti57;
     bool at_end_program;
+    int options;
 } penta7_t;
 
 /** Initializes a Penta7. */
@@ -69,5 +77,7 @@ void penta7_key_release(penta7_t *penta7);
  * For example: "   02   vX  ".
  */
 char *penta7_get_display(penta7_t *penta7);
+
+void penta7_set_options(penta7_t *penta7, int options);
 
 #endif  /* !PENTA7_H */

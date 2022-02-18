@@ -5,8 +5,9 @@
 #include "penta7.h"
 #include "support57.h"
 
-static double get_goal_speed(ti57_t *ti57)
+static double get_goal_speed(penta7_t *penta7)
 {
+    ti57_t *ti57 = &penta7->ti57;
     ti57_activity_t activity = ti57_get_activity(ti57);
 
     switch(ti57_get_mode(ti57)) {
@@ -21,13 +22,18 @@ static double get_goal_speed(ti57_t *ti57)
             return -1;
         }
     case TI57_RUN:
-        if (ti57_is_stopping(ti57)) {
+        if (ti57_is_stopping(ti57) &&
+            penta7->options & PENTA7_FAST_STOP_WHEN_RUNNING_FLAG) {
             // This solves an issue with the original TI-57 where stopping
             // execution on 'Pause' takes up to 1 second in RUN mode.
             return -1;
         } else if (ti57_is_trace(ti57) || activity == TI57_PAUSE) {
-            // We find the actual TI-57 a bit sluggish here, so we go 2x.
-            return 2;
+            if (penta7->options & PENTA7_FASTER_PAUSE_FLAG) {
+                // We find the actual TI-57 a bit sluggish here, so we go 2x.
+                return 2;
+            } else {
+                return 1;
+            }
         }
         return -1;
     }
@@ -236,7 +242,7 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
 
     do {
         int n = ti57_next(&penta7->ti57);
-        double current_speed = get_goal_speed(&penta7->ti57);
+        double current_speed = get_goal_speed(penta7);
         if (current_speed < 0) {
             max_cycles -= n;
         } else if (current_speed == 0) {
@@ -255,7 +261,8 @@ void penta7_key_press(penta7_t *penta7, int row, int col)
         penta7->at_end_program = false;
     }
 
-    if (ti57_get_mode(ti57) == TI57_LRN) {
+    if (ti57_get_mode(ti57) == TI57_LRN &&
+        penta7->options & PENTA7_IMPROVED_LRN_MODE_FLAG) {
         return key_press_in_lrn(penta7, row, col);
     }
 
@@ -271,17 +278,22 @@ char *penta7_get_display(penta7_t *penta7)
 {
     ti57_t *ti57 = &penta7->ti57;
 
-    if (ti57_get_mode(ti57) == TI57_LRN) {
+    if (ti57_get_mode(ti57) == TI57_LRN &&
+        penta7->options & PENTA7_IMPROVED_LRN_MODE_FLAG) {
         return get_lrn_display(penta7);
     }
 
-    if (ti57_get_mode(ti57) == TI57_RUN && get_goal_speed(ti57) < 0) {
+    if (ti57_get_mode(ti57) == TI57_RUN &&
+        penta7->options & PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG &&
+        get_goal_speed(penta7) < 0) {
         return "[           ";
     }
 
     bool blinking_blank = ti57_is_error(ti57) && ti57->B[3] == 9;
 
-    if (!blinking_blank && (ti57_get_mode(ti57) == TI57_EVAL || ti57_is_trace(ti57))) {
+    if (!blinking_blank &&
+        penta7->options & PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG &&
+        (ti57_get_mode(ti57) == TI57_EVAL || ti57_is_trace(ti57))) {
         char *stack = ti57_get_aos_stack(ti57);
         char top = stack[strlen(stack) - 1];
 
@@ -322,4 +334,8 @@ char *penta7_get_display(penta7_t *penta7)
     }
 
     return ti57_get_display(ti57);
+}
+
+void penta7_set_options(penta7_t *penta7, int options) {
+    penta7->options = options;
 }
