@@ -1,4 +1,5 @@
 import Foundation
+import CoreText
 
 // The Penta7 object used to run the emulator.
 class Penta7 {
@@ -13,7 +14,34 @@ class Penta7 {
         penta7_set_options(&p7,options);
     }
 
-    deinit {
+    // Initializes a Penta7 object from the state stored in a given file.
+    // Returns nil if the object was not successfully initialized.
+    init?(filename: String) {
+        var fileRawData: Data?
+        var fileRawBuffer: UnsafePointer<Int8>?
+        let dirURL: URL? =
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
+
+        if fileURL == nil {
+            return nil
+        }
+        do {
+            try fileRawData = Data(contentsOf: fileURL!)
+        } catch {
+            return nil
+        }
+        if fileRawData == nil {
+            return nil
+        }
+        fileRawBuffer = fileRawData!.withUnsafeBytes({
+            (ptr) -> UnsafePointer<Int8> in
+            return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
+        })
+        if fileRawBuffer == nil {
+            return nil
+        }
+        memcpy(&p7, fileRawBuffer, MemoryLayout.size(ofValue: p7))
     }
 
     // Returns the calculator display.
@@ -44,5 +72,25 @@ class Penta7 {
     // Whether the INV key is engaged.
     func isInv() -> Bool {
         return ti57_is_inv(&p7.ti57)
+    }
+
+    // Saves the Penta7 object in a given file. Returns 'true' if the object was saved
+    // successfully.
+    func save(filename: String) -> Bool {
+        let size = MemoryLayout.size(ofValue: p7)
+        let rawData = Data(bytes: &p7, count: size)
+        let dirURL: URL? =
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
+
+        if (fileURL != nil) {
+            do {
+                try rawData.write(to: fileURL!, options: .atomic)
+                return true
+            } catch {
+                // Nothing
+            }
+        }
+        return false
     }
 }
