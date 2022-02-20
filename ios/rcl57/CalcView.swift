@@ -7,7 +7,9 @@ struct CalcView: View {
     private let penta7: Penta7
     @State private var displayText = ""
     @State private var isTapped = false
-    @State private var imageName = "primary"
+    @State private var imageName = "button_pad"
+    @State private var is2nd = false
+    @State private var isInv = false
 
     init(penta7: Penta7) {
         self.penta7 = penta7
@@ -20,7 +22,7 @@ struct CalcView: View {
 
         // Dimensions of each key.
         let w = 54.4
-        let h = 40.8
+        let h = 47.8
 
         // Separation between keys.
         let interX = 13.2
@@ -56,17 +58,14 @@ struct CalcView: View {
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
             self.penta7.advance()
             self.displayText = self.penta7.display()
-            if (penta7.isInv()) {
-                self.imageName = self.penta7.is2nd() ? "secondary_inv" : "primary_inv"
-            } else {
-                self.imageName = self.penta7.is2nd() ? "secondary" : "primary"
-            }
+            self.is2nd = self.penta7.is2nd()
+            self.isInv = self.penta7.isInv()
         })
     }
 
     private func getView(_ metrics: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
-        let standardCalcHeight = 647.0
+        let standardCalcHeight = 682.0
         let standardDisplayHeight = 96.0
         let standardDisplayOffsetY = 95.0
 
@@ -93,7 +92,8 @@ struct CalcView: View {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
             Image(imageName)
                 .resizable()
-                .frame(width: CGFloat(calcWidth), height: CGFloat(calcHeight), alignment: .center)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: CGFloat(calcWidth), height: CGFloat(calcHeight), alignment: .bottom)
                 .gesture(
                     // To be responsive, handle key presses as soon as the user touches the screen,
                     // instead of waiting until the user lifts the finger/stylus.
@@ -132,6 +132,18 @@ struct CalcView: View {
                     self.displayText = self.penta7.display()
                     self.runDisplayAnimationLoop()
                 }
+            if is2nd {
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .strokeBorder(Color.brown,lineWidth: 4)
+                    .offset(x: -152, y: -115)
+                    .frame(width: 56, height: 39)
+            }
+            if isInv {
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .strokeBorder(Color.brown, lineWidth: 4)
+                    .offset(x: -77, y: -115)
+                    .frame(width: 56, height: 39)
+            }
         }
     }
 

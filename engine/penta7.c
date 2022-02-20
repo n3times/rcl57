@@ -262,7 +262,7 @@ void penta7_key_press(penta7_t *penta7, int row, int col)
     }
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        penta7->options & PENTA7_IMPROVED_LRN_MODE_FLAG) {
+        penta7->options & PENTA7_ENHANCED_LRN_MODE_FLAG) {
         return key_press_in_lrn(penta7, row, col);
     }
 
@@ -279,7 +279,7 @@ char *penta7_get_display(penta7_t *penta7)
     ti57_t *ti57 = &penta7->ti57;
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        penta7->options & PENTA7_IMPROVED_LRN_MODE_FLAG) {
+        penta7->options & PENTA7_ENHANCED_LRN_MODE_FLAG) {
         return get_lrn_display(penta7);
     }
 

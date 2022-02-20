@@ -29,12 +29,35 @@
  *
  ******************************************************************************/
 
-/* Option flags. */
+/**
+ * Option flags that enhance the original TI-57.
+ */
+
+// Issue: TI-57 has a very long Pause and looks sluggish in
+//        trace mode.
+// Solution: Run at 2x speed in both cases.
 #define PENTA7_FASTER_PAUSE_FLAG                 0x01
+
+// Issue: In RUN mode, the display looks garbled.
+// Solution: Display "[" when running, like the TI-59.
 #define PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG  0x02
+
+// Issue: The display doesn't show the arithmetic operation
+//        just entered.
+// Solution: Show it.
 #define PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x04
+
+// Issue: In RUN mode, esp. during a Pause instruction, the user
+//        has to press the stop button for a couple of seconds.
+// Solution: Stop right away.
 #define PENTA7_FAST_STOP_WHEN_RUNNING_FLAG       0x08
-#define PENTA7_IMPROVED_LRN_MODE_FLAG            0x10
+
+// Issue: In LRN mode, the display shows the next instruction
+//        instead of the instruction just entered.
+// Solution: Show the instruction just entered. As a bonus,
+//           show the alphanumeric mnemonic for the instruction.
+// Note: This behavior is typical of HP calculators.
+#define PENTA7_ENHANCED_LRN_MODE_FLAG            0x10
 
 typedef struct penta7_s {
     ti57_t ti57;

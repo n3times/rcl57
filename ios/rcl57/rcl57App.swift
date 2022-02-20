@@ -8,11 +8,9 @@ struct rcl57App: App {
     var penta7:Penta7?
 
     init() {
+        penta7 = Penta7(filename: stateFilename)
         if penta7 == nil {
-            penta7 = Penta7(filename: stateFilename)
-            if penta7 == nil {
-                penta7 = Penta7()
-            }
+            penta7 = Penta7()
         }
     }
 
