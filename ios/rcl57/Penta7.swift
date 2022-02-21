@@ -6,12 +6,12 @@ class Penta7 {
     var p7 = penta7_t()
 
     init() {
-        let options = PENTA7_FASTER_PAUSE_FLAG |
-                      PENTA7_FAST_STOP_WHEN_RUNNING_FLAG |
-                      PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG;
+        let options = PENTA7_FASTER_TRACE_FLAG |
+                      PENTA7_FAST_STOP_FLAG |
+                      PENTA7_SHOW_RUN_INDICATOR_FLAG;
         
         penta7_init(&p7)
-        penta7_set_options(&p7,options);
+        p7.options = options
     }
 
     // Initializes a Penta7 object from the state stored in a given file.
@@ -92,5 +92,17 @@ class Penta7 {
             }
         }
         return false
+    }
+
+    func getOption(option:Int32) -> Bool {
+        return p7.options & option != 0
+    }
+
+    func setOption(option: Int32, value: Bool) {
+        if (value) {
+            p7.options |= option
+        } else {
+            p7.options &= ~option
+        }
     }
 }

@@ -23,13 +23,16 @@ static double get_goal_speed(penta7_t *penta7)
         }
     case TI57_RUN:
         if (ti57_is_stopping(ti57) &&
-            penta7->options & PENTA7_FAST_STOP_WHEN_RUNNING_FLAG) {
-            // This solves an issue with the original TI-57 where stopping
-            // execution on 'Pause' takes up to 1 second in RUN mode.
+            penta7->options & PENTA7_FAST_STOP_FLAG) {
             return -1;
-        } else if (ti57_is_trace(ti57) || activity == TI57_PAUSE) {
+        } else if (activity == TI57_PAUSE) {
             if (penta7->options & PENTA7_FASTER_PAUSE_FLAG) {
-                // We find the actual TI-57 a bit sluggish here, so we go 2x.
+                return 2;
+            } else {
+                return 1;
+            }
+        } else if (ti57_is_trace(ti57)) {
+            if (penta7->options & PENTA7_FASTER_TRACE_FLAG) {
                 return 2;
             } else {
                 return 1;
@@ -46,24 +49,40 @@ static char *get_lrn_display(penta7_t *penta7)
     int pc = ti57_get_pc(ti57);
     bool pending = ti57->C[14] & 0x1;
 
-    if (pc == 0 && !pending)
+    if (pc == 0 && !pending && penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
         return "  LRN MODE  ";
+    }
 
-    if (!pending  && !penta7->at_end_program)
+    if (!pending  &&
+        !penta7->at_end_program
+        && penta7->options & PENTA7_HP_LRN_MODE_FLAG)
         pc -= 1;
 
     ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
 
-    sprintf(str,
-            "  %02d %s%s ",
-            pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
-    if (ins->d >= 0)
-        sprintf(str + strlen(str), "%d ", ins->d);
-    else if (pending)
-        sprintf(str + strlen(str), "_ ");
-    else
-        sprintf(str + strlen(str), "  ");
-    return str;
+    if (penta7->options & PENTA7_MNEMONICS_LRN_MODE_FLAG) {
+        sprintf(str,
+                "  %02d %s%s ",
+                pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
+        if (ins->d >= 0)
+            sprintf(str + strlen(str), "%d ", ins->d);
+        else if (pending)
+            sprintf(str + strlen(str), "_ ");
+        else
+            sprintf(str + strlen(str), "  ");
+        return str;
+    } else {
+        sprintf(str,
+                "   %02d %s%02d ",
+                pc, ins->inv ? "-" : " ", (ins->key / 16)*10 + ins->key % 16);
+        if (ins->d >= 0)
+            sprintf(str + strlen(str), "%d", ins->d);
+        else if (pending)
+            sprintf(str + strlen(str), "0");
+        else
+            sprintf(str + strlen(str), " ");
+        return str;
+    }
 }
 
 static void clear_(penta7_t *penta7)
@@ -237,11 +256,17 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
     assert(ms > 0);
     assert(speedup > 0);
 
+    ti57_t *ti57 = &penta7->ti57;
+
     // An actual TI-57 executes 5000 cycles per second (speed 1).
     int max_cycles = 5 * ms * speedup;
 
     do {
-        int n = ti57_next(&penta7->ti57);
+        int n = ti57_next(ti57);
+        if (ti57_is_stopping(ti57) &&
+            penta7->options & PENTA7_FAST_STOP_FLAG) {
+            burst_until_idle(ti57);
+        }
         double current_speed = get_goal_speed(penta7);
         if (current_speed < 0) {
             max_cycles -= n;
@@ -262,7 +287,7 @@ void penta7_key_press(penta7_t *penta7, int row, int col)
     }
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        penta7->options & PENTA7_ENHANCED_LRN_MODE_FLAG) {
+        penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
         return key_press_in_lrn(penta7, row, col);
     }
 
@@ -279,12 +304,13 @@ char *penta7_get_display(penta7_t *penta7)
     ti57_t *ti57 = &penta7->ti57;
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        penta7->options & PENTA7_ENHANCED_LRN_MODE_FLAG) {
+        (penta7->options & PENTA7_HP_LRN_MODE_FLAG ||
+         penta7->options & PENTA7_MNEMONICS_LRN_MODE_FLAG)) {
         return get_lrn_display(penta7);
     }
 
     if (ti57_get_mode(ti57) == TI57_RUN &&
-        penta7->options & PENTA7_SHOW_INDICATOR_WHEN_RUNNING_FLAG &&
+        penta7->options & PENTA7_SHOW_RUN_INDICATOR_FLAG &&
         get_goal_speed(penta7) < 0) {
         return "[           ";
     }
@@ -334,8 +360,4 @@ char *penta7_get_display(penta7_t *penta7)
     }
 
     return ti57_get_display(ti57);
-}
-
-void penta7_set_options(penta7_t *penta7, int options) {
-    penta7->options = options;
 }
