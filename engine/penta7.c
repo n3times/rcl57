@@ -23,10 +23,10 @@ static double get_goal_speed(penta7_t *penta7)
         }
     case TI57_RUN:
         if (ti57_is_stopping(ti57) &&
-            penta7->options & PENTA7_FAST_STOP_FLAG) {
+            penta7->options & PENTA7_QUICK_STOP_FLAG) {
             return -1;
         } else if (activity == TI57_PAUSE) {
-            if (penta7->options & PENTA7_FASTER_PAUSE_FLAG) {
+            if (penta7->options & PENTA7_SHORT_PAUSE_FLAG) {
                 return 2;
             } else {
                 return 1;
@@ -50,7 +50,7 @@ static char *get_lrn_display(penta7_t *penta7)
     bool pending = ti57->C[14] & 0x1;
 
     if (pc == 0 && !pending && penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
-        return "  LRN MODE  ";
+        return "  START LRN ";
     }
 
     if (!pending  &&
@@ -249,6 +249,7 @@ void penta7_init(penta7_t *penta7)
 {
     ti57_init(&penta7->ti57);
     penta7->at_end_program = false;
+    penta7->options = 0;
 }
 
 void penta7_advance(penta7_t *penta7, int ms, int speedup)
@@ -264,7 +265,7 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
     do {
         int n = ti57_next(ti57);
         if (ti57_is_stopping(ti57) &&
-            penta7->options & PENTA7_FAST_STOP_FLAG) {
+            penta7->options & PENTA7_QUICK_STOP_FLAG) {
             burst_until_idle(ti57);
         }
         double current_speed = get_goal_speed(penta7);
@@ -360,4 +361,9 @@ char *penta7_get_display(penta7_t *penta7)
     }
 
     return ti57_get_display(ti57);
+}
+
+void penta7_clear(penta7_t *penta7) {
+    ti57_init(&penta7->ti57);
+    penta7->at_end_program = false;
 }

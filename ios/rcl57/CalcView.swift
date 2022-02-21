@@ -13,9 +13,9 @@ struct CalcView: View {
 
     @State private var hpStyleOn: Bool
     @State private var mnemonicsOn: Bool
-    @State private var fastPauseOn: Bool
-    @State private var fastTraceOn: Bool
-    @State private var fastStopOn: Bool
+    @State private var shortPauseOn: Bool
+    @State private var fasterTraceOn: Bool
+    @State private var quickStopOn: Bool
     @State private var runIndicatorOn: Bool
     @State private var showArithmeticOn: Bool
 
@@ -24,31 +24,27 @@ struct CalcView: View {
 
         hpStyleOn = penta7.getOption(option: PENTA7_HP_LRN_MODE_FLAG)
         mnemonicsOn = penta7.getOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
-        fastPauseOn = penta7.getOption(option: PENTA7_FASTER_PAUSE_FLAG)
-        fastTraceOn = penta7.getOption(option: PENTA7_FASTER_TRACE_FLAG)
-        fastStopOn = penta7.getOption(option: PENTA7_FAST_STOP_FLAG)
+        shortPauseOn = penta7.getOption(option: PENTA7_SHORT_PAUSE_FLAG)
+        fasterTraceOn = penta7.getOption(option: PENTA7_FASTER_TRACE_FLAG)
+        quickStopOn = penta7.getOption(option: PENTA7_QUICK_STOP_FLAG)
         runIndicatorOn = penta7.getOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)
         showArithmeticOn = penta7.getOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
-        // Top left corner of top left key ("?").
-        let x0 = 28.0
-        let y0 = 209.0
+        // Top left corner of top left key ("2nd").
+        let x0 = 0.0
+        let y0 = 196.0
 
         // Dimensions of each key.
-        let w = 54.4
-        let h = 47.8
-
-        // Separation between keys.
-        let interX = 13.2
-        let interY = 12.8
+        let w = 75.0
+        let h = 61.2
 
         let x = Double(standardizedLocation.x) - x0
         let y = Double(standardizedLocation.y) - y0
 
-        var i = (x + interX / 2) / (w + interX)
-        var j = (y + interY / 2) / (h + interY)
+        var i = x / w
+        var j = y / h
 
         // If the key press is a near miss, we choose the closest key.
         if (i >= -0.2 && j >= -0.15 && i < 5.2 && j < 8.15) {
@@ -166,41 +162,33 @@ struct CalcView: View {
                     .frame(width: 56, height: 39)
             }
             Menu("Options") {
-                Button("HP-style LRN mode " + (hpStyleOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_HP_LRN_MODE_FLAG)
-                    hpStyleOn = penta7.getOption(option: PENTA7_HP_LRN_MODE_FLAG)
+                Toggle("HP-style LRN mode", isOn: $hpStyleOn)
+                    .onChange(of: hpStyleOn) {
+                        (value) in toggleOption(option: PENTA7_HP_LRN_MODE_FLAG)}
+                Toggle("Mnemonics in LRN", isOn: $mnemonicsOn)
+                    .onChange(of: mnemonicsOn) {
+                        (value) in toggleOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)}
+                Toggle("Short Pause", isOn: $shortPauseOn)
+                    .onChange(of: shortPauseOn) {
+                        (value) in toggleOption(option: PENTA7_SHORT_PAUSE_FLAG)}
+                Toggle("Quick Stop", isOn: $quickStopOn)
+                    .onChange(of: quickStopOn) {
+                        (value) in toggleOption(option: PENTA7_QUICK_STOP_FLAG)}
+                Toggle("Show RUN Indicator", isOn: $runIndicatorOn)
+                    .onChange(of: runIndicatorOn) {
+                        (value) in toggleOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)}
+                Toggle("Display Arithmetic Ops", isOn: $showArithmeticOn)
+                    .onChange(of: showArithmeticOn) {
+                        (value) in toggleOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)}
+                Button("Clear", action: {
+                    penta7.clear()
                 })
-                Button("Mnemonics in LRN " + (mnemonicsOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
-                    mnemonicsOn = penta7.getOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
-                })
-                Button("Fast Pause " + (fastPauseOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_FASTER_PAUSE_FLAG)
-                    fastPauseOn = penta7.getOption(option: PENTA7_FASTER_PAUSE_FLAG)
-                })
-                Button("Fast Trace " + (fastTraceOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_FASTER_TRACE_FLAG)
-                    fastPauseOn = penta7.getOption(option: PENTA7_FASTER_TRACE_FLAG)
-                })
-                Button("Fast Stop " + (fastStopOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_FAST_STOP_FLAG)
-                    fastStopOn = penta7.getOption(option: PENTA7_FAST_STOP_FLAG)
-                })
-                Button("Show RUN Indicator " + (runIndicatorOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)
-                    runIndicatorOn = penta7.getOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)
-                })
-                Button("Display Arithmetic " + (showArithmeticOn ? "ON" : "OFF"), action: {
-                    toggleOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)
-                    showArithmeticOn =
-                        penta7.getOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)
-                })
-
             }
-            .padding(4)
+            .padding(10)
             .background(Color.gray)
             .foregroundColor(Color.white)
-            .offset(x: -142, y: -315)
+            .offset(x: -128, y: -315)
+            .font(.title2)
         }
     }
 

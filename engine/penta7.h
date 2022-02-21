@@ -17,7 +17,7 @@
  *   Init:
  *     penta7_t penta7;
  *     penta7_init(&penta7);
- *     penta7.options = PENTA7_FAST_STOP_FLAG;
+ *     penta7.options = PENTA7_QUICK_STOP_FLAG;
  *   On a timer, every 50ms:
  *     penta7_advance(penta7, 20, 100);
  *     // 'update_display' should be defined by the client.
@@ -34,10 +34,10 @@
  */
 
 /** Pause for 1s instead of 2s. */
-#define PENTA7_FASTER_PAUSE_FLAG                 0x01
+#define PENTA7_SHORT_PAUSE_FLAG                 0x01
 
 /** On trace, pause at each instruction for 1s, instead of 2s. */
-#define PENTA7_FASTER_TRACE_FLAG                 0x02
+#define PENTA7_FASTER_TRACE_FLAG                0x02
 
 /**
  * In RUN mode, stop right away when user presses 'R/S'.
@@ -45,7 +45,7 @@
  * This option is highly recommended as the default experience (where the user
  * may need to press the 'R/S' for a couple of seconds) can be very frustrating.
  */
-#define PENTA7_FAST_STOP_FLAG       0x10
+#define PENTA7_QUICK_STOP_FLAG                  0x04
 
 /**
  * In RUN mode, show "[" instead of a garbled display.
@@ -54,10 +54,10 @@
  *
  * This option is highly recommended esp. if the emulator is RUN at high speed.
  */
-#define PENTA7_SHOW_RUN_INDICATOR_FLAG  0x04
+#define PENTA7_SHOW_RUN_INDICATOR_FLAG           0x08
 
 /** In EVAL mode, show the arithmetic operator just entered. */
-#define PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x08
+#define PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x10
 
 /**
  * In LRN mode, show the instruction just entered instead of the next one.
@@ -110,5 +110,8 @@ void penta7_key_release(penta7_t *penta7);
  * For example: "   02   vX  ".
  */
 char *penta7_get_display(penta7_t *penta7);
+
+/* Clears the state while preserving the options. */
+void penta7_clear(penta7_t *penta7);
 
 #endif  /* !PENTA7_H */

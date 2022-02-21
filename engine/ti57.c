@@ -92,7 +92,7 @@ static void left_shift(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
     update_R5(reg, ti57, lo, hi);
 }
 
-/** reg = reg << 1. */
+/** reg = reg >> 1. */
 static void right_shift(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
 {
     for (int i = lo; i < hi; i++) {

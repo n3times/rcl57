@@ -7,7 +7,7 @@ class Penta7 {
 
     init() {
         let options = PENTA7_FASTER_TRACE_FLAG |
-                      PENTA7_FAST_STOP_FLAG |
+                      PENTA7_QUICK_STOP_FLAG |
                       PENTA7_SHOW_RUN_INDICATOR_FLAG;
         
         penta7_init(&p7)
@@ -104,5 +104,9 @@ class Penta7 {
         } else {
             p7.options &= ~option
         }
+    }
+
+    func clear() {
+        penta7_clear(&p7)
     }
 }
