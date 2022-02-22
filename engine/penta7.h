@@ -17,9 +17,10 @@
  *   Init:
  *     penta7_t penta7;
  *     penta7_init(&penta7);
- *     penta7.options = PENTA7_QUICK_STOP_FLAG;
+ *     penta7.options = PENTA7_QUICK_STOP_FLAG | PENTA7_SHOW_RUN_INDICATOR_FLAG;
+ *     penta7.speedup = 1000;
  *   On a timer, every 50ms:
- *     penta7_advance(penta7, 20, 100);
+ *     penta7_advance(penta7, 20);
  *     // 'update_display' should be defined by the client.
  *     update_display(penta7_get_display(&penta7))
  *   On key press:
@@ -73,20 +74,18 @@ typedef struct penta7_s {
     ti57_t ti57;
     bool at_end_program;
     int options;
+    unsigned int speedup;
 } penta7_t;
 
 /** Initializes a Penta7. */
 void penta7_init(penta7_t *penta7);
 
 /**
- * Runs the emulator for 'ms' milliseconds at a given speed.
+ * Runs the emulator for 'ms' milliseconds.
  *
- * Set 'speedup' to 1 to get the speed of an actual TI-57.
- *
- * Note: operations that give feedback to the user, such as "Pause", are run at
- * regular speed.
+ * Returns true if calculator is still animating.
  */
-void penta7_advance(penta7_t *penta7, int ms, int speedup);
+bool penta7_advance(penta7_t *penta7, int ms);
 
 /** Should be called when a key is pressed (row in 0..7, col in 0..4). */
 void penta7_key_press(penta7_t *penta7, int row, int col);

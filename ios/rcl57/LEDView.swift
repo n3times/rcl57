@@ -113,7 +113,7 @@ struct LEDView: View {
         let useShortSegments = c == "+" || c == "-" || c == "x" || c == "/"
         let useAlternateDotData = c == "1"
 
-        if (combineSegments) {
+        if combineSegments {
             for pair in LEDView.combinedRightSegmentsData.keys {
                 if isSegment(segments: segments, i: pair[0]) &&
                    isSegment(segments: segments, i: pair[1]) {

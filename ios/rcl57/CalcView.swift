@@ -5,30 +5,25 @@ import AudioToolbox
 // events and runs the animation loop.
 struct CalcView: View {
     private let penta7: Penta7
+
     @State private var displayText = ""
-    @State private var isTapped = false
+    @State private var isKeyPressed = false
     @State private var imageName = "button_pad"
     @State private var is2nd = false
     @State private var isInv = false
 
-    @State private var hpStyleOn: Bool
-    @State private var mnemonicsOn: Bool
-    @State private var shortPauseOn: Bool
-    @State private var fasterTraceOn: Bool
-    @State private var quickStopOn: Bool
-    @State private var runIndicatorOn: Bool
-    @State private var showArithmeticOn: Bool
+    @State private var isHPStyleLRN: Bool
+    @State private var isMnemonicsLRN: Bool
+    @State private var isSmoothRun: Bool
+    @State private var isTurboSpeed: Bool
 
     init(penta7: Penta7) {
         self.penta7 = penta7
 
-        hpStyleOn = penta7.getOption(option: PENTA7_HP_LRN_MODE_FLAG)
-        mnemonicsOn = penta7.getOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
-        shortPauseOn = penta7.getOption(option: PENTA7_SHORT_PAUSE_FLAG)
-        fasterTraceOn = penta7.getOption(option: PENTA7_FASTER_TRACE_FLAG)
-        quickStopOn = penta7.getOption(option: PENTA7_QUICK_STOP_FLAG)
-        runIndicatorOn = penta7.getOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)
-        showArithmeticOn = penta7.getOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)
+        isHPStyleLRN = penta7.getOptionFlag(option: PENTA7_HP_LRN_MODE_FLAG)
+        isMnemonicsLRN = penta7.getOptionFlag(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
+        isSmoothRun = penta7.getOptionFlag(option: PENTA7_FASTER_TRACE_FLAG)
+        isTurboSpeed = penta7.getSpeedup() == 1000
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
@@ -60,24 +55,22 @@ struct CalcView: View {
         }
     }
     
-    static var on = false
+    static var isAnimating = false
 
     private func runDisplayAnimationLoop() {
-        if (CalcView.on) {
-            return
-        }
-        CalcView.on = true
+        if CalcView.isAnimating { return }
+        CalcView.isAnimating = true
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-            self.penta7.advance()
+            _ = self.penta7.advance()
             self.displayText = self.penta7.display()
             self.is2nd = self.penta7.is2nd()
             self.isInv = self.penta7.isInv()
         })
     }
 
-    private func toggleOption(option: Int32) {
-        let currentOption = self.penta7.getOption(option: option)
-        self.penta7.setOption(option: option, value: !currentOption)
+    private func setOption(option: Int32, value: Bool) {
+        self.penta7.setOptionFlag(option: option, value: value)
+        self.displayText = self.penta7.display()
     }
 
     private func getView(_ metrics: GeometryProxy) -> some View {
@@ -112,11 +105,10 @@ struct CalcView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: CGFloat(calcWidth), height: CGFloat(calcHeight), alignment: .bottom)
                 .gesture(
-                    // To be responsive, handle key presses as soon as the user touches the screen,
-                    // instead of waiting until the user lifts the finger/stylus.
+                    // Handle key presses as soon as the user touches the screen.
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged {
-                            if (self.isTapped) { return; }
+                            if self.isKeyPressed { return }
                             let standardizedLocation =
                                 CGPoint(x: $0.location.x / CGFloat(scaleFactor),
                                         y: $0.location.y / CGFloat(scaleFactor))
@@ -124,18 +116,19 @@ struct CalcView: View {
                                 standardizedLocation: standardizedLocation)
                             if c != nil {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
-                                self.isTapped = true;
-                                self.penta7.pressKey(row:Int32(c!.x), col:Int32(c!.y))
+                                self.isKeyPressed = true;
+                                runDisplayAnimationLoop()
+                                self.penta7.keyPress(row:Int32(c!.x), col:Int32(c!.y))
                                 self.displayText = self.penta7.display()
-                                self.penta7.advance()
                             }
                         }
                         .onEnded {_ in
-                            if (self.isTapped) {
-                                self.penta7.pressRelease()
-                                self.penta7.advance()
+                            if self.isKeyPressed {
+                                self.isKeyPressed = false
+                                runDisplayAnimationLoop()
+                                self.penta7.keyRelease()
+                                self.displayText = self.penta7.display()
                             }
-                            self.isTapped = false
                         }
                 )
                 .accessibility(identifier: "calculator")
@@ -162,27 +155,32 @@ struct CalcView: View {
                     .frame(width: 56, height: 39)
             }
             Menu("Options") {
-                Toggle("HP-style LRN mode", isOn: $hpStyleOn)
-                    .onChange(of: hpStyleOn) {
-                        (value) in toggleOption(option: PENTA7_HP_LRN_MODE_FLAG)}
-                Toggle("Mnemonics in LRN", isOn: $mnemonicsOn)
-                    .onChange(of: mnemonicsOn) {
-                        (value) in toggleOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)}
-                Toggle("Short Pause", isOn: $shortPauseOn)
-                    .onChange(of: shortPauseOn) {
-                        (value) in toggleOption(option: PENTA7_SHORT_PAUSE_FLAG)}
-                Toggle("Quick Stop", isOn: $quickStopOn)
-                    .onChange(of: quickStopOn) {
-                        (value) in toggleOption(option: PENTA7_QUICK_STOP_FLAG)}
-                Toggle("Show RUN Indicator", isOn: $runIndicatorOn)
-                    .onChange(of: runIndicatorOn) {
-                        (value) in toggleOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG)}
-                Toggle("Display Arithmetic Ops", isOn: $showArithmeticOn)
-                    .onChange(of: showArithmeticOn) {
-                        (value) in toggleOption(option: PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG)}
                 Button("Clear", action: {
                     penta7.clear()
+                    runDisplayAnimationLoop()
+                    self.displayText = self.penta7.display()
                 })
+                Toggle("Turbo Speed", isOn: $isTurboSpeed)
+                    .onChange(of: isTurboSpeed) {_ in
+                        if isTurboSpeed {
+                            penta7.setSpeedup(speedup: 1000)
+                        } else {
+                            penta7.setSpeedup(speedup: 1)
+                        }
+                    }
+                Toggle("Smooth RUN", isOn: $isSmoothRun)
+                    .onChange(of: isSmoothRun) {_ in
+                        setOption(option: PENTA7_SHORT_PAUSE_FLAG, value: isSmoothRun)
+                        setOption(option: PENTA7_FASTER_TRACE_FLAG, value: isSmoothRun)
+                        setOption(option: PENTA7_QUICK_STOP_FLAG, value: isSmoothRun)
+                        setOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG, value: isSmoothRun)
+                    }
+                Toggle("HP-style LRN mode", isOn: $isHPStyleLRN)
+                    .onChange(of: isHPStyleLRN) {
+                        _ in setOption(option: PENTA7_HP_LRN_MODE_FLAG, value: isHPStyleLRN)}
+                Toggle("Mnemonics in LRN", isOn: $isMnemonicsLRN)
+                    .onChange(of: isMnemonicsLRN) {
+                        _ in setOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG, value: isMnemonicsLRN)}
             }
             .padding(10)
             .background(Color.gray)

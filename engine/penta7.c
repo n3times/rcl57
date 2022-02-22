@@ -62,14 +62,14 @@ static char *get_lrn_display(penta7_t *penta7)
 
     if (penta7->options & PENTA7_MNEMONICS_LRN_MODE_FLAG) {
         sprintf(str,
-                "  %02d %s%s ",
+                "   %02d %s%s ",
                 pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
         if (ins->d >= 0)
-            sprintf(str + strlen(str), "%d ", ins->d);
+            sprintf(str + strlen(str), "%d", ins->d);
         else if (pending)
-            sprintf(str + strlen(str), "_ ");
+            sprintf(str + strlen(str), "_");
         else
-            sprintf(str + strlen(str), "  ");
+            sprintf(str + strlen(str), " ");
         return str;
     } else {
         sprintf(str,
@@ -104,6 +104,10 @@ static void burst_until_idle(ti57_t *ti57)
    for ( ; ; ) {
         ti57_activity_t activity = ti57_get_activity(ti57);
         if (activity == TI57_POLL || activity == TI57_BLINK) {
+            // Call 'next' a few more times to make sure the display gets updated.
+            for (int i = 0; i < 20; i++) {
+                ti57_next(ti57);
+            }
             return;
         }
         ti57_next(ti57);
@@ -250,17 +254,18 @@ void penta7_init(penta7_t *penta7)
     ti57_init(&penta7->ti57);
     penta7->at_end_program = false;
     penta7->options = 0;
+    penta7->speedup = 1;
 }
 
-void penta7_advance(penta7_t *penta7, int ms, int speedup)
+bool penta7_advance(penta7_t *penta7, int ms)
 {
     assert(ms > 0);
-    assert(speedup > 0);
+    assert(penta7->speedup > 0);
 
     ti57_t *ti57 = &penta7->ti57;
 
     // An actual TI-57 executes 5000 cycles per second (speed 1).
-    int max_cycles = 5 * ms * speedup;
+    int max_cycles = 5 * ms * penta7->speedup;
 
     do {
         int n = ti57_next(ti57);
@@ -269,14 +274,20 @@ void penta7_advance(penta7_t *penta7, int ms, int speedup)
             burst_until_idle(ti57);
         }
         double current_speed = get_goal_speed(penta7);
+        if (current_speed == 0) {
+            burst_until_idle(ti57);
+            return false;
+        }
         if (current_speed < 0) {
             max_cycles -= n;
         } else if (current_speed == 0) {
             max_cycles = 0;
         } else {
-            max_cycles -= n * speedup / current_speed;
+            max_cycles -= n * penta7->speedup / current_speed;
         }
     } while (max_cycles > 0);
+
+    return true;
 }
 
 void penta7_key_press(penta7_t *penta7, int row, int col)
