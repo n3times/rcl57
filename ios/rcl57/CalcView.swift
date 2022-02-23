@@ -13,17 +13,15 @@ struct CalcView: View {
     @State private var isInv = false
 
     @State private var isHPStyleLRN: Bool
-    @State private var isMnemonicsLRN: Bool
-    @State private var isSmoothRun: Bool
-    @State private var isTurboSpeed: Bool
+    @State private var isAlphanumericLRN: Bool
+    @State private var isTurboMode: Bool
 
     init(penta7: Penta7) {
         self.penta7 = penta7
 
         isHPStyleLRN = penta7.getOptionFlag(option: PENTA7_HP_LRN_MODE_FLAG)
-        isMnemonicsLRN = penta7.getOptionFlag(option: PENTA7_MNEMONICS_LRN_MODE_FLAG)
-        isSmoothRun = penta7.getOptionFlag(option: PENTA7_FASTER_TRACE_FLAG)
-        isTurboSpeed = penta7.getSpeedup() == 1000
+        isAlphanumericLRN = penta7.getOptionFlag(option: PENTA7_ALPHANUMERIC_LRN_MODE_FLAG)
+        isTurboMode = penta7.getSpeedup() == 1000
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
@@ -60,8 +58,8 @@ struct CalcView: View {
     private func runDisplayAnimationLoop() {
         if CalcView.isAnimating { return }
         CalcView.isAnimating = true
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-            _ = self.penta7.advance()
+        Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true, block: { timer in
+            _ = self.penta7.advance(ms: 20)
             self.displayText = self.penta7.display()
             self.is2nd = self.penta7.is2nd()
             self.isInv = self.penta7.isInv()
@@ -160,33 +158,31 @@ struct CalcView: View {
                     runDisplayAnimationLoop()
                     self.displayText = self.penta7.display()
                 })
-                Toggle("Turbo Speed", isOn: $isTurboSpeed)
-                    .onChange(of: isTurboSpeed) {_ in
-                        if isTurboSpeed {
+                Toggle("Turbo Mode", isOn: $isTurboMode)
+                    .onChange(of: isTurboMode) {_ in
+                        if isTurboMode {
                             penta7.setSpeedup(speedup: 1000)
                         } else {
                             penta7.setSpeedup(speedup: 1)
                         }
+                        setOption(option: PENTA7_SHORT_PAUSE_FLAG, value: isTurboMode)
+                        setOption(option: PENTA7_FASTER_TRACE_FLAG, value: isTurboMode)
+                        setOption(option: PENTA7_QUICK_STOP_FLAG, value: isTurboMode)
+                        setOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
                     }
-                Toggle("Smooth RUN", isOn: $isSmoothRun)
-                    .onChange(of: isSmoothRun) {_ in
-                        setOption(option: PENTA7_SHORT_PAUSE_FLAG, value: isSmoothRun)
-                        setOption(option: PENTA7_FASTER_TRACE_FLAG, value: isSmoothRun)
-                        setOption(option: PENTA7_QUICK_STOP_FLAG, value: isSmoothRun)
-                        setOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG, value: isSmoothRun)
-                    }
-                Toggle("HP-style LRN mode", isOn: $isHPStyleLRN)
+                Toggle("HP-style LRN Mode", isOn: $isHPStyleLRN)
                     .onChange(of: isHPStyleLRN) {
                         _ in setOption(option: PENTA7_HP_LRN_MODE_FLAG, value: isHPStyleLRN)}
-                Toggle("Mnemonics in LRN", isOn: $isMnemonicsLRN)
-                    .onChange(of: isMnemonicsLRN) {
-                        _ in setOption(option: PENTA7_MNEMONICS_LRN_MODE_FLAG, value: isMnemonicsLRN)}
+                Toggle("Alphanumeric LRN Mode", isOn: $isAlphanumericLRN)
+                    .onChange(of: isAlphanumericLRN) {
+                        _ in setOption(option: PENTA7_ALPHANUMERIC_LRN_MODE_FLAG,
+                                       value: isAlphanumericLRN)}
             }
             .padding(10)
             .background(Color.gray)
             .foregroundColor(Color.white)
             .offset(x: -128, y: -315)
-            .font(.title2)
+            .font(.title)
         }
     }
 

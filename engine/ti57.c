@@ -213,6 +213,7 @@ static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
             }
             memcpy(ti57->dA, ti57->A, sizeof(ti57_reg_t));
             memcpy(ti57->dB, ti57->B, sizeof(ti57_reg_t));
+            ti57->last_disp_cycle = ti57->current_cycle;
             break;
     case 8: ti57->is_hex = false; break;
     case 9: ti57->is_hex = true; break;
@@ -320,6 +321,7 @@ void ti57_init(ti57_t *ti57)
 int ti57_next(ti57_t *ti57)
 {
     ti57_opcode_t opcode = ROM[ti57->pc];
+    int cost = 0;
 
     if (opcode > 0x1fff) return false;
 
@@ -336,7 +338,9 @@ int ti57_next(ti57_t *ti57)
     else if ((opcode & 0x1000) == 0x0000)
         op_mask(ti57, opcode);
 
-    return ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
+    cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
+    ti57->current_cycle += cost;
+    return cost;
 }
 
 
@@ -363,6 +367,10 @@ char *ti57_get_display(ti57_t *ti57)
     static char digits[] = "0123456789AbCdEF";
     static char str[25];
     int k = 0;
+
+    if (ti57->current_cycle - ti57->last_disp_cycle > 50) {
+        return "            ";
+    }
 
     for (int i = 11; i >= 0; i--) {
         char c;

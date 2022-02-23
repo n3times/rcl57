@@ -61,9 +61,9 @@ class Penta7 {
         penta7_key_release(&penta7)
     }
 
-    // Should be called every 50ms.
-    func advance() -> Bool {
-        return penta7_advance(&penta7, 50)
+    // Should be called every 'ms' ms.
+    func advance(ms: Int32) -> Bool {
+        return penta7_advance(&penta7, ms)
     }
 
     // Whether the 2nd key is engaged.

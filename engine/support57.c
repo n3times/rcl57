@@ -30,7 +30,7 @@ static char *SECONDARY_KEYS[] = {
     "DSZ",     0,     0,     0, "DEG",
     "X=T",     0,     0,     0, "RAD",
     "X>T",     0,     0,     0, "GRD",
-    "LBL",     0, "SIG", "AVG", "VAR",
+    "LBL",     0, "s+ ", " @ ", "g2 ",
 };
 
 char *ti57_get_keyname(ti57_key_t key)

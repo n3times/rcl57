@@ -110,7 +110,7 @@ struct LEDView: View {
 
         var path = Path()
 
-        let useShortSegments = c == "+" || c == "-" || c == "x" || c == "/"
+        let useShortSegments = c == "+" || c == "-" || c == "x" || c == "/" || c == "@"
         let useAlternateDotData = c == "1"
 
         if combineSegments {

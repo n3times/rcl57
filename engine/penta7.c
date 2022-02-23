@@ -50,7 +50,7 @@ static char *get_lrn_display(penta7_t *penta7)
     bool pending = ti57->C[14] & 0x1;
 
     if (pc == 0 && !pending && penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
-        return "  START LRN ";
+        return "       Lrn  ";
     }
 
     if (!pending  &&
@@ -60,7 +60,7 @@ static char *get_lrn_display(penta7_t *penta7)
 
     ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
 
-    if (penta7->options & PENTA7_MNEMONICS_LRN_MODE_FLAG) {
+    if (penta7->options & PENTA7_ALPHANUMERIC_LRN_MODE_FLAG) {
         sprintf(str,
                 "   %02d %s%s ",
                 pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
@@ -317,7 +317,7 @@ char *penta7_get_display(penta7_t *penta7)
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
         (penta7->options & PENTA7_HP_LRN_MODE_FLAG ||
-         penta7->options & PENTA7_MNEMONICS_LRN_MODE_FLAG)) {
+         penta7->options & PENTA7_ALPHANUMERIC_LRN_MODE_FLAG)) {
         return get_lrn_display(penta7);
     }
 

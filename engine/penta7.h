@@ -68,7 +68,7 @@
 #define PENTA7_HP_LRN_MODE_FLAG                  0x20
 
 /** In LRN mode, show instructions as alphanumeric mnemonics such as "LNX". */
-#define PENTA7_MNEMONICS_LRN_MODE_FLAG           0x40
+#define PENTA7_ALPHANUMERIC_LRN_MODE_FLAG        0x40
 
 typedef struct penta7_s {
     ti57_t ti57;
