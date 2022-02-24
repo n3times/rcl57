@@ -40,6 +40,7 @@ int ti57_get_fix(ti57_t *ti57)
 bool ti57_is_2nd(ti57_t *ti57)
 {
     if (ti57_get_mode(ti57) == TI57_RUN) return false;
+    if (ti57->supress_modifiers) return false;
 
     return (ti57->C[14] & 0x8) != 0;
 }
@@ -47,6 +48,7 @@ bool ti57_is_2nd(ti57_t *ti57)
 bool ti57_is_inv(ti57_t *ti57)
 {
     if (ti57_get_mode(ti57) == TI57_RUN) return false;
+    if (ti57->supress_modifiers) return false;
 
     return (ti57->B[15] & 0x4) != 0;
 }

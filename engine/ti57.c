@@ -360,6 +360,12 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
     ti57->key_pressed = true;
     ti57->row = row;
     ti57->col = col;
+
+    if (row != 0 || (col != 0 && col != 1)) {
+        ti57->supress_modifiers = true;
+    } else {
+        ti57->supress_modifiers = false;
+    }
 }
 
 char *ti57_get_display(ti57_t *ti57)

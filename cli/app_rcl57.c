@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "penta7.h"
+#include "rcl57.h"
 #include "state57.h"
 #include "support57.h"
 
@@ -38,9 +38,9 @@ int main(void)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
         // {61, 64, 62, 44, 63, 24, 51, 74};  // 1 + 2 * 3 ^ 4 =
         // {52, 21, 52};  // 5 STO 5
-    penta7_t penta7;
+    rcl57_t rcl57;
 
-    penta7_init(&penta7);
-    run(&penta7.ti57, keys, sizeof(keys)/sizeof(ti57_key_t));
-    printf("\nDISP = [%s]\n", ti57_get_display(&penta7.ti57));
+    rcl57_init(&rcl57);
+    run(&rcl57.ti57, keys, sizeof(keys)/sizeof(ti57_key_t));
+    printf("\nDISP = [%s]\n", ti57_get_display(&rcl57.ti57));
 }

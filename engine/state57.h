@@ -33,6 +33,7 @@ typedef struct ti57_s {
     ti57_reg_t dA, dB;              // Copy of A and B for display purposes
     unsigned long current_cycle;    // The number of cycle the emulator has been running for
     unsigned long last_disp_cycle;  // The cycle DISP was executed last
+    bool supress_modifiers;
 } ti57_t;
 
 /**

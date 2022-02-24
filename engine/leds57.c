@@ -78,5 +78,5 @@ static void init() {
 
 int get_led_segments(char c) {
     if (!inited) { init(); }
-    return map[c];
+    return map[(int)c];
 }

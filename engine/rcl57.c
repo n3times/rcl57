@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "penta7.h"
+#include "rcl57.h"
 #include "support57.h"
 
-static double get_goal_speed(penta7_t *penta7)
+static double get_goal_speed(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
     ti57_activity_t activity = ti57_get_activity(ti57);
 
     switch(ti57_get_mode(ti57)) {
@@ -23,16 +23,16 @@ static double get_goal_speed(penta7_t *penta7)
         }
     case TI57_RUN:
         if (ti57_is_stopping(ti57) &&
-            penta7->options & PENTA7_QUICK_STOP_FLAG) {
+            rcl57->options & RCL57_QUICK_STOP_FLAG) {
             return -1;
         } else if (activity == TI57_PAUSE) {
-            if (penta7->options & PENTA7_SHORT_PAUSE_FLAG) {
+            if (rcl57->options & RCL57_SHORT_PAUSE_FLAG) {
                 return 2;
             } else {
                 return 1;
             }
         } else if (ti57_is_trace(ti57)) {
-            if (penta7->options & PENTA7_FASTER_TRACE_FLAG) {
+            if (rcl57->options & RCL57_FASTER_TRACE_FLAG) {
                 return 2;
             } else {
                 return 1;
@@ -42,31 +42,31 @@ static double get_goal_speed(penta7_t *penta7)
     }
 }
 
-static char *get_lrn_display(penta7_t *penta7)
+static char *get_lrn_display(rcl57_t *rcl57)
 {
     static char str[100];
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
     int pc = ti57_get_pc(ti57);
-    bool pending = ti57->C[14] & 0x1;
+    bool op_pending = ti57_is_instruction_edit(ti57);
 
-    if (pc == 0 && !pending && penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
+    if (pc == 0 && !op_pending && rcl57->options & RCL57_HP_LRN_MODE_FLAG) {
         return "       Lrn  ";
     }
 
-    if (!pending  &&
-        !penta7->at_end_program
-        && penta7->options & PENTA7_HP_LRN_MODE_FLAG)
+    if (!op_pending  &&
+        !rcl57->at_end_program &&
+        rcl57->options & RCL57_HP_LRN_MODE_FLAG)
         pc -= 1;
 
     ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
 
-    if (penta7->options & PENTA7_ALPHANUMERIC_LRN_MODE_FLAG) {
+    if (rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG) {
         sprintf(str,
                 "   %02d %s%s ",
                 pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
         if (ins->d >= 0)
             sprintf(str + strlen(str), "%d", ins->d);
-        else if (pending)
+        else if (op_pending)
             sprintf(str + strlen(str), "_");
         else
             sprintf(str + strlen(str), " ");
@@ -77,7 +77,7 @@ static char *get_lrn_display(penta7_t *penta7)
                 pc, ins->inv ? "-" : " ", (ins->key / 16)*10 + ins->key % 16);
         if (ins->d >= 0)
             sprintf(str + strlen(str), "%d", ins->d);
-        else if (pending)
+        else if (op_pending)
             sprintf(str + strlen(str), "0");
         else
             sprintf(str + strlen(str), " ");
@@ -85,16 +85,16 @@ static char *get_lrn_display(penta7_t *penta7)
     }
 }
 
-static void clear_(penta7_t *penta7)
+static void clear_(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     ti57->C[14] &= 0xe;
 }
 
-static void clear_2nd(penta7_t *penta7)
+static void clear_2nd(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     ti57->C[14] &= 0x7;
 }
@@ -114,9 +114,9 @@ static void burst_until_idle(ti57_t *ti57)
    }
 }
 
-static void key(penta7_t *penta7, bool sec, int row, int col)
+static void key(rcl57_t *rcl57, bool sec, int row, int col)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     if (sec) {
         ti57->C[14] |= 0x8;
@@ -129,151 +129,151 @@ static void key(penta7_t *penta7, bool sec, int row, int col)
     burst_until_idle(ti57);
 }
 
-static void key_lrn(penta7_t *penta7)
+static void key_lrn(rcl57_t *rcl57)
 {
-     key(penta7, false, 1, 0);
+     key(rcl57, false, 1, 0);
 }
 
-static void key_sst(penta7_t *penta7)
+static void key_sst(rcl57_t *rcl57)
 {
-     key(penta7, false, 2, 0);
+     key(rcl57, false, 2, 0);
 }
 
-static void key_bst(penta7_t *penta7)
+static void key_bst(rcl57_t *rcl57)
 {
-     key(penta7, false, 3, 0);
+     key(rcl57, false, 3, 0);
 }
 
-static void key_ins(penta7_t *penta7)
+static void key_ins(rcl57_t *rcl57)
 {
-     key(penta7, true, 2, 1);
+     key(rcl57, true, 2, 1);
 }
 
-static void key_del(penta7_t *penta7)
+static void key_del(rcl57_t *rcl57)
 {
-     key(penta7, true, 3, 1);
+     key(rcl57, true, 3, 1);
 }
 
-static void bst(penta7_t *penta7)
+static void bst(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
-    if (penta7->at_end_program) {
-        penta7->at_end_program = false;
+    if (rcl57->at_end_program) {
+        rcl57->at_end_program = false;
     } else if (ti57_is_instruction_edit(ti57)) {
-        clear_(penta7);
+        clear_(rcl57);
     } else {
-        key_bst(penta7);
+        key_bst(rcl57);
     }
 }
 
-static void sst(penta7_t *penta7)
+static void sst(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
-    clear_(penta7);
+    clear_(rcl57);
     if (ti57_get_pc(ti57) == 49) {
-        penta7->at_end_program = true;
+        rcl57->at_end_program = true;
     } else {
-        key_sst(penta7);
+        key_sst(rcl57);
     }
 }
 
-static void del(penta7_t *penta7)
+static void del(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
-    if (penta7->at_end_program) {
-        penta7->at_end_program = false;
-        key_del(penta7);
+    if (rcl57->at_end_program) {
+        rcl57->at_end_program = false;
+        key_del(rcl57);
     } else if (ti57_is_instruction_edit(ti57)) {
-        clear_(penta7);
-        key_del(penta7);
+        clear_(rcl57);
+        key_del(rcl57);
     } else if (ti57_get_pc(ti57) > 0) {
-        key_bst(penta7);
-        key_del(penta7);
+        key_bst(rcl57);
+        key_del(rcl57);
     }
 }
 
-static void ins(penta7_t *penta7)
+static void ins(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
-    if (!ti57_is_instruction_edit(ti57) && !penta7->at_end_program) {
-        key_ins(penta7);
+    if (!ti57_is_instruction_edit(ti57) && !rcl57->at_end_program) {
+        key_ins(rcl57);
     }
 }
 
-static void key_press_in_lrn(penta7_t *penta7, int row, int col)
+static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
     bool is_2nd, is_inv;
 
     if (row == 0 && col == 0) {                      // 2ND
-        return ti57_key_press(&penta7->ti57, 0, 0);
+        return ti57_key_press(&rcl57->ti57, 0, 0);
     } else if (row == 0 && col == 1) {               // INV
-        return ti57_key_press(&penta7->ti57, 0, 1);
+        return ti57_key_press(&rcl57->ti57, 0, 1);
     }
 
     is_2nd = ti57_is_2nd(ti57);
     is_inv = ti57_is_inv(ti57);
-    clear_2nd(penta7);
+    clear_2nd(rcl57);
 
     if (!is_2nd && row == 3 && col == 0) {           // BST
-        return bst(penta7);
+        return bst(rcl57);
     } else if (!is_2nd && row == 2 && col == 0) {    // SST
-        return sst(penta7);
+        return sst(rcl57);
     } else if (is_2nd && row == 2 && col == 1) {     // INS
-        return ins(penta7);
+        return ins(rcl57);
     } else if (is_2nd && row == 3 && col == 1) {     // DEL
-        return del(penta7);
+        return del(rcl57);
     } else if (!is_2nd && row == 1 && col == 0) {    // LRN
-        return key_lrn(penta7);
+        return key_lrn(rcl57);
     } else if (row == 0 && col == 0) {               // 2ND
-        return ti57_key_press(&penta7->ti57, 0, 0);
+        return ti57_key_press(&rcl57->ti57, 0, 0);
     }
 
-    if (penta7->at_end_program) {
+    if (rcl57->at_end_program) {
         return;
     }
-    ins(penta7);
+    ins(rcl57);
     if (is_inv) {
         ti57->B[15] |= 0x4;
     }
-    key(penta7, is_2nd, row, col);
+    key(rcl57, is_2nd, row, col);
     if (ti57_get_mode(ti57) == TI57_EVAL) {
-        key_lrn(penta7);
-        penta7->at_end_program = true;
+        key_lrn(rcl57);
+        rcl57->at_end_program = true;
     }
     return;
 }
 
 
-void penta7_init(penta7_t *penta7)
+void rcl57_init(rcl57_t *rcl57)
 {
-    ti57_init(&penta7->ti57);
-    penta7->at_end_program = false;
-    penta7->options = 0;
-    penta7->speedup = 1;
+    ti57_init(&rcl57->ti57);
+    rcl57->at_end_program = false;
+    rcl57->options = 0;
+    rcl57->speedup = 1;
 }
 
-bool penta7_advance(penta7_t *penta7, int ms)
+bool rcl57_advance(rcl57_t *rcl57, int ms)
 {
     assert(ms > 0);
-    assert(penta7->speedup > 0);
+    assert(rcl57->speedup > 0);
 
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     // An actual TI-57 executes 5000 cycles per second (speed 1).
-    int max_cycles = 5 * ms * penta7->speedup;
+    int max_cycles = 5 * ms * rcl57->speedup;
 
     do {
         int n = ti57_next(ti57);
         if (ti57_is_stopping(ti57) &&
-            penta7->options & PENTA7_QUICK_STOP_FLAG) {
+            rcl57->options & RCL57_QUICK_STOP_FLAG) {
             burst_until_idle(ti57);
         }
-        double current_speed = get_goal_speed(penta7);
+        double current_speed = get_goal_speed(rcl57);
         if (current_speed == 0) {
             burst_until_idle(ti57);
             return false;
@@ -283,54 +283,54 @@ bool penta7_advance(penta7_t *penta7, int ms)
         } else if (current_speed == 0) {
             max_cycles = 0;
         } else {
-            max_cycles -= n * penta7->speedup / current_speed;
+            max_cycles -= n * rcl57->speedup / current_speed;
         }
     } while (max_cycles > 0);
 
     return true;
 }
 
-void penta7_key_press(penta7_t *penta7, int row, int col)
+void rcl57_key_press(rcl57_t *rcl57, int row, int col)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     if (ti57_get_pc(ti57) != 49) {
-        penta7->at_end_program = false;
+        rcl57->at_end_program = false;
     }
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        penta7->options & PENTA7_HP_LRN_MODE_FLAG) {
-        return key_press_in_lrn(penta7, row, col);
+        rcl57->options & RCL57_HP_LRN_MODE_FLAG) {
+        return key_press_in_lrn(rcl57, row, col);
     }
 
-    ti57_key_press(&penta7->ti57, row, col);
+    ti57_key_press(&rcl57->ti57, row, col);
 }
 
-void penta7_key_release(penta7_t *penta7)
+void rcl57_key_release(rcl57_t *rcl57)
 {
-    ti57_key_release(&penta7->ti57);
+    ti57_key_release(&rcl57->ti57);
 }
 
-char *penta7_get_display(penta7_t *penta7)
+char *rcl57_get_display(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &penta7->ti57;
+    ti57_t *ti57 = &rcl57->ti57;
 
     if (ti57_get_mode(ti57) == TI57_LRN &&
-        (penta7->options & PENTA7_HP_LRN_MODE_FLAG ||
-         penta7->options & PENTA7_ALPHANUMERIC_LRN_MODE_FLAG)) {
-        return get_lrn_display(penta7);
+        (rcl57->options & RCL57_HP_LRN_MODE_FLAG ||
+         rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG)) {
+        return get_lrn_display(rcl57);
     }
 
     if (ti57_get_mode(ti57) == TI57_RUN &&
-        penta7->options & PENTA7_SHOW_RUN_INDICATOR_FLAG &&
-        get_goal_speed(penta7) < 0) {
+        rcl57->options & RCL57_SHOW_RUN_INDICATOR_FLAG &&
+        get_goal_speed(rcl57) < 0) {
         return "[           ";
     }
 
     bool blinking_blank = ti57_is_error(ti57) && ti57->B[3] == 9;
 
     if (!blinking_blank &&
-        penta7->options & PENTA7_DISPLAY_ARITHMETIC_OPERATORS_FLAG &&
+        rcl57->options & RCL57_DISPLAY_ARITHMETIC_OPERATORS_FLAG &&
         (ti57_get_mode(ti57) == TI57_EVAL || ti57_is_trace(ti57))) {
         char *stack = ti57_get_aos_stack(ti57);
         char top = stack[strlen(stack) - 1];
@@ -374,7 +374,7 @@ char *penta7_get_display(penta7_t *penta7)
     return ti57_get_display(ti57);
 }
 
-void penta7_clear(penta7_t *penta7) {
-    ti57_init(&penta7->ti57);
-    penta7->at_end_program = false;
+void rcl57_clear(rcl57_t *rcl57) {
+    ti57_init(&rcl57->ti57);
+    rcl57->at_end_program = false;
 }

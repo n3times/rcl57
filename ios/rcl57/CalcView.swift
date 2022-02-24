@@ -4,7 +4,7 @@ import AudioToolbox
 // The main view. It holds the calculator with its keyboard and display. It listens to key presses
 // events and runs the animation loop.
 struct CalcView: View {
-    private let penta7: Penta7
+    private let rcl57: RCL57
 
     @State private var displayText = ""
     @State private var isKeyPressed = false
@@ -16,12 +16,12 @@ struct CalcView: View {
     @State private var isAlphanumericLRN: Bool
     @State private var isTurboMode: Bool
 
-    init(penta7: Penta7) {
-        self.penta7 = penta7
+    init(rcl57: RCL57) {
+        self.rcl57 = rcl57
 
-        isHPStyleLRN = penta7.getOptionFlag(option: PENTA7_HP_LRN_MODE_FLAG)
-        isAlphanumericLRN = penta7.getOptionFlag(option: PENTA7_ALPHANUMERIC_LRN_MODE_FLAG)
-        isTurboMode = penta7.getSpeedup() == 1000
+        isHPStyleLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        isAlphanumericLRN = rcl57.getOptionFlag(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG)
+        isTurboMode = rcl57.getSpeedup() == 1000
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
@@ -59,16 +59,16 @@ struct CalcView: View {
         if CalcView.isAnimating { return }
         CalcView.isAnimating = true
         Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true, block: { timer in
-            _ = self.penta7.advance(ms: 20)
-            self.displayText = self.penta7.display()
-            self.is2nd = self.penta7.is2nd()
-            self.isInv = self.penta7.isInv()
+            _ = self.rcl57.advance(ms: 20)
+            self.displayText = self.rcl57.display()
+            self.is2nd = self.rcl57.is2nd()
+            self.isInv = self.rcl57.isInv()
         })
     }
 
     private func setOption(option: Int32, value: Bool) {
-        self.penta7.setOptionFlag(option: option, value: value)
-        self.displayText = self.penta7.display()
+        self.rcl57.setOptionFlag(option: option, value: value)
+        self.displayText = self.rcl57.display()
     }
 
     private func getView(_ metrics: GeometryProxy) -> some View {
@@ -116,16 +116,16 @@ struct CalcView: View {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 self.isKeyPressed = true;
                                 runDisplayAnimationLoop()
-                                self.penta7.keyPress(row:Int32(c!.x), col:Int32(c!.y))
-                                self.displayText = self.penta7.display()
+                                self.rcl57.keyPress(row:Int32(c!.x), col:Int32(c!.y))
+                                self.displayText = self.rcl57.display()
                             }
                         }
                         .onEnded {_ in
                             if self.isKeyPressed {
                                 self.isKeyPressed = false
                                 runDisplayAnimationLoop()
-                                self.penta7.keyRelease()
-                                self.displayText = self.penta7.display()
+                                self.rcl57.keyRelease()
+                                self.displayText = self.rcl57.display()
                             }
                         }
                 )
@@ -137,7 +137,7 @@ struct CalcView: View {
                        height: CGFloat(displayHeight),
                        alignment: .center)
                 .onAppear {
-                    self.displayText = self.penta7.display()
+                    self.displayText = self.rcl57.display()
                     self.runDisplayAnimationLoop()
                 }
             if is2nd {
@@ -154,28 +154,28 @@ struct CalcView: View {
             }
             Menu("Options") {
                 Button("Clear", action: {
-                    penta7.clear()
+                    rcl57.clear()
                     runDisplayAnimationLoop()
-                    self.displayText = self.penta7.display()
+                    self.displayText = self.rcl57.display()
                 })
                 Toggle("Turbo Mode", isOn: $isTurboMode)
                     .onChange(of: isTurboMode) {_ in
                         if isTurboMode {
-                            penta7.setSpeedup(speedup: 1000)
+                            rcl57.setSpeedup(speedup: 1000)
                         } else {
-                            penta7.setSpeedup(speedup: 1)
+                            rcl57.setSpeedup(speedup: 1)
                         }
-                        setOption(option: PENTA7_SHORT_PAUSE_FLAG, value: isTurboMode)
-                        setOption(option: PENTA7_FASTER_TRACE_FLAG, value: isTurboMode)
-                        setOption(option: PENTA7_QUICK_STOP_FLAG, value: isTurboMode)
-                        setOption(option: PENTA7_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
+                        setOption(option: RCL57_SHORT_PAUSE_FLAG, value: isTurboMode)
+                        setOption(option: RCL57_FASTER_TRACE_FLAG, value: isTurboMode)
+                        setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
+                        setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
                     }
                 Toggle("HP-style LRN Mode", isOn: $isHPStyleLRN)
                     .onChange(of: isHPStyleLRN) {
-                        _ in setOption(option: PENTA7_HP_LRN_MODE_FLAG, value: isHPStyleLRN)}
+                        _ in setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isHPStyleLRN)}
                 Toggle("Alphanumeric LRN Mode", isOn: $isAlphanumericLRN)
                     .onChange(of: isAlphanumericLRN) {
-                        _ in setOption(option: PENTA7_ALPHANUMERIC_LRN_MODE_FLAG,
+                        _ in setOption(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG,
                                        value: isAlphanumericLRN)}
             }
             .padding(10)
@@ -195,6 +195,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(penta7: Penta7())
+        CalcView(rcl57: RCL57())
     }
 }
