@@ -44,45 +44,68 @@ static double get_goal_speed(rcl57_t *rcl57)
 
 static char *get_lrn_display(rcl57_t *rcl57)
 {
-    static char str[100];
+    static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
     int pc = ti57_get_pc(ti57);
     bool op_pending = ti57_is_instruction_edit(ti57);
+    bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
+    bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG;
+    int dot_count = 0;
 
-    if (pc == 0 && !op_pending && rcl57->options & RCL57_HP_LRN_MODE_FLAG) {
-        return "       Lrn  ";
+    if (pc == 0 && !op_pending && is_hp_mode) {
+        return " Lrn        ";
     }
 
-    if (!op_pending  &&
-        !rcl57->at_end_program &&
-        rcl57->options & RCL57_HP_LRN_MODE_FLAG)
+    if (!op_pending  && !rcl57->at_end_program && is_hp_mode) {
         pc -= 1;
-
-    ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
-
-    if (rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG) {
-        sprintf(str,
-                "   %02d %s%s ",
-                pc, ins->inv ? "!" : " ", ti57_get_keyname(ins->key));
-        if (ins->d >= 0)
-            sprintf(str + strlen(str), "%d", ins->d);
-        else if (op_pending)
-            sprintf(str + strlen(str), "_");
-        else
-            sprintf(str + strlen(str), " ");
-        return str;
-    } else {
-        sprintf(str,
-                "   %02d %s%02d ",
-                pc, ins->inv ? "-" : " ", (ins->key / 16)*10 + ins->key % 16);
-        if (ins->d >= 0)
-            sprintf(str + strlen(str), "%d", ins->d);
-        else if (op_pending)
-            sprintf(str + strlen(str), "0");
-        else
-            sprintf(str + strlen(str), " ");
-        return str;
     }
+
+    ti57_instruction_t *instruction = ti57_get_instruction(ti57, pc);
+
+    memset(str, ' ', sizeof(str));
+    str[sizeof(str) - 1] = 0;
+
+    // Operation.
+    int i = (int)strlen(str) - 1;
+    if (instruction->d >= 0) {
+        str[i] = '0' + instruction->d;
+    } else if (op_pending) {
+        str[i] = is_alphanumeric_mode ? '_' : '0';
+    }
+    i -= 2;
+    if (is_alphanumeric_mode) {
+        char *name = ti57_get_keyname(instruction->key);
+        for (int j = (int)strlen(name) - 1; j >= 0; j--) {
+            str[i--] = name[j];
+            if (str[i + 1] == '.') {
+                str[i--] = ' ';
+                dot_count += 1;
+            }
+        }
+    } else {
+        str[i--] = '0' + instruction->key % 16;
+        str[i--] = '0' + instruction->key / 16;
+    }
+    if (instruction->inv) {
+        str[i] = is_alphanumeric_mode ? '!' : '-';
+    }
+
+    // Step number.
+    char s1 = '0' + pc / 10;
+    char s2 = '0' + pc % 10;
+    int start = 12 - dot_count;
+    if (is_hp_mode) {
+        str[start] = s1;
+        str[start + 1] = s2;
+    } else if (is_alphanumeric_mode) {
+        str[start + 3] = s1;
+        str[start + 4] = s2;
+    } else {
+        str[start + 4] = s1;
+        str[start + 5] = s2;
+    }
+
+    return str + start;
 }
 
 static void clear_(rcl57_t *rcl57)
