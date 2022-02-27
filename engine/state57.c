@@ -12,10 +12,7 @@
 
 ti57_mode_t ti57_get_mode(ti57_t *ti57)
 {
-    if ((ti57->C[15] & 0x1) != 0) return TI57_LRN;
-    if ((ti57->C[15] & 0x8) != 0) return TI57_RUN;
-
-    return TI57_EVAL;
+    return ti57->mode;
 }
 
 ti57_trig_t ti57_get_trig(ti57_t *ti57)
@@ -39,23 +36,23 @@ int ti57_get_fix(ti57_t *ti57)
 
 bool ti57_is_2nd(ti57_t *ti57)
 {
-    if (ti57_get_mode(ti57) == TI57_RUN) return false;
-    if (ti57->supress_modifiers) return false;
+    if (ti57->mode == TI57_RUN) return false;
+    if (ti57->last_key_pressed != 0x11 && ti57->last_key_pressed != 0x12) return false;
 
     return (ti57->C[14] & 0x8) != 0;
 }
 
 bool ti57_is_inv(ti57_t *ti57)
 {
-    if (ti57_get_mode(ti57) == TI57_RUN) return false;
-    if (ti57->supress_modifiers) return false;
+    if (ti57->mode == TI57_RUN) return false;
+    if (ti57->last_key_pressed != 0x11 && ti57->last_key_pressed != 0x12) return false;
 
     return (ti57->B[15] & 0x4) != 0;
 }
 
 bool ti57_is_error(ti57_t *ti57)
 {
-    if (ti57_get_mode(ti57) != TI57_EVAL) return false;
+    if (ti57->mode != TI57_EVAL) return false;
 
     return (ti57->B[15] & 0x2) != 0;
 }
@@ -70,60 +67,33 @@ bool ti57_is_number_edit(ti57_t *ti57)
     return (ti57->B[15] & 0x1) != 0;
 }
 
-bool ti57_is_instruction_edit(ti57_t *ti57)
+bool ti57_is_instruction_lrn_edit(ti57_t *ti57)
 {
+    if (ti57->mode != TI57_LRN) return false;
+
     return (ti57->C[14] & 0x1) != 0;
+}
+
+bool ti57_is_instruction_eval_edit(ti57_t *ti57)
+{
+    if (ti57->mode != TI57_EVAL) return false;
+
+    return ti57->stack[0] == 0x00c9 || ti57->stack[1] == 0x00c9 ||  // Reg Op or Fix
+           ti57->stack[0] == 0x033f || ti57->stack[1] == 0x033f;    // GTO or SBR
 }
 
 bool ti57_is_trace(ti57_t *ti57)
 {
-    if (ti57_get_mode(ti57) != TI57_RUN) return false;
+    if (ti57->mode != TI57_RUN) return false;
 
-    return ti57->key_pressed && (ti57->row == 2) && (ti57->col == 0);
+    return ti57->is_key_pressed && (ti57->row == 2) && (ti57->col == 0);
 }
 
 bool ti57_is_stopping(ti57_t *ti57)
 {
-    if (ti57_get_mode(ti57) != TI57_RUN) return false;
+    if (ti57->mode != TI57_RUN) return false;
 
-    return ti57->key_pressed && (ti57->row == 7) && (ti57->col == 0);
-}
-
-static bool is_pc_in(ti57_t *ti57, int lo, int hi, int depth)
-{
-   if (ti57->pc >= lo && ti57->pc <= hi) return true;
-
-   for (int i = 0; i <= depth; i++) {
-       if (ti57->stack[i] >= lo && ti57->stack[i] <= hi)
-           return true;
-   }
-   return false;
-}
-
-ti57_activity_t ti57_get_activity(ti57_t *ti57)
-{
-    if (is_pc_in(ti57, 0x00fd, 0x0105, 1) ||  // 'Ins'
-        is_pc_in(ti57, 0x010c, 0x0116, 1)) {  // 'Del'
-        return TI57_LONG;
-    }
-
-    if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {  // 'Pause'
-        return TI57_PAUSE;
-    }
-
-    if (ti57->key_pressed) {
-        if (is_pc_in(ti57, 0x01fc, 0x01fe, -1) ||   // Waiting for 'R/S' release
-            is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {   // Waiting for other release
-            return TI57_POLL;
-        }
-    }
-
-    if (!ti57->key_pressed) {
-        if (is_pc_in(ti57, 0x04a6, 0x04a9, 0))      // Waiting for key press
-            return ti57_is_error(ti57) ? TI57_BLINK : TI57_POLL;
-    }
-
-    return TI57_BUSY;
+    return ti57->is_key_pressed && (ti57->row == 7) && (ti57->col == 0);
 }
 
 /*******************************************************************************

@@ -12,15 +12,13 @@ struct CalcView: View {
     @State private var is2nd = false
     @State private var isInv = false
 
-    @State private var isHPStyleLRN: Bool
-    @State private var isAlphanumericLRN: Bool
+    @State private var isEnhancedLRN: Bool
     @State private var isTurboMode: Bool
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
 
-        isHPStyleLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        isAlphanumericLRN = rcl57.getOptionFlag(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG)
+        isEnhancedLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         isTurboMode = rcl57.getSpeedup() == 1000
     }
 
@@ -170,13 +168,11 @@ struct CalcView: View {
                         setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
                         setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
                     }
-                Toggle("HP-style LRN Mode", isOn: $isHPStyleLRN)
-                    .onChange(of: isHPStyleLRN) {
-                        _ in setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isHPStyleLRN)}
-                Toggle("Alphanumeric LRN Mode", isOn: $isAlphanumericLRN)
-                    .onChange(of: isAlphanumericLRN) {
-                        _ in setOption(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG,
-                                       value: isAlphanumericLRN)}
+                Toggle("Enhanced LRN Mode", isOn: $isEnhancedLRN)
+                    .onChange(of: isEnhancedLRN) { _ in
+                        setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isEnhancedLRN)
+                        setOption(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG, value: isEnhancedLRN)
+                    }
             }
             .padding(10)
             .background(Color.gray)

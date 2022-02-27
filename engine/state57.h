@@ -18,23 +18,37 @@ typedef unsigned char ti57_reg_t[16];
 /** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
 
-/** The internal state of a TI-57. */
-typedef struct ti57_s {
-    ti57_reg_t A, B, C, D;          // Operational Registers
-    ti57_reg_t X[8], Y[8];          // Storage Registers
-    unsigned char RAB;              // Register Address Buffer (3-bit)
-    unsigned char R5;               // Auxiliary 8-bit Register
-    ti57_address_t pc;              // Program Counter
-    ti57_address_t stack[3];        // Subroutine Stack
-    bool COND;                      // Conditional Latch
-    bool is_hex;                    // Arithmetic done in base 16 instead of 10
-    bool key_pressed;               // A key is being pressed
-    int row, col;                   // Row and Column of key
-    ti57_reg_t dA, dB;              // Copy of A and B for display purposes
-    unsigned long current_cycle;    // The number of cycle the emulator has been running for
-    unsigned long last_disp_cycle;  // The cycle DISP was executed last
-    bool supress_modifiers;
-} ti57_t;
+
+/**
+ * Encodes one of the keys of the keyboard.
+ *
+ * Digit keys are encoded as 0x0d. Other keys are encoded by their location
+ * (row, col) on the keyboard:
+ * - most significant 4 bits: row in 1..8
+ * - least significant 4 bits: column in 1..5 for primary keys and in 6..A for
+ *   secondary keys
+ */
+typedef unsigned char ti57_key_t;
+
+/**
+ * Activities:
+ * - TI57_POLL_KEY_PRESS: in a tight loop, waiting for a key press.
+ * - TI57_POLL_KEY_RUN_RELEASE: in a tight loop, waiting for R/S release.
+ * - TI57_POLL_KEY_RELEASE: in a tight loop, waiting for a key release.
+ * - TI57_BLINK:  in a tight loop, waiting for a key press while display blinking
+ * - TI57_PAUSE: 'Pause' is being executed
+ * - TI57_LONG: Executing an expensive operation such as 'Del' and 'Ins'
+ * - TI57_BUSY: default, running or executing some operation
+ */
+typedef enum ti57_activity_e {
+    TI57_BUSY,
+    TI57_POLL_KEY_PRESS,
+    TI57_POLL_KEY_RELEASE,
+    TI57_POLL_KEY_RUN_RELEASE,
+    TI57_BLINK,
+    TI57_PAUSE,
+    TI57_LONG,
+} ti57_activity_t;
 
 /**
  * Calculator modes:
@@ -48,41 +62,42 @@ typedef enum ti57_mode_e {
     TI57_RUN
 } ti57_mode_t;
 
+/** Type of the submodes in mode EVAL . */
+typedef enum ti57_eval_mode_e {
+    TI57_EVAL_MODE_DEFAULT,
+    TI57_NUMBER_EDIT,        // The number on the display is being edited.
+    TI57_OP_PENDING,         // The parameter of an instruction hasn't been entered.
+} ti57_eval_mode_t;
+
+/** The state of a TI-57. */
+typedef struct ti57_s {
+    // The internal state of a TI-57.
+    ti57_reg_t A, B, C, D;          // Operational Registers
+    ti57_reg_t X[8], Y[8];          // Storage Registers
+    unsigned char RAB;              // Register Address Buffer (3-bit)
+    unsigned char R5;               // Auxiliary 8-bit Register
+    ti57_address_t pc;              // Program Counter
+    ti57_address_t stack[3];        // Subroutine Stack
+    bool COND;                      // Conditional Latch
+    bool is_hex;                    // Arithmetic done in base 16 instead of 10
+    bool is_key_pressed;            // A key is being pressed
+    int row, col;                   // Row and Column of key
+    ti57_reg_t dA, dB;              // Copy of A and B for display purposes
+
+    unsigned long current_cycle;    // The number of cycle the emulator has been running for
+    unsigned long last_disp_cycle;  // The cycle DISP was executed last
+    ti57_key_t last_key_pressed;    // The key that was last pressed by the user
+    ti57_mode_t mode;               // The current mode.
+    ti57_eval_mode_t eval_mode;     // The current eval mode
+    ti57_activity_t activity;       // The current activity
+} ti57_t;
+
 /** Units for trigometric functions. */
 typedef enum ti57_trig_e {
     TI57_DEG,
     TI57_RAD,
     TI57_GRAD,
 } ti57_trig_t;
-
-/**
- * Activities:
- * - TI57_POLL: in a tight loop, polling for user input (key press or key
- *   release)
- * - TI57_BLINK: similar to TI57_POLL but, in addition, the display blinking
- *   due to an error
- * - TI57_PAUSE: 'Pause' is being executed for ~2s
- * - TI57_LONG: Executing an expensive operation such as 'Del' and 'Ins'
- * - TI57_BUSY: default, running or executing some operation
- */
-typedef enum ti57_activity_e {
-    TI57_POLL,
-    TI57_BLINK,
-    TI57_PAUSE,
-    TI57_LONG,
-    TI57_BUSY,
-} ti57_activity_t;
-
-/**
- * Encodes one of the keys of the keyboard.
- *
- * Digit keys are encoded as 0x0d. Other keys are encoded by their location
- * (row, col) on the keyboard:
- * - most significant 4 bits: row in 1..8
- * - least significant 4 bits: column in 1..5 for primary keys and in 6..A for
- *   secondary keys
- */
-typedef unsigned char ti57_key_t;
 
 /**
  * An instruction with an optional inverse modifier and an optional paramater.
@@ -132,16 +147,16 @@ bool ti57_is_error(ti57_t *ti57);
 bool ti57_is_number_edit(ti57_t *ti57);
 
 /** An instruction with a digit argument is being edited in LRN mode. */
-bool ti57_is_instruction_edit(ti57_t *ti57);
+bool ti57_is_instruction_lrn_edit(ti57_t *ti57);
+
+/** An instruction with a digit argument is being edited in EVAL mode. */
+bool ti57_is_instruction_eval_edit(ti57_t *ti57);
 
 /** 'SST' is pressed while in RUN mode. */
 bool ti57_is_trace(ti57_t *ti57);
 
 /** 'R/S' is pressed while in RUN mode. */
 bool ti57_is_stopping(ti57_t *ti57);
-
-/** Reports the current activity. */
-ti57_activity_t ti57_get_activity(ti57_t *ti57);
 
 /*******************************************************************************
  *

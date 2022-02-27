@@ -207,7 +207,7 @@ static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
     case 4: memcpy(ti57->X[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
     case 5: memcpy(ti57->A, ti57->X[ti57->RAB], sizeof(ti57_reg_t)); break;
     case 6: memcpy(ti57->Y[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
-    case 7: if (ti57->key_pressed) {
+    case 7: if (ti57->is_key_pressed) {
                 ti57->R5 = (ti57->col + 1) << 4 | ti57->row;
                 ti57->COND = 1;
             }
@@ -309,6 +309,64 @@ static void op_mask(ti57_t *ti57, ti57_opcode_t opcode) {
 
 /******************************************************************************
  *
+ *  State update.
+ *
+ ******************************************************************************/
+
+static void update_mode(ti57_t *ti57)
+{
+    if ((ti57->C[15] & 0x1) != 0) {
+        ti57->mode = TI57_LRN;
+    } else if ((ti57->C[15] & 0x8) != 0) {
+        ti57->mode = TI57_RUN;
+    } else {
+        ti57->mode = TI57_EVAL;
+    }
+}
+
+static void update_eval_mode(ti57_t *ti57)
+{
+    if (ti57_is_instruction_eval_edit(ti57)) {
+        ti57->eval_mode = TI57_OP_PENDING;
+    } else if (ti57_is_number_edit(ti57)) {
+        ti57->eval_mode = TI57_NUMBER_EDIT;
+    } else {
+        ti57->eval_mode = TI57_EVAL_MODE_DEFAULT;
+    }
+}
+
+static bool is_pc_in(ti57_t *ti57, int lo, int hi, int depth)
+{
+   if (ti57->pc >= lo && ti57->pc <= hi) return true;
+
+   for (int i = 0; i <= depth; i++) {
+       if (ti57->stack[i] >= lo && ti57->stack[i] <= hi) {
+           return true;
+       }
+   }
+   return false;
+}
+
+static void update_activity(ti57_t *ti57)
+{
+    if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {  // 'Pause'
+        ti57->activity = TI57_PAUSE;
+    } else if (is_pc_in(ti57, 0x00fd, 0x0105, 1) ||  // 'Ins'
+               is_pc_in(ti57, 0x010c, 0x0116, 1)) {  // 'Del'
+        ti57->activity = TI57_LONG;
+    } else if (is_pc_in(ti57, 0x01fc, 0x01fe, -1)) {
+        ti57->activity = TI57_POLL_KEY_RUN_RELEASE;
+    } else if (is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {
+        ti57->activity = TI57_POLL_KEY_RELEASE;
+    } else if (is_pc_in(ti57, 0x04a6, 0x04a9, 0)) {  // Waiting for key press
+        ti57->activity = ti57_is_error(ti57) ? TI57_BLINK : TI57_POLL_KEY_PRESS;
+    } else {
+        ti57->activity = TI57_BUSY;
+    }
+}
+
+/******************************************************************************
+ *
  *  API IMPLEMENTATION
  *
  ******************************************************************************/
@@ -321,9 +379,9 @@ void ti57_init(ti57_t *ti57)
 int ti57_next(ti57_t *ti57)
 {
     ti57_opcode_t opcode = ROM[ti57->pc];
-    int cost = 0;
+    ti57_activity_t old_activity = ti57->activity;
 
-    if (opcode > 0x1fff) return false;
+    assert(opcode <= 0x1fff);
 
     ti57->pc += 1;
 
@@ -338,7 +396,13 @@ int ti57_next(ti57_t *ti57)
     else if ((opcode & 0x1000) == 0x0000)
         op_mask(ti57, opcode);
 
-    cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
+    update_mode(ti57);
+    update_activity(ti57);
+    if (old_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE) {
+        update_eval_mode(ti57);
+    }
+
+    int cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
     ti57->current_cycle += cost;
     return cost;
 }
@@ -346,26 +410,18 @@ int ti57_next(ti57_t *ti57)
 
 void ti57_key_release(ti57_t *ti57)
 {
-    ///assert(ti57->key_pressed);
-
-    ti57->key_pressed = false;
+    ti57->is_key_pressed = false;
 }
 
 void ti57_key_press(ti57_t *ti57, int row, int col)
 {
-    ///assert(!ti57->key_pressed);
     assert(0 <= row && row <= 7);
     assert(0 <= col && col <= 4);
 
-    ti57->key_pressed = true;
+    ti57->is_key_pressed = true;
+    ti57->last_key_pressed = (row + 1) << 4 | (col + 1);
     ti57->row = row;
     ti57->col = col;
-
-    if (row != 0 || (col != 0 && col != 1)) {
-        ti57->supress_modifiers = true;
-    } else {
-        ti57->supress_modifiers = false;
-    }
 }
 
 char *ti57_get_display(ti57_t *ti57)
@@ -375,7 +431,7 @@ char *ti57_get_display(ti57_t *ti57)
     int k = 0;
 
     if (ti57->current_cycle - ti57->last_disp_cycle > 50) {
-        return "            ";
+        ///return "            ";
     }
 
     for (int i = 11; i >= 0; i--) {

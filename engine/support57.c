@@ -25,7 +25,7 @@ static char *PRIMARY_KEYS[] = {
 static char *SECONDARY_KEYS[] = {
     "2N2", "IN2", "LOG",  "CT", "CL2",
     "DMS", "P/R", "SIN", "COS", "TAN",
-    "PSE", "INS", "EXC", "PRD",  "PI",
+    "PAU", "INS", "EXC", "PRD",  "PI",
     "NOP", "DEL", "FIX", "INT", "|X|",
     "DSZ",     0,     0,     0, "DEG",
     "X=T",     0,     0,     0, "RAD",
@@ -80,7 +80,7 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     ti57_reg_t *T;
 
     ti57_init(&ti57);
-    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+    while (ti57.activity == TI57_BUSY) {
         ti57_next(&ti57);
     }
 
@@ -92,11 +92,11 @@ char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
         ti57.B[15] = 0x8;
 
     ti57_key_press(&ti57, 1, 1);
-    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+    while (ti57.activity == TI57_BUSY) {
         ti57_next(&ti57);
     }
     ti57_key_release(&ti57);
-    while (ti57_get_activity(&ti57) == TI57_BUSY) {
+    while (ti57.activity == TI57_BUSY) {
         ti57_next(&ti57);
     }
     strcpy(str, ti57_trim(ti57_get_display(&ti57)));

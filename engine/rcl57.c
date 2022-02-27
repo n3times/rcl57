@@ -8,13 +8,14 @@
 static double get_goal_speed(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
-    ti57_activity_t activity = ti57_get_activity(ti57);
 
-    switch(ti57_get_mode(ti57)) {
+    switch(ti57->mode) {
     case TI57_EVAL:
     case TI57_LRN:
-        switch (activity) {
-        case TI57_POLL:
+        switch (ti57->activity) {
+        case TI57_POLL_KEY_PRESS:
+        case TI57_POLL_KEY_RELEASE:
+        case TI57_POLL_KEY_RUN_RELEASE:
             return 0;
         case TI57_BLINK:
             return 1;
@@ -25,7 +26,7 @@ static double get_goal_speed(rcl57_t *rcl57)
         if (ti57_is_stopping(ti57) &&
             rcl57->options & RCL57_QUICK_STOP_FLAG) {
             return -1;
-        } else if (activity == TI57_PAUSE) {
+        } else if (ti57->activity == TI57_PAUSE) {
             if (rcl57->options & RCL57_SHORT_PAUSE_FLAG) {
                 return 2;
             } else {
@@ -47,7 +48,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
     int pc = ti57_get_pc(ti57);
-    bool op_pending = ti57_is_instruction_edit(ti57);
+    bool op_pending = ti57_is_instruction_lrn_edit(ti57);
     bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
     bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG;
     int dot_count = 0;
@@ -125,8 +126,10 @@ static void clear_2nd(rcl57_t *rcl57)
 static void burst_until_idle(ti57_t *ti57)
 {
    for ( ; ; ) {
-        ti57_activity_t activity = ti57_get_activity(ti57);
-        if (activity == TI57_POLL || activity == TI57_BLINK) {
+        if (ti57->activity == TI57_POLL_KEY_PRESS ||
+            ti57->activity == TI57_POLL_KEY_RUN_RELEASE ||
+            ti57->activity == TI57_POLL_KEY_RELEASE ||
+            ti57->activity == TI57_BLINK) {
             // Call 'next' a few more times to make sure the display gets updated.
             for (int i = 0; i < 20; i++) {
                 ti57_next(ti57);
@@ -183,7 +186,7 @@ static void bst(rcl57_t *rcl57)
 
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
-    } else if (ti57_is_instruction_edit(ti57)) {
+    } else if (ti57_is_instruction_lrn_edit(ti57)) {
         clear_(rcl57);
     } else {
         key_bst(rcl57);
@@ -209,7 +212,7 @@ static void del(rcl57_t *rcl57)
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
         key_del(rcl57);
-    } else if (ti57_is_instruction_edit(ti57)) {
+    } else if (ti57_is_instruction_lrn_edit(ti57)) {
         clear_(rcl57);
         key_del(rcl57);
     } else if (ti57_get_pc(ti57) > 0) {
@@ -222,7 +225,7 @@ static void ins(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    if (!ti57_is_instruction_edit(ti57) && !rcl57->at_end_program) {
+    if (!ti57_is_instruction_lrn_edit(ti57) && !rcl57->at_end_program) {
         key_ins(rcl57);
     }
 }
@@ -264,7 +267,7 @@ static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
         ti57->B[15] |= 0x4;
     }
     key(rcl57, is_2nd, row, col);
-    if (ti57_get_mode(ti57) == TI57_EVAL) {
+    if (ti57->mode == TI57_EVAL) {
         key_lrn(rcl57);
         rcl57->at_end_program = true;
     }
@@ -321,7 +324,7 @@ void rcl57_key_press(rcl57_t *rcl57, int row, int col)
         rcl57->at_end_program = false;
     }
 
-    if (ti57_get_mode(ti57) == TI57_LRN &&
+    if (ti57->mode == TI57_LRN &&
         rcl57->options & RCL57_HP_LRN_MODE_FLAG) {
         return key_press_in_lrn(rcl57, row, col);
     }
@@ -338,13 +341,13 @@ char *rcl57_get_display(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    if (ti57_get_mode(ti57) == TI57_LRN &&
+    if (ti57->mode == TI57_LRN &&
         (rcl57->options & RCL57_HP_LRN_MODE_FLAG ||
          rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG)) {
         return get_lrn_display(rcl57);
     }
 
-    if (ti57_get_mode(ti57) == TI57_RUN &&
+    if (ti57->mode == TI57_RUN &&
         rcl57->options & RCL57_SHOW_RUN_INDICATOR_FLAG &&
         get_goal_speed(rcl57) < 0) {
         return "[           ";
@@ -354,7 +357,7 @@ char *rcl57_get_display(rcl57_t *rcl57)
 
     if (!blinking_blank &&
         rcl57->options & RCL57_DISPLAY_ARITHMETIC_OPERATORS_FLAG &&
-        (ti57_get_mode(ti57) == TI57_EVAL || ti57_is_trace(ti57))) {
+        (ti57->mode == TI57_EVAL || ti57_is_trace(ti57))) {
         char *stack = ti57_get_aos_stack(ti57);
         char top = stack[strlen(stack) - 1];
 
