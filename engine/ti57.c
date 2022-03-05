@@ -457,6 +457,10 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
     memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
     memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
 
+    if (key == 0x15) {
+        log57_log_message(&ti57->log, "CLR", LOG57_OP);
+    }
+
     if (ti57->eval_mode == TI57_NUMBER_EDIT) {
         memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
         log57_log_message(&ti57->log, ti57_trim(pending_display), LOG57_NUMBER_IN);

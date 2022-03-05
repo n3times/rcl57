@@ -141,14 +141,14 @@ struct CalcView: View {
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4)
-                    .offset(x: -152, y: -115)
-                    .frame(width: 56, height: 39)
+                    .offset(x: -152 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
+                    .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
             if isInv {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown, lineWidth: 4)
-                    .offset(x: -77, y: -115)
-                    .frame(width: 56, height: 39)
+                    .offset(x: -77 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
+                    .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
             Menu("Options") {
                 Button("Clear All", action: {
@@ -185,7 +185,7 @@ struct CalcView: View {
             .padding(10)
             .background(Color.gray)
             .foregroundColor(Color.white)
-            .offset(x: -128, y: -315)
+            .offset(x: -128 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
             .font(.title)
         }
     }
