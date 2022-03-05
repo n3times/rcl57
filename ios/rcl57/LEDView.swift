@@ -12,7 +12,7 @@ struct LEDView: View {
     private static let ledHeight = CGFloat(29.0)
     private static let interLedX = 32.0
     private static let segmentCount = 14
-    private static let slant = CGFloat(0.08)
+    private static let slant = CGFloat(0.05)
     private static let displayToCalculatorWidthRatio = CGFloat(0.85)
 
     // Describes the 10 horizontal and vertical segments.

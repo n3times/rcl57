@@ -367,17 +367,6 @@ static void update_activity(ti57_t *ti57)
     }
 }
 
-/******************************************************************************
- *
- *  API IMPLEMENTATION
- *
- ******************************************************************************/
-
-void ti57_init(ti57_t *ti57)
-{
-    memset(ti57, 0, sizeof(ti57_t));
-}
-
 static ti57_key_t get_key(int row, int col)
 {
     if (row == 4 && col == 1) return 0x07;
@@ -392,6 +381,29 @@ static ti57_key_t get_key(int row, int col)
     if (row == 7 && col == 1) return 0x00;
 
     return (row + 1) << 4 | (col + 1);
+}
+
+static bool has_result(ti57_key_t key)
+{
+    int row = key >> 4;
+    switch(row) {
+    case 1:
+        return key != 0x19;
+    case 2:
+        return true;
+    case 3:
+        return key != 0x32 && key != 0x34 && key != 0x35 && key != 0x37 && key != 0x39;
+    case 4:
+        return key != 0x43 && key != 0x45 && key != 0x46 && key != 0x47;
+    case 5:
+    case 6:
+    case 7:
+        return false;
+    case 8:
+        return true;
+    default:
+        return false;
+    }
 }
 
 static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mode_t previous_mode)
@@ -413,7 +425,8 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
         log57_log_message(&ti57->log, "R/S", LOG57_OP);
         return;
     }
-    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
+    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE) &&
+        !(previous_mode == TI57_EVAL && ti57->mode == TI57_RUN)) {
         return;
     }
 
@@ -474,11 +487,11 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
         } else {
             sprintf(op + i, "%s", ti57_get_keyname(key));
         }
-        log57_log_message(&ti57->log, op, LOG57_OP);
-
+        if (!(pending_key == 0 && key < 0x10)) {
+            log57_log_message(&ti57->log, op, LOG57_OP);
+        }
         // Print result.
-        if (key != 0x45 && key != 0x55 && key != 0x65 && key != 0x75 && key != 0x35 &&
-            key != 0x43 && key != 0x41 && key != 0x81 && pending_key != 0x32) {
+        if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {
             char result[20];
             strcpy(result, ti57_trim(ti57_get_display(ti57)));
             if (ti57_is_error(ti57)) {
@@ -491,6 +504,17 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
             pending_key = 0;
         }
     }
+}
+
+/******************************************************************************
+ *
+ *  API IMPLEMENTATION
+ *
+ ******************************************************************************/
+
+void ti57_init(ti57_t *ti57)
+{
+    memset(ti57, 0, sizeof(ti57_t));
 }
 
 int ti57_next(ti57_t *ti57)
