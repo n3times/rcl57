@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "log57.h"
+
 /**
  * Internal state of a TI-57 and API to decode it.
  */
@@ -81,15 +83,17 @@ typedef struct ti57_s {
     bool COND;                      // Conditional Latch
     bool is_hex;                    // Arithmetic done in base 16 instead of 10
     bool is_key_pressed;            // A key is being pressed
-    int row, col;                   // Row and Column of key
+    int row, col;                   // Row and column of pressed key
     ti57_reg_t dA, dB;              // Copy of A and B for display purposes
 
     unsigned long current_cycle;    // The number of cycle the emulator has been running for
     unsigned long last_disp_cycle;  // The cycle DISP was executed last
-    ti57_key_t last_key_pressed;    // The key that was last pressed by the user
+    ti57_key_t last_processed_key;  // The key that was last pressed by the user
     ti57_mode_t mode;               // The current mode.
     ti57_eval_mode_t eval_mode;     // The current eval mode
     ti57_activity_t activity;       // The current activity
+
+    log57_t log;
 } ti57_t;
 
 /** Units for trigometric functions. */

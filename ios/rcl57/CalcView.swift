@@ -151,10 +151,18 @@ struct CalcView: View {
                     .frame(width: 56, height: 39)
             }
             Menu("Options") {
-                Button("Clear", action: {
-                    rcl57.clear()
+                Button("Clear All", action: {
+                    rcl57.clearAll()
                     runDisplayAnimationLoop()
                     self.displayText = self.rcl57.display()
+                })
+                Button("Clear Log", action: {
+                    rcl57.clearLog()
+                })
+                Button("Print Log", action: {
+                    print()
+                    rcl57.printLog()
+                    print()
                 })
                 Toggle("Turbo Mode", isOn: $isTurboMode)
                     .onChange(of: isTurboMode) {_ in

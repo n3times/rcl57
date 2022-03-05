@@ -277,9 +277,7 @@ static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
 
 void rcl57_init(rcl57_t *rcl57)
 {
-    ti57_init(&rcl57->ti57);
-    rcl57->at_end_program = false;
-    rcl57->options = 0;
+    memset(rcl57, 0, sizeof(rcl57_t));
     rcl57->speedup = 1;
 }
 

@@ -1,5 +1,6 @@
 import Foundation
 import CoreText
+import SwiftUI
 
 // The RCL57 object used to run the emulator.
 class RCL57 {
@@ -118,8 +119,44 @@ class RCL57 {
         rcl57.speedup = speedup
     }
 
-    // Clears the state while preserving the options.
-    func clear() {
+    // Clears the state, only preserving the options.
+    func clearAll() {
         rcl57_clear(&rcl57)
+    }
+
+    // Clears the log.
+    func clearLog() {
+        log57_reset(&rcl57.ti57.log)
+    }
+
+    // Prints the log.
+    func printLog() {
+        let loggedCount = log57_get_logged_count(&rcl57.ti57.log)
+        let start = max(1, loggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
+        var currentColumn = 0
+
+        if (start > loggedCount) {
+            return
+        }
+        for i in start...loggedCount {
+            let message = log57_get_message(&rcl57.ti57.log, i)!
+            let type = log57_get_entry(&rcl57.ti57.log, i).pointee.type
+            let column = (type == LOG57_OP || type == LOG57_PENDING_OP) ? 1 : 0
+            if column == 0 {
+                if currentColumn == 1 {
+                    print()
+                }
+                print(type == LOG57_RESULT ? ">" : " ", terminator: "")
+                print(String(format:"%15s", message), terminator: "")
+                currentColumn = 1
+            } else {
+                if currentColumn == 0 {
+                    print(type == LOG57_RESULT ? ">" : " ", terminator: "")
+                    print(String(format:"%15s", ""), terminator: "");
+                }
+                print(String(format:"%11s", message));
+                currentColumn = 0
+            }
+        }
     }
 }

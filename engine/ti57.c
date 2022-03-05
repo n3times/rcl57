@@ -1,4 +1,6 @@
 #include <assert.h>
+#include "log57.h"
+#include <stdio.h>
 #include <string.h>
 
 #include "ti57.h"
@@ -376,10 +378,126 @@ void ti57_init(ti57_t *ti57)
     memset(ti57, 0, sizeof(ti57_t));
 }
 
+static ti57_key_t get_key(int row, int col)
+{
+    if (row == 4 && col == 1) return 0x07;
+    if (row == 4 && col == 2) return 0x08;
+    if (row == 4 && col == 3) return 0x09;
+    if (row == 5 && col == 1) return 0x04;
+    if (row == 5 && col == 2) return 0x05;
+    if (row == 5 && col == 3) return 0x06;
+    if (row == 6 && col == 1) return 0x01;
+    if (row == 6 && col == 2) return 0x02;
+    if (row == 6 && col == 3) return 0x03;
+    if (row == 7 && col == 1) return 0x00;
+
+    return (row + 1) << 4 | (col + 1);
+}
+
+static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mode_t previous_mode)
+{
+    static char pending_display[25];
+    static ti57_key_t pending_key;
+    static bool pending_sec;
+    static bool pending_inv;
+
+    if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE && ti57->mode == TI57_RUN) {
+        log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+        return;
+    }
+    if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
+        log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_RESULT);
+        return;
+    }
+    if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
+        log57_log_message(&ti57->log, "R/S", LOG57_OP);
+        return;
+    }
+    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
+        return;
+    }
+
+    ti57->last_processed_key = get_key(ti57->row, ti57->col);
+    if (ti57->mode == TI57_LRN) {
+        return;
+    }
+    if (ti57->last_processed_key == 0x81) {
+        return;
+    }
+
+    ti57_key_t key = ti57->last_processed_key;
+
+    if (key == 0x11) {
+        pending_sec = ti57_is_2nd(ti57);
+        return;
+    } else if (key == 0x12) {
+        pending_inv = ti57_is_inv(ti57);
+        return;
+    }
+
+    if (pending_sec && key > 0x09) {
+        key += 5;
+    }
+    pending_sec = false;
+
+    // Flush display.
+    memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
+    memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
+
+    if (ti57->eval_mode == TI57_NUMBER_EDIT) {
+        memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
+        log57_log_message(&ti57->log, ti57_trim(pending_display), LOG57_NUMBER_IN);
+        pending_inv = false;
+    } else if (ti57->eval_mode == TI57_OP_PENDING) {
+        pending_key = key;
+
+        // Print operation.
+        char op[10];
+        int i = 0;
+        if (pending_inv) {
+            sprintf(op, "INV ");
+            i += 4;
+        }
+        sprintf(op + i, "%s _", ti57_get_keyname(key));
+        log57_log_message(&ti57->log, op, LOG57_PENDING_OP);
+    } else if (ti57->eval_mode == TI57_EVAL_MODE_DEFAULT) {
+        // Print operation.
+        char op[10];
+        int i = 0;
+        if (pending_inv) {
+            sprintf(op, "INV ");
+            i += 4;
+            pending_inv = false;
+        }
+        if (pending_key && key <= 0x09) {
+            sprintf(op + i, "%s %d", ti57_get_keyname(pending_key), key);
+        } else {
+            sprintf(op + i, "%s", ti57_get_keyname(key));
+        }
+        log57_log_message(&ti57->log, op, LOG57_OP);
+
+        // Print result.
+        if (key != 0x45 && key != 0x55 && key != 0x65 && key != 0x75 && key != 0x35 &&
+            key != 0x43 && key != 0x41 && key != 0x81 && pending_key != 0x32) {
+            char result[20];
+            strcpy(result, ti57_trim(ti57_get_display(ti57)));
+            if (ti57_is_error(ti57)) {
+                sprintf(result + strlen(result), "?");
+            }
+            log57_log_message(&ti57->log, result, LOG57_RESULT);
+        }
+
+        if (pending_key && key <= 0x09) {
+            pending_key = 0;
+        }
+    }
+}
+
 int ti57_next(ti57_t *ti57)
 {
     ti57_opcode_t opcode = ROM[ti57->pc];
-    ti57_activity_t old_activity = ti57->activity;
+    ti57_activity_t previous_activity = ti57->activity;
+    ti57_mode_t previous_mode = ti57->mode;
 
     assert(opcode <= 0x1fff);
 
@@ -398,9 +516,8 @@ int ti57_next(ti57_t *ti57)
 
     update_mode(ti57);
     update_activity(ti57);
-    if (old_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE) {
-        update_eval_mode(ti57);
-    }
+    update_eval_mode(ti57);
+    update_log(ti57, previous_activity, previous_mode);
 
     int cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
     ti57->current_cycle += cost;
@@ -419,7 +536,6 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
     assert(0 <= col && col <= 4);
 
     ti57->is_key_pressed = true;
-    ti57->last_key_pressed = (row + 1) << 4 | (col + 1);
     ti57->row = row;
     ti57->col = col;
 }

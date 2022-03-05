@@ -37,7 +37,7 @@ int ti57_get_fix(ti57_t *ti57)
 bool ti57_is_2nd(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_key_pressed != 0x11 && ti57->last_key_pressed != 0x12) return false;
+    if (ti57->last_processed_key != 0x11 && ti57->last_processed_key != 0x12) return false;
 
     return (ti57->C[14] & 0x8) != 0;
 }
@@ -45,7 +45,7 @@ bool ti57_is_2nd(ti57_t *ti57)
 bool ti57_is_inv(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_key_pressed != 0x11 && ti57->last_key_pressed != 0x12) return false;
+    if (ti57->last_processed_key != 0x11 && ti57->last_processed_key != 0x12) return false;
 
     return (ti57->B[15] & 0x4) != 0;
 }
