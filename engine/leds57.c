@@ -58,7 +58,6 @@ static void init() {
     map['/'] = 0b00001000010000;
     map['*'] = 0b00111011011100;
     map['+'] = 0b00010011001000;
-    map['%'] = 0b01101011010110;
     map['?'] = 0b10000101001000;
     map['<'] = 0b00001000000100;
     map['['] = 0b11000000100001;
@@ -66,14 +65,16 @@ static void init() {
     map['='] = 0b00000011000001;
     map['('] = 0b00001000000100;
     map[')'] = 0b00100000010000;
-    map['!'] = 0b00000011000010;  // inv symbol
+    map['|'] = 0b00010000001000;
+    map['!'] = 0b00000011000010;  // inv/negation symbol
     map['^'] = 0b10001100010000;  // exponentiation
     map['v'] = 0b00000110000110;  // square root
     map['>'] = 0b00100010000001;  // >=
     map['@'] = 0b10101000010100;  // average
     map['s'] = 0b10100000010001;  // sigma
     map['g'] = 0b00000011100101;  // variance
-    map['|'] = 0b00010000001000;
+    map['%'] = 0b01100011000110;  // exchange symbol between x and t
+    map['~'] = 0b00100010010000;  // right arrow
 }
 
 int get_led_segments(char c) {

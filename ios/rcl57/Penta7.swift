@@ -124,6 +124,23 @@ class RCL57 {
         rcl57_clear(&rcl57)
     }
 
+    func currentOp() -> String {
+        let loggedCount = log57_get_logged_count(&rcl57.ti57.log)
+        let start = max(1, loggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
+        var op = ""
+
+        var current = loggedCount
+        while current >= start {
+            let type = log57_get_entry(&rcl57.ti57.log, current).pointee.type
+            if type == LOG57_OP || type == LOG57_PENDING_OP {
+                op = String(cString: log57_get_message(&rcl57.ti57.log, current)!)
+                break
+            }
+            current -= 1
+        }
+        return op
+    }
+
     // Clears the log.
     func clearLog() {
         log57_reset(&rcl57.ti57.log)

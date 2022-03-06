@@ -11,6 +11,7 @@ struct CalcView: View {
     @State private var imageName = "button_pad"
     @State private var is2nd = false
     @State private var isInv = false
+    @State private var currentOp = ""
 
     @State private var isEnhancedLRN: Bool
     @State private var isTurboMode: Bool
@@ -61,6 +62,10 @@ struct CalcView: View {
             self.displayText = self.rcl57.display()
             self.is2nd = self.rcl57.is2nd()
             self.isInv = self.rcl57.isInv()
+            let reversed = self.rcl57.currentOp().reversed()
+            let padded =
+                String(reversed).padding(toLength: 9, withPad: " ", startingAt: 0)
+            self.currentOp = String(padded.reversed())
         })
     }
 
@@ -93,6 +98,11 @@ struct CalcView: View {
         let displayOffsetX = CGFloat(0.0)
         let displayOffsetY =
             (standardDisplayOffsetY - (standardCalcHeight - standardDisplayHeight)/2) * scaleFactor
+
+        let currentOpFont = Font
+            .system(size: 18)
+            .bold()
+            .monospaced()
 
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
@@ -150,6 +160,11 @@ struct CalcView: View {
                     .offset(x: -77 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
+            Text(currentOp)
+                .padding(10)
+                .foregroundColor(Color.white)
+                .offset(x: 100 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
+                .font(currentOpFont)
             Menu("Options") {
                 Button("Clear All", action: {
                     rcl57.clearAll()

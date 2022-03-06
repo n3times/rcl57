@@ -70,10 +70,11 @@ static char *get_lrn_display(rcl57_t *rcl57)
     int i = (int)strlen(str) - 1;
     if (instruction->d >= 0) {
         str[i] = '0' + instruction->d;
+        i -= 2;
     } else if (op_pending) {
         str[i] = is_alphanumeric_mode ? '_' : '0';
+        i -= 2;
     }
-    i -= 2;
     if (is_alphanumeric_mode) {
         char *name = ti57_get_keyname(instruction->key);
         for (int j = (int)strlen(name) - 1; j >= 0; j--) {
@@ -88,7 +89,11 @@ static char *get_lrn_display(rcl57_t *rcl57)
         str[i--] = '0' + instruction->key / 16;
     }
     if (instruction->inv) {
-        str[i] = is_alphanumeric_mode ? '!' : '-';
+        if (is_alphanumeric_mode) {
+            memcpy(str + i - 3, "INV", 3);
+        } else {
+            str[i] = '-';
+        }
     }
 
     // Step number.

@@ -13,7 +13,7 @@ static char *DIGIT_KEYS[]  = {
 
 static char *PRIMARY_KEYS[] = {
     "2ND", "INV", "LNX",  "CE", "CLR",
-    "LRN", "X/T", "X^2",  "vX", "1/X",
+    "LRN", "X%T", "X^2",  "vX", "1/X",
     "SST", "STO", "RCL", "SUM", "Y^X",
     "BST",  "EE",   "(",   ")",   "/",
     "GTO",     0,     0,     0,   "x",
@@ -24,7 +24,7 @@ static char *PRIMARY_KEYS[] = {
 
 static char *SECONDARY_KEYS[] = {
     "2N2", "IN2", "LOG",  "CT", "CL2",
-    "DMS", "P/R", "SIN", "COS", "TAN",
+    "DMS", "P~R", "SIN", "COS", "TAN",
     "PAU", "INS", "EXC", "PRD",  "PI",
     "NOP", "DEL", "FIX", "INT", "|X|",
     "DSZ",     0,     0,     0, "DEG",
