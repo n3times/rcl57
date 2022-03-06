@@ -1,10 +1,9 @@
-#ifndef TI57_H
-#define TI57_H
+#ifndef ti57_h
+#define ti57_h
 
-#include "support57.h"
+#include "state57.h"
 
-/******************************************************************************
- *
+/**
  * API for clients that want to implement a TI-57 emulator.
  *
  * Sample implementation:
@@ -22,8 +21,7 @@
  *     ti57_key_press(&ti57, row, col);
  *   On key release:
  *     ti57_key_release(&ti57);
- *
- ******************************************************************************/
+ */
 
 /** Initializes the state of a TI-57. */
 void ti57_init(ti57_t *ti57);
@@ -60,4 +58,4 @@ void ti57_key_release(ti57_t *ti57);
  */
 char *ti57_get_display(ti57_t *ti57);
 
-#endif  /* !TI57_H */
+#endif  /* !ti57_h */

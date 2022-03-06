@@ -1,5 +1,5 @@
-#ifndef SUPPORT57_H
-#define SUPPORT57_H
+#ifndef support57_h
+#define support57_h
 
 #include "rom57.h"
 #include "state57.h"
@@ -32,4 +32,4 @@ char *ti57_reg_to_str(ti57_reg_t reg);
  */
 char *ti57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix);
 
-#endif  /* !SUPPORT57_H */
+#endif  /* !support57_h */

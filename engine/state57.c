@@ -243,13 +243,13 @@ ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
 {
     int i;
     ti57_reg_t *reg;
-    static bool inited = false;
+    static bool initialized = false;
 
     assert(0 <= step && step <= 49);
 
-    if (!inited) {
+    if (!initialized) {
         init_instructions();
-        inited = true;
+        initialized = true;
     }
     if (step == 49) {
         reg = &ti57->Y[7];

@@ -1,5 +1,5 @@
-#ifndef STATE57_H
-#define STATE57_H
+#ifndef state57_h
+#define state57_h
 
 #include <stdbool.h>
 
@@ -19,7 +19,6 @@ typedef unsigned char ti57_reg_t[16];
 
 /** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
-
 
 /**
  * Encodes one of the keys of the keyboard.
@@ -64,34 +63,34 @@ typedef enum ti57_mode_e {
     TI57_RUN
 } ti57_mode_t;
 
-/** Type of the submodes in mode EVAL . */
-typedef enum ti57_eval_mode_e {
-    TI57_EVAL_MODE_DEFAULT,
-    TI57_NUMBER_EDIT,        // The number on the display is being edited.
-    TI57_OP_PENDING,         // The parameter of an instruction hasn't been entered.
-} ti57_eval_mode_t;
+/** Parsing state in mode EVAL. */
+typedef enum ti57_parse_state_e {
+    TI57_PARSE_DEFAULT,
+    TI57_PARSE_NUMBER_EDIT,          // The number on the display is being edited.
+    TI57_PARSE_OP_EDIT,              // The parameter of an instruction hasn't been entered.
+} ti57_parse_state_t;
 
 /** The state of a TI-57. */
 typedef struct ti57_s {
     // The internal state of a TI-57.
-    ti57_reg_t A, B, C, D;          // Operational Registers
-    ti57_reg_t X[8], Y[8];          // Storage Registers
-    unsigned char RAB;              // Register Address Buffer (3-bit)
-    unsigned char R5;               // Auxiliary 8-bit Register
-    ti57_address_t pc;              // Program Counter
-    ti57_address_t stack[3];        // Subroutine Stack
-    bool COND;                      // Conditional Latch
-    bool is_hex;                    // Arithmetic done in base 16 instead of 10
-    bool is_key_pressed;            // A key is being pressed
-    int row, col;                   // Row and column of pressed key
-    ti57_reg_t dA, dB;              // Copy of A and B for display purposes
+    ti57_reg_t A, B, C, D;           // Operational Registers
+    ti57_reg_t X[8], Y[8];           // Storage Registers
+    unsigned char RAB;               // Register Address Buffer (3-bit)
+    unsigned char R5;                // Auxiliary 8-bit Register
+    ti57_address_t pc;               // Program Counter
+    ti57_address_t stack[3];         // Subroutine Stack
+    bool COND;                       // Conditional Latch
+    bool is_hex;                     // Arithmetic done in base 16 instead of 10
+    bool is_key_pressed;             // A key is being pressed
+    int row, col;                    // Row and column of pressed key
+    ti57_reg_t dA, dB;               // Copy of A and B for display purposes
 
-    unsigned long current_cycle;    // The number of cycle the emulator has been running for
-    unsigned long last_disp_cycle;  // The cycle DISP was executed last
-    ti57_key_t last_processed_key;  // The key that was last pressed by the user
-    ti57_mode_t mode;               // The current mode.
-    ti57_eval_mode_t eval_mode;     // The current eval mode
-    ti57_activity_t activity;       // The current activity
+    unsigned long current_cycle;     // The number of cycle the emulator has been running for
+    unsigned long last_disp_cycle;   // The cycle DISP was executed last
+    ti57_key_t last_processed_key;   // The key that was last pressed by the user
+    ti57_mode_t mode;                // The current mode
+    ti57_parse_state_t parse_state;  // The current parse state
+    ti57_activity_t activity;        // The current activity
 
     log57_t log;
     char current_op[30];
@@ -215,7 +214,9 @@ int ti57_get_ret(ti57_t *ti57, int i);
 /** Instruction at a given step (step in 0..49). */
 ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step);
 
-/** Gets the last operation in EVAL mode. */
+/**
+ * Gets the last operation in EVAL mode.
+ */
 char *ti57_get_current_op(ti57_t *ti57);
 
-#endif  /* !STATE57_H */
+#endif  /* !state57_h */

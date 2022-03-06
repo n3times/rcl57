@@ -1,6 +1,6 @@
-#ifndef ROM57_H
-#define ROM57_H
+#ifndef rom57_h
+#define rom57_h
 
-extern unsigned short ROM[2048];
+extern unsigned short ROM57[2048];
 
-#endif  /* !ROM57_H */
+#endif  /* !rom57_h */

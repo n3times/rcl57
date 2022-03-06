@@ -1,10 +1,9 @@
-#ifndef RCL57_H
-#define RCL57_H
+#ifndef rcl57_h
+#define rcl57_h
 
 #include "ti57.h"
 
 /**
- *
  * API for clients that want to implement a RCL57 emulator, a calculator built
  * on top of TI-57.
  *
@@ -27,7 +26,6 @@
  *     rcl57_key_press(&rcl57, row, col);
  *   On key release:
  *     rcl57_key_release(&rcl57);
- *
  */
 
 /**
@@ -113,4 +111,4 @@ char *rcl57_get_display(rcl57_t *rcl57);
 /* Clears the state while preserving the options. */
 void rcl57_clear(rcl57_t *rcl57);
 
-#endif  /* !RCL57_H */
+#endif  /* !rcl57_h */

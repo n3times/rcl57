@@ -1,11 +1,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-static bool inited = false;
 static int map[256];
 
 static void init() {
-    memset(map, 0, 256 * sizeof(char));
+    memset(map, 0, 256 * sizeof(int));
 
     map[' '] = 0b00000000000000;
 
@@ -77,7 +76,12 @@ static void init() {
     map['~'] = 0b00100010010000;  // right arrow
 }
 
-int get_led_segments(char c) {
-    if (!inited) { init(); }
+int leds57_get_segments(char c) {
+    static bool initialized = false;
+
+    if (!initialized) {
+        init();
+        initialized = true;
+    }
     return map[(int)c];
 }

@@ -1,8 +1,8 @@
-#ifndef leds_h
-#define leds_h
+#ifndef leds57_h
+#define leds57_h
 
 // Indicates, for each character, which segments of a 14-segment LED are on.
 // Segments top to bottom, left to right: -|\|/|--|/|\|-
-int get_led_segments(char c);
+int leds57_get_segments(char c);
 
-#endif /* leds_h */
+#endif /* leds57_h */

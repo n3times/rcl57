@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ti57.h"
+#include "support57.h"
 #include "rom57.h"
+#include "ti57.h"
 
 /** A 13-bit opcode. */
 typedef unsigned short ti57_opcode_t;
@@ -326,14 +327,14 @@ static void update_mode(ti57_t *ti57)
     }
 }
 
-static void update_eval_mode(ti57_t *ti57)
+static void update_parse_state(ti57_t *ti57)
 {
     if (ti57_is_instruction_eval_edit(ti57)) {
-        ti57->eval_mode = TI57_OP_PENDING;
+        ti57->parse_state = TI57_PARSE_OP_EDIT;
     } else if (ti57_is_number_edit(ti57)) {
-        ti57->eval_mode = TI57_NUMBER_EDIT;
+        ti57->parse_state = TI57_PARSE_NUMBER_EDIT;
     } else {
-        ti57->eval_mode = TI57_EVAL_MODE_DEFAULT;
+        ti57->parse_state = TI57_PARSE_DEFAULT;
     }
 }
 
@@ -406,42 +407,64 @@ static bool has_result(ti57_key_t key)
     }
 }
 
-static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mode_t previous_mode)
+static void update_log(ti57_t *ti57,
+                       ti57_activity_t previous_activity,
+                       ti57_mode_t previous_mode,
+                       ti57_parse_state_t previous_parse_state)
 {
     static char pending_display[25];
     static ti57_key_t pending_key;
     static bool pending_sec;
     static bool pending_inv;
 
-    if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE && ti57->mode == TI57_RUN) {
-        log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+    // In RUN mode, we only log "pauses" (currently, we do not tracing).
+    if (ti57->mode == TI57_RUN) {
+        if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
+            log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+        }
         return;
     }
+
+    // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
-        log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_RESULT);
+        char result[20];
+        strcpy(result, ti57_trim(ti57_get_display(ti57)));
+        if (ti57_is_error(ti57)) {
+            sprintf(result + strlen(result), "?");
+        }
+        log57_log_message(&ti57->log, result, LOG57_RESULT);
         return;
     }
+
+    // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
-        log57_log_message(&ti57->log, "R/S", LOG57_OP);
-        strcpy(ti57->current_op, "R/S");
+        log57_log_message(&ti57->log, ti57_get_keyname(0x81), LOG57_OP);
+        strcpy(ti57->current_op, ti57_get_keyname_unicode(0x81));
         return;
     }
-    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE) &&
-        !(previous_mode == TI57_EVAL && ti57->mode == TI57_RUN)) {
+
+    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
         return;
     }
+
+    // From here on, we are only interested in key presses.
 
     ti57->last_processed_key = get_key(ti57->row, ti57->col);
     if (ti57->mode == TI57_LRN) {
         strcpy(ti57->current_op, "");
         return;
     }
+
+    // From here on, we are in EVAL mode.
+
+    // R/S case has already been treated.
     if (ti57->last_processed_key == 0x81) {
         return;
     }
 
     ti57_key_t key = ti57->last_processed_key;
 
+    // Don't log "2nd" and "INV" but take note of the state.
     if (key == 0x11) {
         pending_sec = ti57_is_2nd(ti57);
         return;
@@ -455,23 +478,29 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
     }
     pending_sec = false;
 
-    // Flush display.
+    // Flush display so we get an accurate result.
+    // Anyway, the emulator would be flushing the display anyway, just a few cycles later.
     memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
     memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
 
-    if (key == 0x15) {
-        log57_log_message(&ti57->log, "CLR", LOG57_OP);
-        strcpy(ti57->current_op, "");
-    }
+    if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
+        // Log "CLR", if number was not being edited.
+        if (key == 0x15) {
+            if (ti57->log.logged_count &&
+                ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
+                log57_log_message(&ti57->log, ti57_get_keyname(0x15), LOG57_OP);
+                strcpy(ti57->current_op, "");
+            }
+        }
 
-    if (ti57->eval_mode == TI57_NUMBER_EDIT) {
+        // Log display.
         memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
         log57_log_message(&ti57->log, ti57_trim(pending_display), LOG57_NUMBER_IN);
         pending_inv = false;
-    } else if (ti57->eval_mode == TI57_OP_PENDING) {
+    } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
         pending_key = key;
 
-        // Print operation.
+        // Print pending operation.
         char op[10];
         char op_unicode[30];
         int i = 0;
@@ -484,7 +513,7 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
         sprintf(op_unicode + i, "%s _", ti57_get_keyname_unicode(key));
         log57_log_message(&ti57->log, op, LOG57_PENDING_OP);
         strcpy(ti57->current_op, op_unicode);
-    } else if (ti57->eval_mode == TI57_EVAL_MODE_DEFAULT) {
+    } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
         // Print operation.
         char op[10];
         char op_unicode[30];
@@ -506,6 +535,7 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
             log57_log_message(&ti57->log, op, LOG57_OP);
             strcpy(ti57->current_op, op_unicode);
         }
+
         // Print result.
         if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {
             char result[20];
@@ -535,9 +565,10 @@ void ti57_init(ti57_t *ti57)
 
 int ti57_next(ti57_t *ti57)
 {
-    ti57_opcode_t opcode = ROM[ti57->pc];
+    ti57_opcode_t opcode = ROM57[ti57->pc];
     ti57_activity_t previous_activity = ti57->activity;
     ti57_mode_t previous_mode = ti57->mode;
+    ti57_parse_state_t previous_parse_state = ti57->parse_state;
 
     assert(opcode <= 0x1fff);
 
@@ -556,8 +587,8 @@ int ti57_next(ti57_t *ti57)
 
     update_mode(ti57);
     update_activity(ti57);
-    update_eval_mode(ti57);
-    update_log(ti57, previous_activity, previous_mode);
+    update_parse_state(ti57);
+    update_log(ti57, previous_activity, previous_mode, previous_parse_state);
 
     int cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
     ti57->current_cycle += cost;

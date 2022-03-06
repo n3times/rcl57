@@ -30,7 +30,7 @@ static char *SECONDARY_KEYS[] = {
     "DSZ",     0,     0,     0, "DEG",
     "X=T",     0,     0,     0, "RAD",
     "X>T",     0,     0,     0, "GRD",
-    "LBL",     0,  "s+",   "@",  "g2",
+    "LBL",     0,  "s+",   "@", "g^2",
 };
 
 #define xxx "\U0001D499"  // italic x

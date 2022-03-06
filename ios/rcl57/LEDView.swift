@@ -105,7 +105,7 @@ struct LEDView: View {
                             hasColon: Bool,
                             combineSegments:Bool)
             -> Path? {
-        let segments = get_led_segments(Int8(c.asciiValue!))
+        let segments = leds57_get_segments(Int8(c.asciiValue!))
         var isSegmentResolved = [Bool](repeating: false, count: 14)
 
         var path = Path()
