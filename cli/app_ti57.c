@@ -30,12 +30,12 @@ static char *get_aos(ti57_t *ti57, char *str)
             break;
         }
         if (reg) {
-            char *user_reg_str = ti57_user_reg_to_str(reg,
+            char *user_reg_str = support57_user_reg_to_str(reg,
                                                       ti57_is_sci(ti57),
                                                       ti57_get_fix(ti57));
             strcpy(part, user_reg_str);
         } else if (c == 'd') {
-            strcpy(part, ti57_trim(ti57_get_display(ti57)));
+            strcpy(part, support57_trim(ti57_get_display(ti57)));
         } else {
             int j = 0;
             if (c != '(') part[j++] = ' ';
@@ -57,7 +57,7 @@ static char *get_instruction_str(ti57_t *ti57, int step, char *str)
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
-            ti57_get_keyname(instruction->key),
+            support57_get_keyname(instruction->key),
             (instruction->d >= 0) ? '0' + instruction->d : ' ');
     return str;
 }
@@ -69,17 +69,17 @@ static void print_state(ti57_t *ti57)
     char str[1000];
 
     printf("INTERNAL STATE\n");
-    printf("  A  = %s\n", ti57_reg_to_str(ti57->A));
-    printf("  B  = %s\n", ti57_reg_to_str(ti57->B));
-    printf("  C  = %s\n", ti57_reg_to_str(ti57->C));
-    printf("  D  = %s\n", ti57_reg_to_str(ti57->D));
+    printf("  A  = %s\n", support57_reg_to_str(ti57->A));
+    printf("  B  = %s\n", support57_reg_to_str(ti57->B));
+    printf("  C  = %s\n", support57_reg_to_str(ti57->C));
+    printf("  D  = %s\n", support57_reg_to_str(ti57->D));
     printf("\n");
 
     for (int i = 0; i < 8; i++)
-        printf("  X%d = %s\n", i, ti57_reg_to_str(ti57->X[i]));
+        printf("  X%d = %s\n", i, support57_reg_to_str(ti57->X[i]));
     printf("\n");
     for (int i = 0; i < 8; i++)
-        printf("  Y%d = %s\n", i, ti57_reg_to_str(ti57->Y[i]));
+        printf("  Y%d = %s\n", i, support57_reg_to_str(ti57->Y[i]));
     printf("\n");
 
     printf("  R5=x%02x   RAB=%d\n", ti57->R5, ti57->RAB);
@@ -101,12 +101,12 @@ static void print_state(ti57_t *ti57)
 
     printf("\nREGISTERS\n");
     printf("  X  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regX(ti57), false, 9));
+           support57_user_reg_to_str(ti57_get_regX(ti57), false, 9));
     printf("  T  = %s\n",
-           ti57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
+           support57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
     for (int i = 0; i <= 7; i++) {
         printf("  R%d = %s\n", i,
-               ti57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
+               support57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
     }
 
     printf("\nAOS\n");
@@ -125,17 +125,6 @@ static void print_state(ti57_t *ti57)
     printf("\nDISP = [%s]\n", ti57_get_display(ti57));
 }
 
-static void burst_until_idle(ti57_t *ti57)
-{
-   for ( ; ; ) {
-       ti57_activity_t activity = ti57_get_activity(ti57);
-       if (activity == TI57_POLL || activity == TI57_BLINK) {
-           return;
-       }
-       ti57_next(ti57);
-   }
-}
-
 static void run(ti57_t *ti57, ti57_key_t *keys, int n)
 {
     // Init.
@@ -146,8 +135,17 @@ static void run(ti57_t *ti57, ti57_key_t *keys, int n)
         ti57_key_press(ti57, keys[i] / 10, keys[i] % 10);
         burst_until_idle(ti57);
         // Key Release.
-        ti57_key_release(ti57);
-        burst_until_idle(ti57);
+        if (ti57->mode != TI57_LRN && keys[i] == 70) {
+            // R/S
+            burst_until_idle(ti57);  // Waiting for key release
+            ti57_key_release(ti57);
+            burst_until_busy(ti57);
+            burst_until_idle(ti57);  // Waiting for key press after program run
+        } else {
+            ti57_key_release(ti57);
+            burst_until_idle(ti57);
+        }
+       burst_until_idle(ti57);
     }
 }
 

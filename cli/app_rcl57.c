@@ -5,29 +5,27 @@
 #include "state57.h"
 #include "support57.h"
 
-static void burst_until_idle(ti57_t *ti57)
-{
-   for ( ; ; ) {
-       ti57_activity_t activity = ti57_get_activity(ti57);
-       if (activity == TI57_POLL || activity == TI57_BLINK) {
-           return;
-       }
-       ti57_next(ti57);
-   }
-}
-
 static void run(ti57_t *ti57, ti57_key_t *keys, int n)
 {
     // Init.
     burst_until_idle(ti57);
 
     for (int i = 0; i < n; i++) {
+        printf("\n ====> %d\n", keys[i]); 
         // Key Press.
         ti57_key_press(ti57, keys[i] / 10, keys[i] % 10);
-        burst_until_idle(ti57);
+        burst_until_busy(ti57);
         // Key Release.
-        ti57_key_release(ti57);
-        burst_until_idle(ti57);
+        if (ti57->mode != TI57_LRN && keys[i] == 70) {
+            // R/S
+            burst_until_idle(ti57);  // Waiting for key release
+            ti57_key_release(ti57);
+            burst_until_busy(ti57);
+            burst_until_idle(ti57);  // Waiting for key press after program run
+        } else {
+            ti57_key_release(ti57);
+            burst_until_idle(ti57);
+        }
     }
 }
 
@@ -35,6 +33,7 @@ int main(void)
 {
     ti57_key_t keys[] =
         {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
+        // {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
         // {61, 64, 62, 44, 63, 24, 51, 74};  // 1 + 2 * 3 ^ 4 =
         // {52, 21, 52};  // 5 STO 5
