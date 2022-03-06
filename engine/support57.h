@@ -11,6 +11,9 @@
 /** Name of a given key. For example: 0x34 -> "SUM". */
 char *ti57_get_keyname(ti57_key_t key);
 
+/** Unicode name of a given key. */
+char *ti57_get_keyname_unicode(ti57_key_t key);
+
 /** Trims 'str'. */
 char *ti57_trim(char *str);
 

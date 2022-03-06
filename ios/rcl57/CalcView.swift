@@ -62,10 +62,7 @@ struct CalcView: View {
             self.displayText = self.rcl57.display()
             self.is2nd = self.rcl57.is2nd()
             self.isInv = self.rcl57.isInv()
-            let reversed = self.rcl57.currentOp().reversed()
-            let padded =
-                String(reversed).padding(toLength: 9, withPad: " ", startingAt: 0)
-            self.currentOp = String(padded.reversed())
+            self.currentOp = self.rcl57.currentOp()
         })
     }
 
@@ -100,9 +97,9 @@ struct CalcView: View {
             (standardDisplayOffsetY - (standardCalcHeight - standardDisplayHeight)/2) * scaleFactor
 
         let currentOpFont = Font
-            .system(size: 18)
+            .system(size: 20)
             .bold()
-            .monospaced()
+        let currentOpColor = Color(red: 0.9, green: 0.9, blue: 0.9)
 
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
@@ -128,7 +125,7 @@ struct CalcView: View {
                                 self.displayText = self.rcl57.display()
                             }
                         }
-                        .onEnded {_ in
+                        .onEnded { _ in
                             if self.isKeyPressed {
                                 self.isKeyPressed = false
                                 runDisplayAnimationLoop()
@@ -162,10 +159,11 @@ struct CalcView: View {
             }
             Text(currentOp)
                 .padding(10)
-                .foregroundColor(Color.white)
-                .offset(x: 100 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
+                .foregroundColor(currentOpColor)
+                .offset(x: 130 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
                 .font(currentOpFont)
-            Menu("Options") {
+                .frame(alignment: .trailing)
+            Menu("Menu") {
                 Button("Clear All", action: {
                     rcl57.clearAll()
                     runDisplayAnimationLoop()
@@ -180,7 +178,7 @@ struct CalcView: View {
                     print()
                 })
                 Toggle("Turbo Mode", isOn: $isTurboMode)
-                    .onChange(of: isTurboMode) {_ in
+                    .onChange(of: isTurboMode) { _ in
                         if isTurboMode {
                             rcl57.setSpeedup(speedup: 1000)
                         } else {

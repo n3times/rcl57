@@ -94,6 +94,7 @@ typedef struct ti57_s {
     ti57_activity_t activity;       // The current activity
 
     log57_t log;
+    char current_op[30];
 } ti57_t;
 
 /** Units for trigometric functions. */
@@ -213,5 +214,8 @@ int ti57_get_ret(ti57_t *ti57, int i);
 
 /** Instruction at a given step (step in 0..49). */
 ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step);
+
+/** Gets the last operation in EVAL mode. */
+char *ti57_get_current_op(ti57_t *ti57);
 
 #endif  /* !STATE57_H */

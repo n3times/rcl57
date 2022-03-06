@@ -260,3 +260,8 @@ ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
     }
     return &ALL_INSTRUCTIONS[((*reg)[i] << 4) | (*reg)[i-1]];
 }
+
+char *ti57_get_current_op(ti57_t *ti57)
+{
+    return ti57->current_op;
+}

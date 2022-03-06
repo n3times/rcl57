@@ -423,6 +423,7 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
     }
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
         log57_log_message(&ti57->log, "R/S", LOG57_OP);
+        strcpy(ti57->current_op, "R/S");
         return;
     }
     if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE) &&
@@ -432,6 +433,7 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
 
     ti57->last_processed_key = get_key(ti57->row, ti57->col);
     if (ti57->mode == TI57_LRN) {
+        strcpy(ti57->current_op, "");
         return;
     }
     if (ti57->last_processed_key == 0x81) {
@@ -459,6 +461,7 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
 
     if (key == 0x15) {
         log57_log_message(&ti57->log, "CLR", LOG57_OP);
+        strcpy(ti57->current_op, "");
     }
 
     if (ti57->eval_mode == TI57_NUMBER_EDIT) {
@@ -470,29 +473,38 @@ static void update_log(ti57_t *ti57, ti57_activity_t previous_activity, ti57_mod
 
         // Print operation.
         char op[10];
+        char op_unicode[30];
         int i = 0;
         if (pending_inv) {
             sprintf(op, "INV ");
+            sprintf(op_unicode, "INV ");
             i += 4;
         }
         sprintf(op + i, "%s _", ti57_get_keyname(key));
+        sprintf(op_unicode + i, "%s _", ti57_get_keyname_unicode(key));
         log57_log_message(&ti57->log, op, LOG57_PENDING_OP);
+        strcpy(ti57->current_op, op_unicode);
     } else if (ti57->eval_mode == TI57_EVAL_MODE_DEFAULT) {
         // Print operation.
         char op[10];
+        char op_unicode[30];
         int i = 0;
         if (pending_inv) {
             sprintf(op, "INV ");
+            sprintf(op_unicode, "INV ");
             i += 4;
             pending_inv = false;
         }
         if (pending_key && key <= 0x09) {
             sprintf(op + i, "%s %d", ti57_get_keyname(pending_key), key);
+            sprintf(op_unicode + i, "%s %d", ti57_get_keyname_unicode(pending_key), key);
         } else {
             sprintf(op + i, "%s", ti57_get_keyname(key));
+            sprintf(op_unicode + i, "%s", ti57_get_keyname_unicode(key));
         }
         if (!(pending_key == 0 && key < 0x10)) {
             log57_log_message(&ti57->log, op, LOG57_OP);
+            strcpy(ti57->current_op, op_unicode);
         }
         // Print result.
         if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {

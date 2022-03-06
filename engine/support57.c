@@ -33,6 +33,31 @@ static char *SECONDARY_KEYS[] = {
     "LBL",     0,  "s+",   "@",  "g2",
 };
 
+#define xxx "\U0001D499"  // italic x
+#define ttt "\U0001D495"  // italic t
+
+static char *UNICODE_PRIMARY_KEYS[] = {
+    "2nd",     "INV",     "ln"xxx,        "CE",     "CLR",
+    "LRN", xxx":"ttt, xxx"\u00b2", "\u221a"xxx,   "1/"xxx,
+    "SST",     "STO",       "RCL",       "SUM", "y\u02e3",
+    "BST",      "EE",         "(",         ")",  "\u00f7",
+    "GTO",         0,           0,           0,  "\uff58",
+    "SBR",         0,           0,           0,  "\uff0d",
+    "RST",         0,           0,           0,  "\uff0b",
+    "R/S",         0,         ".",       "+/-",  "\uff1d",
+};
+
+static char *UNICODE_SECONDARY_KEYS[] = {
+    "2n2",       "IN2",     "log",     "C.t",          "CLR",
+    "D.MS", "P\u2192R",     "sin",     "cos",          "tan",
+    "Pause",     "Ins",     "Exc",     "Prd",       "\u03c0",
+    "Nop",       "Del",     "Fix",     "Int",      "|"xxx"|",
+    "Dsz",           0,         0,         0,          "Deg",
+    xxx"="ttt,       0,         0,         0,          "Rad",
+    xxx"\u2265"ttt,  0,         0,         0,         "Grad",
+    "Lbl",           0, "\u03A3+", "x\u0305", "\u03C3\u00b2",
+};
+
 char *ti57_get_keyname(ti57_key_t key)
 {
     int row, col;
@@ -45,6 +70,20 @@ char *ti57_get_keyname(ti57_key_t key)
     sec = (key & 0x0f) >= 6;
     return sec ? SECONDARY_KEYS[row * 5 + col - 5]
                : PRIMARY_KEYS[row * 5 + col];
+}
+
+char *ti57_get_keyname_unicode(ti57_key_t key)
+{
+    int row, col;
+    bool sec;
+
+    if (key < 0x10) return DIGIT_KEYS[key];
+
+    row = ((key & 0xf0) >> 4) - 1;
+    col = (key & 0x0f) - 1;
+    sec = (key & 0x0f) >= 6;
+    return sec ? UNICODE_SECONDARY_KEYS[row * 5 + col - 5]
+               : UNICODE_PRIMARY_KEYS[row * 5 + col];
 }
 
 char *ti57_trim(char *str)
