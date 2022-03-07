@@ -417,8 +417,17 @@ static void update_log(ti57_t *ti57,
     static bool pending_sec;
     static bool pending_inv;
 
-    // In RUN mode, we only log "pauses" (currently, we do not tracing).
     if (ti57->mode == TI57_RUN) {
+        if (previous_mode == TI57_EVAL && ti57->mode == TI57_RUN) {
+            if (ti57->last_processed_key == 0x61) {  // SBR
+                char str[6];
+                sprintf(str, "%s %d", support57_get_keyname(0x61), get_key(ti57->row, ti57->col));
+                log57_log_message(&ti57->log, str, LOG57_OP);
+                strcpy(ti57->current_op, str);
+                pending_key = 0;
+                return;
+            }
+        }
         if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
             log57_log_message(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
         }
@@ -438,7 +447,6 @@ static void update_log(ti57_t *ti57,
 
     // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
-        printf("poll run release\n");
         log57_log_message(&ti57->log, support57_get_keyname(0x81), LOG57_OP);
         strcpy(ti57->current_op, support57_get_keyname_unicode(0x81));
         return;
@@ -447,7 +455,6 @@ static void update_log(ti57_t *ti57,
     if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
         return;
     }
-    printf("poll release\n");
 
 
     // From here on, we are only interested in key presses.

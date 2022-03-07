@@ -33,12 +33,9 @@ static char *SECONDARY_KEYS[] = {
     "LBL",     0,  "s+",   "@", "g^2",
 };
 
-#define xxx "\U0001D499"  // italic x
-#define ttt "\U0001D495"  // italic t
-
 static char *UNICODE_PRIMARY_KEYS[] = {
-    "2nd",     "INV",     "ln"xxx,        "CE",     "CLR",
-    "LRN", xxx":"ttt, xxx"\u00b2", "\u221a"xxx,   "1/"xxx,
+    "2nd",     "INV",       "lnx",        "CE",     "CLR",
+    "LRN",     "x:t",   "x\u00b2",   "\u221ax",     "1/x",
     "SST",     "STO",       "RCL",       "SUM", "y\u02e3",
     "BST",      "EE",         "(",         ")",  "\u00f7",
     "GTO",         0,           0,           0,  "\uff58",
@@ -51,10 +48,10 @@ static char *UNICODE_SECONDARY_KEYS[] = {
     "2n2",       "IN2",     "log",     "C.t",          "CLR",
     "D.MS", "P\u2192R",     "sin",     "cos",          "tan",
     "Pause",     "Ins",     "Exc",     "Prd",       "\u03c0",
-    "Nop",       "Del",     "Fix",     "Int",      "|"xxx"|",
+    "Nop",       "Del",     "Fix",     "Int",          "|x|",
     "Dsz",           0,         0,         0,          "Deg",
-    xxx"="ttt,       0,         0,         0,          "Rad",
-    xxx"\u2265"ttt,  0,         0,         0,         "Grad",
+    "x=t",           0,         0,         0,          "Rad",
+    "x\u2265t",      0,         0,         0,         "Grad",
     "Lbl",           0, "\u03A3+", "x\u0305", "\u03C3\u00b2",
 };
 
