@@ -420,7 +420,7 @@ static void update_log(ti57_t *ti57,
     // In RUN mode, we only log "pauses" (currently, we do not tracing).
     if (ti57->mode == TI57_RUN) {
         if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
-            log57_log_message(&ti57->log, ti57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+            log57_log_message(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
         }
         return;
     }
@@ -428,7 +428,7 @@ static void update_log(ti57_t *ti57,
     // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
         char result[20];
-        strcpy(result, ti57_trim(ti57_get_display(ti57)));
+        strcpy(result, support57_trim(ti57_get_display(ti57)));
         if (ti57_is_error(ti57)) {
             sprintf(result + strlen(result), "?");
         }
@@ -438,14 +438,17 @@ static void update_log(ti57_t *ti57,
 
     // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
-        log57_log_message(&ti57->log, ti57_get_keyname(0x81), LOG57_OP);
-        strcpy(ti57->current_op, ti57_get_keyname_unicode(0x81));
+        printf("poll run release\n");
+        log57_log_message(&ti57->log, support57_get_keyname(0x81), LOG57_OP);
+        strcpy(ti57->current_op, support57_get_keyname_unicode(0x81));
         return;
     }
 
     if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
         return;
     }
+    printf("poll release\n");
+
 
     // From here on, we are only interested in key presses.
 
@@ -488,14 +491,14 @@ static void update_log(ti57_t *ti57,
         if (key == 0x15) {
             if (ti57->log.logged_count &&
                 ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
-                log57_log_message(&ti57->log, ti57_get_keyname(0x15), LOG57_OP);
+                log57_log_message(&ti57->log, support57_get_keyname(0x15), LOG57_OP);
                 strcpy(ti57->current_op, "");
             }
         }
 
         // Log display.
         memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
-        log57_log_message(&ti57->log, ti57_trim(pending_display), LOG57_NUMBER_IN);
+        log57_log_message(&ti57->log, support57_trim(pending_display), LOG57_NUMBER_IN);
         pending_inv = false;
     } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
         pending_key = key;
@@ -509,8 +512,8 @@ static void update_log(ti57_t *ti57,
             sprintf(op_unicode, "INV ");
             i += 4;
         }
-        sprintf(op + i, "%s _", ti57_get_keyname(key));
-        sprintf(op_unicode + i, "%s _", ti57_get_keyname_unicode(key));
+        sprintf(op + i, "%s _", support57_get_keyname(key));
+        sprintf(op_unicode + i, "%s _", support57_get_keyname_unicode(key));
         log57_log_message(&ti57->log, op, LOG57_PENDING_OP);
         strcpy(ti57->current_op, op_unicode);
     } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
@@ -525,11 +528,11 @@ static void update_log(ti57_t *ti57,
             pending_inv = false;
         }
         if (pending_key && key <= 0x09) {
-            sprintf(op + i, "%s %d", ti57_get_keyname(pending_key), key);
-            sprintf(op_unicode + i, "%s %d", ti57_get_keyname_unicode(pending_key), key);
+            sprintf(op + i, "%s %d", support57_get_keyname(pending_key), key);
+            sprintf(op_unicode + i, "%s %d", support57_get_keyname_unicode(pending_key), key);
         } else {
-            sprintf(op + i, "%s", ti57_get_keyname(key));
-            sprintf(op_unicode + i, "%s", ti57_get_keyname_unicode(key));
+            sprintf(op + i, "%s", support57_get_keyname(key));
+            sprintf(op_unicode + i, "%s", support57_get_keyname_unicode(key));
         }
         if (!(pending_key == 0 && key < 0x10)) {
             log57_log_message(&ti57->log, op, LOG57_OP);
@@ -539,7 +542,7 @@ static void update_log(ti57_t *ti57,
         // Print result.
         if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {
             char result[20];
-            strcpy(result, ti57_trim(ti57_get_display(ti57)));
+            strcpy(result, support57_trim(ti57_get_display(ti57)));
             if (ti57_is_error(ti57)) {
                 sprintf(result + strlen(result), "?");
             }

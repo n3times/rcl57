@@ -76,7 +76,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
         i -= 2;
     }
     if (is_alphanumeric_mode) {
-        char *name = ti57_get_keyname(instruction->key);
+        char *name = support57_get_keyname(instruction->key);
         for (int j = (int)strlen(name) - 1; j >= 0; j--) {
             str[i--] = name[j];
             if (str[i + 1] == '.') {
@@ -126,23 +126,6 @@ static void clear_2nd(rcl57_t *rcl57)
     ti57_t *ti57 = &rcl57->ti57;
 
     ti57->C[14] &= 0x7;
-}
-
-static void burst_until_idle(ti57_t *ti57)
-{
-   for ( ; ; ) {
-        if (ti57->activity == TI57_POLL_KEY_PRESS ||
-            ti57->activity == TI57_POLL_KEY_RUN_RELEASE ||
-            ti57->activity == TI57_POLL_KEY_RELEASE ||
-            ti57->activity == TI57_BLINK) {
-            // Call 'next' a few more times to make sure the display gets updated.
-            for (int i = 0; i < 20; i++) {
-                ti57_next(ti57);
-            }
-            return;
-        }
-        ti57_next(ti57);
-   }
 }
 
 static void key(rcl57_t *rcl57, bool sec, int row, int col)
