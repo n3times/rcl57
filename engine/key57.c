@@ -68,6 +68,22 @@ static char *get_name(key57_t key, bool unicode)
                : primary_keys[row * 5 + col];
 }
 
+key57_t key57_get_key(int row, int col)
+{
+    if (row == 5 && col == 2) return 0x07;
+    if (row == 5 && col == 3) return 0x08;
+    if (row == 5 && col == 4) return 0x09;
+    if (row == 6 && col == 2) return 0x04;
+    if (row == 6 && col == 3) return 0x05;
+    if (row == 6 && col == 4) return 0x06;
+    if (row == 7 && col == 2) return 0x01;
+    if (row == 7 && col == 3) return 0x02;
+    if (row == 7 && col == 4) return 0x03;
+    if (row == 8 && col == 2) return 0x00;
+
+    return (row << 4) | col;
+}
+
 char *key57_get_name(key57_t key)
 {
     return get_name(key, false);

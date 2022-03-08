@@ -72,8 +72,7 @@ typedef struct ti57_s {
     ti57_address_t stack[3];         // Subroutine Stack
     bool COND;                       // Conditional Latch
     bool is_hex;                     // Arithmetic done in base 16 instead of 10
-    bool is_key_pressed;             // A key is being pressed
-    int row, col;                    // Row and column of pressed key
+    int row, col;                    // Row and column of pressed key in 1..8 and 1..5
     ti57_reg_t dA, dB;               // Copy of A and B for display purposes
 
     unsigned long current_cycle;     // The number of cycle the emulator has been running for

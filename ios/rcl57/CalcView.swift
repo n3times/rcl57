@@ -121,7 +121,7 @@ struct CalcView: View {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 self.isKeyPressed = true;
                                 runDisplayAnimationLoop()
-                                self.rcl57.keyPress(row:Int32(c!.x), col:Int32(c!.y))
+                                self.rcl57.keyPress(row:Int32(c!.x + 1), col:Int32(c!.y + 1))
                                 self.displayText = self.rcl57.display()
                             }
                         }

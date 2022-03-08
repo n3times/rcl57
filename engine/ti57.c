@@ -210,8 +210,8 @@ static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
     case 4: memcpy(ti57->X[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
     case 5: memcpy(ti57->A, ti57->X[ti57->RAB], sizeof(ti57_reg_t)); break;
     case 6: memcpy(ti57->Y[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
-    case 7: if (ti57->is_key_pressed) {
-                ti57->R5 = (ti57->col + 1) << 4 | ti57->row;
+    case 7: if (ti57->row && ti57->col) {
+                ti57->R5 = ti57->col << 4 | (ti57->row - 1);
                 ti57->COND = 1;
             }
             memcpy(ti57->dA, ti57->A, sizeof(ti57_reg_t));
@@ -374,22 +374,6 @@ static void update_activity(ti57_t *ti57)
  *
  ******************************************************************************/
 
-static key57_t get_key(int row, int col)
-{
-    if (row == 4 && col == 1) return 0x07;
-    if (row == 4 && col == 2) return 0x08;
-    if (row == 4 && col == 3) return 0x09;
-    if (row == 5 && col == 1) return 0x04;
-    if (row == 5 && col == 2) return 0x05;
-    if (row == 5 && col == 3) return 0x06;
-    if (row == 6 && col == 1) return 0x01;
-    if (row == 6 && col == 2) return 0x02;
-    if (row == 6 && col == 3) return 0x03;
-    if (row == 7 && col == 1) return 0x00;
-
-    return (row + 1) << 4 | (col + 1);
-}
-
 static bool has_result(key57_t key)
 {
     int row = key >> 4;
@@ -429,7 +413,7 @@ static void update_log(ti57_t *ti57,
                 log57_op_t op;
                 op.inv = false;
                 op.key = 0x61;
-                op.d = get_key(ti57->row, ti57->col);
+                op.d = key57_get_key(ti57->row, ti57->col);
                 log57_log_op(&ti57->log, &op, LOG57_OP);
                 pending_key = 0;
             }
@@ -466,7 +450,7 @@ static void update_log(ti57_t *ti57,
 
     // From here on, we are only interested in key presses.
 
-    ti57->last_processed_key = get_key(ti57->row, ti57->col);
+    ti57->last_processed_key = key57_get_key(ti57->row, ti57->col);
     if (ti57->mode == TI57_LRN) {
         log57_clear_current_op(&ti57->log);
         return;
@@ -606,15 +590,15 @@ int ti57_next(ti57_t *ti57)
 
 void ti57_key_release(ti57_t *ti57)
 {
-    ti57->is_key_pressed = false;
+    ti57->row = 0;
+    ti57->col = 0;
 }
 
 void ti57_key_press(ti57_t *ti57, int row, int col)
 {
-    assert(0 <= row && row <= 7);
-    assert(0 <= col && col <= 4);
+    assert(1 <= row && row <= 8);
+    assert(1 <= col && col <= 5);
 
-    ti57->is_key_pressed = true;
     ti57->row = row;
     ti57->col = col;
 }

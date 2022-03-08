@@ -145,27 +145,27 @@ static void key(rcl57_t *rcl57, bool sec, int row, int col)
 
 static void key_lrn(rcl57_t *rcl57)
 {
-     key(rcl57, false, 1, 0);
+     key(rcl57, false, 2, 1);
 }
 
 static void key_sst(rcl57_t *rcl57)
 {
-     key(rcl57, false, 2, 0);
+     key(rcl57, false, 3, 1);
 }
 
 static void key_bst(rcl57_t *rcl57)
 {
-     key(rcl57, false, 3, 0);
+     key(rcl57, false, 4, 1);
 }
 
 static void key_ins(rcl57_t *rcl57)
 {
-     key(rcl57, true, 2, 1);
+     key(rcl57, true, 3, 2);
 }
 
 static void key_del(rcl57_t *rcl57)
 {
-     key(rcl57, true, 3, 1);
+     key(rcl57, true, 4, 2);
 }
 
 static void bst(rcl57_t *rcl57)
@@ -224,27 +224,27 @@ static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
     bool is_2nd, is_inv;
 
     if (row == 0 && col == 0) {                      // 2ND
-        return ti57_key_press(&rcl57->ti57, 0, 0);
+        return ti57_key_press(&rcl57->ti57, 1, 1);
     } else if (row == 0 && col == 1) {               // INV
-        return ti57_key_press(&rcl57->ti57, 0, 1);
+        return ti57_key_press(&rcl57->ti57, 1, 2);
     }
 
     is_2nd = ti57_is_2nd(ti57);
     is_inv = ti57_is_inv(ti57);
     clear_2nd(rcl57);
 
-    if (!is_2nd && row == 3 && col == 0) {           // BST
+    if (!is_2nd && row == 4 && col == 1) {           // BST
         return bst(rcl57);
-    } else if (!is_2nd && row == 2 && col == 0) {    // SST
+    } else if (!is_2nd && row == 3 && col == 1) {    // SST
         return sst(rcl57);
-    } else if (is_2nd && row == 2 && col == 1) {     // INS
+    } else if (is_2nd && row == 3 && col == 2) {     // INS
         return ins(rcl57);
-    } else if (is_2nd && row == 3 && col == 1) {     // DEL
+    } else if (is_2nd && row == 4 && col == 2) {     // DEL
         return del(rcl57);
-    } else if (!is_2nd && row == 1 && col == 0) {    // LRN
+    } else if (!is_2nd && row == 2 && col == 1) {    // LRN
         return key_lrn(rcl57);
-    } else if (row == 0 && col == 0) {               // 2ND
-        return ti57_key_press(&rcl57->ti57, 0, 0);
+    } else if (row == 1 && col == 1) {               // 2ND
+        return ti57_key_press(&rcl57->ti57, 1, 1);
     }
 
     if (rcl57->at_end_program) {

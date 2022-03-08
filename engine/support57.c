@@ -52,7 +52,7 @@ char *support57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     if (sci)
         ti57.B[15] = 0x8;
 
-    ti57_key_press(&ti57, 1, 1);
+    ti57_key_press(&ti57, 2, 2);
     burst_until_idle(&ti57);
     ti57_key_release(&ti57);
     burst_until_idle(&ti57);

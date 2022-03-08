@@ -12,6 +12,9 @@
  */
 typedef unsigned char key57_t;
 
+/** Returns the key at a given row (1..8) and col (1..5) */
+key57_t key57_get_key(int row, int col);
+
 /** Name of a given key. For example: 0x34 -> "SUM". */
 char *key57_get_name(key57_t key);
 

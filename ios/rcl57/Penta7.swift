@@ -53,6 +53,7 @@ class RCL57 {
     }
 
     // Should be called whenever the user presses a calculator key.
+    // row in 1..8 and col in 1..5
     func keyPress(row: Int32, col: Int32) {
         rcl57_key_press(&rcl57, row, col)
     }

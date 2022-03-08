@@ -85,7 +85,7 @@ void rcl57_init(rcl57_t *rcl57);
  */
 bool rcl57_advance(rcl57_t *rcl57, int ms);
 
-/** Should be called when a key is pressed (row in 0..7, col in 0..4). */
+/** Should be called when a key is pressed (row in 1..8, col in 1..5). */
 void rcl57_key_press(rcl57_t *rcl57, int row, int col);
 
 /** Should be called when a key is released. */
