@@ -106,6 +106,11 @@ char *log57_get_message(log57_entry_t *entry)
     return entry->message;
 }
 
+char *log57_get_current_op(log57_t *log)
+{
+    return log->current_op;
+}
+
 void log57_clear_current_op(log57_t *log)
 {
     log->current_op[0] = 0;

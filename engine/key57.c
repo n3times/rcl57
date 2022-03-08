@@ -51,30 +51,30 @@ static char *UNICODE_SECONDARY_KEYS[] = {
     "Lbl",           0, "\u03A3+", "x\u0305", "\u03C3\u00b2",
 };
 
-char *key57_get_name(key57_t key)
+static char *get_name(key57_t key, bool unicode)
 {
     int row, col;
     bool sec;
 
     if (key < 0x10) return DIGIT_KEYS[key];
 
+    char **primary_keys = unicode ? UNICODE_PRIMARY_KEYS : PRIMARY_KEYS;
+    char **secondary_keys = unicode ? UNICODE_SECONDARY_KEYS : SECONDARY_KEYS;
+
     row = ((key & 0xf0) >> 4) - 1;
     col = (key & 0x0f) - 1;
     sec = (key & 0x0f) >= 6;
-    return sec ? SECONDARY_KEYS[row * 5 + col - 5]
-               : PRIMARY_KEYS[row * 5 + col];
+    return sec ? secondary_keys[row * 5 + col - 5]
+               : primary_keys[row * 5 + col];
+}
+
+char *key57_get_name(key57_t key)
+{
+    return get_name(key, false);
 }
 
 char *key57_get_name_unicode(key57_t key)
 {
-    int row, col;
-    bool sec;
+    return get_name(key, true);
 
-    if (key < 0x10) return DIGIT_KEYS[key];
-
-    row = ((key & 0xf0) >> 4) - 1;
-    col = (key & 0x0f) - 1;
-    sec = (key & 0x0f) >= 6;
-    return sec ? UNICODE_SECONDARY_KEYS[row * 5 + col - 5]
-               : UNICODE_PRIMARY_KEYS[row * 5 + col];
 }

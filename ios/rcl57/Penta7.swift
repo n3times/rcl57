@@ -125,7 +125,7 @@ class RCL57 {
     }
 
     func currentOp() -> String {
-        return String(cString: ti57_get_current_op(&rcl57.ti57))
+        return String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
     // Clears the log.

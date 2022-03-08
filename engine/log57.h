@@ -52,19 +52,19 @@ void log57_log_op(log57_t *log, log57_op_t *op, log57_type_t type);
 long log57_get_logged_count(log57_t *log);
 
 /**
- * A given log entry.
+ * Returns a given log entry.
  *
  * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
  */
 log57_entry_t *log57_get_entry(log57_t *log, long index);
 
-void log57_clear_current_op(log57_t *log);
-
-/**
- * A given log message.
- *
- * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
- */
+/** Returns the message of a given log entry. */
 char *log57_get_message(log57_entry_t *entry);
+
+/** Gets the last operation in EVAL mode. */
+char *log57_get_current_op(log57_t *log);
+
+/** Clears the last operation in EVAL mode. */
+void log57_clear_current_op(log57_t *log);
 
 #endif /* log57_h */
