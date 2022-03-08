@@ -368,7 +368,13 @@ static void update_activity(ti57_t *ti57)
     }
 }
 
-static ti57_key_t get_key(int row, int col)
+/******************************************************************************
+ *
+ *  Logging.
+ *
+ ******************************************************************************/
+
+static key57_t get_key(int row, int col)
 {
     if (row == 4 && col == 1) return 0x07;
     if (row == 4 && col == 2) return 0x08;
@@ -384,7 +390,7 @@ static ti57_key_t get_key(int row, int col)
     return (row + 1) << 4 | (col + 1);
 }
 
-static bool has_result(ti57_key_t key)
+static bool has_result(key57_t key)
 {
     int row = key >> 4;
     switch(row) {
@@ -413,7 +419,7 @@ static void update_log(ti57_t *ti57,
                        ti57_parse_state_t previous_parse_state)
 {
     static char pending_display[25];
-    static ti57_key_t pending_key;
+    static key57_t pending_key;
     static bool pending_sec;
     static bool pending_inv;
 
@@ -426,10 +432,8 @@ static void update_log(ti57_t *ti57,
                 op.d = get_key(ti57->row, ti57->col);
                 log57_log_op(&ti57->log, &op, LOG57_OP);
                 pending_key = 0;
-                return;
             }
-        }
-        if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
+        } else if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
             log57_log_display(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
         }
         return;
@@ -442,7 +446,7 @@ static void update_log(ti57_t *ti57,
         if (ti57_is_error(ti57)) {
             sprintf(result + strlen(result), "?");
         }
-        log57_log_display(&ti57->log, result, LOG57_RESULT);
+        log57_log_display(&ti57->log, result, LOG57_RUN_RESULT);
         return;
     }
 
@@ -460,7 +464,6 @@ static void update_log(ti57_t *ti57,
         return;
     }
 
-
     // From here on, we are only interested in key presses.
 
     ti57->last_processed_key = get_key(ti57->row, ti57->col);
@@ -476,7 +479,7 @@ static void update_log(ti57_t *ti57,
         return;
     }
 
-    ti57_key_t key = ti57->last_processed_key;
+    key57_t key = ti57->last_processed_key;
 
     // Don't log "2nd" and "INV" but take note of the state.
     if (key == 0x11) {
@@ -493,7 +496,7 @@ static void update_log(ti57_t *ti57,
     pending_sec = false;
 
     // Flush display so we get an accurate result.
-    // Anyway, the emulator would be flushing the display anyway, just a few cycles later.
+    // The emulator would be flushing the display anyway, just a few cycles later.
     memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
     memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
 
@@ -548,7 +551,7 @@ static void update_log(ti57_t *ti57,
             if (ti57_is_error(ti57)) {
                 sprintf(result + strlen(result), "?");
             }
-            log57_log_display(&ti57->log, result, LOG57_RESULT);
+            log57_log_display(&ti57->log, result, LOG57_OP_RESULT);
         }
 
         if (pending_key && key <= 0x09) {

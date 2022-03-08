@@ -10,12 +10,12 @@
  * - least significant 4 bits: column in 1..5 for primary keys and in 6..A for
  *   secondary keys
  */
-typedef unsigned char ti57_key_t;
+typedef unsigned char key57_t;
 
 /** Name of a given key. For example: 0x34 -> "SUM". */
-char *support57_get_keyname(ti57_key_t key);
+char *key57_get_name(key57_t key);
 
 /** Unicode name of a given key. */
-char *support57_get_keyname_unicode(ti57_key_t key);
+char *key57_get_name_unicode(key57_t key);
 
 #endif /* key57_h */

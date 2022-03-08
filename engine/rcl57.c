@@ -76,7 +76,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
         i -= 2;
     }
     if (is_alphanumeric_mode) {
-        char *name = support57_get_keyname(instruction->key);
+        char *name = key57_get_name(instruction->key);
         for (int j = (int)strlen(name) - 1; j >= 0; j--) {
             str[i--] = name[j];
             if (str[i + 1] == '.') {

@@ -200,7 +200,7 @@ static void init_instructions()
             instruction->d = -1;
         } else {
             // Register ops: RCL, PRD, SUM, EXC and STO.
-            static ti57_key_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
+            static key57_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
             instruction->inv = (i & 0x08) != 0;
             instruction->key = keys[(i >> 4) - 0xb];
             instruction->d = i & 0x07;
@@ -209,7 +209,7 @@ static void init_instructions()
 
     // LBL, GTO, SBR and FIX.
     static int start_indices[] = {0x27, 0x2f, 0x77, 0x7f};
-    static ti57_key_t keys[] = {0x86, 0x51, 0x61, 0x48};
+    static key57_t keys[] = {0x86, 0x51, 0x61, 0x48};
     static int offsets[] = {0, -1, 15, 31, -2, 14, 30, -3, 13, 29};
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 10; j++) {

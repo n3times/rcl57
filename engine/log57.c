@@ -27,7 +27,8 @@ void log57_log_op(log57_t *log, log57_op_t *op, log57_type_t type)
         break;
     case LOG57_NUMBER_IN:
     case LOG57_PAUSE:
-    case LOG57_RESULT:
+    case LOG57_OP_RESULT:
+    case LOG57_RUN_RESULT:
         assert(false);
         break;
     }
@@ -48,12 +49,12 @@ void log57_log_op(log57_t *log, log57_op_t *op, log57_type_t type)
     }
     sprintf(log->entries[index].message, "%s%s%s",
             op->inv ? "INV " : "",
-            support57_get_keyname(op->key),
+            key57_get_name(op->key),
             suffix);
     log->entries[index].type = type;
     sprintf(log->current_op, "%s%s%s",
             op->inv ? "INV " : "",
-            support57_get_keyname_unicode(op->key),
+            key57_get_name_unicode(op->key),
             suffix);}
 
 long log57_get_logged_count(log57_t *log)
@@ -80,7 +81,8 @@ void log57_log_display(log57_t *log, char *display, log57_type_t type)
         assert(false);
         break;
     case LOG57_PAUSE:
-    case LOG57_RESULT:
+    case LOG57_OP_RESULT:
+    case LOG57_RUN_RESULT:
         // nothing
         break;
     }

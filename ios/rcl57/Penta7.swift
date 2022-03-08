@@ -145,19 +145,18 @@ class RCL57 {
         for i in start...loggedCount {
             let entry = log57_get_entry(&rcl57.ti57.log, i)
             let type = entry!.pointee.type
-            let entryMessage = entry!.pointee.message
             let message = log57_get_message(entry)!
             let column = (type == LOG57_OP || type == LOG57_PENDING_OP) ? 1 : 0
             if column == 0 {
                 if currentColumn == 1 {
                     print()
                 }
-                print(type == LOG57_RESULT ? ">" : " ", terminator: "")
+                print(type == LOG57_OP_RESULT || type == LOG57_RUN_RESULT ? ">" : " ", terminator: "")
                 print(String(format:"%15s", message), terminator: "")
                 currentColumn = 1
             } else {
                 if currentColumn == 0 {
-                    print(type == LOG57_RESULT ? ">" : " ", terminator: "")
+                    print(type == LOG57_OP_RESULT || type == LOG57_RUN_RESULT ? ">" : " ", terminator: "")
                     print(String(format:"%15s", ""), terminator: "");
                 }
                 print(String(format:"%11s", message));

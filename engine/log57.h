@@ -16,13 +16,14 @@ typedef enum log57_type_e {
     LOG57_NUMBER_IN,   // A number entered by the user, may be pending.
     LOG57_PENDING_OP,  // A pending operation such as "STO _".
     LOG57_OP,          // An operation such as "STO 2" or "SIN".
-    LOG57_RESULT,      // The result of an operation, i.e. a number.
+    LOG57_OP_RESULT,   // The result of an operation.
+    LOG57_RUN_RESULT,  // The result of a program run.
     LOG57_PAUSE,       // The number on the display, while on Pause.
 } log57_type_t;
 
 typedef struct log57_op_s {
     bool inv;
-    ti57_key_t key;
+    key57_t key;
     signed char d;
 } log57_op_t;
 

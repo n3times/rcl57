@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "key57.h"
 #include "rcl57.h"
 #include "state57.h"
 #include "support57.h"
 
-static void run(ti57_t *ti57, ti57_key_t *keys, int n)
+static void run(ti57_t *ti57, key57_t *keys, int n)
 {
     // Init.
     burst_until_idle(ti57);
@@ -31,7 +32,7 @@ static void run(ti57_t *ti57, ti57_key_t *keys, int n)
 
 int main(void)
 {
-    ti57_key_t keys[] =
+    key57_t keys[] =
         {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
         // {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
@@ -40,6 +41,6 @@ int main(void)
     rcl57_t rcl57;
 
     rcl57_init(&rcl57);
-    run(&rcl57.ti57, keys, sizeof(keys)/sizeof(ti57_key_t));
+    run(&rcl57.ti57, keys, sizeof(keys)/sizeof(key57_t));
     printf("\nDISP = [%s]\n", ti57_get_display(&rcl57.ti57));
 }

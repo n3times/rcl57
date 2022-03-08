@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ti57.h"
-#include "state57.h"
+#include "key57.h"
 #include "support57.h"
+#include "ti57.h"
 
 static char *get_aos(ti57_t *ti57, char *str)
 {
@@ -57,7 +57,7 @@ static char *get_instruction_str(ti57_t *ti57, int step, char *str)
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
-            support57_get_keyname(instruction->key),
+            key57_get_name(instruction->key),
             (instruction->d >= 0) ? '0' + instruction->d : ' ');
     return str;
 }
@@ -125,7 +125,7 @@ static void print_state(ti57_t *ti57)
     printf("\nDISP = [%s]\n", ti57_get_display(ti57));
 }
 
-static void run(ti57_t *ti57, ti57_key_t *keys, int n)
+static void run(ti57_t *ti57, key57_t *keys, int n)
 {
     // Init.
     burst_until_idle(ti57);
@@ -151,7 +151,7 @@ static void run(ti57_t *ti57, ti57_key_t *keys, int n)
 
 int main(void)
 {
-    ti57_key_t keys[] =
+    key57_t keys[] =
         {10, 52, 13, 70, 10, 60, 70};  // program: sqrt(5)
         // {2, 2, 2, 2, 2, 2, 3};  // ln(ln(...(ln(0))...)).
         // {61, 64, 62, 44, 63, 24, 51, 74};  // 1 + 2 * 3 ^ 4 =
@@ -160,6 +160,6 @@ int main(void)
 
     ti57_init(&ti57);
 
-    run(&ti57, keys, sizeof(keys)/sizeof(ti57_key_t));
+    run(&ti57, keys, sizeof(keys)/sizeof(key57_t));
     print_state(&ti57);
 }
