@@ -143,8 +143,10 @@ class RCL57 {
             return
         }
         for i in start...loggedCount {
-            let message = log57_get_message(&rcl57.ti57.log, i)!
-            let type = log57_get_entry(&rcl57.ti57.log, i).pointee.type
+            let entry = log57_get_entry(&rcl57.ti57.log, i)
+            let type = entry!.pointee.type
+            let entryMessage = entry!.pointee.message
+            let message = log57_get_message(entry)!
             let column = (type == LOG57_OP || type == LOG57_PENDING_OP) ? 1 : 0
             if column == 0 {
                 if currentColumn == 1 {

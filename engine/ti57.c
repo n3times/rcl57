@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "support57.h"
 #include "rom57.h"
+#include "support57.h"
 #include "ti57.h"
 
 /** A 13-bit opcode. */
@@ -420,16 +420,17 @@ static void update_log(ti57_t *ti57,
     if (ti57->mode == TI57_RUN) {
         if (previous_mode == TI57_EVAL && ti57->mode == TI57_RUN) {
             if (ti57->last_processed_key == 0x61) {  // SBR
-                char str[6];
-                sprintf(str, "%s %d", support57_get_keyname(0x61), get_key(ti57->row, ti57->col));
-                log57_log_message(&ti57->log, str, LOG57_OP);
-                strcpy(ti57->current_op, str);
+                log57_op_t op;
+                op.inv = false;
+                op.key = 0x61;
+                op.d = get_key(ti57->row, ti57->col);
+                log57_log_op(&ti57->log, &op, LOG57_OP);
                 pending_key = 0;
                 return;
             }
         }
         if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
-            log57_log_message(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+            log57_log_display(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
         }
         return;
     }
@@ -441,14 +442,17 @@ static void update_log(ti57_t *ti57,
         if (ti57_is_error(ti57)) {
             sprintf(result + strlen(result), "?");
         }
-        log57_log_message(&ti57->log, result, LOG57_RESULT);
+        log57_log_display(&ti57->log, result, LOG57_RESULT);
         return;
     }
 
     // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
-        log57_log_message(&ti57->log, support57_get_keyname(0x81), LOG57_OP);
-        strcpy(ti57->current_op, support57_get_keyname_unicode(0x81));
+        log57_op_t op;
+        op.inv = false;
+        op.key = 0x81;
+        op.d = -1;
+        log57_log_op(&ti57->log, &op, LOG57_OP);
         return;
     }
 
@@ -461,7 +465,7 @@ static void update_log(ti57_t *ti57,
 
     ti57->last_processed_key = get_key(ti57->row, ti57->col);
     if (ti57->mode == TI57_LRN) {
-        strcpy(ti57->current_op, "");
+        log57_clear_current_op(&ti57->log);
         return;
     }
 
@@ -498,52 +502,43 @@ static void update_log(ti57_t *ti57,
         if (key == 0x15) {
             if (ti57->log.logged_count &&
                 ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
-                log57_log_message(&ti57->log, support57_get_keyname(0x15), LOG57_OP);
-                strcpy(ti57->current_op, "");
+                log57_op_t op;
+                op.inv = false;
+                op.key = 0x15;
+                op.d = -1;
+                log57_log_op(&ti57->log, &op, LOG57_OP);
+                log57_clear_current_op(&ti57->log);
             }
         }
 
         // Log display.
         memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
-        log57_log_message(&ti57->log, support57_trim(pending_display), LOG57_NUMBER_IN);
+        log57_log_display(&ti57->log, support57_trim(pending_display), LOG57_NUMBER_IN);
         pending_inv = false;
     } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
         pending_key = key;
 
         // Print pending operation.
-        char op[10];
-        char op_unicode[30];
-        int i = 0;
-        if (pending_inv) {
-            sprintf(op, "INV ");
-            sprintf(op_unicode, "INV ");
-            i += 4;
-        }
-        sprintf(op + i, "%s _", support57_get_keyname(key));
-        sprintf(op_unicode + i, "%s _", support57_get_keyname_unicode(key));
-        log57_log_message(&ti57->log, op, LOG57_PENDING_OP);
-        strcpy(ti57->current_op, op_unicode);
+        log57_op_t op;
+        op.inv = pending_inv;
+        op.key = key;
+        op.d = -1;
+        log57_log_op(&ti57->log, &op, LOG57_PENDING_OP);
     } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
         // Print operation.
-        char op[10];
-        char op_unicode[30];
-        int i = 0;
-        if (pending_inv) {
-            sprintf(op, "INV ");
-            sprintf(op_unicode, "INV ");
-            i += 4;
-            pending_inv = false;
-        }
+        log57_op_t op;
+        op.inv = pending_inv;
+        pending_inv = false;
+        op.key = 0x81;
+        op.d = -1;
         if (pending_key && key <= 0x09) {
-            sprintf(op + i, "%s %d", support57_get_keyname(pending_key), key);
-            sprintf(op_unicode + i, "%s %d", support57_get_keyname_unicode(pending_key), key);
+            op.key = pending_key;
+            op.d = key;
         } else {
-            sprintf(op + i, "%s", support57_get_keyname(key));
-            sprintf(op_unicode + i, "%s", support57_get_keyname_unicode(key));
+            op.key = key;
         }
         if (!(pending_key == 0 && key < 0x10)) {
-            log57_log_message(&ti57->log, op, LOG57_OP);
-            strcpy(ti57->current_op, op_unicode);
+            log57_log_op(&ti57->log, &op, LOG57_OP);
         }
 
         // Print result.
@@ -553,7 +548,7 @@ static void update_log(ti57_t *ti57,
             if (ti57_is_error(ti57)) {
                 sprintf(result + strlen(result), "?");
             }
-            log57_log_message(&ti57->log, result, LOG57_RESULT);
+            log57_log_display(&ti57->log, result, LOG57_RESULT);
         }
 
         if (pending_key && key <= 0x09) {

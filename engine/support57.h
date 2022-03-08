@@ -1,18 +1,13 @@
 #ifndef support57_h
 #define support57_h
 
+#include "key57.h"
 #include "rom57.h"
 #include "state57.h"
 
 /**
  * Support API.
  */
-
-/** Name of a given key. For example: 0x34 -> "SUM". */
-char *support57_get_keyname(ti57_key_t key);
-
-/** Unicode name of a given key. */
-char *support57_get_keyname_unicode(ti57_key_t key);
 
 /** Trims 'str'. */
 char *support57_trim(char *str);

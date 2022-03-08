@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+#include "key57.h"
 #include "log57.h"
 
 /**
@@ -20,16 +21,6 @@ typedef unsigned char ti57_reg_t[16];
 /** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
 
-/**
- * Encodes one of the keys of the keyboard.
- *
- * Digit keys are encoded as 0x0d. Other keys are encoded by their location
- * (row, col) on the keyboard:
- * - most significant 4 bits: row in 1..8
- * - least significant 4 bits: column in 1..5 for primary keys and in 6..A for
- *   secondary keys
- */
-typedef unsigned char ti57_key_t;
 
 /**
  * Activities:
@@ -93,7 +84,6 @@ typedef struct ti57_s {
     ti57_activity_t activity;        // The current activity
 
     log57_t log;
-    char current_op[30];
 } ti57_t;
 
 /** Units for trigometric functions. */

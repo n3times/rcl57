@@ -45,6 +45,7 @@
 		154B7A8327BF667700AE38F1 /* leds57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = leds57.c; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
+		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +101,7 @@
 		154B7A7027BC65C900AE38F1 /* engine */ = {
 			isa = PBXGroup;
 			children = (
+				15DBBC4A27D6F8B000CD4131 /* key57.h */,
 				154B7A8327BF667700AE38F1 /* leds57.c */,
 				154B7A8227BF667700AE38F1 /* leds57.h */,
 				15DBBC4827CF2A7400CD4131 /* log57.c */,
