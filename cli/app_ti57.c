@@ -56,7 +56,7 @@ static char *get_instruction_str(ti57_t *ti57, int step, char *str)
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
-            key57_get_name(instruction->key),
+            key57_get_ascii_name(instruction->key),
             (instruction->d >= 0) ? '0' + instruction->d : ' ');
     return str;
 }
@@ -124,17 +124,21 @@ static void print_state(ti57_t *ti57)
     printf("\nDISP = [%s]\n", ti57_get_display(ti57));
 }
 
+static int digit_to_key_map[] = {82, 72, 73, 74, 62, 63, 64, 52, 53, 54};
+
 static void run(ti57_t *ti57, int *keys, int n)
 {
     // Init.
     burst_until_idle(ti57);
 
     for (int i = 0; i < n; i++) {
+        int key = keys[i] <= 9 ? digit_to_key_map[keys[i]] : keys[i];
+
         // Key Press.
-        ti57_key_press(ti57, keys[i] / 10, keys[i] % 10);
+        ti57_key_press(ti57, key / 10, key % 10);
         burst_until_idle(ti57);
         // Key Release.
-        if (ti57->mode != TI57_LRN && keys[i] == 81) {
+        if (ti57->mode != TI57_LRN && key == 81) {
             // R/S
             burst_until_idle(ti57);  // Waiting for key release
             ti57_key_release(ti57);
@@ -150,10 +154,10 @@ static void run(ti57_t *ti57, int *keys, int n)
 int main(void)
 {
     int keys[] =
-        {21, 63, 24, 81, 21, 71, 81};  // program: sqrt(5)
+        {21, 5, 24, 81, 21, 71, 81};  // program: sqrt(5)
         // {13, 13, 13, 13, 13, 13, 14};  // ln(ln(...(ln(0))...)).
-        // {72, 75, 73, 55, 74, 35, 62, 85};  // 1 + 2 * 3 ^ 4 =
-        // {63, 32, 63};  // 5 STO 5
+        // {1, 75, 2, 55, 3, 35, 4, 85};  // 1 + 2 * 3 ^ 4 =
+        // {5, 32, 5};  // 5 STO 5
     ti57_t ti57;
 
     ti57_init(&ti57);
