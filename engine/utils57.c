@@ -4,9 +4,9 @@
 
 #include "ti57.h"
 #include "state57.h"
-#include "support57.h"
+#include "utils57.h"
 
-char *support57_trim(char *str)
+char *utils57_trim(char *str)
 {
     char *begin, *end;
 
@@ -21,7 +21,7 @@ char *support57_trim(char *str)
     return str;
 }
 
-char *support57_reg_to_str(ti57_reg_t reg)
+char *utils57_reg_to_str(ti57_reg_t reg)
 {
     static char str[17];
     static char digits[] = "0123456789ABCDEF";
@@ -32,7 +32,7 @@ char *support57_reg_to_str(ti57_reg_t reg)
     return str;
 }
 
-char *support57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
+char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
 {
     // Hack: we run a new emulator to compute the string by modifying its state. We place reg in the
     // T register, set sci and fix and simulate a key press on "x:t", getting the sought result on
@@ -43,7 +43,7 @@ char *support57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     ti57_reg_t *T;
 
     ti57_init(&ti57);
-    burst_until_idle(&ti57);
+    utils57_burst_until_idle(&ti57);
 
     T = ti57_get_regT(&ti57);
     for (int i = 0; i <= 13; i++)
@@ -53,17 +53,17 @@ char *support57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
         ti57.B[15] = 0x8;
 
     ti57_key_press(&ti57, 2, 2);
-    burst_until_idle(&ti57);
+    utils57_burst_until_idle(&ti57);
     ti57_key_release(&ti57);
-    burst_until_idle(&ti57);
-    strcpy(str, support57_trim(ti57_get_display(&ti57)));
+    utils57_burst_until_idle(&ti57);
+    strcpy(str, utils57_trim(ti57_get_display(&ti57)));
     char *last = str + strlen(str) - 1;
     if (*last == '.')
         *last = 0;
     return str;
 }
 
-void burst_until_idle(ti57_t *ti57)
+void utils57_burst_until_idle(ti57_t *ti57)
 {
    for ( ; ; ) {
         if (ti57->activity == TI57_POLL_KEY_PRESS ||
@@ -80,7 +80,7 @@ void burst_until_idle(ti57_t *ti57)
    }
 }
 
-void burst_until_busy(ti57_t *ti57)
+void utils57_burst_until_busy(ti57_t *ti57)
 {
     while (ti57->activity != TI57_BUSY) {
         ti57_next(ti57);

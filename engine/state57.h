@@ -29,7 +29,6 @@ typedef unsigned short ti57_address_t;
  * - TI57_POLL_KEY_RELEASE: in a tight loop, waiting for a key release.
  * - TI57_BLINK:  in a tight loop, waiting for a key press while display blinking
  * - TI57_PAUSE: 'Pause' is being executed
- * - TI57_LONG: Executing an expensive operation such as 'Del' and 'Ins'
  * - TI57_BUSY: default, running or executing some operation
  */
 typedef enum ti57_activity_e {
@@ -39,7 +38,6 @@ typedef enum ti57_activity_e {
     TI57_POLL_KEY_RUN_RELEASE,
     TI57_BLINK,
     TI57_PAUSE,
-    TI57_LONG,
 } ti57_activity_t;
 
 /**

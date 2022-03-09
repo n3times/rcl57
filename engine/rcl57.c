@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "rcl57.h"
-#include "support57.h"
+#include "utils57.h"
 
 static double get_goal_speed(rcl57_t *rcl57)
 {
@@ -138,9 +138,9 @@ static void key(rcl57_t *rcl57, bool sec, int row, int col)
         ti57->C[14] &= 0x7;
     }
     ti57_key_press(ti57, row, col);
-    burst_until_idle(ti57);
+    utils57_burst_until_idle(ti57);
     ti57_key_release(ti57);
-    burst_until_idle(ti57);
+    utils57_burst_until_idle(ti57);
 }
 
 static void key_lrn(rcl57_t *rcl57)
@@ -283,11 +283,11 @@ bool rcl57_advance(rcl57_t *rcl57, int ms)
         int n = ti57_next(ti57);
         if (ti57_is_stopping(ti57) &&
             rcl57->options & RCL57_QUICK_STOP_FLAG) {
-            burst_until_idle(ti57);
+            utils57_burst_until_idle(ti57);
         }
         double current_speed = get_goal_speed(rcl57);
         if (current_speed == 0) {
-            burst_until_idle(ti57);
+            utils57_burst_until_idle(ti57);
             return false;
         }
         if (current_speed < 0) {

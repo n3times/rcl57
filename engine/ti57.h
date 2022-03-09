@@ -37,7 +37,7 @@ void ti57_init(ti57_t *ti57);
  */
 int ti57_next(ti57_t *ti57);
 
-/** Should be called when a key is pressed (row in 0..7, col in 0..4). */
+/** Should be called when a key is pressed (row in 1..8, col in 1..5). */
 void ti57_key_press(ti57_t *ti57, int row, int col);
 
 /** Should be called when a key is released. */

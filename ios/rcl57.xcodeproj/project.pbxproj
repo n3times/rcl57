@@ -16,7 +16,7 @@
 		154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7127BC65C900AE38F1 /* rcl57.c */; };
 		154B7A7C27BC65C900AE38F1 /* state57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7327BC65C900AE38F1 /* state57.c */; };
 		154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7427BC65C900AE38F1 /* ti57.c */; };
-		154B7A7E27BC65C900AE38F1 /* support57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7827BC65C900AE38F1 /* support57.c */; };
+		154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7827BC65C900AE38F1 /* utils57.c */; };
 		154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7927BC65C900AE38F1 /* rom57.c */; };
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
@@ -33,13 +33,13 @@
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* LEDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDView.swift; sourceTree = "<group>"; };
 		154B7A7127BC65C900AE38F1 /* rcl57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rcl57.c; sourceTree = "<group>"; };
-		154B7A7227BC65C900AE38F1 /* support57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = support57.h; sourceTree = "<group>"; };
+		154B7A7227BC65C900AE38F1 /* utils57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils57.h; sourceTree = "<group>"; };
 		154B7A7327BC65C900AE38F1 /* state57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = state57.c; sourceTree = "<group>"; };
 		154B7A7427BC65C900AE38F1 /* ti57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ti57.c; sourceTree = "<group>"; };
 		154B7A7527BC65C900AE38F1 /* rom57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rom57.h; sourceTree = "<group>"; };
 		154B7A7627BC65C900AE38F1 /* state57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = state57.h; sourceTree = "<group>"; };
 		154B7A7727BC65C900AE38F1 /* rcl57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rcl57.h; sourceTree = "<group>"; };
-		154B7A7827BC65C900AE38F1 /* support57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = support57.c; sourceTree = "<group>"; };
+		154B7A7827BC65C900AE38F1 /* utils57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils57.c; sourceTree = "<group>"; };
 		154B7A7927BC65C900AE38F1 /* rom57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rom57.c; sourceTree = "<group>"; };
 		154B7A7A27BC65C900AE38F1 /* ti57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ti57.h; sourceTree = "<group>"; };
 		154B7A8227BF667700AE38F1 /* leds57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leds57.h; sourceTree = "<group>"; };
@@ -115,10 +115,10 @@
 				154B7A7527BC65C900AE38F1 /* rom57.h */,
 				154B7A7327BC65C900AE38F1 /* state57.c */,
 				154B7A7627BC65C900AE38F1 /* state57.h */,
-				154B7A7827BC65C900AE38F1 /* support57.c */,
-				154B7A7227BC65C900AE38F1 /* support57.h */,
 				154B7A7427BC65C900AE38F1 /* ti57.c */,
 				154B7A7A27BC65C900AE38F1 /* ti57.h */,
+				154B7A7827BC65C900AE38F1 /* utils57.c */,
+				154B7A7227BC65C900AE38F1 /* utils57.h */,
 			);
 			name = engine;
 			path = ../engine;
@@ -199,7 +199,7 @@
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* LEDView.swift in Sources */,
-				154B7A7E27BC65C900AE38F1 /* support57.c in Sources */,
+				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
 				154B7A8427BF667700AE38F1 /* leds57.c in Sources */,
 				150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */,

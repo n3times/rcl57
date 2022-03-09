@@ -3,30 +3,30 @@
 
 #include "rcl57.h"
 #include "state57.h"
-#include "support57.h"
+#include "utils57.h"
 
 static int digit_to_key_map[] = {82, 72, 73, 74, 62, 63, 64, 52, 53, 54};
 
 static void run(ti57_t *ti57, int *keys, int n)
 {
     // Init.
-    burst_until_idle(ti57);
+    utils57_burst_until_idle(ti57);
 
     for (int i = 0; i < n; i++) {
         int key = keys[i] <= 9 ? digit_to_key_map[keys[i]] : keys[i];
 
         // Key Press.
         ti57_key_press(ti57, key / 10, key % 10);
-        burst_until_busy(ti57);
+        utils57_burst_until_busy(ti57);
         // Key Release.
         if (ti57->mode != TI57_LRN && key == 81) {  // R/S
-            burst_until_idle(ti57);  // Waiting for key release
+            utils57_burst_until_idle(ti57);  // Waiting for key release
             ti57_key_release(ti57);
-            burst_until_busy(ti57);  // Start running
-            burst_until_idle(ti57);  // Waiting for key press after program run
+            utils57_burst_until_busy(ti57);  // Start running
+            utils57_burst_until_idle(ti57);  // Waiting for key press after program run
         } else {
             ti57_key_release(ti57);
-            burst_until_idle(ti57);
+            utils57_burst_until_idle(ti57);
         }
     }
 }

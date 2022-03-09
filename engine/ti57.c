@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "rom57.h"
-#include "support57.h"
+#include "utils57.h"
 #include "ti57.h"
 
 /** A 13-bit opcode. */
@@ -354,9 +354,6 @@ static void update_activity(ti57_t *ti57)
 {
     if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {  // 'Pause'
         ti57->activity = TI57_PAUSE;
-    } else if (is_pc_in(ti57, 0x00fd, 0x0105, 1) ||  // 'Ins'
-               is_pc_in(ti57, 0x010c, 0x0116, 1)) {  // 'Del'
-        ti57->activity = TI57_LONG;
     } else if (is_pc_in(ti57, 0x01fc, 0x01fe, -1)) {
         ti57->activity = TI57_POLL_KEY_RUN_RELEASE;
     } else if (is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {
@@ -418,7 +415,7 @@ static void update_log(ti57_t *ti57,
                 pending_key = 0;
             }
         } else if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
-            log57_log_display(&ti57->log, support57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+            log57_log_display(&ti57->log, utils57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
         }
         return;
     }
@@ -426,7 +423,7 @@ static void update_log(ti57_t *ti57,
     // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
         char result[20];
-        strcpy(result, support57_trim(ti57_get_display(ti57)));
+        strcpy(result, utils57_trim(ti57_get_display(ti57)));
         if (ti57_is_error(ti57)) {
             sprintf(result + strlen(result), "?");
         }
@@ -500,7 +497,7 @@ static void update_log(ti57_t *ti57,
 
         // Log display.
         memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
-        log57_log_display(&ti57->log, support57_trim(pending_display), LOG57_NUMBER_IN);
+        log57_log_display(&ti57->log, utils57_trim(pending_display), LOG57_NUMBER_IN);
         pending_inv = false;
     } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
         pending_key = key;
@@ -531,7 +528,7 @@ static void update_log(ti57_t *ti57,
         // Print result.
         if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {
             char result[20];
-            strcpy(result, support57_trim(ti57_get_display(ti57)));
+            strcpy(result, utils57_trim(ti57_get_display(ti57)));
             if (ti57_is_error(ti57)) {
                 sprintf(result + strlen(result), "?");
             }
