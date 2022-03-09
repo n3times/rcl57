@@ -15,10 +15,23 @@ typedef unsigned char key57_t;
 /** Returns the key at a given row (1..8) and col (1..5) */
 key57_t key57_get_key(int row, int col);
 
-/** Name of a given key. For example: 0x34 -> "SUM". */
-char *key57_get_name(key57_t key);
+/**
+ * Returns the ascii name of a given key.
+ *
+ * A short simple name that can be printed easily, but
+ * may not be very readable.
+ *
+ * For example: 0x34 -> "SUM", 0x89 -> "@" for average.
+ */
+char *key57_get_ascii_name(key57_t key);
 
-/** Unicode name of a given key. */
-char *key57_get_name_unicode(key57_t key);
+/**
+ * Returns the unicode name of a given key.
+ *
+ * A readable accurate name that requires Unicode support.
+ *
+ * For example: 0x34 -> "SUM", 0x89 -> "x\u0305" (average symbol).
+ */
+char *key57_get_unicode_name(key57_t key);
 
 #endif /* key57_h */

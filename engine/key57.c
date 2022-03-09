@@ -84,12 +84,12 @@ key57_t key57_get_key(int row, int col)
     return (row << 4) | col;
 }
 
-char *key57_get_name(key57_t key)
+char *key57_get_ascii_name(key57_t key)
 {
     return get_name(key, false);
 }
 
-char *key57_get_name_unicode(key57_t key)
+char *key57_get_unicode_name(key57_t key)
 {
     return get_name(key, true);
 

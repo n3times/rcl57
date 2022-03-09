@@ -414,7 +414,7 @@ static void update_log(ti57_t *ti57,
                 op.inv = false;
                 op.key = 0x61;
                 op.d = key57_get_key(ti57->row, ti57->col);
-                log57_log_op(&ti57->log, &op, LOG57_OP);
+                log57_log_op(&ti57->log, &op, false);
                 pending_key = 0;
             }
         } else if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
@@ -440,7 +440,7 @@ static void update_log(ti57_t *ti57,
         op.inv = false;
         op.key = 0x81;
         op.d = -1;
-        log57_log_op(&ti57->log, &op, LOG57_OP);
+        log57_log_op(&ti57->log, &op, false);
         return;
     }
 
@@ -493,7 +493,7 @@ static void update_log(ti57_t *ti57,
                 op.inv = false;
                 op.key = 0x15;
                 op.d = -1;
-                log57_log_op(&ti57->log, &op, LOG57_OP);
+                log57_log_op(&ti57->log, &op, false);
                 log57_clear_current_op(&ti57->log);
             }
         }
@@ -510,7 +510,7 @@ static void update_log(ti57_t *ti57,
         op.inv = pending_inv;
         op.key = key;
         op.d = -1;
-        log57_log_op(&ti57->log, &op, LOG57_PENDING_OP);
+        log57_log_op(&ti57->log, &op, true);
     } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
         // Print operation.
         log57_op_t op;
@@ -525,7 +525,7 @@ static void update_log(ti57_t *ti57,
             op.key = key;
         }
         if (!(pending_key == 0 && key < 0x10)) {
-            log57_log_op(&ti57->log, &op, LOG57_OP);
+            log57_log_op(&ti57->log, &op, false);
         }
 
         // Print result.

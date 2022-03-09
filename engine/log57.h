@@ -43,23 +43,28 @@ typedef struct log57_s {
 /** Resets the log, setting the logged_count to 0. */
 void log57_reset(log57_t *log);
 
-/** Logs a message of a given type. */
-void log57_log_display(log57_t *log, char *display, log57_type_t type);
-
-void log57_log_op(log57_t *log, log57_op_t *op, log57_type_t type);
-
 /** Returns the number of logged entries since reset. Can be > LOG57_MAX_ENTRY_COUNT. */
 long log57_get_logged_count(log57_t *log);
 
+/** Logs a message of a given type. */
+void log57_log_display(log57_t *log, char *display, log57_type_t type);
+
+/** Log an operation, possibly pending. */
+void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending);
+
 /**
- * Returns a given log entry.
+ * Returns the message of a given entry.
  *
  * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
  */
-log57_entry_t *log57_get_entry(log57_t *log, long index);
+char *log57_get_message(log57_t *log, long index);
 
-/** Returns the message of a given log entry. */
-char *log57_get_message(log57_entry_t *entry);
+/**
+ * Returns the type of a given entry.
+ *
+ * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
+ */
+log57_type_t log57_get_type(log57_t *log, long index);
 
 /** Gets the last operation in EVAL mode. */
 char *log57_get_current_op(log57_t *log);
