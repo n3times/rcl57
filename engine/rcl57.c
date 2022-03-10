@@ -223,9 +223,9 @@ static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
     ti57_t *ti57 = &rcl57->ti57;
     bool is_2nd, is_inv;
 
-    if (row == 0 && col == 0) {                      // 2ND
+    if (row == 1 && col == 1) {                      // 2ND
         return ti57_key_press(&rcl57->ti57, 1, 1);
-    } else if (row == 0 && col == 1) {               // INV
+    } else if (row == 1 && col == 2) {               // INV
         return ti57_key_press(&rcl57->ti57, 1, 2);
     }
 
