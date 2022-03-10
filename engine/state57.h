@@ -75,7 +75,7 @@ typedef struct ti57_s {
 
     unsigned long current_cycle;     // The number of cycle the emulator has been running for
     unsigned long last_disp_cycle;   // The cycle DISP was executed last
-    key57_t last_processed_key;   // The key that was last pressed by the user
+    key57_t last_processed_key;      // The key that was last pressed by the user
     ti57_mode_t mode;                // The current mode
     ti57_parse_state_t parse_state;  // The current parse state
     ti57_activity_t activity;        // The current activity

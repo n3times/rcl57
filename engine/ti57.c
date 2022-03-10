@@ -375,6 +375,8 @@ static bool has_result(key57_t key)
 {
     int row = key >> 4;
     switch(row) {
+    case 0:
+        return false;
     case 1:
         return key != 0x19;
     case 2:
@@ -394,50 +396,68 @@ static bool has_result(key57_t key)
     }
 }
 
+static void log_display(ti57_t *ti57, log57_type_t type)
+{
+    char display_str[26];  // 26 = 2 * 12 + 1 ('?') + 1 (end of string).
+
+    // Flush display just in case.
+    memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
+    memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
+
+    strcpy(display_str, utils57_trim(ti57_get_display(ti57)));
+    if (ti57_is_error(ti57)) {
+        sprintf(display_str + strlen(display_str), "?");
+    }
+    log57_log_display(&ti57->log, display_str, type);
+}
+
+static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
+{
+    log57_op_t op;
+
+    op.inv = inv;
+    op.key = key;
+    op.d = d;
+    log57_log_op(&ti57->log, &op, pending);
+}
+
 static void update_log(ti57_t *ti57,
                        ti57_activity_t previous_activity,
                        ti57_mode_t previous_mode,
                        ti57_parse_state_t previous_parse_state)
 {
-    static char pending_display[25];
-    static key57_t pending_key;
-    static bool pending_sec;
-    static bool pending_inv;
+    static key57_t pending_op_key;
+    static bool is_pending_sec;
+    static bool is_pending_inv;
+    static bool cancel_next_key;
+
+    key57_t current_key = key57_get_key(ti57->row, ti57->col);
 
     if (ti57->mode == TI57_RUN) {
-        if (previous_mode == TI57_EVAL && ti57->mode == TI57_RUN) {
-            if (ti57->last_processed_key == 0x61) {  // SBR
-                log57_op_t op;
-                op.inv = false;
-                op.key = 0x61;
-                op.d = key57_get_key(ti57->row, ti57->col);
-                log57_log_op(&ti57->log, &op, false);
-                pending_key = 0;
+        if (previous_mode == TI57_EVAL) {
+            if (pending_op_key == 0x61) {  // SBR
+                log_op(ti57, false, pending_op_key, current_key, false);
+                pending_op_key = 0;
+                // SBR X has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
+                cancel_next_key = true;
             }
         } else if (previous_activity != TI57_PAUSE && ti57->activity == TI57_PAUSE) {
-            log57_log_display(&ti57->log, utils57_trim(ti57_get_display(ti57)), LOG57_PAUSE);
+            log_display(ti57, LOG57_PAUSE);
         }
         return;
     }
 
     // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
-        char result[20];
-        strcpy(result, utils57_trim(ti57_get_display(ti57)));
-        if (ti57_is_error(ti57)) {
-            sprintf(result + strlen(result), "?");
-        }
-        log57_log_display(&ti57->log, result, LOG57_RUN_RESULT);
+        log_display(ti57, LOG57_RUN_RESULT);
         return;
     }
 
     // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
-        log57_op_t op;
-        op.inv = false;
-        op.key = 0x81;
-        op.d = -1;
-        log57_log_op(&ti57->log, &op, false);
+        log_op(ti57, false, 0x81, -1, false);
+        // R/S has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
+        cancel_next_key = true;
         return;
     }
 
@@ -447,96 +467,70 @@ static void update_log(ti57_t *ti57,
 
     // From here on, we are only interested in key presses.
 
-    ti57->last_processed_key = key57_get_key(ti57->row, ti57->col);
+    ti57->last_processed_key = current_key;
+
+    // Don't log "2nd" and "INV" but take note of their state.
+    if (current_key == 0x11) {
+        is_pending_sec = ti57_is_2nd(ti57);
+        return;
+    } else if (current_key == 0x12) {
+        is_pending_inv = ti57_is_inv(ti57);
+        return;
+    }
+
     if (ti57->mode == TI57_LRN) {
         log57_clear_current_op(&ti57->log);
         return;
     }
 
-    // From here on, we are in EVAL mode.
+    // Handle key presses in EVAL mode.
 
-    // R/S case has already been treated.
-    if (ti57->last_processed_key == 0x81) {
+    // Cover SBR X and R/S cases.
+    if (cancel_next_key) {
+        cancel_next_key = false;
         return;
     }
 
-    key57_t key = ti57->last_processed_key;
-
-    // Don't log "2nd" and "INV" but take note of the state.
-    if (key == 0x11) {
-        pending_sec = ti57_is_2nd(ti57);
-        return;
-    } else if (key == 0x12) {
-        pending_inv = ti57_is_inv(ti57);
-        return;
+    if (is_pending_sec && current_key > 0x09) {
+        current_key += 5;
     }
-
-    if (pending_sec && key > 0x09) {
-        key += 5;
-    }
-    pending_sec = false;
-
-    // Flush display so we get an accurate result.
-    // The emulator would be flushing the display anyway, just a few cycles later.
-    memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
-    memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
+    is_pending_sec = false;
 
     if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
         // Log "CLR", if number was not being edited.
-        if (key == 0x15) {
+        if (current_key == 0x15) {
             if (ti57->log.logged_count &&
                 ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
-                log57_op_t op;
-                op.inv = false;
-                op.key = 0x15;
-                op.d = -1;
-                log57_log_op(&ti57->log, &op, false);
+                log_op(ti57, false, 0x15, -1, false);
                 log57_clear_current_op(&ti57->log);
             }
         }
 
         // Log display.
-        memcpy(pending_display, ti57_get_display(ti57), sizeof(pending_display));
-        log57_log_display(&ti57->log, utils57_trim(pending_display), LOG57_NUMBER_IN);
-        pending_inv = false;
+        log_display(ti57, LOG57_NUMBER_IN);
+        is_pending_inv = false;
     } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
-        pending_key = key;
-
-        // Print pending operation.
-        log57_op_t op;
-        op.inv = pending_inv;
-        op.key = key;
-        op.d = -1;
-        log57_log_op(&ti57->log, &op, true);
+        pending_op_key = current_key;
+        log_op(ti57, is_pending_inv, pending_op_key, -1, true);
     } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
         // Print operation.
-        log57_op_t op;
-        op.inv = pending_inv;
-        pending_inv = false;
-        op.key = 0x81;
-        op.d = -1;
-        if (pending_key && key <= 0x09) {
-            op.key = pending_key;
-            op.d = key;
+        int op_key = (pending_op_key && current_key <= 0x09) ? pending_op_key : current_key;
+        if (pending_op_key) {
+          if (current_key <= 0x9) {
+            log_op(ti57, is_pending_inv, pending_op_key, current_key, false);
+          } else {
+            log_op(ti57, is_pending_inv, pending_op_key, -1, false);
+            log_op(ti57, is_pending_inv, current_key, -1, false);
+          }
         } else {
-            op.key = key;
+            log_op(ti57, is_pending_inv, current_key, -1, false);
         }
-        if (!(pending_key == 0 && key < 0x10)) {
-            log57_log_op(&ti57->log, &op, false);
-        }
+        is_pending_inv = false;
+        pending_op_key = 0;
 
         // Print result.
-        if (has_result(pending_key ? pending_key : key) || ti57_is_error(ti57)) {
-            char result[20];
-            strcpy(result, utils57_trim(ti57_get_display(ti57)));
-            if (ti57_is_error(ti57)) {
-                sprintf(result + strlen(result), "?");
-            }
-            log57_log_display(&ti57->log, result, LOG57_OP_RESULT);
-        }
-
-        if (pending_key && key <= 0x09) {
-            pending_key = 0;
+        if (has_result(op_key) || ti57_is_error(ti57)) {
+            log_display(ti57, LOG57_OP_RESULT);
         }
     }
 }
