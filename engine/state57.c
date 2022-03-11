@@ -86,14 +86,14 @@ bool ti57_is_trace(ti57_t *ti57)
 {
     if (ti57->mode != TI57_RUN) return false;
 
-    return (ti57->row == 3) && (ti57->col == 1);
+    return ti57->is_key_pressed && ti57->row == 3 && ti57->col == 1;
 }
 
 bool ti57_is_stopping(ti57_t *ti57)
 {
     if (ti57->mode != TI57_RUN) return false;
 
-    return (ti57->row == 8) && (ti57->col == 1);
+    return ti57->is_key_pressed && ti57->row == 8 && ti57->col == 1;
 }
 
 /*******************************************************************************

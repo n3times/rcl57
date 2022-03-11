@@ -469,10 +469,12 @@ static void update_log(ti57_t *ti57,
 
     // From here on, we are only interested in key presses.
 
-    // This happens when the calculator is turned on.
-    if (!ti57->is_key_pressed) {
+    // This happens when the calculator is just turned on.
+    if (ti57->row == 0 && ti57->col == 0) {
         return;
     }
+
+    // Do not check for 'is_key_pressed' as the key may already have been released.
 
     current_key = key57_get_key(ti57->row, ti57->col);
     ti57->last_processed_key = current_key;
