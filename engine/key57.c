@@ -99,5 +99,4 @@ char *key57_get_ascii_name(key57_t key)
 char *key57_get_unicode_name(key57_t key)
 {
     return get_name(key, true);
-
 }

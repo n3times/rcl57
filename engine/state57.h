@@ -24,19 +24,19 @@ typedef unsigned short ti57_address_t;
 
 /**
  * Activities:
- * - TI57_POLL_KEY_PRESS: in a tight loop, waiting for a key press.
- * - TI57_POLL_KEY_RUN_RELEASE: in a tight loop, waiting for R/S release.
- * - TI57_POLL_KEY_RELEASE: in a tight loop, waiting for a key release.
- * - TI57_BLINK:  in a tight loop, waiting for a key press while display blinking
- * - TI57_PAUSE: 'Pause' is being executed
  * - TI57_BUSY: default, running or executing some operation
+ * - TI57_POLL_PRESS: in a tight loop, waiting for a key press.
+ * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display blinking
+ * - TI57_POLL_RELEASE: in a tight loop, waiting for a key release.
+ * - TI57_POLL_RS_RELEASE: in a tight loop, waiting for R/S release.
+ * - TI57_PAUSE: 'Pause' is being executed
  */
 typedef enum ti57_activity_e {
     TI57_BUSY,
-    TI57_POLL_KEY_PRESS,
-    TI57_POLL_KEY_RELEASE,
-    TI57_POLL_KEY_RUN_RELEASE,
-    TI57_BLINK,
+    TI57_POLL_PRESS,
+    TI57_POLL_PRESS_BLINK,
+    TI57_POLL_RELEASE,
+    TI57_POLL_RS_RELEASE,
     TI57_PAUSE,
 } ti57_activity_t;
 
@@ -71,6 +71,7 @@ typedef struct ti57_s {
     bool COND;                       // Conditional Latch
     bool is_hex;                     // Arithmetic done in base 16 instead of 10
     int row, col;                    // Row and column of pressed key in 1..8 and 1..5
+    bool is_key_pressed;             // Whether a key is being pressed by the user.
     ti57_reg_t dA, dB;               // Copy of A and B for display purposes
 
     unsigned long current_cycle;     // The number of cycle the emulator has been running for

@@ -66,10 +66,10 @@ char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
 void utils57_burst_until_idle(ti57_t *ti57)
 {
    for ( ; ; ) {
-        if (ti57->activity == TI57_POLL_KEY_PRESS ||
-            ti57->activity == TI57_POLL_KEY_RUN_RELEASE ||
-            ti57->activity == TI57_POLL_KEY_RELEASE ||
-            ti57->activity == TI57_BLINK) {
+        if (ti57->activity == TI57_POLL_PRESS ||
+            ti57->activity == TI57_POLL_RS_RELEASE ||
+            ti57->activity == TI57_POLL_RELEASE ||
+            ti57->activity == TI57_POLL_PRESS_BLINK) {
             // Call 'next' a few more times to make sure the display gets updated.
             for (int i = 0; i < 20; i++) {
                 ti57_next(ti57);

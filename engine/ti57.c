@@ -210,7 +210,7 @@ static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
     case 4: memcpy(ti57->X[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
     case 5: memcpy(ti57->A, ti57->X[ti57->RAB], sizeof(ti57_reg_t)); break;
     case 6: memcpy(ti57->Y[ti57->RAB], ti57->A, sizeof(ti57_reg_t)); break;
-    case 7: if (ti57->row && ti57->col) {
+    case 7: if (ti57->is_key_pressed) {
                 ti57->R5 = ti57->col << 4 | (ti57->row - 1);
                 ti57->COND = 1;
             }
@@ -355,11 +355,11 @@ static void update_activity(ti57_t *ti57)
     if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {  // 'Pause'
         ti57->activity = TI57_PAUSE;
     } else if (is_pc_in(ti57, 0x01fc, 0x01fe, -1)) {
-        ti57->activity = TI57_POLL_KEY_RUN_RELEASE;
+        ti57->activity = TI57_POLL_RS_RELEASE;
     } else if (is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {
-        ti57->activity = TI57_POLL_KEY_RELEASE;
+        ti57->activity = TI57_POLL_RELEASE;
     } else if (is_pc_in(ti57, 0x04a6, 0x04a9, 0)) {  // Waiting for key press
-        ti57->activity = ti57_is_error(ti57) ? TI57_BLINK : TI57_POLL_KEY_PRESS;
+        ti57->activity = ti57_is_error(ti57) ? TI57_POLL_PRESS_BLINK : TI57_POLL_PRESS;
     } else {
         ti57->activity = TI57_BUSY;
     }
@@ -421,6 +421,12 @@ static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
     log57_log_op(&ti57->log, &op, pending);
 }
 
+// Activity transitions:
+// - [ END_SEQ ]: BUSY : POLL_RELEASE : POLL_PRESS or POLL_PRESS_BLINK
+// - on start:    [ END_SEQ ]
+// - key press:   POLL_PRESS : [ END_SEQ ]
+// - SBR 0:       POLL_PRESS : [ END_SEQ ]
+// - R/S:         POLL_PRESS : BUSY : POLL_RS_RELASE : [ END_SEQ ]
 static void update_log(ti57_t *ti57,
                        ti57_activity_t previous_activity,
                        ti57_mode_t previous_mode)
@@ -450,18 +456,23 @@ static void update_log(ti57_t *ti57,
     }
 
     // Log R/S, from EVAL mode, a special case with its own activity.
-    if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RUN_RELEASE) {
+    if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_RS_RELEASE) {
         log_op(ti57, false, 0x81, -1, false);
         // R/S has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
         log->is_key_logged = true;
         return;
     }
 
-    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_KEY_RELEASE)) {
+    if (!(previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_RELEASE)) {
         return;
     }
 
     // From here on, we are only interested in key presses.
+
+    // This happens when the calculator is turned on.
+    if (!ti57->is_key_pressed) {
+        return;
+    }
 
     current_key = key57_get_key(ti57->row, ti57->col);
     ti57->last_processed_key = current_key;
@@ -577,8 +588,9 @@ int ti57_next(ti57_t *ti57)
 
 void ti57_key_release(ti57_t *ti57)
 {
-    ti57->row = 0;
-    ti57->col = 0;
+    // Do not zero out row and col, so we can keep track of the last pressed key.
+
+    ti57->is_key_pressed = false;
 }
 
 void ti57_key_press(ti57_t *ti57, int row, int col)
@@ -588,6 +600,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
 
     ti57->row = row;
     ti57->col = col;
+    ti57->is_key_pressed = true;
 }
 
 char *ti57_get_display(ti57_t *ti57)

@@ -13,11 +13,11 @@ static double get_goal_speed(rcl57_t *rcl57)
     case TI57_EVAL:
     case TI57_LRN:
         switch (ti57->activity) {
-        case TI57_POLL_KEY_PRESS:
-        case TI57_POLL_KEY_RELEASE:
-        case TI57_POLL_KEY_RUN_RELEASE:
+        case TI57_POLL_PRESS:
+        case TI57_POLL_RELEASE:
+        case TI57_POLL_RS_RELEASE:
             return 0;
-        case TI57_BLINK:
+        case TI57_POLL_PRESS_BLINK:
             return 1;
         default:
             return -1;
