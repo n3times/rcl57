@@ -21,7 +21,6 @@ typedef unsigned char ti57_reg_t[16];
 /** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
 
-
 /**
  * Activities:
  * - TI57_BUSY: default, running or executing some operation

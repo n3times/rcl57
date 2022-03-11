@@ -422,11 +422,11 @@ static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
 }
 
 // Activity transitions:
-// - [ END_SEQ ]: BUSY : POLL_RELEASE : POLL_PRESS or POLL_PRESS_BLINK
-// - on start:    [ END_SEQ ]
-// - key press:   POLL_PRESS : [ END_SEQ ]
-// - SBR 0:       POLL_PRESS : [ END_SEQ ]
-// - R/S:         POLL_PRESS : BUSY : POLL_RS_RELASE : [ END_SEQ ]
+// - [ END_SEQ ]  =  BUSY : POLL_RELEASE : POLL_PRESS or POLL_PRESS_BLINK
+// - on start:    =  [ END_SEQ ]
+// - key press:   =  POLL_PRESS : [ END_SEQ ]
+// - SBR 0:       =  POLL_PRESS : [ END_SEQ ]
+// - R/S:         =  POLL_PRESS : BUSY : POLL_RS_RELASE : [ END_SEQ ]
 static void update_log(ti57_t *ti57,
                        ti57_activity_t previous_activity,
                        ti57_mode_t previous_mode)
@@ -540,7 +540,7 @@ static void update_log(ti57_t *ti57,
 
         // Print result.
         if (has_result(op_key) || ti57_is_error(ti57)) {
-            log_display(ti57, LOG57_OP_RESULT);
+            log_display(ti57, LOG57_RESULT);
         }
     }
 }

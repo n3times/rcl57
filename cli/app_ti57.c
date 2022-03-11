@@ -29,12 +29,12 @@ static char *get_aos(ti57_t *ti57, char *str)
             break;
         }
         if (reg) {
-            char *user_reg_str = support57_user_reg_to_str(reg,
+            char *user_reg_str = utils57_user_reg_to_str(reg,
                                                       ti57_is_sci(ti57),
                                                       ti57_get_fix(ti57));
             strcpy(part, user_reg_str);
         } else if (c == 'd') {
-            strcpy(part, support57_trim(ti57_get_display(ti57)));
+            strcpy(part, utils57_trim(ti57_get_display(ti57)));
         } else {
             int j = 0;
             if (c != '(') part[j++] = ' ';
@@ -68,17 +68,17 @@ static void print_state(ti57_t *ti57)
     char str[1000];
 
     printf("INTERNAL STATE\n");
-    printf("  A  = %s\n", support57_reg_to_str(ti57->A));
-    printf("  B  = %s\n", support57_reg_to_str(ti57->B));
-    printf("  C  = %s\n", support57_reg_to_str(ti57->C));
-    printf("  D  = %s\n", support57_reg_to_str(ti57->D));
+    printf("  A  = %s\n", utils57_reg_to_str(ti57->A));
+    printf("  B  = %s\n", utils57_reg_to_str(ti57->B));
+    printf("  C  = %s\n", utils57_reg_to_str(ti57->C));
+    printf("  D  = %s\n", utils57_reg_to_str(ti57->D));
     printf("\n");
 
     for (int i = 0; i < 8; i++)
-        printf("  X%d = %s\n", i, support57_reg_to_str(ti57->X[i]));
+        printf("  X%d = %s\n", i, utils57_reg_to_str(ti57->X[i]));
     printf("\n");
     for (int i = 0; i < 8; i++)
-        printf("  Y%d = %s\n", i, support57_reg_to_str(ti57->Y[i]));
+        printf("  Y%d = %s\n", i, utils57_reg_to_str(ti57->Y[i]));
     printf("\n");
 
     printf("  R5=x%02x   RAB=%d\n", ti57->R5, ti57->RAB);
@@ -100,12 +100,12 @@ static void print_state(ti57_t *ti57)
 
     printf("\nREGISTERS\n");
     printf("  X  = %s\n",
-           support57_user_reg_to_str(ti57_get_regX(ti57), false, 9));
+           utils57_user_reg_to_str(ti57_get_regX(ti57), false, 9));
     printf("  T  = %s\n",
-           support57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
+           utils57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
     for (int i = 0; i <= 7; i++) {
         printf("  R%d = %s\n", i,
-               support57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
+               utils57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
     }
 
     printf("\nAOS\n");
