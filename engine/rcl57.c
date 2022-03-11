@@ -5,6 +5,8 @@
 #include "rcl57.h"
 #include "utils57.h"
 
+// -1 means as fast as possible.
+// 0 means that the emulator could pause.
 static double get_goal_speed(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
@@ -16,7 +18,7 @@ static double get_goal_speed(rcl57_t *rcl57)
         case TI57_POLL_PRESS:
         case TI57_POLL_RELEASE:
         case TI57_POLL_RS_RELEASE:
-            return 0;
+            return -1;
         case TI57_POLL_PRESS_BLINK:
             return 1;
         default:

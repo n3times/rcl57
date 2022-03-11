@@ -58,26 +58,28 @@ char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     utils57_burst_until_idle(&ti57);
     strcpy(str, utils57_trim(ti57_get_display(&ti57)));
     char *last = str + strlen(str) - 1;
-    if (*last == '.')
+    if (*last == '.') {
         *last = 0;
+    }
     return str;
 }
 
 void utils57_burst_until_idle(ti57_t *ti57)
 {
-   for ( ; ; ) {
+    for ( ; ; ) {
         if (ti57->activity == TI57_POLL_PRESS ||
-            ti57->activity == TI57_POLL_RS_RELEASE ||
-            ti57->activity == TI57_POLL_RELEASE ||
             ti57->activity == TI57_POLL_PRESS_BLINK) {
-            // Call 'next' a few more times to make sure the display gets updated.
-            for (int i = 0; i < 20; i++) {
-                ti57_next(ti57);
+            if (!ti57->is_key_pressed) {
+                break;
             }
-            return;
+        } else if (ti57->activity == TI57_POLL_RELEASE ||
+                   ti57->activity == TI57_POLL_RS_RELEASE) {
+            if (ti57->is_key_pressed) {
+                break;
+            }
         }
         ti57_next(ti57);
-   }
+    }
 }
 
 void utils57_burst_until_busy(ti57_t *ti57)

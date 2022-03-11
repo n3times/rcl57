@@ -92,18 +92,18 @@ void rcl57_key_press(rcl57_t *rcl57, int row, int col);
 void rcl57_key_release(rcl57_t *rcl57);
 
 /**
- * The display as a string.
+ * Returns the display as a string.
  *
  * The display is composed of 12 LEDs and each one is represented by 1
  * character (or 2 characters if there is an additional dot).
  *
  * Characters:
- * - legacy from TI-57: 'blank character' 0..9 A b C d E F -
- * - additional common characters: B D G..Z ( ) + / >
- * - multiply: x (different from X)
+ * - legacy from TI-57: 'blank character' 0..9 A b C d E F - and .
+ * - the rest of the uppercase letters
+ * - arithmetic operators ( ) + - x / ^ = with '^' for exponentiation
  * - square root: v
- * - up arrow: ^ (for exponentiation)
- * - inverse: !
+ * - greater or equal: >
+ * - stats: s for uppercase sigma, @ for average, g for lower case sigma
  * For example: "   02   vX  ".
  */
 char *rcl57_get_display(rcl57_t *rcl57);
