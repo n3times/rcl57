@@ -1,5 +1,6 @@
 #include "key57.h"
 
+#include <assert.h>
 #include <stdbool.h>
 
 static char *DIGIT_KEYS[]  = {
@@ -9,7 +10,7 @@ static char *DIGIT_KEYS[]  = {
 
 static char *PRIMARY_KEYS[] = {
     "2ND", "INV", "LNX",  "CE", "CLR",
-    "LRN", "X%T", "X^2",  "vX", "1/X",
+    "LRN", "X/T", "X^2",  "vX", "1/X",
     "SST", "STO", "RCL", "SUM", "Y^X",
     "BST",  "EE",   "(",   ")",   "/",
     "GTO",     0,     0,     0,   "x",
@@ -70,18 +71,24 @@ static char *get_name(key57_t key, bool unicode)
 
 key57_t key57_get_key(int row, int col)
 {
-    if (row == 5 && col == 2) return 0x07;
-    if (row == 5 && col == 3) return 0x08;
-    if (row == 5 && col == 4) return 0x09;
-    if (row == 6 && col == 2) return 0x04;
-    if (row == 6 && col == 3) return 0x05;
-    if (row == 6 && col == 4) return 0x06;
-    if (row == 7 && col == 2) return 0x01;
-    if (row == 7 && col == 3) return 0x02;
-    if (row == 7 && col == 4) return 0x03;
-    if (row == 8 && col == 2) return 0x00;
+    assert(1 <= row && row <= 8);
+    assert(1 <= col && col <= 5);
 
-    return (row << 4) | col;
+    key57_t key = (row << 4) | col;
+
+    switch(key) {
+    case 0x52: return 0x07;
+    case 0x53: return 0x08;
+    case 0x54: return 0x09;
+    case 0x62: return 0x04;
+    case 0x63: return 0x05;
+    case 0x64: return 0x06;
+    case 0x72: return 0x01;
+    case 0x73: return 0x02;
+    case 0x74: return 0x03;
+    case 0x82: return 0x00;
+    default: return key;
+    }
 }
 
 char *key57_get_ascii_name(key57_t key)

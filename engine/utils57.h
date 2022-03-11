@@ -13,13 +13,13 @@
 char *utils57_trim(char *str);
 
 /**
- * A raw string representation of a given internal register. Characters in
+ * Returns a raw string representation of a given internal register. Characters in
  * '0'-'F'.
  */
 char *utils57_reg_to_str(ti57_reg_t reg);
 
 /**
- * A string representation of the user register at 'reg'. For example:
+ * Returns a string representation of the user register at 'reg'. For example:
  * "-1.23 45".
  *
  * Note that digits of reg at 14 and 15, as well as the two higher bits at 13,

@@ -111,7 +111,6 @@ struct LEDView: View {
         var path = Path()
 
         let useShortSegments = c == "+" || c == "-" || c == "x" || c == "/" || c == "@"
-        let useAlternateDotData = c == "1"
 
         if combineSegments {
             for pair in LEDView.combinedRightSegmentsData.keys {
@@ -155,9 +154,8 @@ struct LEDView: View {
             }
         }
         if (hasDot || hasColon) {
-            let data = useAlternateDotData ? alternateDotData : dotData
-            path.addRect(data.offsetBy(dx: CGFloat(startX), dy: CGFloat(0)))
-            if hasColon { path.addRect(data.offsetBy(dx: CGFloat(startX), dy: CGFloat(0) - 18)) }
+            path.addRect(dotData.offsetBy(dx: CGFloat(startX), dy: CGFloat(0)))
+            if hasColon { path.addRect(dotData.offsetBy(dx: CGFloat(startX), dy: CGFloat(0) - 18)) }
         }
         return path
     }

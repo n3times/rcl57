@@ -21,10 +21,11 @@ typedef enum log57_type_e {
     LOG57_PAUSE,       // The number on the display, while on Pause.
 } log57_type_t;
 
+/** An operation. */
 typedef struct log57_op_s {
-    bool inv;
-    key57_t key;
-    signed char d;
+    bool inv;       // Whether it is an inverse operation.
+    key57_t key;    // The key that determines the operator.
+    signed char d;  // -1 if operator is parameterless or if parameter is pending.
 } log57_op_t;
 
 /** A log entry. */
@@ -35,9 +36,16 @@ typedef struct log57_entry_s {
 
 /** All the log data. */
 typedef struct log57_s {
+    // The log data. */
     log57_entry_t entries[LOG57_MAX_ENTRY_COUNT];
-    long logged_count;  // Number of logged entries since reset, can be > LOG57_MAX_ENTRY_COUNT.
-    char current_op[16];
+    long logged_count;    // Number of logged entries since reset, can be > LOG57_MAX_ENTRY_COUNT.
+    char current_op[16];  // The current operation such as "+", "STO _" or "STO 2".
+
+    // Parsing internal state.
+    key57_t pending_op_key;  // The key such as "STO" before the digit parameter has been entered.
+    bool is_pending_sec;     // Whether 2nd is selected. Used to help determined the operation.
+    bool is_pending_inv;     // Whether INV is selected. Used to help determined the operation.
+    bool is_key_logged;      // Whether the current key has already been logged.
 } log57_t;
 
 /** Resets the log, setting the logged_count to 0. */
