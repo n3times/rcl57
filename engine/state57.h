@@ -13,8 +13,8 @@
 /**
  * Type for internal registers.
  *
- * Internal registers are composed of 16 4-bit digits which can be  decimal 0..9
- * or hexadecimal 0-F.
+ * Internal registers are composed of 16 4-bit digits. Depending on the context,
+ * the range of digits can be  decimal 0..9 or hexadecimal 0-F.
  */
 typedef unsigned char ti57_reg_t[16];
 
@@ -23,9 +23,9 @@ typedef unsigned short ti57_address_t;
 
 /**
  * Activities:
- * - TI57_BUSY: default, running or executing some operation
+ * - TI57_BUSY: default, running or executing some operation.
  * - TI57_POLL_PRESS: in a tight loop, waiting for a key press.
- * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display blinking
+ * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display blinking.
  * - TI57_POLL_RELEASE: in a tight loop, waiting for a key release.
  * - TI57_POLL_RS_RELEASE: in a tight loop, waiting for R/S release.
  * - TI57_PAUSE: 'Pause' is being executed
@@ -53,7 +53,7 @@ typedef enum ti57_mode_e {
 
 /** Parsing state in mode EVAL. */
 typedef enum ti57_parse_state_e {
-    TI57_PARSE_DEFAULT,
+    TI57_PARSE_DEFAULT,              // No parsing is currently occurring.
     TI57_PARSE_NUMBER_EDIT,          // The number on the display is being edited.
     TI57_PARSE_OP_EDIT,              // The parameter of an instruction hasn't been entered.
 } ti57_parse_state_t;
@@ -61,27 +61,27 @@ typedef enum ti57_parse_state_e {
 /** The state of a TI-57. */
 typedef struct ti57_s {
     // The internal state of a TI-57.
-    ti57_reg_t A, B, C, D;           // Operational Registers
-    ti57_reg_t X[8], Y[8];           // Storage Registers
-    unsigned char RAB;               // Register Address Buffer (3-bit)
-    unsigned char R5;                // Auxiliary 8-bit Register
-    ti57_address_t pc;               // Program Counter
-    ti57_address_t stack[3];         // Subroutine Stack
-    bool COND;                       // Conditional Latch
-    bool is_hex;                     // Arithmetic done in base 16 instead of 10
-    int row, col;                    // Row and column of pressed key in 1..8 and 1..5
+    ti57_reg_t A, B, C, D;           // Operational registers.
+    ti57_reg_t X[8], Y[8];           // Storage registers.
+    unsigned char RAB;               // Register address buffer (3-bit).
+    unsigned char R5;                // Auxiliary 8-bit register.
+    ti57_address_t pc;               // Internal program counter.
+    ti57_address_t stack[3];         // Subroutine stack.
+    bool COND;                       // Conditional latch.
+    bool is_hex;                     // Arithmetic done in base 16 instead of 10.
+    int row, col;                    // Row and column of pressed key in 1..8 and 1..5/
     bool is_key_pressed;             // Whether a key is being pressed by the user.
-    ti57_reg_t dA, dB;               // Copy of A and B for display purposes
+    ti57_reg_t dA, dB;               // Copy of A and B for display purposes.
 
-    unsigned long current_cycle;     // The number of cycle the emulator has been running for
-    unsigned long last_disp_cycle;   // The cycle DISP was executed last
-    key57_t last_processed_key;      // The key that was last pressed by the user
-    ti57_mode_t mode;                // The current mode
-    ti57_parse_state_t parse_state;  // The current parse state
-    ti57_activity_t activity;        // The current activity
-    int step_at_key_press;           // Use for SST (single step)
+    unsigned long current_cycle;     // The number of cycles the emulator has been running for.
+    unsigned long last_disp_cycle;   // The cycle DISP was executed last.
+    key57_t last_processed_key;      // The key that was last pressed by the user.
+    ti57_mode_t mode;                // The current mode.
+    ti57_parse_state_t parse_state;  // The current parse state.
+    ti57_activity_t activity;        // The current activity.
+    int step_at_key_press;           // Use for SST (single step).
 
-    log57_t log;
+    log57_t log;                     // The sequence of user operations and results.
 } ti57_t;
 
 /** Units for trigometric functions. */

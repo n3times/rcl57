@@ -32,7 +32,9 @@ int ti57_get_fix(ti57_t *ti57)
 bool ti57_is_2nd(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_processed_key != 0x11 && ti57->last_processed_key != 0x12) return false;
+    if (ti57->last_processed_key != KEY57_2ND && ti57->last_processed_key != KEY57_INV) {
+        return false;
+    }
 
     return (ti57->C[14] & 0x8) != 0;
 }
@@ -40,8 +42,9 @@ bool ti57_is_2nd(ti57_t *ti57)
 bool ti57_is_inv(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_processed_key != 0x11 && ti57->last_processed_key != 0x12) return false;
-
+    if (ti57->last_processed_key != KEY57_2ND && ti57->last_processed_key != KEY57_INV) {
+        return false;
+    }
     return (ti57->B[15] & 0x4) != 0;
 }
 
@@ -80,15 +83,17 @@ bool ti57_is_instruction_eval_edit(ti57_t *ti57)
 bool ti57_is_trace(ti57_t *ti57)
 {
     if (ti57->mode != TI57_RUN) return false;
+    if (!ti57->is_key_pressed) return false;
 
-    return ti57->is_key_pressed && ti57->row == 3 && ti57->col == 1;
+    return key57_get_key(ti57->row, ti57->col) == KEY57_SST;
 }
 
 bool ti57_is_stopping(ti57_t *ti57)
 {
     if (ti57->mode != TI57_RUN) return false;
+    if (!ti57->is_key_pressed) return false;
 
-    return ti57->is_key_pressed && ti57->row == 8 && ti57->col == 1;
+    return key57_get_key(ti57->row, ti57->col) == KEY57_RS;
 }
 
 /**
@@ -152,7 +157,8 @@ ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i)
     case 5: return &ti57->X[3];
     case 6: return &ti57->X[2];
     case 7: return &ti57->X[4];
-    default: return 0;
+
+    default: return NULL;
     }
 }
 

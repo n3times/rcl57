@@ -66,7 +66,7 @@
 #define RCL57_HP_LRN_MODE_FLAG                  0x20
 
 /** In LRN mode, show instructions as alphanumeric mnemonics such as "LNX". */
-#define RCL57_ALPHANUMERIC_LRN_MODE_FLAG        0x40
+#define RCL57_ALPHA_LRN_MODE_FLAG               0x40
 
 typedef struct rcl57_s {
     ti57_t ti57;

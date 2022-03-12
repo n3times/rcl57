@@ -44,7 +44,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col);
 void ti57_key_release(ti57_t *ti57);
 
 /**
- * The display as a string.
+ * Returns the display as a string.
  *
  * The display is composed of 12 LEDs and each one is represented by 1
  * character (or 2 characters if there is an additional dot).

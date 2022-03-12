@@ -52,7 +52,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
     int pc = ti57_get_pc(ti57);
     bool op_pending = ti57_is_instruction_lrn_edit(ti57);
     bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
-    bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG;
+    bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG;
     int dot_count = 0;
 
     if (pc == 0 && !op_pending && is_hp_mode) {
@@ -328,7 +328,7 @@ char *rcl57_get_display(rcl57_t *rcl57)
 
     if (ti57->mode == TI57_LRN &&
         (rcl57->options & RCL57_HP_LRN_MODE_FLAG ||
-         rcl57->options & RCL57_ALPHANUMERIC_LRN_MODE_FLAG)) {
+         rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG)) {
         return get_lrn_display(rcl57);
     }
 

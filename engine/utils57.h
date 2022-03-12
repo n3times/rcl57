@@ -20,10 +20,12 @@ char *utils57_reg_to_str(ti57_reg_t reg);
  * Returns a string representation of the user register at 'reg'. For example:
  * "-1.23 45".
  *
- * Note that digits of reg at 14 and 15, as well as the two higher bits at 13,
- * are ignored.
+ * Note that digits of reg at indices 14 and 15, as well as the two higher bits
+ * at index 13, are ignored.
  */
 char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix);
+
+char *utils57_display_to_str(ti57_reg_t *digits, ti57_reg_t *mask);
 
 /** Calls repeatedly 'ti57_next' until the calculator is waiting for a key press or a key release. */
 void utils57_burst_until_idle(ti57_t *ti57);

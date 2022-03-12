@@ -7,11 +7,13 @@ char *utils57_trim(char *str)
     char *begin, *end;
 
     begin = str;
-    while (*begin == ' ')
+    while (*begin == ' ') {
         begin++;
+    }
     end = begin + strlen(begin) - 1;
-    while (*end == ' ')
+    while (*end == ' ') {
         end--;
+    }
     *(end + 1) = 0;
     memmove(str, begin, strlen(begin) + 1);
     return str;
@@ -52,11 +54,33 @@ char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     utils57_burst_until_idle(&ti57);
     ti57_key_release(&ti57);
     utils57_burst_until_idle(&ti57);
-    strcpy(str, utils57_trim(ti57_get_display(&ti57)));
+    strcpy(str, utils57_trim(utils57_display_to_str(&ti57.dA, &ti57.dB)));
     char *last = str + strlen(str) - 1;
     if (*last == '.') {
         *last = 0;
     }
+    return str;
+}
+
+char *utils57_display_to_str(ti57_reg_t *digits, ti57_reg_t *mask)
+{
+    static char DIGITS[] = "0123456789AbCdEF";
+    static char str[25];
+    int k = 0;
+
+    for (int i = 11; i >= 0; i--) {
+        char c;
+        if ((*mask)[i] & 0x8)
+            c = ' ';
+        else if ((*mask)[i] & 0x1)
+            c = '-';
+        else
+            c = DIGITS[(*digits)[i]];
+        str[k++] = c;
+        if ((*mask)[i] & 0x2)
+            str[k++] = '.';
+    }
+    str[k] = 0;
     return str;
 }
 

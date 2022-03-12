@@ -1,5 +1,5 @@
 /**
- * Describes how to display key characters from keys57.
+ * Describes keys on the keyboard, how they are encoded and their names.
  */
 
 #ifndef key57_h
@@ -7,11 +7,14 @@
 
 #define KEY57_2ND 0x11
 #define KEY57_INV 0x12
+#define KEY57_CLR 0x15
 #define KEY57_LRN 0x21
 #define KEY57_SST 0x31
 #define KEY57_STO 0x32
 #define KEY57_BST 0x41
 #define KEY57_EE  0x42
+#define KEY57_SBR 0x61
+#define KEY57_RS  0x81
 
 /**
  * Encodes one of the keys of the keyboard.

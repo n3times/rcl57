@@ -77,7 +77,7 @@ key57_t key57_get_key(int row, int col)
     key57_t key = (row << 4) | col;
 
     switch(key) {
-    // Digit cases:
+    // Digits:
     case 0x52: return 0x07;
     case 0x53: return 0x08;
     case 0x54: return 0x09;
@@ -89,7 +89,6 @@ key57_t key57_get_key(int row, int col)
     case 0x74: return 0x03;
     case 0x82: return 0x00;
 
-    // Default case:
     default: return key;
     }
 }

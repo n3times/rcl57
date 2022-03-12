@@ -1,5 +1,6 @@
 /**
- * Describes how to display key characters from keys57.
+ * Describes how to display, in an 14-segment LED, characters used in the names of
+ * keys of type key57_t.
  */
 
 #ifndef leds57_h

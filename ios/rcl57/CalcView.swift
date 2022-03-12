@@ -145,6 +145,11 @@ struct CalcView: View {
                     self.displayText = self.rcl57.display()
                     self.runDisplayAnimationLoop()
                 }
+                .onTapGesture {
+                    isEnhancedLRN = !isEnhancedLRN
+                    setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isEnhancedLRN)
+                    setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isEnhancedLRN)
+                }
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4)
@@ -192,7 +197,7 @@ struct CalcView: View {
                 Toggle("Enhanced LRN Mode", isOn: $isEnhancedLRN)
                     .onChange(of: isEnhancedLRN) { _ in
                         setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isEnhancedLRN)
-                        setOption(option: RCL57_ALPHANUMERIC_LRN_MODE_FLAG, value: isEnhancedLRN)
+                        setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isEnhancedLRN)
                     }
             }
             .padding(10)

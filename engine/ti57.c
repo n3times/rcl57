@@ -78,8 +78,9 @@ static void subtract(ti57_reg_t *dest, ti57_reg_t *left, ti57_reg_t *right,
         }
     }
 
-    if (borrow)
+    if (borrow) {
         ti57->COND = 1;
+    }
     update_R5(dest, ti57, lo, hi);
 }
 
@@ -157,8 +158,9 @@ static void op_branch(ti57_t *ti57, ti57_opcode_t opcode)
 {
     int COND = opcode >> 10 & 0x1;
 
-    if (COND == ti57->COND)
+    if (COND == ti57->COND) {
         ti57->pc = (ti57->pc & 0x400) | (opcode & 0x3ff);
+    }
     ti57->COND = 0;
 }
 
@@ -313,7 +315,7 @@ static void update_mode(ti57_t *ti57)
 {
     if ((ti57->C[15] & 0x1) != 0) {
         ti57->mode = TI57_LRN;
-    } else if ((ti57->C[15] & 0x8) != 0) {
+    } else if (ti57->C[15] == 0x8) {
         ti57->mode = TI57_RUN;
     } else {
         ti57->mode = TI57_EVAL;
@@ -391,11 +393,8 @@ static void log_display(ti57_t *ti57, log57_type_t type)
 {
     char display_str[26];  // 26 = 2 * 12 + 1 ('?') + 1 (end of string).
 
-    // Flush display just in case.
-    memcpy(ti57->dA, ti57->A, sizeof(ti57->dA));
-    memcpy(ti57->dB, ti57->B, sizeof(ti57->dB));
-
-    strcpy(display_str, utils57_trim(ti57_get_display(ti57)));
+    // Use A and B instead of dA and dB, in case the display hasn't been flushed.
+    strcpy(display_str, utils57_trim(utils57_display_to_str(&ti57->A, &ti57->B)));
     if (ti57_is_error(ti57)) {
         sprintf(display_str + strlen(display_str), "?");
     }
@@ -427,7 +426,7 @@ static void update_log(ti57_t *ti57,
 
     if (ti57->mode == TI57_RUN) {
         if (previous_mode == TI57_EVAL) {
-            if (log->pending_op_key == 0x61) {  // SBR
+            if (log->pending_op_key == KEY57_SBR) {
                 current_key = key57_get_key(ti57->row, ti57->col);
                 log_op(ti57, false, log->pending_op_key, current_key, false);
                 log->pending_op_key = 0;
@@ -442,15 +441,13 @@ static void update_log(ti57_t *ti57,
 
     // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
-        if (!(ti57->row == 3 && ti57->col == 1)) {
-            log_display(ti57, LOG57_RUN_RESULT);
-        }
+        log_display(ti57, LOG57_RUN_RESULT);
         return;
     }
 
     // Log R/S, from EVAL mode, a special case with its own activity.
     if (previous_activity == TI57_BUSY && ti57->activity == TI57_POLL_RS_RELEASE) {
-        log_op(ti57, false, 0x81, -1, false);
+        log_op(ti57, false, KEY57_RS, -1, false);
         // R/S has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
         log->is_key_logged = true;
         return;
@@ -462,7 +459,8 @@ static void update_log(ti57_t *ti57,
 
     // From here on, we are only interested in key presses.
 
-    // This happens when the calculator is just turned on.
+    // This happens when the calculator is just turned on, polling for a key
+    // release even if no key has been pressed yet.
     if (ti57->row == 0 && ti57->col == 0) {
         return;
     }
@@ -473,10 +471,10 @@ static void update_log(ti57_t *ti57,
     ti57->last_processed_key = current_key;
 
     // Don't log "2nd" and "INV" but take note of their state.
-    if (current_key == 0x11) {
+    if (current_key == KEY57_2ND) {
         log->is_pending_sec = ti57_is_2nd(ti57);
         return;
-    } else if (current_key == 0x12) {
+    } else if (current_key == KEY57_INV) {
         log->is_pending_inv = ti57_is_inv(ti57);
         return;
     }
@@ -514,10 +512,10 @@ static void update_log(ti57_t *ti57,
 
     if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
         // Log "CLR", if number was not being edited.
-        if (current_key == 0x15) {
+        if (current_key == KEY57_CLR) {
             if (ti57->log.logged_count &&
                 ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
-                log_op(ti57, false, 0x15, -1, false);
+                log_op(ti57, false, KEY57_CLR, -1, false);
                 log57_clear_current_op(&ti57->log);
             }
         }
@@ -612,26 +610,12 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
 
 char *ti57_get_display(ti57_t *ti57)
 {
-    static char DIGITS[] = "0123456789AbCdEF";
-    static char str[25];
-    int k = 0;
+    static char str[26];
 
     if (ti57->current_cycle - ti57->last_disp_cycle > 50) {
-        ///return "            ";
+        strcpy(str, "            ");
+        return str;
     }
 
-    for (int i = 11; i >= 0; i--) {
-        char c;
-        if (ti57->dB[i] & 0x8)
-            c = ' ';
-        else if (ti57->dB[i] & 0x1)
-            c = '-';
-        else
-            c = DIGITS[ti57->dA[i]];
-        str[k++] = c;
-        if (ti57->dB[i] & 0x2)
-            str[k++] = '.';
-    }
-    str[k] = 0;
-    return str;
+    return utils57_display_to_str(&ti57->dA, &ti57->dB);
 }

@@ -41,7 +41,7 @@ typedef struct log57_s {
     long logged_count;    // Number of logged entries since reset, can be > LOG57_MAX_ENTRY_COUNT.
     char current_op[16];  // The current operation such as "+", "STO _" or "STO 2".
 
-    // Parsing internal state.
+    // Internal state used for parsing.
     key57_t pending_op_key;  // The key such as "STO" before the digit parameter has been entered.
     bool is_pending_sec;     // Whether 2nd is selected. Used to help determine the operation.
     bool is_pending_inv;     // Whether INV is selected. Used to help determine the operation.
@@ -52,7 +52,7 @@ typedef struct log57_s {
 void log57_reset(log57_t *log);
 
 /**
- * Actual logging.
+ * ACTUAL LOGGING
  */
 
 /** Logs a message of a given type. */
@@ -62,7 +62,7 @@ void log57_log_display(log57_t *log, char *display, log57_type_t type);
 void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending);
 
 /**
- * Log retrieval.
+ * LOG RETRIEVAL
  */
 
 /** Returns the number of logged entries since reset. Can be > LOG57_MAX_ENTRY_COUNT. */
@@ -83,7 +83,7 @@ char *log57_get_message(log57_t *log, long index);
 log57_type_t log57_get_type(log57_t *log, long index);
 
 /**
- * Current operation.
+ * CURRENT OPERATION
  */
 
 /** Gets the last operation in EVAL mode. */
