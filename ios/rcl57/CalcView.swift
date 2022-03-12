@@ -13,14 +13,16 @@ struct CalcView: View {
     @State private var isInv = false
     @State private var currentOp = ""
 
-    @State private var isEnhancedLRN: Bool
     @State private var isTurboMode: Bool
+    @State private var isHpLRN: Bool
+    @State private var isAlpha: Bool
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
 
-        isEnhancedLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         isTurboMode = rcl57.getSpeedup() == 1000
+        isHpLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
@@ -145,11 +147,6 @@ struct CalcView: View {
                     self.displayText = self.rcl57.display()
                     self.runDisplayAnimationLoop()
                 }
-                .onTapGesture {
-                    isEnhancedLRN = !isEnhancedLRN
-                    setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isEnhancedLRN)
-                    setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isEnhancedLRN)
-                }
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4)
@@ -182,22 +179,25 @@ struct CalcView: View {
                     rcl57.printLog()
                     print()
                 })
-                Toggle("Turbo Mode", isOn: $isTurboMode)
+                Toggle("Turbo Speed", isOn: $isTurboMode)
                     .onChange(of: isTurboMode) { _ in
                         if isTurboMode {
                             rcl57.setSpeedup(speedup: 1000)
                         } else {
-                            rcl57.setSpeedup(speedup: 1)
+                            rcl57.setSpeedup(speedup: 2)
                         }
                         setOption(option: RCL57_SHORT_PAUSE_FLAG, value: isTurboMode)
                         setOption(option: RCL57_FASTER_TRACE_FLAG, value: isTurboMode)
                         setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
                         setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
                     }
-                Toggle("Enhanced LRN Mode", isOn: $isEnhancedLRN)
-                    .onChange(of: isEnhancedLRN) { _ in
-                        setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isEnhancedLRN)
-                        setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isEnhancedLRN)
+                Toggle("HP LRN", isOn: $isHpLRN)
+                    .onChange(of: isHpLRN) { _ in
+                        setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isHpLRN)
+                    }
+                Toggle("Alpha Display", isOn: $isAlpha)
+                    .onChange(of: isAlpha) { _ in
+                        setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
                     }
             }
             .padding(10)

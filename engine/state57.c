@@ -32,7 +32,9 @@ int ti57_get_fix(ti57_t *ti57)
 bool ti57_is_2nd(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_processed_key != KEY57_2ND && ti57->last_processed_key != KEY57_INV) {
+
+    key57_t current_key = key57_get_key(ti57->row, ti57->col);
+    if (current_key != KEY57_2ND && current_key != KEY57_INV) {
         return false;
     }
 
@@ -42,9 +44,12 @@ bool ti57_is_2nd(ti57_t *ti57)
 bool ti57_is_inv(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
-    if (ti57->last_processed_key != KEY57_2ND && ti57->last_processed_key != KEY57_INV) {
+
+    key57_t current_key = key57_get_key(ti57->row, ti57->col);
+    if (current_key != KEY57_2ND && current_key != KEY57_INV) {
         return false;
     }
+
     return (ti57->B[15] & 0x4) != 0;
 }
 

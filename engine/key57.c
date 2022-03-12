@@ -71,6 +71,8 @@ static char *get_name(key57_t key, bool unicode)
 
 key57_t key57_get_key(int row, int col)
 {
+    if (row == 0 && col == 0) return KEY57_NONE;
+
     assert(1 <= row && row <= 8);
     assert(1 <= col && col <= 5);
 

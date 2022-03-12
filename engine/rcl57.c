@@ -56,7 +56,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
     int dot_count = 0;
 
     if (pc == 0 && !op_pending && is_hp_mode) {
-        return " Lrn        ";
+        return is_alphanumeric_mode ? " LRN        " : " Lrn        ";
     }
 
     if (!op_pending  && !rcl57->at_end_program && is_hp_mode) {
@@ -102,12 +102,9 @@ static char *get_lrn_display(rcl57_t *rcl57)
     char s1 = '0' + pc / 10;
     char s2 = '0' + pc % 10;
     int start = 12 - dot_count;
-    if (is_hp_mode) {
+    if (is_hp_mode || is_alphanumeric_mode) {
         str[start] = s1;
         str[start + 1] = s2;
-    } else if (is_alphanumeric_mode) {
-        str[start + 3] = s1;
-        str[start + 4] = s2;
     } else {
         str[start + 4] = s1;
         str[start + 5] = s2;
@@ -382,7 +379,13 @@ char *rcl57_get_display(rcl57_t *rcl57)
         }
     }
 
-    return ti57_get_display(ti57);
+    if (ti57->current_cycle - ti57->last_disp_cycle > 250 * rcl57->speedup) {
+        static char str[26];
+        strcpy(str, "            ");
+        return str;
+    }
+
+    return utils57_display_to_str(&ti57->dA, &ti57->dB);
 }
 
 void rcl57_clear(rcl57_t *rcl57) {
