@@ -79,6 +79,7 @@ typedef struct ti57_s {
     ti57_mode_t mode;                // The current mode
     ti57_parse_state_t parse_state;  // The current parse state
     ti57_activity_t activity;        // The current activity
+    int step_at_key_press;           // Use for SST (single step)
 
     log57_t log;
 } ti57_t;

@@ -224,29 +224,26 @@ static void key_press_in_lrn(rcl57_t *rcl57, int row, int col)
 {
     ti57_t *ti57 = &rcl57->ti57;
     bool is_2nd, is_inv;
+    key57_t pressed_key = key57_get_key(row, col);
 
-    if (row == 1 && col == 1) {                      // 2ND
-        return ti57_key_press(&rcl57->ti57, 1, 1);
-    } else if (row == 1 && col == 2) {               // INV
-        return ti57_key_press(&rcl57->ti57, 1, 2);
+    if (pressed_key == KEY57_2ND || pressed_key == KEY57_INV) {
+        return ti57_key_press(&rcl57->ti57, row, col);
     }
 
     is_2nd = ti57_is_2nd(ti57);
     is_inv = ti57_is_inv(ti57);
     clear_2nd(rcl57);
 
-    if (!is_2nd && row == 4 && col == 1) {           // BST
+    if (!is_2nd && pressed_key == KEY57_BST) {
         return bst(rcl57);
-    } else if (!is_2nd && row == 3 && col == 1) {    // SST
+    } else if (!is_2nd && pressed_key == KEY57_SST) {
         return sst(rcl57);
-    } else if (is_2nd && row == 3 && col == 2) {     // INS
+    } else if (is_2nd && pressed_key == KEY57_STO) {
         return ins(rcl57);
-    } else if (is_2nd && row == 4 && col == 2) {     // DEL
+    } else if (is_2nd && pressed_key == KEY57_EE) {
         return del(rcl57);
-    } else if (!is_2nd && row == 2 && col == 1) {    // LRN
+    } else if (!is_2nd && pressed_key == KEY57_LRN) {
         return key_lrn(rcl57);
-    } else if (row == 1 && col == 1) {               // 2ND
-        return ti57_key_press(&rcl57->ti57, 1, 1);
     }
 
     if (rcl57->at_end_program) {

@@ -451,7 +451,9 @@ static void update_log(ti57_t *ti57,
 
     // Log the end result of running a program.
     if (previous_mode == TI57_RUN && ti57->mode == TI57_EVAL) {
-        log_display(ti57, LOG57_RUN_RESULT);
+        if (!(ti57->row == 3 && ti57->col == 1)) {
+            log_display(ti57, LOG57_RUN_RESULT);
+        }
         return;
     }
 
@@ -505,6 +507,19 @@ static void update_log(ti57_t *ti57,
         current_key += 5;
     }
     log->is_pending_sec = false;
+
+    if (current_key == KEY57_SST) {
+        int pc = ti57->step_at_key_press;
+        if (pc < 0 || pc > 49) return;
+        ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
+        if (ins->d >= 0) {
+            log->pending_op_key = ins->key;
+            current_key = ins->d;
+        } else {
+            current_key = ins->key;
+        }
+        log->is_pending_inv = ins->inv;
+    }
 
     if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
         // Log "CLR", if number was not being edited.
@@ -603,6 +618,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
     ti57->row = row;
     ti57->col = col;
     ti57->is_key_pressed = true;
+    ti57->step_at_key_press = ti57_get_pc(ti57);
 }
 
 char *ti57_get_display(ti57_t *ti57)
