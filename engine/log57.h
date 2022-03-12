@@ -1,3 +1,7 @@
+/**
+ * Logging API.
+ */
+
 #ifndef log57_h
 #define log57_h
 
@@ -6,10 +10,6 @@
 #include "key57.h"
 
 #define LOG57_MAX_ENTRY_COUNT 1000
-
-/**
- * Logging API.
- */
 
 /** The different types of log entries. */
 typedef enum log57_type_e {

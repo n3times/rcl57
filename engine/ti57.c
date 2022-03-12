@@ -1,22 +1,21 @@
+#include "ti57.h"
+
 #include <assert.h>
-#include "log57.h"
 #include <stdio.h>
 #include <string.h>
 
+#include "log57.h"
 #include "rom57.h"
 #include "utils57.h"
-#include "ti57.h"
 
 /** A 13-bit opcode. */
 typedef unsigned short ti57_opcode_t;
 
-/******************************************************************************
+/**
+ * MASK OPERATIONS
  *
- *  MASK OPERATIONS
- *
- *  Performed on digits whose indices are between lo and hi.
- *
- ******************************************************************************/
+ * Performed on digits whose indices are between lo and hi.
+ */
 
 /** Updates R5 with the 2 least significant digits of reg. */
 static void update_R5(ti57_reg_t *reg, ti57_t *ti57, int lo, int hi)
@@ -130,11 +129,9 @@ static void store(ti57_reg_t *dest, ti57_reg_t *src, ti57_t *ti57,
     update_R5(src, ti57, lo, hi);
 }
 
-/******************************************************************************
- *
- *  STACK OPERATIONS
- *
- ******************************************************************************/
+/**
+ * STACK OPERATIONS
+ */
 
 static void stack_push(ti57_t *ti57, ti57_address_t val)
 {
@@ -151,11 +148,9 @@ static ti57_address_t stack_pop(ti57_t *ti57)
     return val;
 }
 
-/******************************************************************************
- *
- *  CPU INSTRUCTIONS
- *
- ******************************************************************************/
+/**
+ * CPU INSTRUCTIONS
+ */
 
 /** Branches conditionally. */
 static void op_branch(ti57_t *ti57, ti57_opcode_t opcode)
@@ -310,11 +305,9 @@ static void op_mask(ti57_t *ti57, ti57_opcode_t opcode) {
     }
 }
 
-/******************************************************************************
- *
- *  State update.
- *
- ******************************************************************************/
+/**
+ * STATE UPDATE
+ */
 
 static void update_mode(ti57_t *ti57)
 {
@@ -365,11 +358,9 @@ static void update_activity(ti57_t *ti57)
     }
 }
 
-/******************************************************************************
- *
- *  Logging.
- *
- ******************************************************************************/
+/**
+ * LOGGING
+ */
 
 static bool has_result(key57_t key)
 {
@@ -382,9 +373,9 @@ static bool has_result(key57_t key)
     case 2:
         return true;
     case 3:
-        return key != 0x32 && key != 0x34 && key != 0x35 && key != 0x37 && key != 0x39;
+        return key == 0x33 || key == 0x36 || key == 0x38 || key == 0x30;
     case 4:
-        return key != 0x43 && key != 0x45 && key != 0x46 && key != 0x47;
+        return key == 0x42 || key == 0x44 || key == 0x48 || key == 0x49 || key == 0x40;
     case 5:
     case 6:
     case 7:
@@ -560,11 +551,9 @@ static void update_log(ti57_t *ti57,
     }
 }
 
-/******************************************************************************
- *
+/**
  *  API IMPLEMENTATION
- *
- ******************************************************************************/
+ */
 
 void ti57_init(ti57_t *ti57)
 {

@@ -1,10 +1,6 @@
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "ti57.h"
-#include "state57.h"
 #include "utils57.h"
+
+#include <string.h>
 
 char *utils57_trim(char *str)
 {

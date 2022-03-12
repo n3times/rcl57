@@ -1,8 +1,3 @@
-#ifndef ti57_h
-#define ti57_h
-
-#include "state57.h"
-
 /**
  * API for clients that want to implement a TI-57 emulator.
  *
@@ -22,6 +17,11 @@
  *   On key release:
  *     ti57_key_release(&ti57);
  */
+
+#ifndef ti57_h
+#define ti57_h
+
+#include "state57.h"
 
 /** Initializes the state of a TI-57. */
 void ti57_init(ti57_t *ti57);

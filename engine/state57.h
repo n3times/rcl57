@@ -1,3 +1,7 @@
+/**
+ * Internal state of a TI-57 and API to decode it.
+ */
+
 #ifndef state57_h
 #define state57_h
 
@@ -5,10 +9,6 @@
 
 #include "key57.h"
 #include "log57.h"
-
-/**
- * Internal state of a TI-57 and API to decode it.
- */
 
 /**
  * Type for internal registers.
@@ -102,11 +102,9 @@ typedef struct ti57_instruction_s {
     signed char d;
 } ti57_instruction_t;
 
-/*******************************************************************************
- *
+/**
  * MODES
- *
- ******************************************************************************/
+ */
 
 /** Current mode. */
 ti57_mode_t ti57_get_mode(ti57_t *ti57);
@@ -117,11 +115,9 @@ ti57_trig_t ti57_get_trig(ti57_t *ti57);
 /** Number of decimals after the decimal point (0..9). */
 int ti57_get_fix(ti57_t *ti57);
 
-/*******************************************************************************
- *
+/**
  * FLAGS
- *
- ******************************************************************************/
+ */
 
 /** The '2nd' key has been registered in EVAL or LRN mode. */
 bool ti57_is_2nd(ti57_t *ti57);
@@ -150,11 +146,9 @@ bool ti57_is_trace(ti57_t *ti57);
 /** 'R/S' is pressed while in RUN mode. */
 bool ti57_is_stopping(ti57_t *ti57);
 
-/*******************************************************************************
- *
+/**
  * AOS
- *
- ******************************************************************************/
+ */
 
 /**
  * Returns the arithmetic stack coded as a sequence of characters:
@@ -172,11 +166,9 @@ bool ti57_is_stopping(ti57_t *ti57);
  */
 char *ti57_get_aos_stack(ti57_t *ti57);
 
-/*******************************************************************************
- *
+/**
  * USER REGISTERS
- *
- ******************************************************************************/
+ */
 
 /** One of the 8 user registers (i in 0..7). */
 ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i);
@@ -187,11 +179,9 @@ ti57_reg_t *ti57_get_regX(ti57_t *ti57);
 /** The T register, same as user register 7. */
 ti57_reg_t *ti57_get_regT(ti57_t *ti57);
 
-/*******************************************************************************
- *
+/**
  * USER PROGRAM
- *
- ******************************************************************************/
+ */
 
 /** Program counter: 0..50 even if only steps 0..49 are valid. */
 int ti57_get_pc(ti57_t *ti57);

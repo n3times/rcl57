@@ -1,3 +1,7 @@
+/**
+ * Describes how to display key characters from keys57.
+ */
+
 #ifndef leds57_h
 #define leds57_h
 

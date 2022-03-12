@@ -10,7 +10,7 @@ void log57_reset(log57_t *log)
 }
 
 /**
- * Actual logging.
+ * ACTUAL LOGGING
  */
 
 void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending)
@@ -88,7 +88,7 @@ void log57_log_display(log57_t *log, char *display, log57_type_t type)
 }
 
 /**
- * Log retrieval.
+ * LOG RETRIEVAL
  */
 
 long log57_get_logged_count(log57_t *log)
@@ -113,7 +113,7 @@ log57_type_t log57_get_type(log57_t *log, long index)
 }
 
 /**
- * Current operation.
+ * CURRENT OPERATION
  */
 
 char *log57_get_current_op(log57_t *log)

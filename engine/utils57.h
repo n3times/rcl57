@@ -1,13 +1,11 @@
-#ifndef utils57_h
-#define utils57_h
-
-#include "key57.h"
-#include "rom57.h"
-#include "state57.h"
-
 /**
  * Util functions.
  */
+
+#ifndef utils57_h
+#define utils57_h
+
+#include "ti57.h"
 
 /** Trims 'str'. */
 char *utils57_trim(char *str);

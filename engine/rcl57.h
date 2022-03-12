@@ -1,8 +1,3 @@
-#ifndef rcl57_h
-#define rcl57_h
-
-#include "ti57.h"
-
 /**
  * API for clients that want to implement a RCL57 emulator, a calculator built
  * on top of TI-57.
@@ -27,6 +22,11 @@
  *   On key release:
  *     rcl57_key_release(&rcl57);
  */
+
+#ifndef rcl57_h
+#define rcl57_h
+
+#include "ti57.h"
 
 /**
  * Option flags that modify/enhance the original TI-57.
