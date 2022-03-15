@@ -35,7 +35,7 @@
 /** Pause for 1s instead of 2s. */
 #define RCL57_SHORT_PAUSE_FLAG                 0x01
 
-/** On trace, pause at each instruction for 1s, instead of 2s. */
+/** On trace, pause at each step for 1s, instead of 2s. */
 #define RCL57_FASTER_TRACE_FLAG                0x02
 
 /**
@@ -59,13 +59,13 @@
 #define RCL57_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x10
 
 /**
- * In LRN mode, show the instruction just entered instead of the next one.
+ * In LRN mode, show the step just edited instead of the next one.
  *
  * This is the default behavior of classic HP calculators and arguably better.
  */
 #define RCL57_HP_LRN_MODE_FLAG                  0x20
 
-/** In LRN mode, show instructions as alphanumeric mnemonics such as "LNX". */
+/** In LRN mode, show steps as alphanumeric mnemonics such as "LNX". */
 #define RCL57_ALPHA_LRN_MODE_FLAG               0x40
 
 typedef struct rcl57_s {

@@ -14,7 +14,7 @@
  * Type for internal registers.
  *
  * Internal registers are composed of 16 4-bit digits. Depending on the context,
- * the range of digits can be  decimal 0..9 or hexadecimal 0-F.
+ * the range of the digits can be  decimal 0..9 or hexadecimal 0-F.
  */
 typedef unsigned char ti57_reg_t[16];
 
@@ -22,10 +22,10 @@ typedef unsigned char ti57_reg_t[16];
 typedef unsigned short ti57_address_t;
 
 /**
- * Activities:
+ * Describes the activity state (busy or idle) of the TI-57:
  * - TI57_BUSY: default, running or executing some operation.
  * - TI57_POLL_PRESS: in a tight loop, waiting for a key press.
- * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display blinking.
+ * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display is blinking.
  * - TI57_POLL_RELEASE: in a tight loop, waiting for a key release.
  * - TI57_POLL_RS_RELEASE: in a tight loop, waiting for R/S release.
  * - TI57_PAUSE: 'Pause' is being executed
@@ -41,7 +41,7 @@ typedef enum ti57_activity_e {
 
 /**
  * Calculator modes:
- * - TI57_EVAL: executing or ready to execute user instructions
+ * - TI57_EVAL: executing or ready to execute user operations
  * - TI57_LRN: user program is being edited
  * - TI57_RUN: user program is running
  */
@@ -55,7 +55,7 @@ typedef enum ti57_mode_e {
 typedef enum ti57_parse_state_e {
     TI57_PARSE_DEFAULT,              // No parsing is currently occurring.
     TI57_PARSE_NUMBER_EDIT,          // The number on the display is being edited.
-    TI57_PARSE_OP_EDIT,              // The parameter of an instruction hasn't been entered.
+    TI57_PARSE_OP_EDIT,              // The parameter of an operation hasn't been entered.
 } ti57_parse_state_t;
 
 /** The state of a TI-57. */
@@ -91,17 +91,6 @@ typedef enum ti57_trig_e {
 } ti57_trig_t;
 
 /**
- * An instruction with an optional inverse modifier and an optional paramater.
- *
- * The parameter 'd' is in 0..9 (-1 means there is no parameter).
- */
-typedef struct ti57_instruction_s {
-    bool inv;
-    key57_t key;
-    signed char d;
-} ti57_instruction_t;
-
-/**
  * MODES
  */
 
@@ -133,11 +122,11 @@ bool ti57_is_error(ti57_t *ti57);
 /** A number is being edited on the display. */
 bool ti57_is_number_edit(ti57_t *ti57);
 
-/** An instruction with a digit argument is being edited in LRN mode. */
-bool ti57_is_instruction_lrn_edit(ti57_t *ti57);
+/** An operation with a digit argument is being edited in LRN mode. */
+bool ti57_is_op_edit_in_lrn(ti57_t *ti57);
 
-/** An instruction with a digit argument is being edited in EVAL mode. */
-bool ti57_is_instruction_eval_edit(ti57_t *ti57);
+/** An operation with a digit argument is being edited in EVAL mode. */
+bool ti57_is_op_edit_in_eval(ti57_t *ti57);
 
 /** 'SST' is pressed while in RUN mode. */
 bool ti57_is_trace(ti57_t *ti57);
@@ -188,7 +177,7 @@ int ti57_get_pc(ti57_t *ti57);
 /** Subroutine return addresses (i in 0..1). */
 int ti57_get_ret(ti57_t *ti57, int i);
 
-/** Instruction at a given step (step in 0..49). */
-ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step);
+/** Operation at a given step (step in 0..49). */
+op57_op_t *ti57_get_op(ti57_t *ti57, int step);
 
 #endif  /* !state57_h */

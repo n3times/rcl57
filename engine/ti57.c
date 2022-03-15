@@ -150,7 +150,7 @@ static ti57_address_t stack_pop(ti57_t *ti57)
 }
 
 /**
- * CPU INSTRUCTIONS
+ * CPU OPERATIONS
  */
 
 /** Branches conditionally. */
@@ -195,7 +195,7 @@ static void op_flag(ti57_t *ti57, ti57_opcode_t opcode)
 static void op_misc(ti57_t *ti57, ti57_opcode_t opcode)
 {
     int q = (opcode & 0x00f0) >> 4;  // potential operand
-    int p = opcode & 0x000f;         // instruction
+    int p = opcode & 0x000f;         // operation
 
     switch(p) {
     case 0: memcpy(ti57->A, ti57->Y[ti57->RAB], sizeof(ti57_reg_t)); break;
@@ -324,7 +324,7 @@ static void update_mode(ti57_t *ti57)
 
 static void update_parse_state(ti57_t *ti57)
 {
-    if (ti57_is_instruction_eval_edit(ti57)) {
+    if (ti57_is_op_edit_in_eval(ti57)) {
         ti57->parse_state = TI57_PARSE_OP_EDIT;
     } else if (ti57_is_number_edit(ti57)) {
         ti57->parse_state = TI57_PARSE_NUMBER_EDIT;
@@ -403,7 +403,7 @@ static void log_display(ti57_t *ti57, log57_type_t type)
 
 static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
 {
-    log57_op_t op;
+    op57_op_t op;
 
     op.inv = inv;
     op.key = key;
@@ -499,7 +499,7 @@ static void update_log(ti57_t *ti57,
     if (current_key == KEY57_SST) {
         int pc = ti57->step_at_key_press;
         if (pc < 0 || pc > 49) return;
-        ti57_instruction_t *ins = ti57_get_instruction(ti57, pc);
+        op57_op_t *ins = ti57_get_op(ti57, pc);
         if (ins->d >= 0) {
             log->pending_op_key = ins->key;
             current_key = ins->d;

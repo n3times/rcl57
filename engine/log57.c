@@ -13,7 +13,7 @@ void log57_reset(log57_t *log)
  * ACTUAL LOGGING
  */
 
-void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending)
+void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
 {
     bool override = false;
     log57_entry_t *current_log_entry = NULL;
@@ -54,7 +54,8 @@ void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending)
     sprintf(log->current_op, "%s%s%s",
             op->inv ? "INV " : "",
             key57_get_unicode_name(op->key),
-            param);}
+            param);
+}
 
 void log57_log_display(log57_t *log, char *display, log57_type_t type)
 {

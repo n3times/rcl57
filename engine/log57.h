@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #include "key57.h"
+#include "op57.h"
 
 #define LOG57_MAX_ENTRY_COUNT 1000
 
@@ -20,13 +21,6 @@ typedef enum log57_type_e {
     LOG57_RUN_RESULT,  // The result of a program run.
     LOG57_PAUSE,       // The number on the display, while on Pause.
 } log57_type_t;
-
-/** An operation. */
-typedef struct log57_op_s {
-    bool inv;       // Whether it is an inverse operation.
-    key57_t key;    // The key that determines the operator.
-    signed char d;  // -1 if operator is parameterless or if the operation is pending.
-} log57_op_t;
 
 /** A log entry. */
 typedef struct log57_entry_s {
@@ -59,7 +53,7 @@ void log57_reset(log57_t *log);
 void log57_log_display(log57_t *log, char *display, log57_type_t type);
 
 /** Log an operation, possibly pending. */
-void log57_log_op(log57_t *log, log57_op_t *op, bool is_pending);
+void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending);
 
 /**
  * LOG RETRIEVAL

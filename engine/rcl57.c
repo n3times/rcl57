@@ -50,7 +50,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
     int pc = ti57_get_pc(ti57);
-    bool op_pending = ti57_is_instruction_lrn_edit(ti57);
+    bool op_pending = ti57_is_op_edit_in_lrn(ti57);
     bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
     bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG;
     int dot_count = 0;
@@ -63,22 +63,22 @@ static char *get_lrn_display(rcl57_t *rcl57)
         pc -= 1;
     }
 
-    ti57_instruction_t *instruction = ti57_get_instruction(ti57, pc);
+    op57_op_t *op = ti57_get_op(ti57, pc);
 
     memset(str, ' ', sizeof(str));
     str[sizeof(str) - 1] = 0;
 
     // Operation.
     int i = (int)strlen(str) - 1;
-    if (instruction->d >= 0) {
-        str[i] = '0' + instruction->d;
+    if (op->d >= 0) {
+        str[i] = '0' + op->d;
         i -= 2;
     } else if (op_pending) {
         str[i] = is_alphanumeric_mode ? '_' : '0';
         i -= 2;
     }
     if (is_alphanumeric_mode) {
-        char *name = key57_get_ascii_name(instruction->key);
+        char *name = key57_get_ascii_name(op->key);
         for (int j = (int)strlen(name) - 1; j >= 0; j--) {
             str[i--] = name[j];
             if (str[i + 1] == '.') {
@@ -87,10 +87,10 @@ static char *get_lrn_display(rcl57_t *rcl57)
             }
         }
     } else {
-        str[i--] = '0' + instruction->key % 16;
-        str[i--] = '0' + instruction->key / 16;
+        str[i--] = '0' + op->key % 16;
+        str[i--] = '0' + op->key / 16;
     }
-    if (instruction->inv) {
+    if (op->inv) {
         if (is_alphanumeric_mode) {
             memcpy(str + i - 3, "INV", 3);
         } else {
@@ -173,7 +173,7 @@ static void bst(rcl57_t *rcl57)
 
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
-    } else if (ti57_is_instruction_lrn_edit(ti57)) {
+    } else if (ti57_is_op_edit_in_lrn(ti57)) {
         clear_(rcl57);
     } else {
         key_bst(rcl57);
@@ -199,7 +199,7 @@ static void del(rcl57_t *rcl57)
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
         key_del(rcl57);
-    } else if (ti57_is_instruction_lrn_edit(ti57)) {
+    } else if (ti57_is_op_edit_in_lrn(ti57)) {
         clear_(rcl57);
         key_del(rcl57);
     } else if (ti57_get_pc(ti57) > 0) {
@@ -212,7 +212,7 @@ static void ins(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    if (!ti57_is_instruction_lrn_edit(ti57) && !rcl57->at_end_program) {
+    if (!ti57_is_op_edit_in_lrn(ti57) && !rcl57->at_end_program) {
         key_ins(rcl57);
     }
 }

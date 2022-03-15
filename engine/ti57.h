@@ -27,13 +27,13 @@
 void ti57_init(ti57_t *ti57);
 
 /**
- * Executes the instruction at the current program counter address.
+ * Executes the operation at the current program counter address.
  *
- * A TI-57 is always executing instructions, possibly just polling for user
- * input. It takes around 1/5000 seconds to execute most instructions.
+ * A TI-57 is always executing operation, possibly just polling for user
+ * input. It takes around 1/5000 seconds to execute most operations.
  *
- * Returns the relative cost of the instruction, most often 1 though some
- * instructions, such as those involving the display, may take longer.
+ * Returns the relative cost of the operation, most often 1 though some
+ * operations, such as those involving the display, may take longer.
  */
 int ti57_next(ti57_t *ti57);
 

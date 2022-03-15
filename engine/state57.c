@@ -1,7 +1,6 @@
 #include "state57.h"
 
 #include <assert.h>
-#include <stdio.h>
 
 /**
  * MODES
@@ -70,18 +69,19 @@ bool ti57_is_number_edit(ti57_t *ti57)
     return (ti57->B[15] & 0x1) != 0;
 }
 
-bool ti57_is_instruction_lrn_edit(ti57_t *ti57)
+bool ti57_is_op_edit_in_lrn(ti57_t *ti57)
 {
     if (ti57->mode != TI57_LRN) return false;
+    if (key57_get_key(ti57->row, ti57->col) == KEY57_LRN) return false;
 
     return (ti57->C[14] & 0x1) != 0;
 }
 
-bool ti57_is_instruction_eval_edit(ti57_t *ti57)
+bool ti57_is_op_edit_in_eval(ti57_t *ti57)
 {
     if (ti57->mode != TI57_EVAL) return false;
 
-    return ti57->stack[0] == 0x00c9 || ti57->stack[1] == 0x00c9 ||  // Reg Op or Fix
+    return ti57->stack[0] == 0x00c9 || ti57->stack[1] == 0x00c9 ||  // Reg op or Fix
            ti57->stack[0] == 0x033f || ti57->stack[1] == 0x033f;    // GTO or SBR
 }
 
@@ -163,7 +163,7 @@ ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i)
     case 6: return &ti57->X[2];
     case 7: return &ti57->X[4];
 
-    default: return NULL;
+    default: return 0;
     }
 }
 
@@ -182,46 +182,6 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57)
  * USER PROGRAM
  */
 
-static ti57_instruction_t ALL_INSTRUCTIONS[256];
-
-static void init_instructions()
-{
-    for (int i = 0; i <= 0xff; i++) {
-        ti57_instruction_t *instruction = &ALL_INSTRUCTIONS[i];
-        if (i < 0x10) {
-            // Digits.
-            instruction->inv = false;
-            instruction->key = i;
-            instruction->d = -1;
-        } else if (i < 0xb0) {
-            // Ops with no parameters.
-            instruction->inv = (i & 0x08) != 0;
-            instruction->key = (((i & 0x07) + 1) << 4) | (i & 0xf0) >> 4;
-            instruction->d = -1;
-        } else {
-            // Register ops: RCL, PRD, SUM, EXC and STO.
-            static key57_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
-            instruction->inv = (i & 0x08) != 0;
-            instruction->key = keys[(i >> 4) - 0xb];
-            instruction->d = i & 0x07;
-        }
-    }
-
-    // LBL, GTO, SBR and FIX.
-    static int start_indices[] = {0x27, 0x2f, 0x77, 0x7f};
-    static key57_t keys[] = {0x86, 0x51, 0x61, 0x48};
-    static int offsets[] = {0, -1, 15, 31, -2, 14, 30, -3, 13, 29};
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 10; j++) {
-            ti57_instruction_t *instruction =
-                &ALL_INSTRUCTIONS[start_indices[i] + offsets[j]];
-            instruction->inv = false;
-            instruction->key = keys[i];
-            instruction->d = j;
-        }
-    }
-}
-
 int ti57_get_pc(ti57_t *ti57)
 {
     int pc = (ti57->X[5][15] << 4) + ti57->X[5][14];
@@ -239,7 +199,46 @@ int ti57_get_ret(ti57_t *ti57, int i)
     return (ti57->X[6 + i][15] << 4) + ti57->X[6 + i][14];
 }
 
-ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
+static op57_op_t ALL_OPS[256];
+
+static void init_ops()
+{
+    for (int i = 0; i <= 0xff; i++) {
+        op57_op_t *op = &ALL_OPS[i];
+        if (i < 0x10) {
+            // Digits.
+            op->inv = false;
+            op->key = i;
+            op->d = -1;
+        } else if (i < 0xb0) {
+            // Ops with no parameters.
+            op->inv = (i & 0x08) != 0;
+            op->key = (((i & 0x07) + 1) << 4) | (i & 0xf0) >> 4;
+            op->d = -1;
+        } else {
+            // Register ops: RCL, PRD, SUM, EXC and STO.
+            static key57_t keys[] = {0x33, 0x38, 0x34, 0x39, 0x32};
+            op->inv = (i & 0x08) != 0;
+            op->key = keys[(i >> 4) - 0xb];
+            op->d = i & 0x07;
+        }
+    }
+
+    // LBL, GTO, SBR and FIX.
+    static int start_indices[] = {0x27, 0x2f, 0x77, 0x7f};
+    static key57_t keys[] = {0x86, 0x51, 0x61, 0x48};
+    static int offsets[] = {0, -1, 15, 31, -2, 14, 30, -3, 13, 29};
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 10; j++) {
+            op57_op_t *op = &ALL_OPS[start_indices[i] + offsets[j]];
+            op->inv = false;
+            op->key = keys[i];
+            op->d = j;
+        }
+    }
+}
+
+op57_op_t *ti57_get_op(ti57_t *ti57, int step)
 {
     int i;
     ti57_reg_t *reg;
@@ -248,7 +247,7 @@ ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
     assert(0 <= step && step <= 49);
 
     if (!initialized) {
-        init_instructions();
+        init_ops();
         initialized = true;
     }
     if (step == 49) {
@@ -258,5 +257,5 @@ ti57_instruction_t *ti57_get_instruction(ti57_t *ti57, int step)
         reg = &ti57->Y[step / 8];
         i = 15 - 2 * (step % 8);
     }
-    return &ALL_INSTRUCTIONS[((*reg)[i] << 4) | (*reg)[i-1]];
+    return &ALL_OPS[((*reg)[i] << 4) | (*reg)[i-1]];
 }
