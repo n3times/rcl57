@@ -53,10 +53,17 @@ typedef enum ti57_mode_e {
 
 /** Parsing state in mode EVAL. */
 typedef enum ti57_parse_state_e {
-    TI57_PARSE_DEFAULT,              // No parsing is currently occurring.
+    TI57_PARSE_DEFAULT,              // No parsing is occurring.
     TI57_PARSE_NUMBER_EDIT,          // The number on the display is being edited.
     TI57_PARSE_OP_EDIT,              // The parameter of an operation hasn't been entered.
 } ti57_parse_state_t;
+
+/** Units for trigometric functions. */
+typedef enum ti57_trig_e {
+    TI57_DEG,
+    TI57_RAD,
+    TI57_GRAD,
+} ti57_trig_t;
 
 /** The state of a TI-57. */
 typedef struct ti57_s {
@@ -71,8 +78,8 @@ typedef struct ti57_s {
     bool is_hex;                     // Arithmetic done in base 16 instead of 10.
     int row, col;                    // Row and column of pressed key in 1..8 and 1..5/
     bool is_key_pressed;             // Whether a key is being pressed by the user.
-    ti57_reg_t dA, dB;               // Copy of A and B for display purposes.
 
+    ti57_reg_t dA, dB;               // Copy of A and B for display purposes.
     unsigned long current_cycle;     // The number of cycles the emulator has been running for.
     unsigned long last_disp_cycle;   // The cycle DISP was executed last.
     ti57_mode_t mode;                // The current mode.
@@ -82,13 +89,6 @@ typedef struct ti57_s {
 
     log57_t log;                     // The sequence of user operations and results.
 } ti57_t;
-
-/** Units for trigometric functions. */
-typedef enum ti57_trig_e {
-    TI57_DEG,
-    TI57_RAD,
-    TI57_GRAD,
-} ti57_trig_t;
 
 /**
  * MODES
@@ -159,7 +159,7 @@ char *ti57_get_aos_stack(ti57_t *ti57);
  */
 
 /** One of the 8 user registers (i in 0..7). */
-ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i);
+ti57_reg_t *ti57_get_user_reg(ti57_t *ti57, int i);
 
 /** The X register. */
 ti57_reg_t *ti57_get_regX(ti57_t *ti57);
@@ -172,7 +172,7 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57);
  */
 
 /** Program counter: 0..50 even if only steps 0..49 are valid. */
-int ti57_get_pc(ti57_t *ti57);
+int ti57_get_user_pc(ti57_t *ti57);
 
 /** Subroutine return addresses (i in 0..1). */
 int ti57_get_ret(ti57_t *ti57, int i);

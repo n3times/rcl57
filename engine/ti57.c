@@ -604,7 +604,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
     ti57->row = row;
     ti57->col = col;
     ti57->is_key_pressed = true;
-    ti57->step_at_key_press = ti57_get_pc(ti57);
+    ti57->step_at_key_press = ti57_get_user_pc(ti57);
 }
 
 char *ti57_get_display(ti57_t *ti57)

@@ -47,8 +47,9 @@ char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix)
     for (int i = 0; i <= 13; i++)
         (*T)[i] = (*reg)[i];
     ti57.X[4][14] = 9 - fix;
-    if (sci)
+    if (sci) {
         ti57.B[15] = 0x8;
+    }
 
     ti57_key_press(&ti57, 2, 2);
     utils57_burst_until_idle(&ti57);

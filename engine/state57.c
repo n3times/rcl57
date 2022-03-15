@@ -149,7 +149,7 @@ char *ti57_get_aos_stack(ti57_t *ti57)
  * USER REGISTERS
  */
 
-ti57_reg_t *ti57_get_reg(ti57_t *ti57, int i)
+ti57_reg_t *ti57_get_user_reg(ti57_t *ti57, int i)
 {
     assert(0 <= i && i <= 7);
 
@@ -182,7 +182,7 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57)
  * USER PROGRAM
  */
 
-int ti57_get_pc(ti57_t *ti57)
+int ti57_get_user_pc(ti57_t *ti57)
 {
     int pc = (ti57->X[5][15] << 4) + ti57->X[5][14];
 
@@ -238,6 +238,11 @@ static void init_ops()
     }
 }
 
+static op57_op_t *get_op(unsigned char index)
+{
+    return &ALL_OPS[index];
+}
+
 op57_op_t *ti57_get_op(ti57_t *ti57, int step)
 {
     int i;
@@ -257,5 +262,5 @@ op57_op_t *ti57_get_op(ti57_t *ti57, int step)
         reg = &ti57->Y[step / 8];
         i = 15 - 2 * (step % 8);
     }
-    return &ALL_OPS[((*reg)[i] << 4) | (*reg)[i-1]];
+    return get_op(((*reg)[i] << 4) | (*reg)[i-1]);
 }

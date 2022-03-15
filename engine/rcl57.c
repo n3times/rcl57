@@ -49,7 +49,7 @@ static char *get_lrn_display(rcl57_t *rcl57)
 {
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
-    int pc = ti57_get_pc(ti57);
+    int pc = ti57_get_user_pc(ti57);
     bool op_pending = ti57_is_op_edit_in_lrn(ti57);
     bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
     bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG;
@@ -185,7 +185,7 @@ static void sst(rcl57_t *rcl57)
     ti57_t *ti57 = &rcl57->ti57;
 
     clear_(rcl57);
-    if (ti57_get_pc(ti57) == 49) {
+    if (ti57_get_user_pc(ti57) == 49) {
         rcl57->at_end_program = true;
     } else {
         key_sst(rcl57);
@@ -202,7 +202,7 @@ static void del(rcl57_t *rcl57)
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
         clear_(rcl57);
         key_del(rcl57);
-    } else if (ti57_get_pc(ti57) > 0) {
+    } else if (ti57_get_user_pc(ti57) > 0) {
         key_bst(rcl57);
         key_del(rcl57);
     }
@@ -302,7 +302,7 @@ void rcl57_key_press(rcl57_t *rcl57, int row, int col)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    if (ti57_get_pc(ti57) != 49) {
+    if (ti57_get_user_pc(ti57) != 49) {
         rcl57->at_end_program = false;
     }
 

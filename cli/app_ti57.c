@@ -50,9 +50,9 @@ static char *get_aos(ti57_t *ti57, char *str)
     return str;
 }
 
-static char *get_instruction_str(ti57_t *ti57, int step, char *str)
+static char *get_op_str(ti57_t *ti57, int step, char *str)
 {
-    ti57_instruction_t *instruction = ti57_get_instruction(ti57, step);
+    op57_op_t *instruction = ti57_get_op(ti57, step);
 
     sprintf(str, "%s %s %c",
             instruction->inv ? "-" : " ",
@@ -105,7 +105,7 @@ static void print_state(ti57_t *ti57)
            utils57_user_reg_to_str(ti57_get_regT(ti57), false, 9));
     for (int i = 0; i <= 7; i++) {
         printf("  R%d = %s\n", i,
-               utils57_user_reg_to_str(ti57_get_reg(ti57, i), false, 9));
+               utils57_user_reg_to_str(ti57_get_user_reg(ti57, i), false, 9));
     }
 
     printf("\nAOS\n");
@@ -113,13 +113,13 @@ static void print_state(ti57_t *ti57)
     printf("  aos = %s\n", get_aos(ti57, str));
 
     int last_step = 49;
-    while (last_step >= 0 && ti57_get_instruction(ti57, last_step)->key == 0)
+    while (last_step >= 0 && ti57_get_op(ti57, last_step)->key == 0)
         last_step -= 1;
 
     printf("\nPROGRAM (%d steps)\n", last_step + 1);
     for (int i = 0; i <= last_step; i++)
-        printf("  %02d %s\n", i, get_instruction_str(ti57, i, str));
-    printf("  pc=%d\n", ti57_get_pc(ti57));
+        printf("  %02d %s\n", i, get_op_str(ti57, i, str));
+    printf("  pc=%d\n", ti57_get_user_pc(ti57));
 
     printf("\nDISP = [%s]\n", ti57_get_display(ti57));
 }
