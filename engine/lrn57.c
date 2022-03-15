@@ -106,12 +106,14 @@ static void handle_del(rcl57_t *rcl57)
 
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
+        key_del(ti57);
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
         clear_edit(ti57);
+        key_del(ti57);
     } else if (ti57_get_user_pc(ti57) > 0) {
         key_bst(ti57);
+        key_del(ti57);
     }
-    key_del(ti57);
 }
 
 static void handle_ins(rcl57_t *rcl57)
