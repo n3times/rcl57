@@ -70,7 +70,7 @@
 
 typedef struct rcl57_s {
     ti57_t ti57;
-    bool at_end_program;
+    bool at_end_program;   // pc == 49
     int options;
     unsigned int speedup;
 } rcl57_t;
