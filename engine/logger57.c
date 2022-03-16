@@ -5,7 +5,8 @@
 
 #include "utils57.h"
 
-static bool has_result(key57_t key)
+/** Returns true if operations with a given key produce a result. */
+static bool op_produces_result(key57_t key)
 {
     int row = key >> 4;
     switch(row) {
@@ -63,13 +64,14 @@ void log57_update_after_next(ti57_t *ti57,
                              ti57_mode_t previous_mode)
 {
     log57_t *log = &ti57->log;
-    key57_t current_key;
 
     if (ti57->mode == TI57_RUN) {
         if (previous_mode == TI57_EVAL) {
             if (log->pending_op_key == KEY57_SBR) {
-                current_key = key57_get_key(ti57->row, ti57->col);
-                log_op(ti57, false, log->pending_op_key, current_key, false);
+                // Don't wait for key release polling which won't happen until
+                // the program stops.
+                key57_t digit_key = key57_get_key(ti57->row, ti57->col);
+                log_op(ti57, false, log->pending_op_key, digit_key, false);
                 log->pending_op_key = 0;
                 // SBR X has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
                 log->is_key_logged = true;
@@ -98,11 +100,18 @@ void log57_update_after_next(ti57_t *ti57,
         return;
     }
 
-    // From here on, we are only interested in key presses.
+    if (ti57->mode == TI57_LRN) {
+        if (previous_mode == TI57_EVAL) {
+            log57_clear_current_op(&ti57->log);
+        }
+        return;
+    }
+
+    // From here on, we are only handling key presses in EVAL mode.
 
     // Do not check for 'is_key_pressed' as the key may already have been released.
 
-    current_key = key57_get_key(ti57->row, ti57->col);
+    key57_t current_key = key57_get_key(ti57->row, ti57->col);
 
     // This condition holds when the calculator is just turned on, polling for a key
     // release even if no key has been pressed yet.
@@ -119,14 +128,7 @@ void log57_update_after_next(ti57_t *ti57,
         return;
     }
 
-    if (ti57->mode == TI57_LRN) {
-        log57_clear_current_op(&ti57->log);
-        return;
-    }
-
-    // Handle key presses in EVAL mode.
-
-    // Cover 'X' in 'SBR X' and 'R/S' cases.
+    // 'SBR X' and 'R/S' cases have been already handled.
     if (log->is_key_logged) {
         log->is_key_logged = false;
         return;
@@ -137,17 +139,18 @@ void log57_update_after_next(ti57_t *ti57,
     }
     log->is_pending_sec = false;
 
+    // Handle tracing.
     if (current_key == KEY57_SST) {
         int pc = ti57->step_at_key_press;
         if (pc < 0 || pc > 49) return;
-        op57_op_t *ins = ti57_get_op(ti57, pc);
-        if (ins->d >= 0) {
-            log->pending_op_key = ins->key;
-            current_key = ins->d;
+        op57_op_t *op = ti57_get_op(ti57, pc);
+        if (op->d >= 0) {
+            log->pending_op_key = op->key;
+            current_key = op->d;
         } else {
-            current_key = ins->key;
+            current_key = op->key;
         }
-        log->is_pending_inv = ins->inv;
+        log->is_pending_inv = op->inv;
     }
 
     if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
@@ -167,7 +170,7 @@ void log57_update_after_next(ti57_t *ti57,
         log->pending_op_key = current_key;
         log_op(ti57, log->is_pending_inv, log->pending_op_key, -1, true);
     } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
-        // Print operation.
+        // Log operation.
         int op_key = (log->pending_op_key && current_key <= 0x09) ? log->pending_op_key : current_key;
         if (log->pending_op_key) {
             if (current_key <= 0x9) {
@@ -182,10 +185,9 @@ void log57_update_after_next(ti57_t *ti57,
         log->is_pending_inv = false;
         log->pending_op_key = 0;
 
-        // Print result.
-        if (has_result(op_key) || ti57_is_error(ti57)) {
+        // Log result.
+        if (op_produces_result(op_key) || ti57_is_error(ti57)) {
             log_display(ti57, LOG57_RESULT);
         }
     }
 }
-
