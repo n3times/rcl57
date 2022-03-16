@@ -75,31 +75,62 @@ static void key_del(ti57_t *ti57)
  * EDIT KEYS
  */
 
+// Note that, in HP-mode, the step being displayed is not necessarily
+// the one at pc. It is the one at pc - 1, except when we are 'at_end_program'
+// or when an operation is being edited. This explains the intricate logic
+// necessary for the edit keys to function the way the user would expect.
+
+// Displays the step previous to the one currently displayed.
 static void handle_bst(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
     if (rcl57->at_end_program) {
+        // No need to decrement pc.
         rcl57->at_end_program = false;
+        // Step displayed: 49 -> 48
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
+        // No need to decrement pc.
         clear_edit(ti57);
-    } else {
+        // Step displayed: pc -> pc - 1.
+    } else if (ti57_get_user_pc(ti57) > 0) {
         key_bst(ti57);
+        // Step displayed: pc - 1 -> pc - 2 (or 0 -> 'Lrn' if pc == 1).
+    } else {
+        // Already at the beginning with pc == 0 and 'Lrn' displayed.
     }
 }
 
+// Displays the step following the one currently displayed.
 static void handle_sst(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    clear_edit(ti57);
-    if (ti57_get_user_pc(ti57) == 49) {
+    if (rcl57->at_end_program) {
+        // Nothing.
+    } else if (ti57_is_op_edit_in_lrn(ti57)) {
+        int pc = ti57_get_user_pc(ti57);
+        clear_edit(ti57);
+        if (pc == 49) {
+            // No need to increment pc.
+            rcl57->at_end_program = true;
+        } else if (pc == 48) {
+            key_sst(ti57);
+            rcl57->at_end_program = true;
+        } else {
+            key_sst(ti57);
+            key_sst(ti57);
+            // Step displayed: pc -> pc + 1 (even if pc -> pc + 2).
+        }
+    } else if (ti57_get_user_pc(ti57) == 49) {
+        // No need to increment pc.
         rcl57->at_end_program = true;
     } else {
         key_sst(ti57);
     }
 }
 
+// Deletes the step currently displayed, displaying the previous step.
 static void handle_del(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
@@ -111,19 +142,18 @@ static void handle_del(rcl57_t *rcl57)
         clear_edit(ti57);
         key_del(ti57);
     } else if (ti57_get_user_pc(ti57) > 0) {
+        // Decrement pc, since the step being displayed is pc - 1.
         key_bst(ti57);
         key_del(ti57);
+    } else {
+        // The user is seeing 'Lrn'. Do not delete.
     }
 }
 
+// Note that classic HP calculators do not have an insert key.
 static void handle_ins(rcl57_t *rcl57)
 {
-    ti57_t *ti57 = &rcl57->ti57;
-
-    if (rcl57->at_end_program) return;
-    if (ti57_is_op_edit_in_lrn(ti57)) return;
-
-    key_ins(ti57);
+    // Nothing.
 }
 
 static void handle_lrn(rcl57_t *rcl57)
@@ -171,8 +201,11 @@ void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col)
         return;
     }
 
-    // Note that in HP mode, we insert insert of overriding.
-    handle_ins(rcl57);
+    // Note that in HP mode, we insert instead of overriding.
+    if (ti57_is_op_edit_in_lrn(ti57)) {
+        clear_edit(ti57);
+    }
+    key_ins(ti57);
 
     if (is_inv) {
         set_inv(ti57);
@@ -180,6 +213,8 @@ void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col)
     key(ti57, is_2nd, row, col);
 
     if (ti57->mode == TI57_EVAL) {
+        // HACK when we are at the end of the program, and need to
+        // go back to LRN mode from EVAL.
         key_lrn(ti57);
         rcl57->at_end_program = true;
     }
