@@ -315,7 +315,7 @@ static void update_mode(ti57_t *ti57)
 {
     if ((ti57->C[15] & 0x1) != 0) {
         ti57->mode = TI57_LRN;
-    } else if (ti57->C[15] == 0x8) {
+    } else if (ti57->C[15] == 0x8 || ti57->C[15] == 0xc) {
         ti57->mode = TI57_RUN;
     } else {
         ti57->mode = TI57_EVAL;

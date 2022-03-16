@@ -170,12 +170,12 @@ void log57_update_after_next(ti57_t *ti57,
         // Print operation.
         int op_key = (log->pending_op_key && current_key <= 0x09) ? log->pending_op_key : current_key;
         if (log->pending_op_key) {
-          if (current_key <= 0x9) {
-            log_op(ti57, log->is_pending_inv, log->pending_op_key, current_key, false);
-          } else {
-            log_op(ti57, log->is_pending_inv, log->pending_op_key, -1, false);
-            log_op(ti57, log->is_pending_inv, current_key, -1, false);
-          }
+            if (current_key <= 0x9) {
+                log_op(ti57, log->is_pending_inv, log->pending_op_key, current_key, false);
+            } else {
+                log_op(ti57, log->is_pending_inv, log->pending_op_key, -1, false);
+                log_op(ti57, log->is_pending_inv, current_key, -1, false);
+            }
         } else {
             log_op(ti57, log->is_pending_inv, current_key, -1, false);
         }
