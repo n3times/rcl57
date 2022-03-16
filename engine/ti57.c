@@ -400,7 +400,6 @@ int ti57_next(ti57_t *ti57)
     return cost;
 }
 
-
 void ti57_key_release(ti57_t *ti57)
 {
     // Do not zero out row and col, so we can keep track of the last pressed key.

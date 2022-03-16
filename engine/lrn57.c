@@ -202,10 +202,9 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
     }
 
     // Note that in HP mode, we insert instead of overriding.
-    if (ti57_is_op_edit_in_lrn(ti57)) {
-        clear_edit(ti57);
+    if (!ti57_is_op_edit_in_lrn(ti57)) {
+        key_ins(ti57);
     }
-    key_ins(ti57);
 
     if (is_inv) {
         set_inv(ti57);
