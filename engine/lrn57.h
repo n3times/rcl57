@@ -3,8 +3,8 @@
 
 #include "rcl57.h"
 
-/** Returns a string representing the display in alpha and HP modes. */
-char *get_display_in_special_lrn_mode(rcl57_t *rcl57);
+/** Returns a string representing the display in LRN mode. */
+char *get_display_in_lrn_mode(rcl57_t *rcl57);
 
 /** Handles a key press in HP LRN mode. */
 void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col);

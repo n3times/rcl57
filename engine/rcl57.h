@@ -55,9 +55,6 @@
  */
 #define RCL57_SHOW_RUN_INDICATOR_FLAG           0x08
 
-/** In EVAL mode, show the arithmetic operator just entered. */
-#define RCL57_DISPLAY_ARITHMETIC_OPERATORS_FLAG 0x10
-
 /**
  * In LRN mode, show the step just edited instead of the next one.
  *

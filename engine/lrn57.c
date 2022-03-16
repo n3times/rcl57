@@ -221,7 +221,7 @@ void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col)
     return;
 }
 
-char *get_display_in_special_lrn_mode(rcl57_t *rcl57)
+char *get_display_in_lrn_mode(rcl57_t *rcl57)
 {
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
@@ -252,6 +252,8 @@ char *get_display_in_special_lrn_mode(rcl57_t *rcl57)
     } else if (op_pending) {
         str[i] = is_alphanumeric_mode ? '_' : '0';
         i -= 2;
+    } else if (!is_alphanumeric_mode) {
+        i -= 2;
     }
     if (is_alphanumeric_mode) {
         char *name = key57_get_ascii_name(op->key);
@@ -278,7 +280,7 @@ char *get_display_in_special_lrn_mode(rcl57_t *rcl57)
     char s1 = '0' + pc / 10;
     char s2 = '0' + pc % 10;
     int start = 12 - dot_count;
-    if (is_hp_mode || is_alphanumeric_mode) {
+    if (is_alphanumeric_mode) {
         str[start] = s1;
         str[start + 1] = s2;
     } else {

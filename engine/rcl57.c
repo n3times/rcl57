@@ -113,57 +113,13 @@ char *rcl57_get_display(rcl57_t *rcl57)
     if (ti57->mode == TI57_LRN &&
         (rcl57->options & RCL57_HP_LRN_MODE_FLAG ||
          rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG)) {
-        return get_display_in_special_lrn_mode(rcl57);
+        return get_display_in_lrn_mode(rcl57);
     }
 
     if (ti57->mode == TI57_RUN &&
         rcl57->options & RCL57_SHOW_RUN_INDICATOR_FLAG &&
         get_goal_speed(rcl57) < 0) {
         return "[           ";
-    }
-
-    bool blinking_blank = ti57_is_error(ti57) && ti57->B[3] == 9;
-
-    if (!blinking_blank &&
-        rcl57->options & RCL57_DISPLAY_ARITHMETIC_OPERATORS_FLAG &&
-        (ti57->mode == TI57_EVAL || ti57_is_trace(ti57))) {
-        char *stack = ti57_get_aos_stack(ti57);
-        char top = stack[strlen(stack) - 1];
-
-        if (top == '+') {
-            return "        +   ";
-        } else if (top == 'x') {
-            return "        x   ";
-        } else if (top == '^') {
-            return "      X^Y   ";
-        } else if (top == 'v') {
-            return "     !X^Y   ";
-        } else if (top == '-') {
-            return "        -   ";
-        } else if (top == '/') {
-            return "        /   ";
-        }
-
-        int len = 0;
-        for (int i = (int)strlen(stack) - 1; i >= 0; i--) {
-            char c = stack[i];
-            if (c == '(') {
-                len += 1;
-            } else {
-                break;
-            }
-        }
-        if (len > 0) {
-            static char str[13];
-            for (int i = 0; i < 9; i++) {
-                str[i] = (i >=  9 - len) ? '(' : ' ';
-            }
-            str[9] = ' ';
-            str[10] = ' ';
-            str[11] = ' ';
-            str[12] = 0;
-            return str;
-        }
     }
 
     if (ti57->current_cycle - ti57->last_disp_cycle > 250 * rcl57->speedup) {
