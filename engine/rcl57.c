@@ -95,7 +95,7 @@ void rcl57_key_press(rcl57_t *rcl57, int row, int col)
 
     if (ti57->mode == TI57_LRN &&
         rcl57->options & RCL57_HP_LRN_MODE_FLAG) {
-        return key_press_in_hp_lrn_mode(rcl57, row, col);
+        return lrn57_key_press_in_hp_mode(rcl57, row, col);
     }
 
     ti57_key_press(&rcl57->ti57, row, col);
@@ -113,7 +113,7 @@ char *rcl57_get_display(rcl57_t *rcl57)
     if (ti57->mode == TI57_LRN &&
         (rcl57->options & RCL57_HP_LRN_MODE_FLAG ||
          rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG)) {
-        return get_display_in_lrn_mode(rcl57);
+        return lrn57_get_display(rcl57);
     }
 
     if (ti57->mode == TI57_RUN &&

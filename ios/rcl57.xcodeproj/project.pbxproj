@@ -20,6 +20,7 @@
 		154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7927BC65C900AE38F1 /* rom57.c */; };
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
+		158D172327E244FA003BC323 /* logger57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D172227E24441003BC323 /* logger57.c */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,8 @@
 		158D171827E01A89003BC323 /* op57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = op57.h; sourceTree = "<group>"; };
 		158D171D27E032EC003BC323 /* lrn57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lrn57.h; sourceTree = "<group>"; };
 		158D171E27E032EC003BC323 /* lrn57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lrn57.c; sourceTree = "<group>"; };
+		158D172127E24441003BC323 /* logger57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logger57.h; sourceTree = "<group>"; };
+		158D172227E24441003BC323 /* logger57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = logger57.c; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -110,6 +113,7 @@
 				15DBBC4B27D6FE0B00CD4131 /* key57.c */,
 				154B7A8327BF667700AE38F1 /* leds57.c */,
 				15DBBC4827CF2A7400CD4131 /* log57.c */,
+				158D172227E24441003BC323 /* logger57.c */,
 				158D171E27E032EC003BC323 /* lrn57.c */,
 				154B7A7127BC65C900AE38F1 /* rcl57.c */,
 				154B7A7927BC65C900AE38F1 /* rom57.c */,
@@ -119,6 +123,7 @@
 				15DBBC4A27D6F8B000CD4131 /* key57.h */,
 				154B7A8227BF667700AE38F1 /* leds57.h */,
 				15DBBC4727CF1C4900CD4131 /* log57.h */,
+				158D172127E24441003BC323 /* logger57.h */,
 				158D171D27E032EC003BC323 /* lrn57.h */,
 				158D171827E01A89003BC323 /* op57.h */,
 				154B7A7727BC65C900AE38F1 /* rcl57.h */,
@@ -202,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
+				158D172327E244FA003BC323 /* logger57.c in Sources */,
 				15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,

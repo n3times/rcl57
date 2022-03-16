@@ -167,7 +167,7 @@ static void handle_lrn(rcl57_t *rcl57)
  * API IMPLEMENTATION
  */
 
-void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col)
+void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
 {
     ti57_t *ti57 = &rcl57->ti57;
     bool is_2nd, is_inv;
@@ -221,7 +221,7 @@ void key_press_in_hp_lrn_mode(rcl57_t *rcl57, int row, int col)
     return;
 }
 
-char *get_display_in_lrn_mode(rcl57_t *rcl57)
+char *lrn57_get_display(rcl57_t *rcl57)
 {
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
