@@ -1,7 +1,6 @@
 #include "key57.h"
 
 #include <assert.h>
-#include <stdbool.h>
 
 static char *DIGIT_KEYS[]  = {
     "0", "1", "2", "3", "4", "5", "6", "7",
@@ -69,7 +68,7 @@ static char *get_name(key57_t key, bool unicode)
                : primary_keys[row * 5 + col];
 }
 
-key57_t key57_get_key(int row, int col)
+key57_t key57_get_key(int row, int col, bool is_secondary)
 {
     if (row == 0 && col == 0) return KEY57_NONE;
 
@@ -91,7 +90,7 @@ key57_t key57_get_key(int row, int col)
     case 0x74: return 0x03;
     case 0x82: return 0x00;
 
-    default: return key;
+    default: return is_secondary ? key + 5 : key;
     }
 }
 

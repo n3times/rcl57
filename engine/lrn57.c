@@ -171,7 +171,7 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
 {
     ti57_t *ti57 = &rcl57->ti57;
     bool is_2nd, is_inv;
-    key57_t pressed_key = key57_get_key(row, col);
+    key57_t pressed_key = key57_get_key(row, col, false);
 
     // Handle modifiers.
     if (pressed_key == KEY57_2ND || pressed_key == KEY57_INV) {
@@ -184,15 +184,16 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
     clear_inv(ti57);
 
     // Handle editing keys.
-    if (!is_2nd && pressed_key == KEY57_BST) {         // BST
+    pressed_key = key57_get_key(row, col, is_2nd);
+    if (pressed_key == KEY57_BST) {
         return handle_bst(rcl57);
-    } else if (!is_2nd && pressed_key == KEY57_SST) {  // SST
+    } else if (pressed_key == KEY57_SST) {
         return handle_sst(rcl57);
-    } else if (is_2nd && pressed_key == KEY57_STO) {   // INS
+    } else if (pressed_key == KEY57_INS) {
         return handle_ins(rcl57);
-    } else if (is_2nd && pressed_key == KEY57_EE) {    // DEL
+    } else if (pressed_key == KEY57_DEL) {
         return handle_del(rcl57);
-    } else if (!is_2nd && pressed_key == KEY57_LRN) {  // LRN
+    } else if (pressed_key == KEY57_LRN) {
         return handle_lrn(rcl57);
     }
 

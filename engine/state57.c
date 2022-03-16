@@ -32,7 +32,7 @@ bool ti57_is_2nd(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
 
-    key57_t current_key = key57_get_key(ti57->row, ti57->col);
+    key57_t current_key = key57_get_key(ti57->row, ti57->col, false);
     if (current_key != KEY57_2ND && current_key != KEY57_INV) {
         return false;
     }
@@ -44,7 +44,7 @@ bool ti57_is_inv(ti57_t *ti57)
 {
     if (ti57->mode == TI57_RUN) return false;
 
-    key57_t current_key = key57_get_key(ti57->row, ti57->col);
+    key57_t current_key = key57_get_key(ti57->row, ti57->col, false);
     if (current_key != KEY57_2ND && current_key != KEY57_INV) {
         return false;
     }
@@ -72,7 +72,7 @@ bool ti57_is_number_edit(ti57_t *ti57)
 bool ti57_is_op_edit_in_lrn(ti57_t *ti57)
 {
     if (ti57->mode != TI57_LRN) return false;
-    if (key57_get_key(ti57->row, ti57->col) == KEY57_LRN) return false;
+    if (key57_get_key(ti57->row, ti57->col, false) == KEY57_LRN) return false;
 
     return (ti57->C[14] & 0x1) != 0;
 }
@@ -90,7 +90,7 @@ bool ti57_is_trace(ti57_t *ti57)
     if (ti57->mode != TI57_RUN) return false;
     if (!ti57->is_key_pressed) return false;
 
-    return key57_get_key(ti57->row, ti57->col) == KEY57_SST;
+    return key57_get_key(ti57->row, ti57->col, false) == KEY57_SST;
 }
 
 bool ti57_is_stopping(ti57_t *ti57)
@@ -98,7 +98,7 @@ bool ti57_is_stopping(ti57_t *ti57)
     if (ti57->mode != TI57_RUN) return false;
     if (!ti57->is_key_pressed) return false;
 
-    return key57_get_key(ti57->row, ti57->col) == KEY57_RS;
+    return key57_get_key(ti57->row, ti57->col, false) == KEY57_RS;
 }
 
 /**

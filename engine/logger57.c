@@ -59,9 +59,9 @@ static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
 // - key press:   =  POLL_PRESS : [ END_SEQ ]
 // - SBR 0:       =  POLL_PRESS : [ END_SEQ ]
 // - R/S:         =  POLL_PRESS : BUSY : POLL_RS_RELASE : [ END_SEQ ]
-void log57_update_after_next(ti57_t *ti57,
-                             ti57_activity_t previous_activity,
-                             ti57_mode_t previous_mode)
+void logger57_update_after_next(ti57_t *ti57,
+                                ti57_activity_t previous_activity,
+                                ti57_mode_t previous_mode)
 {
     log57_t *log = &ti57->log;
 
@@ -70,7 +70,7 @@ void log57_update_after_next(ti57_t *ti57,
             if (log->pending_op_key == KEY57_SBR) {
                 // Don't wait for key release polling which won't happen until
                 // the program stops.
-                key57_t digit_key = key57_get_key(ti57->row, ti57->col);
+                key57_t digit_key = key57_get_key(ti57->row, ti57->col, false);
                 log_op(ti57, false, log->pending_op_key, digit_key, false);
                 log->pending_op_key = 0;
                 // SBR X has been handled. Do not handle it again in TI57_POLL_KEY_RELEASE.
@@ -111,7 +111,7 @@ void log57_update_after_next(ti57_t *ti57,
 
     // Do not check for 'is_key_pressed' as the key may already have been released.
 
-    key57_t current_key = key57_get_key(ti57->row, ti57->col);
+    key57_t current_key = key57_get_key(ti57->row, ti57->col, false);
 
     // This condition holds when the calculator is just turned on, polling for a key
     // release even if no key has been pressed yet.
@@ -134,9 +134,7 @@ void log57_update_after_next(ti57_t *ti57,
         return;
     }
 
-    if (log->is_pending_sec && current_key > 0x09) {
-        current_key += 5;
-    }
+    current_key = key57_get_key(ti57->row, ti57->col, log->is_pending_sec);
     log->is_pending_sec = false;
 
     // Handle tracing.

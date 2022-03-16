@@ -393,7 +393,7 @@ int ti57_next(ti57_t *ti57)
     update_mode(ti57);
     update_activity(ti57);
     update_parse_state(ti57);
-    log57_update_after_next(ti57, previous_activity, previous_mode);
+    logger57_update_after_next(ti57, previous_activity, previous_mode);
 
     int cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
     ti57->current_cycle += cost;
