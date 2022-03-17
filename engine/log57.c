@@ -18,6 +18,8 @@ void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
     bool override = false;
     log57_entry_t *current_log_entry = NULL;
 
+    log->timestamp += 1;
+
     if (log->logged_count) {
         current_log_entry = &log->entries[log->logged_count % LOG57_MAX_ENTRY_COUNT];
     }
@@ -48,7 +50,7 @@ void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
 
     sprintf(current_log_entry->message, "%s%s%s",
             op->inv ? "INV " : "",
-            key57_get_ascii_name(op->key),
+            key57_get_unicode_name(op->key),
             param);
     current_log_entry->type = is_pending ? LOG57_PENDING_OP : LOG57_OP;
     sprintf(log->current_op, "%s%s%s",
@@ -60,6 +62,8 @@ void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
 void log57_log_display(log57_t *log, char *display, log57_type_t type)
 {
     bool override = false;
+
+    log->timestamp += 1;
 
     switch(type) {
     case LOG57_NUMBER_IN:

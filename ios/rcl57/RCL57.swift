@@ -129,6 +129,23 @@ class RCL57 {
         return String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
+    func getLoggedCount() -> Int {
+        return log57_get_logged_count(&rcl57.ti57.log)
+    }
+
+    func getLogMessage(index: Int) -> String {
+        let message = log57_get_message(&rcl57.ti57.log, index)!
+        return String(cString: message)
+    }
+
+    func getLogType(index: Int) -> log57_type_t {
+        return log57_get_type(&rcl57.ti57.log, index)
+    }
+
+    func getLogTimestamp() -> Int {
+        return rcl57.ti57.log.timestamp;
+    }
+
     // Clears the log.
     func clearLog() {
         log57_reset(&rcl57.ti57.log)

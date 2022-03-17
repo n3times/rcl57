@@ -40,6 +40,10 @@ typedef struct log57_s {
     bool is_pending_sec;     // Whether 2nd is selected. Used to help determine the operation.
     bool is_pending_inv;     // Whether INV is selected. Used to help determine the operation.
     bool is_key_logged;      // Whether the current key has already been logged.
+
+    // The timestamp is incremented whenever there is a change to the log. It can be used
+    // by clients to update the UI only when needed.
+    long timestamp;
 } log57_t;
 
 /** Resets the log, setting the logged_count to 0. */

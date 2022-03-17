@@ -11,7 +11,7 @@
 		150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* CalcView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
 		150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */; };
-		150ED8E927B08CC900E01FC6 /* Penta7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* Penta7.swift */; };
+		150ED8E927B08CC900E01FC6 /* RCL57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* RCL57.swift */; };
 		150ED8EC27B09E6400E01FC6 /* LEDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* LEDView.swift */; };
 		154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7127BC65C900AE38F1 /* rcl57.c */; };
 		154B7A7C27BC65C900AE38F1 /* state57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7327BC65C900AE38F1 /* state57.c */; };
@@ -21,6 +21,7 @@
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
 		158D172327E244FA003BC323 /* logger57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D172227E24441003BC323 /* logger57.c */; };
+		158D172527E2A5E6003BC323 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D172427E2A5E6003BC323 /* LogView.swift */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
 /* End PBXBuildFile section */
@@ -31,7 +32,7 @@
 		150ED8A327B089EF00E01FC6 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		150ED8A527B089F000E01FC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		150ED8E827B08CC900E01FC6 /* Penta7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Penta7.swift; sourceTree = "<group>"; };
+		150ED8E827B08CC900E01FC6 /* RCL57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCL57.swift; sourceTree = "<group>"; };
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* LEDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDView.swift; sourceTree = "<group>"; };
 		154B7A7127BC65C900AE38F1 /* rcl57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rcl57.c; sourceTree = "<group>"; };
@@ -51,6 +52,7 @@
 		158D171E27E032EC003BC323 /* lrn57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lrn57.c; sourceTree = "<group>"; };
 		158D172127E24441003BC323 /* logger57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logger57.h; sourceTree = "<group>"; };
 		158D172227E24441003BC323 /* logger57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = logger57.c; sourceTree = "<group>"; };
+		158D172427E2A5E6003BC323 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -91,7 +93,8 @@
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				150ED8A327B089EF00E01FC6 /* CalcView.swift */,
 				150ED8EB27B09E6400E01FC6 /* LEDView.swift */,
-				150ED8E827B08CC900E01FC6 /* Penta7.swift */,
+				158D172427E2A5E6003BC323 /* LogView.swift */,
+				150ED8E827B08CC900E01FC6 /* RCL57.swift */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
 				150ED8A527B089F000E01FC6 /* Assets.xcassets */,
 				150ED8A727B089F000E01FC6 /* Preview Content */,
@@ -217,8 +220,9 @@
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
 				154B7A8427BF667700AE38F1 /* leds57.c in Sources */,
 				150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */,
-				150ED8E927B08CC900E01FC6 /* Penta7.swift in Sources */,
+				150ED8E927B08CC900E01FC6 /* RCL57.swift in Sources */,
 				154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */,
+				158D172527E2A5E6003BC323 /* LogView.swift in Sources */,
 				154B7A7C27BC65C900AE38F1 /* state57.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

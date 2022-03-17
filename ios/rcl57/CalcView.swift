@@ -98,11 +98,6 @@ struct CalcView: View {
         let displayOffsetY =
             (standardDisplayOffsetY - (standardCalcHeight - standardDisplayHeight)/2) * scaleFactor
 
-        let currentOpFont = Font
-            .system(size: 20)
-            .bold()
-        let currentOpColor = Color(red: 0.9, green: 0.9, blue: 0.9)
-
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
             Image(imageName)
@@ -138,6 +133,11 @@ struct CalcView: View {
                 )
                 .accessibility(identifier: "calculator")
                 .accessibility(label: Text(self.displayText))
+            LogView(rcl57: rcl57)
+                .offset(x: CGFloat(-50), y: CGFloat(1.4*displayOffsetY))
+                .frame(width: CGFloat(displayWidth*0.65),
+                       height: CGFloat(displayHeight),
+                       alignment:.topLeading)
             LEDView(self.displayText)
                 .offset(x: CGFloat(displayOffsetX), y: CGFloat(displayOffsetY))
                 .frame(width: CGFloat(displayWidth),
@@ -159,12 +159,6 @@ struct CalcView: View {
                     .offset(x: -77 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
-            Text(currentOp)
-                .padding(10)
-                .foregroundColor(currentOpColor)
-                .offset(x: 130 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
-                .font(currentOpFont)
-                .frame(alignment: .trailing)
             Menu("Menu") {
                 Button("Clear All", action: {
                     rcl57.clearAll()
@@ -200,10 +194,10 @@ struct CalcView: View {
                         setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
                     }
             }
-            .padding(10)
+            .padding(5)
             .background(Color.gray)
             .foregroundColor(Color.white)
-            .offset(x: -128 * CGFloat(scaleFactor), y: -315 * CGFloat(scaleFactor))
+            .offset(x: 128 * CGFloat(scaleFactor), y: -255 * CGFloat(scaleFactor))
             .font(.title)
         }
     }
