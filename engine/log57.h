@@ -14,7 +14,7 @@
 
 /** The different types of log entries. */
 typedef enum log57_type_e {
-    LOG57_NUMBER_IN,   // A number entered by the user, may be pending.
+    LOG57_NUMBER_IN,   // A number entered by the user.
     LOG57_PENDING_OP,  // A pending operation such as "STO _".
     LOG57_OP,          // An operation such as "STO 2" or "SIN".
     LOG57_RESULT,      // The result of an operation.

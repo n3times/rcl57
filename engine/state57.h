@@ -14,48 +14,35 @@
  * Type for internal registers.
  *
  * Internal registers are composed of 16 4-bit digits. Depending on the context,
- * the range of the digits can be  decimal 0..9 or hexadecimal 0-F.
+ * the range of the digits can be  decimal 0..9 or hexadecimal 0..F.
  */
 typedef unsigned char ti57_reg_t[16];
 
 /** Type for an 11-bit address (the ROM has 2^11 instructions). */
 typedef unsigned short ti57_address_t;
 
-/**
- * Describes the activity state (busy or idle) of the TI-57:
- * - TI57_BUSY: default, running or executing some operation.
- * - TI57_POLL_PRESS: in a tight loop, waiting for a key press.
- * - TI57_POLL_PRESS_BLINK:  in a tight loop, waiting for a key press while display is blinking.
- * - TI57_POLL_RELEASE: in a tight loop, waiting for a key release.
- * - TI57_POLL_RS_RELEASE: in a tight loop, waiting for R/S release.
- * - TI57_PAUSE: 'Pause' is being executed
- */
+/** Describes the activity state (busy or idle) of the TI-57. */
 typedef enum ti57_activity_e {
-    TI57_BUSY,
-    TI57_POLL_PRESS,
-    TI57_POLL_PRESS_BLINK,
-    TI57_POLL_RELEASE,
-    TI57_POLL_RS_RELEASE,
-    TI57_PAUSE,
+    TI57_BUSY,              // Default, running or executing some operation.
+    TI57_POLL_PRESS,        // In a tight loop, waiting for a key press.
+    TI57_POLL_PRESS_BLINK,  // In a tight loop, waiting for a key press while display is blinking.
+    TI57_POLL_RELEASE,      // In a tight loop, waiting for a key release.
+    TI57_POLL_RS_RELEASE,   // In a tight loop, waiting for R/S release.
+    TI57_PAUSE,             // 'Pause' is being executed.
 } ti57_activity_t;
 
-/**
- * Calculator modes:
- * - TI57_EVAL: executing or ready to execute user operations
- * - TI57_LRN: user program is being edited
- * - TI57_RUN: user program is running
- */
+/** Calculator modes. */
 typedef enum ti57_mode_e {
-    TI57_EVAL,
-    TI57_LRN,
-    TI57_RUN
+    TI57_EVAL,  // Executing or ready to execute user operations.
+    TI57_LRN,   // User program is being edited.
+    TI57_RUN    // User program is running.
 } ti57_mode_t;
 
 /** Parsing state in mode EVAL. */
 typedef enum ti57_parse_state_e {
-    TI57_PARSE_DEFAULT,              // No parsing is occurring.
-    TI57_PARSE_NUMBER_EDIT,          // The number on the display is being edited.
-    TI57_PARSE_OP_EDIT,              // The parameter of an operation hasn't been entered.
+    TI57_PARSE_DEFAULT,      // No parsing is occurring.
+    TI57_PARSE_NUMBER_EDIT,  // The number on the display is being edited.
+    TI57_PARSE_OP_EDIT,      // The parameter of an operation hasn't been entered.
 } ti57_parse_state_t;
 
 /** Units for trigometric functions. */
@@ -76,7 +63,7 @@ typedef struct ti57_s {
     ti57_address_t stack[3];         // Subroutine stack.
     bool COND;                       // Conditional latch.
     bool is_hex;                     // Arithmetic done in base 16 instead of 10.
-    int row, col;                    // Row and column of pressed key in 1..8 and 1..5/
+    int row, col;                    // Row (1..8) and column (1..5) of last pressed key.
     bool is_key_pressed;             // Whether a key is being pressed by the user.
 
     ti57_reg_t dA, dB;               // Copy of A and B for display purposes.

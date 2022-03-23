@@ -51,28 +51,28 @@
  *
  * This is the behavior of the TI-59.
  *
- * This option is highly recommended esp. if the emulator is RUN at high speed.
+ * This option is highly recommended if the emulator is RUN at high speed.
  */
-#define RCL57_SHOW_RUN_INDICATOR_FLAG           0x08
+#define RCL57_SHOW_RUN_INDICATOR_FLAG          0x08
 
 /**
  * In LRN mode, show the step just edited instead of the next one.
  *
  * This is the default behavior of classic HP calculators and arguably better.
  */
-#define RCL57_HP_LRN_MODE_FLAG                  0x20
+#define RCL57_HP_LRN_MODE_FLAG                 0x10
 
 /** In LRN mode, show steps as alphanumeric mnemonics such as "LNX". */
-#define RCL57_ALPHA_LRN_MODE_FLAG               0x40
+#define RCL57_ALPHA_LRN_MODE_FLAG              0x20
 
 typedef struct rcl57_s {
-    ti57_t ti57;
-    bool at_end_program;   // pc == 49
-    int options;
-    unsigned int speedup;
+    ti57_t ti57;           // The underlying state.
+    bool at_end_program;   // In HP mode, indicates that the last step has been executed.
+    int options;           // A combination of option flags.
+    unsigned int speedup;  // 1 for the speed of an actual TI-57.
 } rcl57_t;
 
-/** Initializes a RCL57. */
+/** Initializes or resets a RCL57. */
 void rcl57_init(rcl57_t *rcl57);
 
 /**

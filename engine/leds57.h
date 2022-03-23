@@ -1,6 +1,6 @@
 /**
- * Describes how to display, in an 14-segment LED, characters used in the names of
- * keys of type key57_t.
+ * Describes how to display, using an 14-segment LED, characters used in the ASCII names
+ * of keys of type key57_t.
  */
 
 #ifndef leds57_h
