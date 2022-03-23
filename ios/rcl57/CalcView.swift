@@ -135,8 +135,8 @@ struct CalcView: View {
                 .accessibility(label: Text(self.displayText))
             LogView(rcl57: rcl57)
                 .offset(x: CGFloat(-50), y: CGFloat(1.4*displayOffsetY))
-                .frame(width: CGFloat(displayWidth*0.65),
-                       height: CGFloat(displayHeight),
+                .frame(width: CGFloat(displayWidth * 0.65),
+                       height: CGFloat(displayHeight * 0.7),
                        alignment:.topLeading)
             LEDView(self.displayText)
                 .offset(x: CGFloat(displayOffsetX), y: CGFloat(displayOffsetY))

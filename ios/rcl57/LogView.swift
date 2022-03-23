@@ -1,21 +1,43 @@
 import SwiftUI
 
 struct Line: Identifiable {
-    let content: String
+    let left: String
+    let right: String
     let id: Int
 
-    init(content: String, id: Int) {
-        self.content = content
+    init(left: String, right: String, id: Int) {
+        self.left = left
+        self.right = right
         self.id = id
+    }
+}
+
+struct LineView: View {
+    let left: String
+    let right: String
+
+    init(left: String, right: String) {
+        self.left = left
+        self.right = right
+    }
+
+    var body: some View {
+        HStack {
+            Text(left)
+                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
+            Spacer(minLength: 25)
+            Text(right)
+                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+        } .font(.callout)
     }
 }
 
 struct LogView: View {
     let rcl57 : RCL57
     @State private var lines : [Line] = []
-    @State private var numLines = 0;
-    @State private var lastTimestamp = 0;
-    @State private var lastLoggedCount = 0;
+    @State private var currentLine = 0
+    @State private var lastTimestamp = 0
+    @State private var lastLoggedCount = 0
     private let maxLines = 1000
     private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
@@ -24,13 +46,13 @@ struct LogView: View {
         self.rcl57 = rcl57
     }
 
-    func makeLine(content: String) -> Line {
-        return Line(content: content, id: numLines)
+    func makeLine(left: String, right: String) -> Line {
+        return Line(left: left, right: right, id: currentLine)
     }
 
     func clear() {
         lines.removeAll()
-        numLines = 0
+        currentLine = 0
         lastTimestamp = 0
         lastLoggedCount = 0
     }
@@ -42,50 +64,58 @@ struct LogView: View {
 
         let newLoggedCount = rcl57.getLoggedCount()
         if newLoggedCount == 0 { clear(); return }
-        if newLoggedCount == lastLoggedCount {
-            // Change to the last log line.
+
+        var left = lines.last?.left
+        var right = lines.last?.right
+        if (lastLoggedCount > 0) {
+            let type = rcl57.getLogType(index: lastLoggedCount)
+            if type == LOG57_OP || type == LOG57_PENDING_OP {
+                right = rcl57.getLogMessage(index: lastLoggedCount)
+            } else {
+                left = rcl57.getLogMessage(index: lastLoggedCount)
+            }
             lines.removeLast()
-            lines.append(makeLine(content: rcl57.getLogMessage(index: numLines)))
-            return
+            lines.append(makeLine(left: left!, right: right!))
         }
 
-        // At least a new line.
-
-        if numLines >= maxLines {
-            lines.removeFirst()
+        if (newLoggedCount > lastLoggedCount) {
+            for i in lastLoggedCount+1...newLoggedCount {
+                let type = rcl57.getLogType(index: i)
+                if type == LOG57_OP || type == LOG57_PENDING_OP {
+                    let left = lines.last?.left
+                    let right = lines.last?.right
+                    if right == "" {
+                        lines.removeLast()
+                        lines.append(makeLine(left: left!, right: rcl57.getLogMessage(index: i)))
+                    } else {
+                        currentLine += 1
+                        lines.append(makeLine(left: "", right: rcl57.getLogMessage(index: i)))
+                    }
+                } else {
+                    currentLine += 1
+                    lines.append(makeLine(left: rcl57.getLogMessage(index: i), right: ""))
+                }
+            }
         }
 
-        var reAdd = false
-        if numLines > 0 {
-            // Remove the last line in case it needs to be updated
-            lines.removeLast()
-            numLines -= 1
-            reAdd = true
-        }
-
-        let start = reAdd ? lastLoggedCount : lastLoggedCount + 1
-        for _ in start...newLoggedCount {
-            numLines += 1
-            lines.append(makeLine(content: rcl57.getLogMessage(index: numLines)))
-        }
         lastLoggedCount = newLoggedCount
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             List(lines) {
-                Text($0.content)
+                LineView(left: $0.left, right: $0.right)
                     .listRowBackground(Color.black)
                     .foregroundColor(Color.white)
                     .listRowSeparator(.hidden)
             }
             .onAppear {
-                if numLines > 0 {
+                if currentLine > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .onChange(of: numLines) { newValue in
-                if numLines > 0 {
+            .onChange(of: currentLine) { newValue in
+                if currentLine > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
@@ -93,6 +123,7 @@ struct LogView: View {
                 updateLog()
             }
             .listStyle(PlainListStyle())
+            .environment(\.defaultMinListRowHeight, 10)
         }
     }
 }
