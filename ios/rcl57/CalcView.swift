@@ -1,8 +1,11 @@
+/**
+ * The main view. It holds the calculator with its keyboard and display. It listens to key presses
+ * events and runs the animation loop.
+ */
+
 import SwiftUI
 import AudioToolbox
 
-// The main view. It holds the calculator with its keyboard and display. It listens to key presses
-// events and runs the animation loop.
 struct CalcView: View {
     private let rcl57: RCL57
 
@@ -167,11 +170,6 @@ struct CalcView: View {
                 })
                 Button("Clear Log", action: {
                     rcl57.clearLog()
-                })
-                Button("Print Log", action: {
-                    print()
-                    rcl57.printLog()
-                    print()
                 })
                 Toggle("Turbo Speed", isOn: $isTurboMode)
                     .onChange(of: isTurboMode) { _ in

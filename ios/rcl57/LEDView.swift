@@ -1,11 +1,14 @@
+/**
+ * The display, composed of 12 14-segment LEDs. In addition, each LED has an optional dot
+ * to the right (decimal point).
+ */
+
 import SwiftUI
 
-// The display, composed of 12 14-segments LEDs. In addition, each LED has a dot or colon to the
-// right (decimal point).
 struct LEDView: View {
-    // The text composed of up to 12 non-dot non-colon characters, each one optionally followed by a
-    // a dot or colon. The text should be right-justified within the display.
-    var displayText: String
+    // The text composed of up to 12 non-dot characters, each one optionally followed by a
+    // a dot. The text will be right-justified within the display.
+    private var displayText: String
 
     private static let ledColor = Color.red
     private static let ledCount = 12
@@ -70,7 +73,6 @@ struct LEDView: View {
     ]
 
     private let dotData = CGRect(x: 22, y: 25, width: 4, height: 4)
-    private let alternateDotData = CGRect(x: 15, y: 25, width: 4, height: 4)
 
     private func getRectSegmentPath(rect: CGRect) -> Path? {
         var path = Path()
@@ -102,7 +104,6 @@ struct LEDView: View {
     private func getLedPath(c: Character,
                             startX: Double,
                             hasDot: Bool,
-                            hasColon: Bool,
                             combineSegments:Bool)
             -> Path? {
         let segments = leds57_get_segments(Int8(c.asciiValue!))
@@ -153,9 +154,8 @@ struct LEDView: View {
                 }
             }
         }
-        if (hasDot || hasColon) {
+        if (hasDot) {
             path.addRect(dotData.offsetBy(dx: CGFloat(startX), dy: CGFloat(0)))
-            if hasColon { path.addRect(dotData.offsetBy(dx: CGFloat(startX), dy: CGFloat(0) - 18)) }
         }
         return path
     }
@@ -163,25 +163,22 @@ struct LEDView: View {
     private func getPath(_ string: String) -> TransformedShape<Path> {
         var path = Path()
         let displayCharacters = Array(string)
-        var nonDotNonColonCount = 0
+        var nonDotCount = 0
         for c in displayCharacters {
-            if c != "." && c != ":" {
-                nonDotNonColonCount += 1
+            if c != "." {
+                nonDotCount += 1
             }
         }
         var index = 0
         for i in 0..<displayCharacters.count {
             if displayCharacters[i] == "." { continue }
-            if displayCharacters[i] == ":" { continue }
 
             // Right justify.
-            let position = index + (LEDView.ledCount - nonDotNonColonCount)
+            let position = index + (LEDView.ledCount - nonDotCount)
             let hasDot = i < displayCharacters.count - 1 && displayCharacters[i + 1] == "."
-            let hasColon = i < displayCharacters.count - 1 && displayCharacters[i + 1] == ":"
             let ledPath = getLedPath(c: displayCharacters[i],
                                      startX: LEDView.interLedX * Double(position),
                                      hasDot: hasDot,
-                                     hasColon: hasColon,
                                      combineSegments: true)
             if ledPath != nil { path.addPath(ledPath!) }
             index += 1
@@ -200,9 +197,7 @@ struct LEDView: View {
         let fullRect = getPath("PENTATRONICS").shape.boundingRect
         let scaleFactor: CGFloat
             = LEDView.displayToCalculatorWidthRatio * metrics.size.width / fullRect.width
-        var recenterOffsetX = LEDView.ledHeight * LEDView.slant
-        // Tweak so that it *looks* more centered (even if it is not).
-        recenterOffsetX += 5.0
+        let recenterOffsetX = LEDView.ledHeight * LEDView.slant
 
         let offsetX = (metrics.size.width - fullRect.width + recenterOffsetX) / 2 * scaleFactor
         let offsetY = (metrics.size.height - fullRect.height) / 2 * scaleFactor

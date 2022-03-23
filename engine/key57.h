@@ -20,7 +20,7 @@
 
 #define KEY57_NONE 0xFF
 
-/** Encodes one of the keys of the keyboard. */
+/** Represents one of the keys of the keyboard. */
 typedef unsigned char key57_t;
 
 /** Returns the key at a given row (1..8) and col (1..5) */

@@ -1,37 +1,42 @@
+/**
+ * The view that holds user operations and results.
+ */
+
 import SwiftUI
 
+/** Data for a LineView: a number and an operation. */
 struct Line: Identifiable {
-    let left: String
-    let right: String
+    let number: String
+    let op: String
     let id: Int
 
-    init(left: String, right: String, id: Int) {
-        self.left = left
-        self.right = right
+    init(number: String, op: String, id: Int) {
+        self.number = number
+        self.op = op
         self.id = id
     }
 }
 
+/** A line in the LogView: a number on the left and an operation on the right. */
 struct LineView: View {
-    let left: String
-    let right: String
+    let line: Line
 
-    init(left: String, right: String) {
-        self.left = left
-        self.right = right
+    init(line: Line) {
+        self.line = line
     }
 
     var body: some View {
         HStack {
-            Text(left)
+            Text(line.number)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 25)
-            Text(right)
+            Text(line.op)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
         } .font(.callout)
     }
 }
 
+/** A list of LineView's. */
 struct LogView: View {
     let rcl57 : RCL57
     @State private var lines : [Line] = []
@@ -46,8 +51,8 @@ struct LogView: View {
         self.rcl57 = rcl57
     }
 
-    func makeLine(left: String, right: String) -> Line {
-        return Line(left: left, right: right, id: currentLine)
+    func makeLine(number: String, op: String) -> Line {
+        return Line(number: number, op: op, id: currentLine)
     }
 
     func clear() {
@@ -58,53 +63,56 @@ struct LogView: View {
     }
 
     func updateLog() {
+        // Return right away if there are no changes.
         let newTimestamp = rcl57.getLogTimestamp()
-        if newTimestamp == lastTimestamp { return }  // No changes.
+        if newTimestamp == lastTimestamp { return }
         lastTimestamp = newTimestamp
 
+        // Clear log and return if necessary.
         let newLoggedCount = rcl57.getLoggedCount()
         if newLoggedCount == 0 { clear(); return }
 
-        var left = lines.last?.left
-        var right = lines.last?.right
+        // Reevaluate the item that was last logged in case it has been updated.
         if (lastLoggedCount > 0) {
+            var number = lines.last?.number
+            var op = lines.last?.op
             let type = rcl57.getLogType(index: lastLoggedCount)
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                right = rcl57.getLogMessage(index: lastLoggedCount)
+                op = rcl57.getLogMessage(index: lastLoggedCount)
             } else {
-                left = rcl57.getLogMessage(index: lastLoggedCount)
+                number = rcl57.getLogMessage(index: lastLoggedCount)
             }
             lines.removeLast()
-            lines.append(makeLine(left: left!, right: right!))
+            lines.append(makeLine(number: number!, op: op!))
         }
 
+        // Handle newly logged items.
         if (newLoggedCount > lastLoggedCount) {
             for i in lastLoggedCount+1...newLoggedCount {
                 let type = rcl57.getLogType(index: i)
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
-                    let left = lines.last?.left
-                    let right = lines.last?.right
-                    if right == "" {
+                    let number = lines.last?.number
+                    let op = lines.last?.op
+                    if op == "" {
                         lines.removeLast()
-                        lines.append(makeLine(left: left!, right: rcl57.getLogMessage(index: i)))
+                        lines.append(makeLine(number: number!, op: rcl57.getLogMessage(index: i)))
                     } else {
                         currentLine += 1
-                        lines.append(makeLine(left: "", right: rcl57.getLogMessage(index: i)))
+                        lines.append(makeLine(number: "", op: rcl57.getLogMessage(index: i)))
                     }
                 } else {
                     currentLine += 1
-                    lines.append(makeLine(left: rcl57.getLogMessage(index: i), right: ""))
+                    lines.append(makeLine(number: rcl57.getLogMessage(index: i), op: ""))
                 }
             }
+            lastLoggedCount = newLoggedCount
         }
-
-        lastLoggedCount = newLoggedCount
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             List(lines) {
-                LineView(left: $0.left, right: $0.right)
+                LineView(line: $0)
                     .listRowBackground(Color.black)
                     .foregroundColor(Color.white)
                     .listRowSeparator(.hidden)
