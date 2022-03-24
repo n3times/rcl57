@@ -40,9 +40,10 @@ typedef struct log57_s {
     bool is_pending_sec;     // Whether 2nd is selected. Used to help determine the operation.
     bool is_pending_inv;     // Whether INV is selected. Used to help determine the operation.
     bool is_key_logged;      // Whether the current key has already been logged.
+    int step_at_key_press;   // Used for SST (single step).
 
-    // The timestamp is incremented whenever there is a change to the log. It can be used
-    // by clients to update the UI only when needed.
+    // The timestamp is incremented whenever there is a change to the log. It can be used by clients
+    // to update the UI only when needed.
     long timestamp;
 } log57_t;
 

@@ -1,5 +1,5 @@
 /**
- * Describes how to display, using an 14-segment LED, characters used in the ASCII names
+ * Describes how to display, using a 14-segment LED, the characters used in the ASCII names
  * of keys of type key57_t.
  */
 

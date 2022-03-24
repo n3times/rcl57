@@ -28,10 +28,10 @@ char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix);
  */
 char *utils57_display_to_str(ti57_reg_t *digits, ti57_reg_t *mask);
 
-/** Calls repeatedly 'ti57_next' until the calculator is waiting for a key press or a key release. */
+/** Calls 'ti57_next' repeatedly until the calculator is waiting for a key press or a key release. */
 void utils57_burst_until_idle(ti57_t *ti57);
 
-/** Calls repeatedly 'ti57_next' until the calculator is in a busy state. */
+/** Calls 'ti57_next' repeatedly until the calculator is in a busy state. */
 void utils57_burst_until_busy(ti57_t *ti57);
 
 #endif  /* !utils57_h */

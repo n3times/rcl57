@@ -1,8 +1,9 @@
-import Foundation
-import CoreText
-import SwiftUI
+/**
+ * Interface to the emulator.
+ */
 
-// The RCL57 object used to run the emulator.
+import Foundation
+
 class RCL57 {
     private var rcl57 = rcl57_t()
 
@@ -47,18 +48,17 @@ class RCL57 {
         memcpy(&rcl57, fileRawBuffer, MemoryLayout.size(ofValue: rcl57))
     }
 
-    // Returns the calculator display.
+    /** Returns the calculator display. */
     func display() -> String {
         return String(cString: rcl57_get_display(&rcl57))
     }
 
-    // Should be called whenever the user presses a calculator key.
-    // row in 1..8 and col in 1..5
+    /** Should be called whenever the user presses a calculator key (row in 1..8 and col in 1..5). */
     func keyPress(row: Int32, col: Int32) {
         rcl57_key_press(&rcl57, row, col)
     }
 
-    // Should be called whenever the user releases a calculator key.
+    /** Should be called whenever the user releases a calculator key. */
     func keyRelease() {
         rcl57_key_release(&rcl57)
     }
@@ -68,18 +68,17 @@ class RCL57 {
         return rcl57_advance(&rcl57, ms)
     }
 
-    // Whether the 2nd key is engaged.
+    /** Whether the 2nd key is engaged. */
     func is2nd() -> Bool {
         return ti57_is_2nd(&rcl57.ti57)
     }
 
-    // Whether the INV key is engaged.
+    /** Whether the INV key is engaged. */
     func isInv() -> Bool {
         return ti57_is_inv(&rcl57.ti57)
     }
 
-    // Saves the RCL57 object in a given file. Returns 'true' if the object was saved
-    // successfully.
+    /** Saves the RCL57 object in a given file. Returns 'true' if the object was saved successfully. */
     func save(filename: String) -> Bool {
         let size = MemoryLayout.size(ofValue: rcl57)
         let rawData = Data(bytes: &rcl57, count: size)
@@ -98,12 +97,12 @@ class RCL57 {
         return false
     }
 
-    // Returns true if a given option flag is set.
+    /* Returns true if a given option flag is set. */
     func getOptionFlag(option:Int32) -> Bool {
         return rcl57.options & option != 0
     }
 
-    // Sets or clears a given option flag.
+    /* Sets or clears a given option flag. */
     func setOptionFlag(option: Int32, value: Bool) {
         if value {
             rcl57.options |= option
@@ -112,15 +111,17 @@ class RCL57 {
         }
     }
 
+    /**  */
     func getSpeedup() -> UInt32 {
         return rcl57.speedup
     }
 
+    /** */
     func setSpeedup(speedup: UInt32) {
         rcl57.speedup = speedup
     }
 
-    // Clears the state, only preserving the options.
+    /** Clears the state, only preserving the options. */
     func clearAll() {
         rcl57_clear(&rcl57)
     }
@@ -129,29 +130,34 @@ class RCL57 {
      * LOGGING.
      */
 
-    func currentOp() -> String {
-        return String(cString: log57_get_current_op(&rcl57.ti57.log))
+    /** Clears the log. */
+    func clearLog() {
+        log57_reset(&rcl57.ti57.log)
     }
 
+    /** Number of log items since reset. */
     func getLoggedCount() -> Int {
         return log57_get_logged_count(&rcl57.ti57.log)
     }
 
+    /** The message of a given entry. */
     func getLogMessage(index: Int) -> String {
         let message = log57_get_message(&rcl57.ti57.log, index)!
         return String(cString: message)
     }
 
+    /** The type of a given entry. */
     func getLogType(index: Int) -> log57_type_t {
         return log57_get_type(&rcl57.ti57.log, index)
     }
 
-    func getLogTimestamp() -> Int {
-        return rcl57.ti57.log.timestamp;
+    /** The current operation in EVAL mode. */
+    func currentOp() -> String {
+        return String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
-    // Clears the log.
-    func clearLog() {
-        log57_reset(&rcl57.ti57.log)
+    /** Can be used to find out when the log has been updated. */
+    func getLogTimestamp() -> Int {
+        return rcl57.ti57.log.timestamp;
     }
 }

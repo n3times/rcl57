@@ -23,7 +23,7 @@ typedef unsigned short ti57_address_t;
 
 /** Describes the activity state (busy or idle) of the TI-57. */
 typedef enum ti57_activity_e {
-    TI57_BUSY,              // Default, running or executing some operation.
+    TI57_BUSY,              // Running or executing some operation.
     TI57_POLL_PRESS,        // In a tight loop, waiting for a key press.
     TI57_POLL_PRESS_BLINK,  // In a tight loop, waiting for a key press while display is blinking.
     TI57_POLL_RELEASE,      // In a tight loop, waiting for a key release.
@@ -37,13 +37,6 @@ typedef enum ti57_mode_e {
     TI57_LRN,   // User program is being edited.
     TI57_RUN    // User program is running.
 } ti57_mode_t;
-
-/** Parsing state in mode EVAL. */
-typedef enum ti57_parse_state_e {
-    TI57_PARSE_DEFAULT,      // No parsing is occurring.
-    TI57_PARSE_NUMBER_EDIT,  // The number on the display is being edited.
-    TI57_PARSE_OP_EDIT,      // The parameter of an operation hasn't been entered.
-} ti57_parse_state_t;
 
 /** Units for trigometric functions. */
 typedef enum ti57_trig_e {
@@ -70,11 +63,9 @@ typedef struct ti57_s {
     unsigned long current_cycle;     // The number of cycles the emulator has been running for.
     unsigned long last_disp_cycle;   // The cycle DISP was executed last.
     ti57_mode_t mode;                // The current mode.
-    ti57_parse_state_t parse_state;  // The current parse state.
     ti57_activity_t activity;        // The current activity.
-    int step_at_key_press;           // Use for SST (single step).
 
-    log57_t log;                     // The sequence of user operations and results.
+    log57_t log;                     // The sequence of operations and results.
 } ti57_t;
 
 /**

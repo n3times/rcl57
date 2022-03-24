@@ -139,7 +139,7 @@ void logger57_update_after_next(ti57_t *ti57,
 
     // Handle tracing.
     if (current_key == KEY57_SST) {
-        int pc = ti57->step_at_key_press;
+        int pc = ti57->log.step_at_key_press;
         if (pc < 0 || pc > 49) return;
         op57_op_t *op = ti57_get_op(ti57, pc);
         if (op->d >= 0) {
@@ -151,7 +151,7 @@ void logger57_update_after_next(ti57_t *ti57,
         log->is_pending_inv = op->inv;
     }
 
-    if (ti57->parse_state == TI57_PARSE_NUMBER_EDIT) {
+    if (ti57_is_number_edit(ti57)) {
         // Log "CLR", if number was not being edited.
         if (current_key == KEY57_CLR) {
             if (ti57->log.logged_count &&
@@ -164,10 +164,10 @@ void logger57_update_after_next(ti57_t *ti57,
         // Log display.
         log_display(ti57, LOG57_NUMBER_IN);
         log->is_pending_inv = false;
-    } else if (ti57->parse_state == TI57_PARSE_OP_EDIT) {
+    } else if (ti57_is_op_edit_in_eval(ti57)) {
         log->pending_op_key = current_key;
         log_op(ti57, log->is_pending_inv, log->pending_op_key, -1, true);
-    } else if (ti57->parse_state == TI57_PARSE_DEFAULT) {
+    } else {
         // Log operation.
         int op_key = (log->pending_op_key && current_key <= 0x09) ? log->pending_op_key : current_key;
         if (log->pending_op_key) {

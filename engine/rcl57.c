@@ -19,7 +19,7 @@ static double get_goal_speed(rcl57_t *rcl57)
         case TI57_POLL_PRESS:
         case TI57_POLL_RELEASE:
         case TI57_POLL_RS_RELEASE:
-            return -1;
+            return 1;
         case TI57_POLL_PRESS_BLINK:
             return 1;
         default:

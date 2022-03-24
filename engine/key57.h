@@ -1,5 +1,5 @@
 /**
- * Describes keys on the keyboard.
+ * Describes the keys on the keyboard.
  */
 
 #ifndef key57_h
@@ -23,11 +23,11 @@
 /** Represents one of the keys of the keyboard. */
 typedef unsigned char key57_t;
 
-/** Returns the key at a given row (1..8) and col (1..5) */
+/** Returns the primary or secondary key at a given row (1..8) and column (1..5). */
 key57_t key57_get_key(int row, int col, bool is_secondary);
 
 /**
- * Returns the ascii name of a given key.
+ * Returns the ASCII name of a given key.
  *
  * A short simple name that can be printed easily, but
  * may not be very readable.

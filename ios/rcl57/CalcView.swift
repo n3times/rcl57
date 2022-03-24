@@ -59,15 +59,20 @@ struct CalcView: View {
     
     static var isAnimating = false
 
+    private func burst(ms: Int32) {
+        _ = self.rcl57.advance(ms: ms)
+        self.displayText = self.rcl57.display()
+        self.is2nd = self.rcl57.is2nd()
+        self.isInv = self.rcl57.isInv()
+        self.currentOp = self.rcl57.currentOp()
+    }
+
     private func runDisplayAnimationLoop() {
+        burst(ms: 20)
         if CalcView.isAnimating { return }
         CalcView.isAnimating = true
         Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true, block: { timer in
-            _ = self.rcl57.advance(ms: 20)
-            self.displayText = self.rcl57.display()
-            self.is2nd = self.rcl57.is2nd()
-            self.isInv = self.rcl57.isInv()
-            self.currentOp = self.rcl57.currentOp()
+            burst(ms: 20)
         })
     }
 
@@ -138,7 +143,7 @@ struct CalcView: View {
                 .accessibility(label: Text(self.displayText))
             LogView(rcl57: rcl57)
                 .offset(x: CGFloat(-50), y: CGFloat(1.4*displayOffsetY))
-                .frame(width: CGFloat(displayWidth * 0.65),
+                .frame(width: CGFloat(displayWidth * 0.8),
                        height: CGFloat(displayHeight * 0.7),
                        alignment:.topLeading)
             LEDView(self.displayText)

@@ -322,17 +322,6 @@ static void update_mode(ti57_t *ti57)
     }
 }
 
-static void update_parse_state(ti57_t *ti57)
-{
-    if (ti57_is_op_edit_in_eval(ti57)) {
-        ti57->parse_state = TI57_PARSE_OP_EDIT;
-    } else if (ti57_is_number_edit(ti57)) {
-        ti57->parse_state = TI57_PARSE_NUMBER_EDIT;
-    } else {
-        ti57->parse_state = TI57_PARSE_DEFAULT;
-    }
-}
-
 static bool is_pc_in(ti57_t *ti57, int lo, int hi, int depth)
 {
    if (ti57->pc >= lo && ti57->pc <= hi) return true;
@@ -347,13 +336,13 @@ static bool is_pc_in(ti57_t *ti57, int lo, int hi, int depth)
 
 static void update_activity(ti57_t *ti57)
 {
-    if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {  // 'Pause'
+    if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {
         ti57->activity = TI57_PAUSE;
     } else if (is_pc_in(ti57, 0x01fc, 0x01fe, -1)) {
         ti57->activity = TI57_POLL_RS_RELEASE;
     } else if (is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {
         ti57->activity = TI57_POLL_RELEASE;
-    } else if (is_pc_in(ti57, 0x04a6, 0x04a9, 0)) {  // Waiting for key press
+    } else if (is_pc_in(ti57, 0x04a6, 0x04a9, 0)) {
         ti57->activity = ti57_is_error(ti57) ? TI57_POLL_PRESS_BLINK : TI57_POLL_PRESS;
     } else {
         ti57->activity = TI57_BUSY;
@@ -379,20 +368,22 @@ int ti57_next(ti57_t *ti57)
 
     ti57->pc += 1;
 
-    if ((opcode & 0x1800) == 0x1800)
+    // Execute operation.
+    if ((opcode & 0x1800) == 0x1800) {
         op_branch(ti57, opcode);
-    else if ((opcode & 0x1800) == 0x1000)
+    } else if ((opcode & 0x1800) == 0x1000) {
         op_call(ti57, opcode);
-    else if ((opcode & 0x1f00) == 0x0e00)
+    } else if ((opcode & 0x1f00) == 0x0e00) {
         op_misc(ti57, opcode);
-    else if ((opcode & 0x1f00) == 0x0c00)
+    } else if ((opcode & 0x1f00) == 0x0c00) {
         op_flag(ti57, opcode);
-    else if ((opcode & 0x1000) == 0x0000)
+    } else if ((opcode & 0x1000) == 0x0000) {
         op_mask(ti57, opcode);
+    }
 
+    // Update state.
     update_mode(ti57);
     update_activity(ti57);
-    update_parse_state(ti57);
     logger57_update_after_next(ti57, previous_activity, previous_mode);
 
     int cost = ((opcode & 0x0e07) == 0x0e07) ? 32 : 1;
@@ -415,7 +406,7 @@ void ti57_key_press(ti57_t *ti57, int row, int col)
     ti57->row = row;
     ti57->col = col;
     ti57->is_key_pressed = true;
-    ti57->step_at_key_press = ti57_get_user_pc(ti57);
+    ti57->log.step_at_key_press = ti57_get_user_pc(ti57);
 }
 
 char *ti57_get_display(ti57_t *ti57)

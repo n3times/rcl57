@@ -4,7 +4,7 @@
 
 #include "utils57.h"
 
-static void clear_edit(ti57_t *ti57)
+static void clear_op_edit_flag(ti57_t *ti57)
 {
     ti57->C[14] &= 0xe;
 }
@@ -33,7 +33,7 @@ static void set_inv(ti57_t *ti57)
  *
  */
 
-static void key(ti57_t *ti57, bool sec, int row, int col)
+static void press_key(ti57_t *ti57, bool sec, int row, int col)
 {
     if (sec) {
         set_2nd(ti57);
@@ -46,29 +46,29 @@ static void key(ti57_t *ti57, bool sec, int row, int col)
     utils57_burst_until_idle(ti57);
 }
 
-static void key_lrn(ti57_t *ti57)
+static void press_key_lrn(ti57_t *ti57)
 {
-     key(ti57, false, 2, 1);
+    press_key(ti57, false, 2, 1);
 }
 
-static void key_sst(ti57_t *ti57)
+static void press_key_sst(ti57_t *ti57)
 {
-     key(ti57, false, 3, 1);
+    press_key(ti57, false, 3, 1);
 }
 
-static void key_bst(ti57_t *ti57)
+static void press_key_bst(ti57_t *ti57)
 {
-     key(ti57, false, 4, 1);
+    press_key(ti57, false, 4, 1);
 }
 
-static void key_ins(ti57_t *ti57)
+static void press_key_ins(ti57_t *ti57)
 {
-     key(ti57, true, 3, 2);
+    press_key(ti57, true, 3, 2);
 }
 
-static void key_del(ti57_t *ti57)
+static void press_key_del(ti57_t *ti57)
 {
-     key(ti57, true, 4, 2);
+    press_key(ti57, true, 4, 2);
 }
 
 /**
@@ -91,10 +91,10 @@ static void handle_bst(rcl57_t *rcl57)
         // Step displayed: 49 -> 48
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
         // No need to decrement pc.
-        clear_edit(ti57);
+        clear_op_edit_flag(ti57);
         // Step displayed: pc -> pc - 1.
     } else if (ti57_get_user_pc(ti57) > 0) {
-        key_bst(ti57);
+        press_key_bst(ti57);
         // Step displayed: pc - 1 -> pc - 2 (or 0 -> 'Lrn' if pc == 1).
     } else {
         // Already at the beginning with pc == 0 and 'Lrn' displayed.
@@ -110,23 +110,23 @@ static void handle_sst(rcl57_t *rcl57)
         // Nothing.
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
         int pc = ti57_get_user_pc(ti57);
-        clear_edit(ti57);
+        clear_op_edit_flag(ti57);
         if (pc == 49) {
             // No need to increment pc.
             rcl57->at_end_program = true;
         } else if (pc == 48) {
-            key_sst(ti57);
+            press_key_sst(ti57);
             rcl57->at_end_program = true;
         } else {
-            key_sst(ti57);
-            key_sst(ti57);
+            press_key_sst(ti57);
+            press_key_sst(ti57);
             // Step displayed: pc -> pc + 1 (even if pc -> pc + 2).
         }
     } else if (ti57_get_user_pc(ti57) == 49) {
         // No need to increment pc.
         rcl57->at_end_program = true;
     } else {
-        key_sst(ti57);
+        press_key_sst(ti57);
     }
 }
 
@@ -137,14 +137,14 @@ static void handle_del(rcl57_t *rcl57)
 
     if (rcl57->at_end_program) {
         rcl57->at_end_program = false;
-        key_del(ti57);
+        press_key_del(ti57);
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
-        clear_edit(ti57);
-        key_del(ti57);
+        clear_op_edit_flag(ti57);
+        press_key_del(ti57);
     } else if (ti57_get_user_pc(ti57) > 0) {
         // Decrement pc, since the step being displayed is pc - 1.
-        key_bst(ti57);
-        key_del(ti57);
+        press_key_bst(ti57);
+        press_key_del(ti57);
     } else {
         // The user is seeing 'Lrn'. Do not delete.
     }
@@ -160,7 +160,7 @@ static void handle_lrn(rcl57_t *rcl57)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    key_lrn(ti57);
+    press_key_lrn(ti57);
 }
 
 /**
@@ -177,7 +177,6 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
     if (pressed_key == KEY57_2ND || pressed_key == KEY57_INV) {
         return ti57_key_press(&rcl57->ti57, row, col);
     }
-
     is_2nd = ti57_is_2nd(ti57);
     is_inv = ti57_is_inv(ti57);
     clear_2nd(ti57);
@@ -202,20 +201,20 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
         return;
     }
 
-    // Note that in HP mode, we insert instead of overriding.
+    // Insert instead of overriding in HP mode.
     if (!ti57_is_op_edit_in_lrn(ti57)) {
-        key_ins(ti57);
+        press_key_ins(ti57);
     }
 
+    // Handle key.
     if (is_inv) {
         set_inv(ti57);
     }
-    key(ti57, is_2nd, row, col);
+    press_key(ti57, is_2nd, row, col);
 
+    // HACK: Go back to LRN mode, if we are at the end of the program and in EVAL mode.
     if (ti57->mode == TI57_EVAL) {
-        // HACK when we are at the end of the program, and need to
-        // go back to LRN mode from EVAL.
-        key_lrn(ti57);
+        press_key_lrn(ti57);
         rcl57->at_end_program = true;
     }
     return;
@@ -244,7 +243,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
     memset(str, ' ', sizeof(str));
     str[sizeof(str) - 1] = 0;
 
-    // Operation.
+    // Set operation.
     int i = (int)strlen(str) - 1;
     if (op->d >= 0) {
         str[i] = '0' + op->d;
@@ -276,7 +275,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
         }
     }
 
-    // Step number.
+    // Set step number.
     char s1 = '0' + pc / 10;
     char s2 = '0' + pc % 10;
     int start = 12 - dot_count;

@@ -94,9 +94,8 @@ void rcl57_key_release(rcl57_t *rcl57);
  * The display is composed of 12 LEDs and each one is represented by 1
  * character (or 2 characters if there is an additional dot).
  *
- * Characters:
- * - legacy from TI-57: 'blank character' 0..9 A b C d E F - and .
- * - the rest of the uppercase letters
+ * Character set:
+ * - 'blank' 0..9 A..Z b d - and .
  * - arithmetic operators ( ) + - x / ^ = with '^' for exponentiation
  * - square root: v
  * - greater or equal: >
