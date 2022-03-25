@@ -9,11 +9,12 @@ import AudioToolbox
 struct CalcView: View {
     private let rcl57: RCL57
 
-    @State private var displayText = ""
+    @State private var displayString = ""
     @State private var isKeyPressed = false
     @State private var imageName = "button_pad"
     @State private var is2nd = false
     @State private var isInv = false
+    @State private var trigUnits = TI57_DEG
     @State private var currentOp = ""
 
     @State private var isTurboMode: Bool
@@ -61,9 +62,10 @@ struct CalcView: View {
 
     private func burst(ms: Int32) {
         _ = self.rcl57.advance(ms: ms)
-        self.displayText = self.rcl57.display()
+        self.displayString = self.rcl57.display()
         self.is2nd = self.rcl57.is2nd()
         self.isInv = self.rcl57.isInv()
+        self.trigUnits = self.rcl57.getTrigUnits()
         self.currentOp = self.rcl57.currentOp()
     }
 
@@ -71,24 +73,80 @@ struct CalcView: View {
         burst(ms: 20)
         if CalcView.isAnimating { return }
         CalcView.isAnimating = true
-        Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true, block: { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { _ in
             burst(ms: 20)
-        })
+        }
     }
 
     private func setOption(option: Int32, value: Bool) {
         self.rcl57.setOptionFlag(option: option, value: value)
-        self.displayText = self.rcl57.display()
+        self.displayString = self.rcl57.display()
     }
 
-    private func getView(_ metrics: GeometryProxy) -> some View {
+    private func getTrigIndicatorView(trigUnits: ti57_trig_t, scaleFactor: Double) -> some View {
+        let x = 367.0
+        var y = 0.0
+        switch (trigUnits) {
+        case TI57_DEG: y = 464; break
+        case TI57_RAD: y = 527; break
+        case TI57_GRAD: y = 588; break
+        default: break
+        }
+        return Path { path in
+            path.move(to: CGPoint(x: 0, y: 0))
+            path.addLine(to: CGPoint(x: 8, y: -5))
+            path.addLine(to: CGPoint(x: 8, y: 5))
+        }
+        .offsetBy(dx: x * scaleFactor, dy: y * scaleFactor)
+        .fill(Color.brown)
+    }
+
+    private func getMenuView(_ scaleFactor: Double) -> some View {
+        Menu("Menu") {
+            Button("Clear All") {
+                rcl57.clearAll()
+                runDisplayAnimationLoop()
+                self.displayString = self.rcl57.display()
+            }
+            Button("Clear Log") {
+                rcl57.clearLog()
+            }
+            Toggle("Turbo Speed", isOn: $isTurboMode)
+                .onChange(of: isTurboMode) { _ in
+                    if isTurboMode {
+                        rcl57.setSpeedup(speedup: 1000)
+                    } else {
+                        rcl57.setSpeedup(speedup: 2)
+                    }
+                    setOption(option: RCL57_SHORT_PAUSE_FLAG, value: isTurboMode)
+                    setOption(option: RCL57_FASTER_TRACE_FLAG, value: isTurboMode)
+                    setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
+                    setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
+                }
+            Toggle("HP LRN", isOn: $isHpLRN)
+                .onChange(of: isHpLRN) { _ in
+                    setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isHpLRN)
+                }
+            Toggle("Alpha Display", isOn: $isAlpha)
+                .onChange(of: isAlpha) { _ in
+                    setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
+                }
+        }
+        .padding(5)
+        .background(Color.gray)
+        .foregroundColor(Color.white)
+        .offset(x: 128 * CGFloat(scaleFactor), y: -255 * CGFloat(scaleFactor))
+        .font(.title)
+    }
+
+    private func getView(_ geometry: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
         let standardCalcHeight = 682.0
         let standardDisplayHeight = 96.0
-        let standardDisplayOffsetY = 95.0
+        let standardDisplayOffsetY = 100.0
 
-        let screenWidth = Double(metrics.size.width)
-        let screenHeight = Double(metrics.size.height)
+        let screenWidth = geometry.size.width
+        let screenHeight = geometry.size.height
 
         let screenAspectRatio = screenHeight / screenWidth
         let calcAspectRatio = standardCalcHeight / standardCalcWidth
@@ -127,7 +185,7 @@ struct CalcView: View {
                                 self.isKeyPressed = true;
                                 runDisplayAnimationLoop()
                                 self.rcl57.keyPress(row:Int32(c!.x + 1), col:Int32(c!.y + 1))
-                                self.displayText = self.rcl57.display()
+                                self.displayString = self.rcl57.display()
                             }
                         }
                         .onEnded { _ in
@@ -135,24 +193,24 @@ struct CalcView: View {
                                 self.isKeyPressed = false
                                 runDisplayAnimationLoop()
                                 self.rcl57.keyRelease()
-                                self.displayText = self.rcl57.display()
+                                self.displayString = self.rcl57.display()
                             }
                         }
                 )
                 .accessibility(identifier: "calculator")
-                .accessibility(label: Text(self.displayText))
+                .accessibility(label: Text(self.displayString))
             LogView(rcl57: rcl57)
-                .offset(x: CGFloat(-50), y: CGFloat(1.4*displayOffsetY))
+                .offset(x: CGFloat(-50), y: CGFloat(1.4 * displayOffsetY))
                 .frame(width: CGFloat(displayWidth * 0.8),
                        height: CGFloat(displayHeight * 0.7),
                        alignment:.topLeading)
-            LEDView(self.displayText)
+            DisplayView(self.displayString)
                 .offset(x: CGFloat(displayOffsetX), y: CGFloat(displayOffsetY))
                 .frame(width: CGFloat(displayWidth),
                        height: CGFloat(displayHeight),
                        alignment: .center)
                 .onAppear {
-                    self.displayText = self.rcl57.display()
+                    self.displayString = self.rcl57.display()
                     self.runDisplayAnimationLoop()
                 }
             if is2nd {
@@ -167,47 +225,14 @@ struct CalcView: View {
                     .offset(x: -77 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
-            Menu("Menu") {
-                Button("Clear All", action: {
-                    rcl57.clearAll()
-                    runDisplayAnimationLoop()
-                    self.displayText = self.rcl57.display()
-                })
-                Button("Clear Log", action: {
-                    rcl57.clearLog()
-                })
-                Toggle("Turbo Speed", isOn: $isTurboMode)
-                    .onChange(of: isTurboMode) { _ in
-                        if isTurboMode {
-                            rcl57.setSpeedup(speedup: 1000)
-                        } else {
-                            rcl57.setSpeedup(speedup: 2)
-                        }
-                        setOption(option: RCL57_SHORT_PAUSE_FLAG, value: isTurboMode)
-                        setOption(option: RCL57_FASTER_TRACE_FLAG, value: isTurboMode)
-                        setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
-                        setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
-                    }
-                Toggle("HP LRN", isOn: $isHpLRN)
-                    .onChange(of: isHpLRN) { _ in
-                        setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isHpLRN)
-                    }
-                Toggle("Alpha Display", isOn: $isAlpha)
-                    .onChange(of: isAlpha) { _ in
-                        setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
-                    }
-            }
-            .padding(5)
-            .background(Color.gray)
-            .foregroundColor(Color.white)
-            .offset(x: 128 * CGFloat(scaleFactor), y: -255 * CGFloat(scaleFactor))
-            .font(.title)
+            getTrigIndicatorView(trigUnits: trigUnits, scaleFactor: scaleFactor)
+            getMenuView(scaleFactor)
         }
     }
 
     var body: some View {
-        return GeometryReader { metrics in
-            self.getView(metrics)
+        return GeometryReader { geometry in
+            self.getView(geometry)
         }
     }
 }

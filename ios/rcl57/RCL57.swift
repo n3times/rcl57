@@ -78,6 +78,10 @@ class RCL57 {
         return ti57_is_inv(&rcl57.ti57)
     }
 
+    func getTrigUnits() -> ti57_trig_t {
+        return ti57_get_trig(&rcl57.ti57)
+    }
+
     /** Saves the RCL57 object in a given file. Returns 'true' if the object was saved successfully. */
     func save(filename: String) -> Bool {
         let size = MemoryLayout.size(ofValue: rcl57)

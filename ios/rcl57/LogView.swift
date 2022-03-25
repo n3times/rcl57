@@ -1,5 +1,5 @@
 /**
- * The view that holds user operations and results.
+ * The view that shows operations and results.
  */
 
 import SwiftUI
@@ -17,7 +17,7 @@ struct Line: Identifiable {
     }
 }
 
-/** A line in the LogView: a number on the left and an operation on the right. */
+/** A line in a LogView: a number on the left and an operation on the right. */
 struct LineView: View {
     let line: Line
 
@@ -86,23 +86,24 @@ struct LogView: View {
             lines.append(makeLine(number: number!, op: op!))
         }
 
-        // Handle newly logged items.
+        // Handle newly logged entries.
         if (newLoggedCount > lastLoggedCount) {
             for i in lastLoggedCount+1...newLoggedCount {
                 let type = rcl57.getLogType(index: i)
+                let message = rcl57.getLogMessage(index: i)
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
                     let number = lines.last?.number
                     let op = lines.last?.op
                     if op == "" {
                         lines.removeLast()
-                        lines.append(makeLine(number: number!, op: rcl57.getLogMessage(index: i)))
+                        lines.append(makeLine(number: number!, op: message))
                     } else {
                         currentLine += 1
-                        lines.append(makeLine(number: "", op: rcl57.getLogMessage(index: i)))
+                        lines.append(makeLine(number: "", op: message))
                     }
                 } else {
                     currentLine += 1
-                    lines.append(makeLine(number: rcl57.getLogMessage(index: i), op: ""))
+                    lines.append(makeLine(number: message, op: ""))
                 }
             }
             lastLoggedCount = newLoggedCount
@@ -122,12 +123,12 @@ struct LogView: View {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .onChange(of: currentLine) { newValue in
+            .onChange(of: currentLine) { _ in
                 if currentLine > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .onReceive(timePublisher) { (date) in
+            .onReceive(timePublisher) { _ in
                 updateLog()
             }
             .listStyle(PlainListStyle())
@@ -136,7 +137,7 @@ struct LogView: View {
     }
 }
 
-struct Log_Previews: PreviewProvider {
+struct LogView_Previews: PreviewProvider {
     static var previews: some View {
         LogView(rcl57: RCL57())
     }
