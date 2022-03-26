@@ -80,12 +80,12 @@ static void init() {
     LEDS_MAP['~'] = 0b00000011000000;  // "right arrow" for P->R
 }
 
-int leds57_get_segments(char c) {
+int leds57_get_segments(unsigned char c) {
     static bool initialized = false;
 
     if (!initialized) {
         init();
         initialized = true;
     }
-    return LEDS_MAP[(int)c];
+    return LEDS_MAP[c];
 }

@@ -5,7 +5,7 @@
 
 #include "utils57.h"
 
-/** Returns true if operations with a given key produce a result. */
+/** Returns true if the operation associated with a given key produces a result. */
 static bool op_produces_result(key57_t key)
 {
     int row = key >> 4;
@@ -37,10 +37,7 @@ static void log_display(ti57_t *ti57, log57_type_t type)
 
     // Use A and B instead of dA and dB, in case the display hasn't been flushed.
     strcpy(display_str, utils57_trim(utils57_display_to_str(&ti57->A, &ti57->B)));
-    if (ti57_is_error(ti57)) {
-        sprintf(display_str + strlen(display_str), "?");
-    }
-    log57_log_display(&ti57->log, display_str, type);
+    log57_log_display(&ti57->log, display_str, type, ti57_is_error(ti57));
 }
 
 static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
@@ -65,6 +62,7 @@ void logger57_update_after_next(ti57_t *ti57,
 {
     log57_t *log = &ti57->log;
 
+    // In RUN mode, log paused display and the special 'SBR d' case.
     if (ti57->mode == TI57_RUN) {
         if (previous_mode == TI57_EVAL) {
             if (log->pending_op_key == KEY57_SBR) {
@@ -128,7 +126,7 @@ void logger57_update_after_next(ti57_t *ti57,
         return;
     }
 
-    // 'SBR X' and 'R/S' cases have been already handled.
+    // 'SBR d' and 'R/S' cases have been already handled.
     if (log->is_key_logged) {
         log->is_key_logged = false;
         return;

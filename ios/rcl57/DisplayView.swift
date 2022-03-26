@@ -130,7 +130,7 @@ struct DisplayView: View {
                             startX: CGFloat,
                             hasDot: Bool,
                             combineSegments:Bool) -> Path? {
-        let segments = leds57_get_segments(Int8(c.asciiValue!))
+        let segments = leds57_get_segments(UInt8(c.asciiValue!))
         var isSegmentResolved = [Bool](repeating: false, count: 14)
 
         var path = Path()

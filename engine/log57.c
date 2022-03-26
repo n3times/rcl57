@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+// Returns the entry at a given index.
 static log57_entry_t *get_entry(log57_t *log, long index)
 {
     assert(index >= 1 && index >= log->logged_count - LOG57_MAX_ENTRY_COUNT);
@@ -11,6 +12,10 @@ static log57_entry_t *get_entry(log57_t *log, long index)
 
     return &log->entries[index % LOG57_MAX_ENTRY_COUNT];
 }
+
+static log57_entry_t LOG57_BLANK_ENTRY_2 = {"", LOG57_NUMBER_IN, 0};
+
+log57_entry_t *LOG57_BLANK_ENTRY = &LOG57_BLANK_ENTRY_2;
 
 void log57_reset(log57_t *log)
 {
@@ -62,7 +67,7 @@ void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
     strcpy(log->current_op, entry->message);
 }
 
-void log57_log_display(log57_t *log, char *display, log57_type_t type)
+void log57_log_display(log57_t *log, char *display, log57_type_t type, bool is_error)
 {
     log->timestamp += 1;
 
@@ -77,6 +82,7 @@ void log57_log_display(log57_t *log, char *display, log57_type_t type)
     log57_entry_t *entry = get_entry(log, log->logged_count);
     strcpy(entry->message, display);
     entry->type = type;
+    entry->flags = is_error ? LOG57_ERROR_FLAG : 0;
 }
 
 /**
@@ -88,14 +94,14 @@ long log57_get_logged_count(log57_t *log)
     return log->logged_count;
 }
 
-char *log57_get_message(log57_t *log, long index)
+log57_entry_t *log57_get_entry(log57_t *log, long index)
 {
-    return get_entry(log, index)->message;
+    return get_entry(log, index);
 }
 
-log57_type_t log57_get_type(log57_t *log, long index)
+char *log57_get_entry_message(log57_entry_t *entry)
 {
-    return get_entry(log, index)->type;
+    return entry->message;
 }
 
 /**

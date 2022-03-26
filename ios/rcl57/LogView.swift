@@ -6,13 +6,13 @@ import SwiftUI
 
 /** Data for a LineView: a number and an operation. */
 struct Line: Identifiable {
-    let number: String
-    let op: String
+    let numberEntry: LogEntry
+    let opEntry: LogEntry
     let id: Int
 
-    init(number: String, op: String, id: Int) {
-        self.number = number
-        self.op = op
+    init(numberEntry: LogEntry, opEntry: LogEntry, id: Int) {
+        self.numberEntry = numberEntry
+        self.opEntry = opEntry
         self.id = id
     }
 }
@@ -25,13 +25,20 @@ struct LineView: View {
         self.line = line
     }
 
+    private func getColor(entry: LogEntry) -> Color {
+        let type = entry.entry.pointee.type
+        return type == LOG57_RESULT || type == LOG57_RUN_RESULT ? Color.yellow : Color.white
+    }
+
     var body: some View {
         HStack {
-            Text(line.number)
+            Text(line.numberEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
+                .foregroundColor(getColor(entry: line.numberEntry))
             Spacer(minLength: 25)
-            Text(line.op)
+            Text(line.opEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+                .foregroundColor(Color.white)
         } .font(.callout)
     }
 }
@@ -51,8 +58,9 @@ struct LogView: View {
         self.rcl57 = rcl57
     }
 
-    func makeLine(number: String, op: String) -> Line {
-        return Line(number: number, op: op, id: currentLine)
+    func makeLine(numberEntry: LogEntry,
+                  opEntry: LogEntry) -> Line {
+        return Line(numberEntry: numberEntry, opEntry: opEntry, id: currentLine)
     }
 
     func clear() {
@@ -74,49 +82,54 @@ struct LogView: View {
 
         // Reevaluate the item that was last logged in case it has been updated.
         if (lastLoggedCount > 0) {
-            var number = lines.last?.number
-            var op = lines.last?.op
-            let type = rcl57.getLogType(index: lastLoggedCount)
+            var numberEntry = lines.last?.numberEntry
+            var opEntry = lines.last?.opEntry
+            let type = rcl57.getLogEntry(index: lastLoggedCount).getType()
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                op = rcl57.getLogMessage(index: lastLoggedCount)
+                opEntry = rcl57.getLogEntry(index: lastLoggedCount)
             } else {
-                number = rcl57.getLogMessage(index: lastLoggedCount)
+                numberEntry = rcl57.getLogEntry(index: lastLoggedCount)
             }
             lines.removeLast()
-            lines.append(makeLine(number: number!, op: op!))
+            lines.append(makeLine(numberEntry: numberEntry!, opEntry: opEntry!))
+            ///numberEntry?.toggle.toggle()
+            ///opEntry?.toggle.toggle()
         }
 
         // Handle newly logged entries.
         if (newLoggedCount > lastLoggedCount) {
             for i in lastLoggedCount+1...newLoggedCount {
-                let type = rcl57.getLogType(index: i)
-                let message = rcl57.getLogMessage(index: i)
+                let entry = rcl57.getLogEntry(index: i)
+                let type = entry.getType()
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
-                    let number = lines.last?.number
-                    let op = lines.last?.op
-                    if op == "" {
+                    let numberEntry = lines.last?.numberEntry
+                    let opEntry = lines.last?.opEntry
+                    if opEntry?.getMessage() == "" {
                         lines.removeLast()
-                        lines.append(makeLine(number: number!, op: message))
+                        lines.append(makeLine(numberEntry: numberEntry!, opEntry: entry))
                     } else {
                         currentLine += 1
-                        lines.append(makeLine(number: "", op: message))
+                        lines.append(makeLine(numberEntry: LogEntry(LOG57_BLANK_ENTRY), opEntry: entry))
                     }
                 } else {
                     currentLine += 1
-                    lines.append(makeLine(number: message, op: ""))
+                    lines.append(makeLine(numberEntry: entry, opEntry: LogEntry(LOG57_BLANK_ENTRY)))
                 }
             }
             lastLoggedCount = newLoggedCount
         }
     }
 
+    private func getLineView(_ line: Line) -> some View {
+        return LineView(line: line)
+            .listRowBackground(Color.black)
+            .listRowSeparator(.hidden)
+    }
+
     var body: some View {
         ScrollViewReader { proxy in
             List(lines) {
-                LineView(line: $0)
-                    .listRowBackground(Color.black)
-                    .foregroundColor(Color.white)
-                    .listRowSeparator(.hidden)
+                getLineView($0)
             }
             .onAppear {
                 if currentLine > 0 {

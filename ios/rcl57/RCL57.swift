@@ -2,7 +2,27 @@
  * Interface to the emulator.
  */
 
-import Foundation
+import SwiftUI
+
+struct LogEntry {
+    @Binding var entry: UnsafeMutablePointer<log57_entry_t>
+
+    init(_ entry: UnsafeMutablePointer<log57_entry_t>) {
+        _entry = .constant(entry)
+    }
+
+    func getMessage() -> String {
+        return String(cString: log57_get_entry_message(entry))
+    }
+
+    func getType() -> log57_type_t {
+        return entry.pointee.type
+    }
+
+    func getFlags() -> Int32 {
+        return entry.pointee.flags
+    }
+}
 
 class RCL57 {
     private var rcl57 = rcl57_t()
@@ -144,15 +164,9 @@ class RCL57 {
         return log57_get_logged_count(&rcl57.ti57.log)
     }
 
-    /** The message of a given entry. */
-    func getLogMessage(index: Int) -> String {
-        let message = log57_get_message(&rcl57.ti57.log, index)!
-        return String(cString: message)
-    }
-
-    /** The type of a given entry. */
-    func getLogType(index: Int) -> log57_type_t {
-        return log57_get_type(&rcl57.ti57.log, index)
+    /** The log entry at a given index. */
+    func getLogEntry(index: Int) -> LogEntry {
+        return LogEntry(log57_get_entry(&rcl57.ti57.log, index))
     }
 
     /** The current operation in EVAL mode. */

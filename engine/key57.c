@@ -56,7 +56,9 @@ static char *get_name(key57_t key, bool unicode)
     int row, col;
     bool sec;
 
-    if (key < 0x10) return DIGIT_KEYS[key];
+    if (key < 0x10) {
+        return DIGIT_KEYS[key];
+    }
 
     char **primary_keys = unicode ? UNICODE_PRIMARY_KEYS : PRIMARY_KEYS;
     char **secondary_keys = unicode ? UNICODE_SECONDARY_KEYS : SECONDARY_KEYS;
@@ -67,6 +69,10 @@ static char *get_name(key57_t key, bool unicode)
     return sec ? secondary_keys[row * 5 + col - 5]
                : primary_keys[row * 5 + col];
 }
+
+/**
+ * API FUNCTIONS
+ */
 
 key57_t key57_get_key(int row, int col, bool is_secondary)
 {

@@ -9,22 +9,22 @@ static void clear_op_edit_flag(ti57_t *ti57)
     ti57->C[14] &= 0xe;
 }
 
-static void clear_2nd(ti57_t *ti57)
+static void clear_2nd_flag(ti57_t *ti57)
 {
     ti57->C[14] &= 0x7;
 }
 
-static void set_2nd(ti57_t *ti57)
+static void set_2nd_flag(ti57_t *ti57)
 {
     ti57->C[14] |= 0x8;
 }
 
-static void clear_inv(ti57_t *ti57)
+static void clear_inv_flag(ti57_t *ti57)
 {
     ti57->B[15] &= 0xb;
 }
 
-static void set_inv(ti57_t *ti57)
+static void set_inv_flag(ti57_t *ti57)
 {
     ti57->B[15] |= 0x4;
 }
@@ -36,9 +36,9 @@ static void set_inv(ti57_t *ti57)
 static void press_key(ti57_t *ti57, bool sec, int row, int col)
 {
     if (sec) {
-        set_2nd(ti57);
+        set_2nd_flag(ti57);
     } else {
-        clear_2nd(ti57);
+        clear_2nd_flag(ti57);
     }
     ti57_key_press(ti57, row, col);
     utils57_burst_until_idle(ti57);
@@ -179,8 +179,8 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
     }
     is_2nd = ti57_is_2nd(ti57);
     is_inv = ti57_is_inv(ti57);
-    clear_2nd(ti57);
-    clear_inv(ti57);
+    clear_2nd_flag(ti57);
+    clear_inv_flag(ti57);
 
     // Handle editing keys.
     pressed_key = key57_get_key(row, col, is_2nd);
@@ -208,7 +208,7 @@ void lrn57_key_press_in_hp_mode(rcl57_t *rcl57, int row, int col)
 
     // Handle key.
     if (is_inv) {
-        set_inv(ti57);
+        set_inv_flag(ti57);
     }
     press_key(ti57, is_2nd, row, col);
 
