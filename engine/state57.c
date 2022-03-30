@@ -107,18 +107,20 @@ bool ti57_is_stopping(ti57_t *ti57)
 
 char *ti57_get_aos_stack(ti57_t *ti57)
 {
-    static char str[45];
+    static char str[46]; //  longest example: "0+((((((((((1+((((((((((2+((((((((((3+((((((((((4"
     int k = 0;
     int num_operands = 0;
 
-    if (ti57->X[0][14] != 0)
+    if (ti57->X[0][14] != 0) {
         num_operands = ti57->D[15] + 1;
+    }
 
-    // Optional initial opening parentheses.
+    // Initial opening parentheses.
     if (num_operands == 0) {
         int num_parentheses = ti57->X[0][15];
-        for (int i = 0; i < num_parentheses; i++)
+        for (int i = 0; i < num_parentheses; i++) {
             str[k++] = '(';
+        }
     }
 
     // List of [operand, operator, parentheses]
@@ -131,15 +133,17 @@ char *ti57_get_aos_stack(ti57_t *ti57)
             case 8: str[k++] = inv ? 'v' : '^'; break;
             default: str[k++] = '?';
         }
-        for (int j = 0; j < ti57->X[i][15]; j++)
+        for (int j = 0; j < ti57->X[i][15]; j++) {
             str[k++] = '(';
+        }
     }
 
     // Optional last operand.
-    if (ti57->B[15] & 0x1)
-        str[k++] = 'd';
-    else if ((ti57->C[14] & 0x2) == 0)
-        str[k++] = 'X';
+    if (ti57->B[15] & 0x1) {
+        str[k++] = 'd';  // display
+    } else if ((ti57->C[14] & 0x2) == 0) {
+        str[k++] = 'X';  // regX
+    }
 
     str[k++] = 0;
     return str;
@@ -159,9 +163,9 @@ ti57_reg_t *ti57_get_user_reg(ti57_t *ti57, int i)
     case 2: return &ti57->X[7];
     case 3: return &ti57->Y[6];
     case 4: return &ti57->Y[7];
-    case 5: return &ti57->X[3];
-    case 6: return &ti57->X[2];
-    case 7: return &ti57->X[4];
+    case 5: return &ti57->X[3];  // Shared with AOS stack
+    case 6: return &ti57->X[2];  // Shared with AOS stack
+    case 7: return &ti57->X[4];  // Shared with regT
 
     default: return 0;
     }
@@ -182,7 +186,7 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57)
  * USER PROGRAM
  */
 
-int ti57_get_user_pc(ti57_t *ti57)
+int ti57_get_program_pc(ti57_t *ti57)
 {
     int pc = (ti57->X[5][15] << 4) + ti57->X[5][14];
 
@@ -192,19 +196,19 @@ int ti57_get_user_pc(ti57_t *ti57)
     return pc;
 }
 
-int ti57_get_ret(ti57_t *ti57, int i)
+int ti57_get_program_ret(ti57_t *ti57, int i)
 {
     assert(0 <= i && i <= 1);
 
     return (ti57->X[6 + i][15] << 4) + ti57->X[6 + i][14];
 }
 
-static op57_op_t ALL_OPS[256];
+static op57_t ALL_OPS[256];
 
 static void init_ops()
 {
     for (int i = 0; i <= 0xff; i++) {
-        op57_op_t *op = &ALL_OPS[i];
+        op57_t *op = &ALL_OPS[i];
         if (i < 0x10) {
             // Digits.
             op->inv = false;
@@ -230,7 +234,7 @@ static void init_ops()
     static int offsets[] = {0, -1, 15, 31, -2, 14, 30, -3, 13, 29};
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 10; j++) {
-            op57_op_t *op = &ALL_OPS[start_indices[i] + offsets[j]];
+            op57_t *op = &ALL_OPS[start_indices[i] + offsets[j]];
             op->inv = false;
             op->key = keys[i];
             op->d = j;
@@ -238,12 +242,12 @@ static void init_ops()
     }
 }
 
-static op57_op_t *get_op(unsigned char index)
+static op57_t *get_op(unsigned char index)
 {
     return &ALL_OPS[index];
 }
 
-op57_op_t *ti57_get_op(ti57_t *ti57, int step)
+op57_t *ti57_get_program_op(ti57_t *ti57, int step)
 {
     int i;
     ti57_reg_t *reg;

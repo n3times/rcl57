@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "op57.h"
 #include "utils57.h"
 
 static void clear_op_edit_flag(ti57_t *ti57)
@@ -93,7 +94,7 @@ static void handle_bst(rcl57_t *rcl57)
         // No need to decrement pc.
         clear_op_edit_flag(ti57);
         // Step displayed: pc -> pc - 1.
-    } else if (ti57_get_user_pc(ti57) > 0) {
+    } else if (ti57_get_program_pc(ti57) > 0) {
         press_key_bst(ti57);
         // Step displayed: pc - 1 -> pc - 2 (or 0 -> 'Lrn' if pc == 1).
     } else {
@@ -109,7 +110,7 @@ static void handle_sst(rcl57_t *rcl57)
     if (rcl57->at_end_program) {
         // Nothing.
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
-        int pc = ti57_get_user_pc(ti57);
+        int pc = ti57_get_program_pc(ti57);
         clear_op_edit_flag(ti57);
         if (pc == 49) {
             // No need to increment pc.
@@ -122,7 +123,7 @@ static void handle_sst(rcl57_t *rcl57)
             press_key_sst(ti57);
             // Step displayed: pc -> pc + 1 (even if pc -> pc + 2).
         }
-    } else if (ti57_get_user_pc(ti57) == 49) {
+    } else if (ti57_get_program_pc(ti57) == 49) {
         // No need to increment pc.
         rcl57->at_end_program = true;
     } else {
@@ -141,7 +142,7 @@ static void handle_del(rcl57_t *rcl57)
     } else if (ti57_is_op_edit_in_lrn(ti57)) {
         clear_op_edit_flag(ti57);
         press_key_del(ti57);
-    } else if (ti57_get_user_pc(ti57) > 0) {
+    } else if (ti57_get_program_pc(ti57) > 0) {
         // Decrement pc, since the step being displayed is pc - 1.
         press_key_bst(ti57);
         press_key_del(ti57);
@@ -224,7 +225,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
 {
     static char str[25];
     ti57_t *ti57 = &rcl57->ti57;
-    int pc = ti57_get_user_pc(ti57);
+    int pc = ti57_get_program_pc(ti57);
     bool op_pending = ti57_is_op_edit_in_lrn(ti57);
     bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
     bool is_alphanumeric_mode = rcl57->options & RCL57_ALPHA_LRN_MODE_FLAG;
@@ -238,7 +239,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
         pc -= 1;
     }
 
-    op57_op_t *op = ti57_get_op(ti57, pc);
+    op57_t *op = ti57_get_program_op(ti57, pc);
 
     memset(str, ' ', sizeof(str));
     str[sizeof(str) - 1] = 0;

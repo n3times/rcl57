@@ -17,7 +17,7 @@ struct Line: Identifiable {
     }
 }
 
-/** A line in a LogView: a number on the left and an operation on the right. */
+/** A line view in a LogView: a number on the left and an operation on the right. */
 struct LineView: View {
     let line: Line
 
@@ -26,8 +26,8 @@ struct LineView: View {
     }
 
     private func getColor(entry: LogEntry) -> Color {
-        let type = entry.entry.pointee.type
-        return type == LOG57_RESULT || type == LOG57_RUN_RESULT ? Color.yellow : Color.white
+        let isError = (entry.getFlags() & LOG57_ERROR_FLAG) != 0
+        return isError ? Color.yellow : Color.white
     }
 
     var body: some View {
@@ -39,7 +39,7 @@ struct LineView: View {
             Text(line.opEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                 .foregroundColor(Color.white)
-        } .font(.callout)
+        } .font(Font.system(.callout, design: .monospaced))
     }
 }
 
@@ -47,7 +47,7 @@ struct LineView: View {
 struct LogView: View {
     let rcl57 : RCL57
     @State private var lines : [Line] = []
-    @State private var currentLine = 0
+    @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
     private let maxLines = 1000
@@ -60,12 +60,12 @@ struct LogView: View {
 
     func makeLine(numberEntry: LogEntry,
                   opEntry: LogEntry) -> Line {
-        return Line(numberEntry: numberEntry, opEntry: opEntry, id: currentLine)
+        return Line(numberEntry: numberEntry, opEntry: opEntry, id: currentLineIndex)
     }
 
     func clear() {
         lines.removeAll()
-        currentLine = 0
+        currentLineIndex = 0
         lastTimestamp = 0
         lastLoggedCount = 0
     }
@@ -92,8 +92,6 @@ struct LogView: View {
             }
             lines.removeLast()
             lines.append(makeLine(numberEntry: numberEntry!, opEntry: opEntry!))
-            ///numberEntry?.toggle.toggle()
-            ///opEntry?.toggle.toggle()
         }
 
         // Handle newly logged entries.
@@ -108,12 +106,20 @@ struct LogView: View {
                         lines.removeLast()
                         lines.append(makeLine(numberEntry: numberEntry!, opEntry: entry))
                     } else {
-                        currentLine += 1
-                        lines.append(makeLine(numberEntry: LogEntry(LOG57_BLANK_ENTRY), opEntry: entry))
+                        currentLineIndex += 1
+                        if lines.count == maxLines {
+                            lines.removeFirst()
+                        }
+                        lines.append(makeLine(numberEntry: LogEntry(entry: LOG57_BLANK_ENTRY),
+                                              opEntry: entry))
                     }
                 } else {
-                    currentLine += 1
-                    lines.append(makeLine(numberEntry: entry, opEntry: LogEntry(LOG57_BLANK_ENTRY)))
+                    currentLineIndex += 1
+                    if lines.count == maxLines {
+                        lines.removeFirst()
+                    }
+                    lines.append(makeLine(numberEntry: entry,
+                                          opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
                 }
             }
             lastLoggedCount = newLoggedCount
@@ -132,12 +138,12 @@ struct LogView: View {
                 getLineView($0)
             }
             .onAppear {
-                if currentLine > 0 {
+                if lines.count > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .onChange(of: currentLine) { _ in
-                if currentLine > 0 {
+            .onChange(of: currentLineIndex) { _ in
+                if lines.count > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }

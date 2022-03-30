@@ -9,6 +9,7 @@
 
 #include "key57.h"
 #include "log57.h"
+#include "op57.h"
 
 /**
  * Type for internal registers.
@@ -25,7 +26,7 @@ typedef unsigned short ti57_address_t;
 typedef enum ti57_activity_e {
     TI57_BUSY,              // Running or executing some operation.
     TI57_POLL_PRESS,        // In a tight loop, waiting for a key press.
-    TI57_POLL_PRESS_BLINK,  // In a tight loop, waiting for a key press while display is blinking.
+    TI57_POLL_PRESS_BLINK,  // In a tight loop, waiting for a key press while blinking the display.
     TI57_POLL_RELEASE,      // In a tight loop, waiting for a key release.
     TI57_POLL_RS_RELEASE,   // In a tight loop, waiting for R/S release.
     TI57_PAUSE,             // 'Pause' is being executed.
@@ -38,7 +39,7 @@ typedef enum ti57_mode_e {
     TI57_RUN    // User program is running.
 } ti57_mode_t;
 
-/** Units for trigometric functions. */
+/** Units for trigonometric functions. */
 typedef enum ti57_trig_e {
     TI57_DEG,
     TI57_RAD,
@@ -50,7 +51,7 @@ typedef struct ti57_s {
     // The internal state of a TI-57.
     ti57_reg_t A, B, C, D;           // Operational registers.
     ti57_reg_t X[8], Y[8];           // Storage registers.
-    unsigned char RAB;               // Register address buffer (3-bit).
+    unsigned char RAB;               // Register Address Buffer (3-bit).
     unsigned char R5;                // Auxiliary 8-bit register.
     ti57_address_t pc;               // Internal program counter.
     ti57_address_t stack[3];         // Subroutine stack.
@@ -61,7 +62,7 @@ typedef struct ti57_s {
 
     ti57_reg_t dA, dB;               // Copy of A and B for display purposes.
     unsigned long current_cycle;     // The number of cycles the emulator has been running for.
-    unsigned long last_disp_cycle;   // The cycle DISP was executed last.
+    unsigned long last_disp_cycle;   // The cycle DISP (display refresh) was executed last.
     ti57_mode_t mode;                // The current mode.
     ti57_activity_t activity;        // The current activity.
 
@@ -85,10 +86,10 @@ int ti57_get_fix(ti57_t *ti57);
  * FLAGS
  */
 
-/** The '2nd' key has been registered in EVAL or LRN mode. */
+/** The '2nd' key has been activated in EVAL or LRN mode. */
 bool ti57_is_2nd(ti57_t *ti57);
 
-/** The 'INV' key has been registered in EVAL or LRN mode. */
+/** The 'INV' key has been activated in EVAL or LRN mode. */
 bool ti57_is_inv(ti57_t *ti57);
 
 /** Scientific notation is on. */
@@ -100,10 +101,10 @@ bool ti57_is_error(ti57_t *ti57);
 /** A number is being edited on the display. */
 bool ti57_is_number_edit(ti57_t *ti57);
 
-/** An operation with a digit argument is being edited in LRN mode. */
+/** An operation with a digit argument, such as RCL, is being edited in LRN mode. */
 bool ti57_is_op_edit_in_lrn(ti57_t *ti57);
 
-/** An operation with a digit argument is being edited in EVAL mode. */
+/** An operation with a digit argument, such as RCL,  is being edited in EVAL mode. */
 bool ti57_is_op_edit_in_eval(ti57_t *ti57);
 
 /** 'SST' is pressed while in RUN mode. */
@@ -149,13 +150,13 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57);
  * USER PROGRAM
  */
 
-/** Program counter: 0..50 even if only steps 0..49 are valid. */
-int ti57_get_user_pc(ti57_t *ti57);
+/** Returns the program counter (in 0..50 even if only steps 0..49 are valid). */
+int ti57_get_program_pc(ti57_t *ti57);
 
-/** Subroutine return addresses (i in 0..1). */
-int ti57_get_ret(ti57_t *ti57, int i);
+/** Returns the subroutine return addresses (i in 0..1). */
+int ti57_get_program_ret(ti57_t *ti57, int i);
 
-/** Operation at a given step (step in 0..49). */
-op57_op_t *ti57_get_op(ti57_t *ti57, int step);
+/** Returns the operation at a given step (step in 0..49). */
+op57_t *ti57_get_program_op(ti57_t *ti57, int step);
 
 #endif  /* !state57_h */

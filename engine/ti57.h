@@ -29,7 +29,7 @@ void ti57_init(ti57_t *ti57);
 /**
  * Executes the operation at the current program counter address.
  *
- * A TI-57 is always executing operation, possibly just polling for user
+ * A TI-57 is always executing operations, possibly just polling for user
  * input. It takes around 1/5000 seconds to execute most operations.
  *
  * Returns the relative cost of the operation, most often 1 though some

@@ -23,8 +23,8 @@ char *utils57_reg_to_str(ti57_reg_t reg);
 char *utils57_user_reg_to_str(ti57_reg_t *reg, bool sci, int fix);
 
 /**
- * Given 2 registers, one representing the display digits (typically register A in ti57_t) and the other
- * one the mask (typically register B in ti57_t),  returns a string representing the display.
+ * Given 2 registers, one representing the display digits (typically registers A or dA in ti57_t) and the
+ * other one the mask (typically register B or dB in ti57_t),  returns a string representing the display.
  */
 char *utils57_display_to_str(ti57_reg_t *digits, ti57_reg_t *mask);
 

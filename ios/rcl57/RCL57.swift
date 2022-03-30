@@ -7,12 +7,12 @@ import SwiftUI
 struct LogEntry {
     @Binding var entry: UnsafeMutablePointer<log57_entry_t>
 
-    init(_ entry: UnsafeMutablePointer<log57_entry_t>) {
+    init(entry: UnsafeMutablePointer<log57_entry_t>) {
         _entry = .constant(entry)
     }
 
     func getMessage() -> String {
-        return String(cString: log57_get_entry_message(entry))
+        return String(cString: UnsafeRawPointer(&entry.pointee.message).assumingMemoryBound(to: CChar.self))
     }
 
     func getType() -> log57_type_t {
@@ -68,7 +68,7 @@ class RCL57 {
         memcpy(&rcl57, fileRawBuffer, MemoryLayout.size(ofValue: rcl57))
     }
 
-    /** Returns the calculator display. */
+    /** Returns the calculator display as a string. */
     func display() -> String {
         return String(cString: rcl57_get_display(&rcl57))
     }
@@ -83,7 +83,7 @@ class RCL57 {
         rcl57_key_release(&rcl57)
     }
 
-    // Should be called every 'ms' ms.
+    /** Runs the emulator for 'ms' ms. */
     func advance(ms: Int32) -> Bool {
         return rcl57_advance(&rcl57, ms)
     }
@@ -98,6 +98,9 @@ class RCL57 {
         return ti57_is_inv(&rcl57.ti57)
     }
 
+    /**
+     * The current units in trigonometric mode.
+     */
     func getTrigUnits() -> ti57_trig_t {
         return ti57_get_trig(&rcl57.ti57)
     }
@@ -159,14 +162,18 @@ class RCL57 {
         log57_reset(&rcl57.ti57.log)
     }
 
-    /** Number of log items since reset. */
+    /** Returns the number of logged items since reset. */
     func getLoggedCount() -> Int {
         return log57_get_logged_count(&rcl57.ti57.log)
     }
 
-    /** The log entry at a given index. */
+    /**
+     * The log entry at a given index.
+     *
+     * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
+     */
     func getLogEntry(index: Int) -> LogEntry {
-        return LogEntry(log57_get_entry(&rcl57.ti57.log, index))
+        return LogEntry(entry: log57_get_entry(&rcl57.ti57.log, index))
     }
 
     /** The current operation in EVAL mode. */
@@ -174,7 +181,7 @@ class RCL57 {
         return String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
-    /** Can be used to find out when the log has been updated. */
+    /** Returns a timestamp that can be used to find out whether the log has been updated. */
     func getLogTimestamp() -> Int {
         return rcl57.ti57.log.timestamp;
     }

@@ -10,7 +10,7 @@
 /**
  * Updates the log using the current state of the calculator and comparing it to the previous one.
  *
- * Note: to be effective this function should be called after every call to 'next'.
+ * Note: this function should be called after every call to 'next'.
  */
 void logger57_update_after_next(ti57_t *ti57,
                                 ti57_activity_t previous_activity,

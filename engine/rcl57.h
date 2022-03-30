@@ -3,7 +3,7 @@
  * on top of TI-57.
  *
  * The goal of RCL57 is to maintain backward compatibility with TI-57 while
- * having options to improve the user experience.
+ * giving options to improve the user experience.
  *
  * For a faithful emulation, use ti57.h instead.
  *
@@ -56,7 +56,9 @@
 #define RCL57_SHOW_RUN_INDICATOR_FLAG          0x08
 
 /**
- * In LRN mode, show the step just edited instead of the next one.
+ * In LRN mode, show the step just entered by the user  instead of the next one.
+ * Also, steps entered by the user are inserted into the program instead of overwriting
+ * the operation at a given step.
  *
  * This is the default behavior of classic HP calculators and arguably better.
  */

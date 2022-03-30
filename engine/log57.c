@@ -26,7 +26,7 @@ void log57_reset(log57_t *log)
  * ACTUAL LOGGING
  */
 
-void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending)
+void log57_log_op(log57_t *log, op57_t *op, bool is_pending)
 {
     log57_entry_t *entry = NULL;
 
@@ -97,11 +97,6 @@ long log57_get_logged_count(log57_t *log)
 log57_entry_t *log57_get_entry(log57_t *log, long index)
 {
     return get_entry(log, index);
-}
-
-char *log57_get_entry_message(log57_entry_t *entry)
-{
-    return entry->message;
 }
 
 /**

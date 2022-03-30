@@ -197,11 +197,9 @@ struct CalcView: View {
                             }
                         }
                 )
-                .accessibility(identifier: "calculator")
-                .accessibility(label: Text(self.displayString))
             LogView(rcl57: rcl57)
                 .offset(x: CGFloat(-50), y: CGFloat(1.4 * displayOffsetY))
-                .frame(width: CGFloat(displayWidth * 0.8),
+                .frame(width: CGFloat(displayWidth * 0.85),
                        height: CGFloat(displayHeight * 0.7),
                        alignment:.topLeading)
             DisplayView(self.displayString)

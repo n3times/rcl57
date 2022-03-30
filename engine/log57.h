@@ -63,7 +63,7 @@ void log57_reset(log57_t *log);
 void log57_log_display(log57_t *log, char *display, log57_type_t type, bool is_error);
 
 /** Log an operation, possibly pending. */
-void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending);
+void log57_log_op(log57_t *log, op57_t *op, bool is_pending);
 
 /**
  * LOG RETRIEVAL
@@ -72,10 +72,12 @@ void log57_log_op(log57_t *log, op57_op_t *op, bool is_pending);
 /** Returns the number of logged entries since reset. Can be > LOG57_MAX_ENTRY_COUNT. */
 long log57_get_logged_count(log57_t *log);
 
-
+/**
+ * Returns the entry at a given index.
+ *
+ * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
+ */
 log57_entry_t *log57_get_entry(log57_t *log, long index);
-
-char *log57_get_entry_message(log57_entry_t *entry);
 
 /**
  * CURRENT OPERATION

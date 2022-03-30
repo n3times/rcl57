@@ -42,7 +42,7 @@ static void log_display(ti57_t *ti57, log57_type_t type)
 
 static void log_op(ti57_t *ti57, bool inv, key57_t key, int d, bool pending)
 {
-    op57_op_t op;
+    op57_t op;
 
     op.inv = inv;
     op.key = key;
@@ -139,7 +139,7 @@ void logger57_update_after_next(ti57_t *ti57,
     if (current_key == KEY57_SST) {
         int pc = ti57->log.step_at_key_press;
         if (pc < 0 || pc > 49) return;
-        op57_op_t *op = ti57_get_op(ti57, pc);
+        op57_t *op = ti57_get_program_op(ti57, pc);
         if (op->d >= 0) {
             log->pending_op_key = op->key;
             current_key = op->d;

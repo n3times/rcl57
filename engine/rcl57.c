@@ -89,7 +89,7 @@ void rcl57_key_press(rcl57_t *rcl57, int row, int col)
 {
     ti57_t *ti57 = &rcl57->ti57;
 
-    if (ti57_get_user_pc(ti57) != 49) {
+    if (ti57_get_program_pc(ti57) != 49) {
         rcl57->at_end_program = false;
     }
 
