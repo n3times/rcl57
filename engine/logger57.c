@@ -17,9 +17,9 @@ static bool op_produces_result(key57_t key)
     case 2:
         return true;
     case 3:
-        return key == 0x33 || key == 0x36 || key == 0x38 || key == 0x30;
+        return key == 0x33 || key == 0x36 || key == 0x38;
     case 4:
-        return key == 0x42 || key == 0x44 || key == 0x48 || key == 0x49 || key == 0x40;
+        return key == 0x42 || key == 0x44 || key == 0x48 || key == 0x49 || key == 0x4A;
     case 5:
     case 6:
     case 7:
@@ -175,11 +175,15 @@ void logger57_update_after_next(ti57_t *ti57,
                 log_op(ti57, log->is_pending_inv, log->pending_op_key, -1, false);
                 log_op(ti57, log->is_pending_inv, current_key, -1, false);
             }
+            log->pending_op_key = 0;
+        } else if (current_key == KEY57_PI) {
+            log_display(ti57, LOG57_NUMBER_IN);
+            log->is_pending_inv = false;
+            return;
         } else {
             log_op(ti57, log->is_pending_inv, current_key, -1, false);
         }
         log->is_pending_inv = false;
-        log->pending_op_key = 0;
 
         // Log result.
         if (op_produces_result(op_key) || ti57_is_error(ti57)) {

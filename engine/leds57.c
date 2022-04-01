@@ -56,6 +56,8 @@ static void init() {
     LEDS_MAP['x'] = 0b00101000010100;  // multiply
 
     // Some symbols.
+    LEDS_MAP['['] = 0b11000000100001;
+    LEDS_MAP['_'] = 0b00000000000001;
     LEDS_MAP['-'] = 0b00000011000000;
     LEDS_MAP['/'] = 0b00001000010000;
     LEDS_MAP['+'] = 0b00010011001000;

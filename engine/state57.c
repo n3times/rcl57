@@ -107,7 +107,7 @@ bool ti57_is_stopping(ti57_t *ti57)
 
 char *ti57_get_aos_stack(ti57_t *ti57)
 {
-    static char str[46]; //  longest example: "0+((((((((((1+((((((((((2+((((((((((3+((((((((((4"
+    static char str[46];  // longest example: "0+((((((((((1+((((((((((2+((((((((((3+((((((((((4"
     int k = 0;
     int num_operands = 0;
 

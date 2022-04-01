@@ -5,10 +5,10 @@
 import SwiftUI
 
 struct LogEntry {
-    @Binding var entry: UnsafeMutablePointer<log57_entry_t>
+    let entry: UnsafeMutablePointer<log57_entry_t>
 
     init(entry: UnsafeMutablePointer<log57_entry_t>) {
-        _entry = .constant(entry)
+        self.entry = entry
     }
 
     func getMessage() -> String {

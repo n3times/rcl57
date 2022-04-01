@@ -13,6 +13,7 @@
 #define KEY57_LRN  0x21
 #define KEY57_SST  0x31
 #define KEY57_INS  0x37
+#define KEY57_PI   0x3A
 #define KEY57_BST  0x41
 #define KEY57_DEL  0x47
 #define KEY57_SBR  0x61

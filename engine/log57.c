@@ -7,7 +7,7 @@
 // Returns the entry at a given index.
 static log57_entry_t *get_entry(log57_t *log, long index)
 {
-    assert(index >= 1 && index >= log->logged_count - LOG57_MAX_ENTRY_COUNT);
+    assert(index >= 1 && index >= log->logged_count - LOG57_MAX_ENTRY_COUNT + 1);
     assert(index <= log->logged_count);
 
     return &log->entries[index % LOG57_MAX_ENTRY_COUNT];
