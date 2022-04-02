@@ -90,7 +90,7 @@ struct DisplayView: View {
     private let dotData = CGRect(x: 22, y: 25, width: 4, height: 4)
 
     /*
-     * SEGMENT PATHS
+     * SINGLE-SEGMENT PATH
      */
 
     // Returns a rectangle path with the corners slightly clipped.
@@ -123,7 +123,7 @@ struct DisplayView: View {
     }
 
     /*
-     * SINGLE LED PATH
+     * SINGLE-LED PATH
      */
 
     private func getLedPath(c: Character,
@@ -190,7 +190,7 @@ struct DisplayView: View {
     }
 
     /*
-     * DISPLAY PATH
+     * ALL-LEDS PATH
      */
 
     private func getDisplayPath(displayString: String) -> TransformedShape<Path> {
