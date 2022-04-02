@@ -79,48 +79,34 @@ struct CalcView: View {
         .padding(5)
         .background(Color.gray)
         .foregroundColor(Color.white)
-        .offset(x: 128 * CGFloat(scaleFactor), y: -255 * CGFloat(scaleFactor))
         .font(.title)
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
-        let standardCalcHeight = 682.0
         let standardDisplayHeight = 96.0
-        let standardDisplayOffsetY = 100.0
 
-        let screenWidth = geometry.size.width
-        let screenHeight = geometry.size.height
-
-        let screenAspectRatio = screenHeight / screenWidth
-        let calcAspectRatio = standardCalcHeight / standardCalcWidth
-        let isPortrait = screenAspectRatio >= calcAspectRatio
-
-        let calcWidth = isPortrait ? screenWidth : screenHeight / calcAspectRatio
+        let calcWidth = geometry.size.width
 
         let scaleFactor = calcWidth / standardCalcWidth
 
         let displayWidth = calcWidth
         let displayHeight = standardDisplayHeight * scaleFactor
 
-        let displayOffsetX = CGFloat(0.0)
-        let displayOffsetY =
-            (standardDisplayOffsetY - (standardCalcHeight - standardDisplayHeight)/2) * scaleFactor
-
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
-            KeyboardView(rcl57: rcl57)
-            LogView(rcl57: rcl57)
-                .offset(x: CGFloat(-50), y: CGFloat(1.4 * displayOffsetY))
-                .frame(width: CGFloat(displayWidth * 0.85),
-                       height: CGFloat(displayHeight * 0.7),
-                       alignment:.topLeading)
-            DisplayView(self.displayString)
-                .offset(x: CGFloat(displayOffsetX), y: CGFloat(displayOffsetY))
-                .frame(width: CGFloat(displayWidth),
-                       height: CGFloat(displayHeight),
-                       alignment: .center)
-            getMenuView(scaleFactor)
+            VStack {
+                getMenuView(scaleFactor)
+                LogView(rcl57: rcl57)
+                    .frame(width: CGFloat(displayWidth * 0.85),
+                           height: CGFloat(displayHeight * 0.7),
+                           alignment:.topLeading)
+                DisplayView(self.displayString)
+                    .frame(width: CGFloat(displayWidth),
+                           height: CGFloat(displayHeight),
+                           alignment: .center)
+                KeyboardView(rcl57: rcl57)
+            }
         }
         .onAppear {
             self.displayString = self.rcl57.display()

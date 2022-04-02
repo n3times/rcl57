@@ -17,11 +17,11 @@ struct KeyboardView: View {
     private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
         // Top left corner of top left key ("2nd").
         let x0 = 0.0
-        let y0 = 196.0
+        let y0 = 10.0
 
         // Dimensions of each key.
-        let w = 75.0
-        let h = 61.2
+        let w = 375.0 / 5
+        let h = 496.0 / 8
 
         let x = Double(standardizedLocation.x) - x0
         let y = Double(standardizedLocation.y) - y0
@@ -51,12 +51,12 @@ struct KeyboardView: View {
     }
 
     private func getTrigIndicatorView(trigUnits: ti57_trig_t, scaleFactor: Double) -> some View {
-        let x = 367.0
+        let x = 368.0
         var y = 0.0
         switch (trigUnits) {
-        case TI57_DEG: y = 464; break
-        case TI57_RAD: y = 527; break
-        case TI57_GRAD: y = 588; break
+        case TI57_DEG: y = 256; break
+        case TI57_RAD: y = 318; break
+        case TI57_GRAD: y = 380; break
         default: break
         }
         return Path { path in
@@ -64,23 +64,14 @@ struct KeyboardView: View {
             path.addLine(to: CGPoint(x: 8, y: -5))
             path.addLine(to: CGPoint(x: 8, y: 5))
         }
-        .offsetBy(dx: x * scaleFactor, dy: y * scaleFactor)
+        .offset(x: x * scaleFactor, y: y * scaleFactor)
         .fill(Color.brown)
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
-        let standardCalcHeight = 682.0
 
-        let screenWidth = geometry.size.width
-        let screenHeight = geometry.size.height
-
-        let screenAspectRatio = screenHeight / screenWidth
-        let calcAspectRatio = standardCalcHeight / standardCalcWidth
-        let isPortrait = screenAspectRatio >= calcAspectRatio
-
-        let calcWidth = isPortrait ? screenWidth : screenHeight / calcAspectRatio
-        let calcHeight = isPortrait ? screenWidth * calcAspectRatio : screenHeight
+        let calcWidth =  geometry.size.width
 
         let scaleFactor = calcWidth / standardCalcWidth
 
@@ -88,7 +79,6 @@ struct KeyboardView: View {
             Image(imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: CGFloat(calcWidth), height: CGFloat(calcHeight), alignment: .bottom)
                 .gesture(
                     // Handle key presses as soon as the user touches the screen.
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
@@ -116,14 +106,14 @@ struct KeyboardView: View {
                 )
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .strokeBorder(Color.brown,lineWidth: 4)
-                    .offset(x: -152 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
+                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactor))
+                    .offset(x: -152 * CGFloat(scaleFactor), y: -207 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
             if isInv {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .strokeBorder(Color.brown, lineWidth: 4)
-                    .offset(x: -77 * CGFloat(scaleFactor), y: -115 * CGFloat(scaleFactor))
+                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactor))
+                    .offset(x: -77 * CGFloat(scaleFactor), y: -207 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
             getTrigIndicatorView(trigUnits: trigUnits, scaleFactor: scaleFactor)
