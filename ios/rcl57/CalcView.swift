@@ -1,6 +1,5 @@
 /**
- * The main view. It holds the calculator with its keyboard and display. It listens to key presses
- * events and runs the animation loop.
+ * The main view. It holds the calculator with its keyboard and display.
  */
 
 import SwiftUI
@@ -90,7 +89,6 @@ struct CalcView: View {
 
         let scaleFactor = calcWidth / standardCalcWidth
 
-        let displayWidth = calcWidth
         let displayHeight = standardDisplayHeight * scaleFactor
 
         return ZStack {
@@ -98,13 +96,17 @@ struct CalcView: View {
             VStack {
                 getMenuView(scaleFactor)
                 LogView(rcl57: rcl57)
-                    .frame(width: CGFloat(displayWidth * 0.85),
-                           height: CGFloat(displayHeight * 0.7),
-                           alignment:.topLeading)
-                DisplayView(self.displayString)
-                    .frame(width: CGFloat(displayWidth),
-                           height: CGFloat(displayHeight),
-                           alignment: .center)
+                    .frame(width: CGFloat(calcWidth),
+                           height: CGFloat(displayHeight * 0.7))
+                    .background(.black)
+                HStack {
+                    DisplayView(self.displayString)
+                        .frame(width: CGFloat(calcWidth * 0.85),
+                               height: CGFloat(displayHeight))
+                }
+                    .frame(width: CGFloat(calcWidth),
+                        height: CGFloat(displayHeight))
+                    .background(.black)
                 KeyboardView(rcl57: rcl57)
             }
         }
@@ -115,7 +117,7 @@ struct CalcView: View {
     }
 
     var body: some View {
-        return GeometryReader { geometry in
+        GeometryReader { geometry in
             self.getView(geometry)
         }
     }

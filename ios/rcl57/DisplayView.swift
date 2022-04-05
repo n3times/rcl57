@@ -17,7 +17,6 @@ struct DisplayView: View {
     private static let interLedX = 32.0
     private static let segmentCount = 14
     private static let slant = 0.05
-    private static let scaleFactor = 0.85
 
     private static func getDisplayRect() -> CGRect {
         let width = (Double(maxLedCount - 1)) * interLedX + ledWidth
@@ -238,10 +237,12 @@ struct DisplayView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let width = geometry.size.width
+            let height = geometry.size.height
             let rect = DisplayView.getDisplayRect()
-            let scaleFactor = geometry.size.width / rect.width * DisplayView.scaleFactor
-            let offsetX = (geometry.size.width - rect.width) / 2
-            let offsetY = (geometry.size.height - rect.height) / 2
+            let scaleFactor = width / rect.width
+            let offsetX = (width - rect.width) / 2
+            let offsetY = (height - rect.height) / 2
             getDisplayPath(displayString: displayString)
                 .offset(x: offsetX, y: offsetY)
                 .scale(scaleFactor)

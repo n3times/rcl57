@@ -137,7 +137,7 @@ struct LogView: View {
     }
 
     private func getLineView(_ line: Line) -> some View {
-        return LineView(line: line)
+        LineView(line: line)
             .listRowBackground(Color.black)
             .listRowSeparator(.hidden)
     }

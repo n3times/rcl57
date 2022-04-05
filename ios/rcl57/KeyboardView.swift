@@ -1,6 +1,21 @@
 import SwiftUI
 import AudioToolbox
 
+struct TrigIndicator: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Path { path in
+                let width = geometry.size.width
+                let height = geometry.size.height
+                path.move(to: CGPoint(x: 0, y: height / 2))
+                path.addLine(to: CGPoint(x: width, y: 0))
+                path.addLine(to: CGPoint(x: width, y: height))
+            }
+            .fill(Color.brown)
+        }
+    }
+}
+
 struct KeyboardView: View {
     private let rcl57: RCL57
     private let imageName = "button_pad"
@@ -50,22 +65,13 @@ struct KeyboardView: View {
         self.trigUnits = self.rcl57.getTrigUnits()
     }
 
-    private func getTrigIndicatorView(trigUnits: ti57_trig_t, scaleFactor: Double) -> some View {
-        let x = 368.0
-        var y = 0.0
-        switch (trigUnits) {
-        case TI57_DEG: y = 256; break
-        case TI57_RAD: y = 318; break
-        case TI57_GRAD: y = 380; break
-        default: break
+    private func getTrigOffsetY(units: ti57_trig_t, scaleFactor: Double) -> Double {
+        switch (units) {
+        case TI57_DEG: return 8.5 * scaleFactor
+        case TI57_RAD: return 70 * scaleFactor
+        case TI57_GRAD: return 131.5 * scaleFactor
+        default: return 0
         }
-        return Path { path in
-            path.move(to: CGPoint(x: 0, y: 0))
-            path.addLine(to: CGPoint(x: 8, y: -5))
-            path.addLine(to: CGPoint(x: 8, y: 5))
-        }
-        .offset(x: x * scaleFactor, y: y * scaleFactor)
-        .fill(Color.brown)
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
@@ -116,12 +122,15 @@ struct KeyboardView: View {
                     .offset(x: -77 * CGFloat(scaleFactor), y: -207 * CGFloat(scaleFactor))
                     .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
             }
-            getTrigIndicatorView(trigUnits: trigUnits, scaleFactor: scaleFactor)
+            TrigIndicator()
+                .frame(width: 10 * scaleFactor, height: 10 * scaleFactor)
+                .offset(x: 184 * scaleFactor,
+                        y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactor))
         }
     }
 
     var body: some View {
-        return GeometryReader { geometry in
+        GeometryReader { geometry in
             self.getView(geometry)
         }
     }
