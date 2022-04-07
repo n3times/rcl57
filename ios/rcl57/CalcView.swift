@@ -16,12 +16,16 @@ struct CalcView: View {
     @State private var isHpLRN: Bool
     @State private var isAlpha: Bool
 
+    @State private var isFullLog: Bool
+
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
 
         isTurboMode = rcl57.getSpeedup() == 1000
         isHpLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
+
+        isFullLog = false
     }
 
     private func burst(ms: Int32) {
@@ -44,7 +48,7 @@ struct CalcView: View {
         self.displayString = self.rcl57.display()
     }
 
-    private func getMenuView(_ scaleFactor: Double) -> some View {
+    private func getMenuView(_ scaleFactor: Double, _ calcWidth: Double) -> some View {
         Menu("Menu") {
             Button("Clear All") {
                 rcl57.clearAll()
@@ -74,8 +78,13 @@ struct CalcView: View {
                 .onChange(of: isAlpha) { _ in
                     setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
                 }
+            Button("Full Log") {
+                withAnimation {
+                    isFullLog.toggle()
+                }
+            }
         }
-        .padding(5)
+        .frame(width: calcWidth, height: 45)
         .background(Color.gray)
         .foregroundColor(Color.white)
         .font(.title)
@@ -93,21 +102,47 @@ struct CalcView: View {
 
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
-            VStack {
-                getMenuView(scaleFactor)
-                LogView(rcl57: rcl57)
-                    .frame(width: CGFloat(calcWidth),
-                           height: CGFloat(displayHeight * 0.7))
-                    .background(.black)
-                HStack {
-                    DisplayView(self.displayString)
-                        .frame(width: CGFloat(calcWidth * 0.85),
+            ZStack {
+                VStack {
+                    getMenuView(scaleFactor, calcWidth)
+                    LogView(rcl57: rcl57)
+                        .frame(width: CGFloat(calcWidth),
+                               height: CGFloat(displayHeight * 0.7))
+                        .background(.black)
+                        .onTapGesture(count: 1) {
+                            withAnimation {
+                                isFullLog.toggle()
+                            }
+                        }
+                    HStack {
+                        DisplayView(self.displayString)
+                            .frame(width: CGFloat(calcWidth * 0.85),
+                                   height: CGFloat(displayHeight))
+                    }
+                        .frame(width: CGFloat(calcWidth),
                                height: CGFloat(displayHeight))
+                        .background(.black)
+                    KeyboardView(rcl57: rcl57)
                 }
-                    .frame(width: CGFloat(calcWidth),
-                        height: CGFloat(displayHeight))
-                    .background(.black)
-                KeyboardView(rcl57: rcl57)
+                if isFullLog {
+                    VStack {
+                        Button("Log") {
+                            withAnimation {
+                                isFullLog.toggle()
+                            }
+                        }
+                        .frame(width: calcWidth, height: 45)
+                        .background(Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.title)
+                        LogView(rcl57: rcl57)
+                            .frame(width: CGFloat(calcWidth),
+                                   height: CGFloat(geometry.size.height))
+                            .background(.black)
+                    }
+                    .transition(.move(edge: .trailing))
+                    .zIndex(1)
+                }
             }
         }
         .onAppear {

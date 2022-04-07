@@ -18,7 +18,7 @@ struct DisplayView: View {
     private static let segmentCount = 14
     private static let slant = 0.05
 
-    private static func getDisplayRect() -> CGRect {
+    private static func getDisplayPathRect() -> CGRect {
         let width = (Double(maxLedCount - 1)) * interLedX + ledWidth
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
     }
@@ -192,7 +192,9 @@ struct DisplayView: View {
      * ALL-LEDS PATH
      */
 
-    private func getDisplayPath(displayString: String) -> TransformedShape<Path> {
+    private func getDisplayPath(
+        displayString: String,
+        boundingRect: CGRect) -> ScaledShape<OffsetShape<TransformedShape<Path>>> {
         var path = Path()
         let displayCharacters = Array(displayString)
 
@@ -228,7 +230,11 @@ struct DisplayView: View {
                                                                 tx: 0,
                                                                 ty: 0))
 
+        // Canter and scale path
+        let displayRect = DisplayView.getDisplayPathRect()
         return slantedPath
+            .offset(x: (boundingRect.width - displayRect.width) / 2, y: (boundingRect.height - displayRect.height) / 2)
+            .scale(boundingRect.width / displayRect.width)
     }
 
     init(_ displayText: String) {
@@ -239,13 +245,8 @@ struct DisplayView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             let height = geometry.size.height
-            let rect = DisplayView.getDisplayRect()
-            let scaleFactor = width / rect.width
-            let offsetX = (width - rect.width) / 2
-            let offsetY = (height - rect.height) / 2
-            getDisplayPath(displayString: displayString)
-                .offset(x: offsetX, y: offsetY)
-                .scale(scaleFactor)
+            let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
+            getDisplayPath(displayString: displayString, boundingRect: boundingRect)
                 .fill(DisplayView.ledColor)
         }
     }
