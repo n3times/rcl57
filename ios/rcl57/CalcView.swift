@@ -100,16 +100,18 @@ struct CalcView: View {
 
         let displayHeight = standardDisplayHeight * scaleFactor
 
+        let logBackgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
+
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
             ZStack {
                 VStack {
                     getMenuView(scaleFactor, calcWidth)
-                    LogView(rcl57: rcl57)
+                    LogView(rcl57: rcl57, maxLines: 3)
                         .frame(width: CGFloat(calcWidth),
                                height: CGFloat(displayHeight * 0.7))
-                        .background(.black)
-                        .onTapGesture(count: 1) {
+                        .background(logBackgroundColor)
+                        .onTapGesture(count: 2) {
                             withAnimation {
                                 isFullLog.toggle()
                             }
@@ -135,10 +137,8 @@ struct CalcView: View {
                         .background(Color.gray)
                         .foregroundColor(Color.white)
                         .font(.title)
-                        LogView(rcl57: rcl57)
-                            .frame(width: CGFloat(calcWidth),
-                                   height: CGFloat(geometry.size.height))
-                            .background(.black)
+                        LogView(rcl57: rcl57, maxLines: 500)
+                            .background(logBackgroundColor)
                     }
                     .transition(.move(edge: .trailing))
                     .zIndex(1)

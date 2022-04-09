@@ -37,12 +37,12 @@ struct LineView: View {
             Text(line.numberLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
                 .foregroundColor(getColor(entry: line.numberLogEntry))
-                .font(Font.system(.callout, design: .monospaced))
+                .font(Font.system(.title3, design: .monospaced))
             Spacer(minLength: 25)
             Text(line.opLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                 .foregroundColor(Color.white)
-                .font(Font.system(.callout))
+                .font(Font.system(.title3, design: .monospaced))
         }
     }
 }
@@ -54,12 +54,13 @@ struct LogView: View {
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
-    private let maxLines = LOG57_MAX_ENTRY_COUNT / 2
+    private var maxLines = LOG57_MAX_ENTRY_COUNT / 2
     private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
-    init(rcl57: RCL57) {
+    init(rcl57: RCL57, maxLines: Int32) {
         self.rcl57 = rcl57
+        self.maxLines = maxLines
     }
 
     func makeLine(numberEntry: LogEntry,
@@ -137,8 +138,9 @@ struct LogView: View {
     }
 
     private func getLineView(_ line: Line) -> some View {
-        LineView(line: line)
-            .listRowBackground(Color.black)
+        let backgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
+        return LineView(line: line)
+            .listRowBackground(backgroundColor)
             .listRowSeparator(.hidden)
     }
 
@@ -168,6 +170,6 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(rcl57: RCL57())
+        LogView(rcl57: RCL57(), maxLines: 3)
     }
 }
