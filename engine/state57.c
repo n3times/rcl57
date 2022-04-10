@@ -268,3 +268,12 @@ op57_t *ti57_get_program_op(ti57_t *ti57, int step)
     }
     return get_op(((*reg)[i] << 4) | (*reg)[i-1]);
 }
+
+int ti57_get_program_last_index(ti57_t *ti57)
+{
+    int last_index = 49;
+    while (last_index >= 0 && ti57_get_program_op(ti57, last_index)->key == 0) {
+        last_index -= 1;
+    }
+    return last_index;
+}

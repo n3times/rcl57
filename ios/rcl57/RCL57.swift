@@ -199,4 +199,9 @@ class RCL57 {
 
         return (isInv ? "INV " : "") + keyName + suffix
     }
+
+    /** Returns the index of the first non-zero step, or -1 if none,*/
+    func getProgramLastIndex() -> Int32 {
+        return ti57_get_program_last_index(&rcl57.ti57)
+    }
 }

@@ -1,5 +1,5 @@
 /**
- * The view that the user program.
+ * The view that shows the user program.
  */
 
 import SwiftUI
@@ -9,11 +9,13 @@ private struct Line: Identifiable {
     static var lineId = 0
     let index: Int
     let op: String
+    let active: Bool
     let id: Int
 
-    init(index: Int, op: String) {
+    init(index: Int, op: String, active: Bool) {
         self.index = index
         self.op = op
+        self.active = active
         self.id = Line.lineId
         Line.lineId += 1
     }
@@ -36,7 +38,10 @@ private struct LineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 10)
         }
+        .padding(3.0)
         .font(Font.system(.title3, design: .monospaced))
+        .listRowBackground(Color.black)
+        .background(line.active ? .white : .gray)
     }
 }
 
@@ -49,14 +54,13 @@ struct ProgramView: View {
         self.rcl57 = rcl57
     }
 
-    private func makeLine(index: Int, op: String) -> Line {
-        return Line(index: index, op: op)
+    private func makeLine(index: Int, op: String, active: Bool) -> Line {
+        return Line(index: index, op: op, active: active)
     }
 
     private func getLineView(_ line: Line) -> some View {
         return LineView(line: line)
-            .padding(3.0)
-     }
+    }
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -64,9 +68,10 @@ struct ProgramView: View {
                 getLineView($0)
             }
             .onAppear {
+                let last_index = rcl57.getProgramLastIndex()
                 for i in 0...49 {
                     let op = rcl57.getProgramStep(index: Int32(i))
-                    lines.append(makeLine(index: i, op: op))
+                    lines.append(makeLine(index: i, op: op, active: i <= last_index))
                 }
             }
             .listStyle(PlainListStyle())

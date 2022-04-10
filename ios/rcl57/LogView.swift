@@ -22,14 +22,19 @@ private struct Line: Identifiable {
 /** A line view in a LogView: a number on the left and an operation on the right. */
 private struct LineView: View {
     let line: Line
+    private let foregroundColor: Color
+    private let foregroundColorError: Color
 
-    init(line: Line) {
+    init(line: Line, isFull: Bool) {
         self.line = line
+        self.foregroundColor = isFull ? Color.white : Color(uiColor: UIColor.systemGray2)
+        self.foregroundColorError = isFull ? .yellow : .yellow
     }
 
     private func getColor(entry: LogEntry) -> Color {
         let isError = (entry.getFlags() & LOG57_ERROR_FLAG) != 0
-        return isError ? Color.yellow : Color.white
+
+        return isError ? foregroundColorError : foregroundColor
     }
 
     var body: some View {
@@ -41,7 +46,7 @@ private struct LineView: View {
             Spacer(minLength: 25)
             Text(line.opLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
-                .foregroundColor(Color.white)
+                .foregroundColor(foregroundColor)
                 .font(Font.system(.title3, design: .monospaced))
         }
     }
@@ -54,17 +59,18 @@ struct LogView: View {
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
-    private var maxLines = LOG57_MAX_ENTRY_COUNT / 2
+    private let maxLines : Int
+    private let isFull: Bool
     private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
-    init(rcl57: RCL57, maxLines: Int32) {
+    init(rcl57: RCL57, isFull: Bool) {
         self.rcl57 = rcl57
-        self.maxLines = maxLines
+        self.maxLines = isFull ? 500 : 3
+        self.isFull = isFull
     }
 
-    private func makeLine(numberEntry: LogEntry,
-                  opEntry: LogEntry) -> Line {
+    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> Line {
         return Line(numberEntry: numberEntry, opEntry: opEntry)
     }
 
@@ -139,7 +145,7 @@ struct LogView: View {
 
     private func getLineView(_ line: Line) -> some View {
         let backgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
-        return LineView(line: line)
+        return LineView(line: line, isFull: isFull)
             .listRowBackground(backgroundColor)
             .listRowSeparator(.hidden)
     }
@@ -170,6 +176,6 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(rcl57: RCL57(), maxLines: 3)
+        LogView(rcl57: RCL57(), isFull: false)
     }
 }

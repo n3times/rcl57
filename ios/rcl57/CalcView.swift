@@ -114,7 +114,7 @@ struct CalcView: View {
             ZStack {
                 VStack {
                     getMenuView(scaleFactor, calcWidth)
-                    LogView(rcl57: rcl57, maxLines: 3)
+                    LogView(rcl57: rcl57, isFull: false)
                         .frame(width: CGFloat(calcWidth),
                                height: CGFloat(displayHeight * 0.7))
                         .background(logBackgroundColor)
@@ -144,7 +144,7 @@ struct CalcView: View {
                         .background(Color.gray)
                         .foregroundColor(Color.white)
                         .font(.title)
-                        LogView(rcl57: rcl57, maxLines: 500)
+                        LogView(rcl57: rcl57, isFull: true)
                             .background(logBackgroundColor)
                     }
                     .transition(.move(edge: .trailing))
