@@ -185,4 +185,18 @@ class RCL57 {
     func getLogTimestamp() -> Int {
         return rcl57.ti57.log.timestamp;
     }
+
+    func getProgramStep(index: Int32) -> String {
+        let instruction = ti57_get_program_op(&rcl57.ti57, index)!;
+
+        let isInv = instruction.pointee.inv
+        let keyName = String(cString: key57_get_unicode_name(instruction.pointee.key))
+        let d = instruction.pointee.d
+        var suffix = ""
+        if d >= 0 {
+            suffix = " " + String(d)
+        }
+
+        return (isInv ? "INV " : "") + keyName + suffix
+    }
 }

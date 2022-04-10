@@ -17,6 +17,7 @@ struct CalcView: View {
     @State private var isAlpha: Bool
 
     @State private var isFullLog: Bool
+    @State private var isFullProgram: Bool
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -26,6 +27,7 @@ struct CalcView: View {
         isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
 
         isFullLog = false
+        isFullProgram = false
     }
 
     private func burst(ms: Int32) {
@@ -78,9 +80,14 @@ struct CalcView: View {
                 .onChange(of: isAlpha) { _ in
                     setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
                 }
-            Button("Full Log") {
+            Button("Log") {
                 withAnimation {
                     isFullLog.toggle()
+                }
+            }
+            Button("Program") {
+                withAnimation {
+                    isFullProgram.toggle()
                 }
             }
         }
@@ -141,6 +148,23 @@ struct CalcView: View {
                             .background(logBackgroundColor)
                     }
                     .transition(.move(edge: .trailing))
+                    .zIndex(1)
+                }
+                if isFullProgram {
+                    VStack {
+                        Button("Program") {
+                            withAnimation {
+                                isFullProgram.toggle()
+                            }
+                        }
+                        .frame(width: calcWidth, height: 45)
+                        .background(Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.title)
+                        ProgramView(rcl57: rcl57, maxLines: 500)
+                            .background(logBackgroundColor)
+                    }
+                    .transition(.move(edge: .leading))
                     .zIndex(1)
                 }
             }

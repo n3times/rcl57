@@ -5,7 +5,7 @@
 import SwiftUI
 
 /** Data for a LineView: a number and an operation. */
-struct Line: Identifiable {
+private struct Line: Identifiable {
     static var lineId = 0
     let numberLogEntry: LogEntry
     let opLogEntry: LogEntry
@@ -20,7 +20,7 @@ struct Line: Identifiable {
 }
 
 /** A line view in a LogView: a number on the left and an operation on the right. */
-struct LineView: View {
+private struct LineView: View {
     let line: Line
 
     init(line: Line) {
@@ -63,19 +63,19 @@ struct LogView: View {
         self.maxLines = maxLines
     }
 
-    func makeLine(numberEntry: LogEntry,
+    private func makeLine(numberEntry: LogEntry,
                   opEntry: LogEntry) -> Line {
         return Line(numberEntry: numberEntry, opEntry: opEntry)
     }
 
-    func clear() {
+    private func clear() {
         lines.removeAll()
         currentLineIndex = 0
         lastTimestamp = 0
         lastLoggedCount = 0
     }
 
-    func updateLog() {
+    private func updateLog() {
         // Return right away if there are no changes.
         let newTimestamp = rcl57.getLogTimestamp()
         if newTimestamp == lastTimestamp {
