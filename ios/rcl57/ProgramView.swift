@@ -42,6 +42,7 @@ private struct LineView: View {
         .font(Font.system(.title3, design: .monospaced))
         .listRowBackground(Color.black)
         .background(line.active ? .white : .gray)
+        .foregroundColor(.black)
     }
 }
 

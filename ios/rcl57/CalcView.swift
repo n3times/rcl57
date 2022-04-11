@@ -80,18 +80,8 @@ struct CalcView: View {
                 .onChange(of: isAlpha) { _ in
                     setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
                 }
-            Button("Log") {
-                withAnimation {
-                    isFullLog.toggle()
-                }
-            }
-            Button("Program") {
-                withAnimation {
-                    isFullProgram.toggle()
-                }
-            }
         }
-        .frame(width: calcWidth, height: 45)
+        .frame(width: calcWidth * 2 / 3 , height: 45)
         .background(Color.gray)
         .foregroundColor(Color.white)
         .font(.title)
@@ -113,7 +103,27 @@ struct CalcView: View {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
             ZStack {
                 VStack {
-                    getMenuView(scaleFactor, calcWidth)
+                    HStack(spacing: 0) {
+                        Button("\u{25c1}") {
+                            withAnimation {
+                                isFullProgram.toggle()
+                            }
+                        }
+                        .frame(width: calcWidth / 6, height: 45)
+                        .background(Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.title)
+                        getMenuView(scaleFactor, calcWidth)
+                        Button("\u{25b7}") {
+                            withAnimation {
+                                isFullLog.toggle()
+                            }
+                        }
+                        .frame(width: calcWidth / 6, height: 45)
+                        .background(Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.title)
+                    }
                     LogView(rcl57: rcl57, isFull: false)
                         .frame(width: CGFloat(calcWidth),
                                height: CGFloat(displayHeight * 0.7))
@@ -135,10 +145,20 @@ struct CalcView: View {
                 }
                 if isFullLog {
                     VStack {
-                        Button("Log") {
-                            withAnimation {
-                                isFullLog.toggle()
+                        HStack(spacing: 0) {
+                            Button("\u{25c1}") {
+                                withAnimation {
+                                    isFullLog.toggle()
+                                }
                             }
+                            .frame(width: calcWidth / 6, height: 45)
+                            .background(Color.gray)
+                            .foregroundColor(Color.white)
+                            .font(.title)
+                            Text("Log")
+                            .frame(width: calcWidth * 2 / 3, height: 45)
+                            Spacer()
+                            .frame(width: calcWidth / 6, height: 45)
                         }
                         .frame(width: calcWidth, height: 45)
                         .background(Color.gray)
@@ -152,10 +172,20 @@ struct CalcView: View {
                 }
                 if isFullProgram {
                     VStack {
-                        Button("Program") {
-                            withAnimation {
-                                isFullProgram.toggle()
+                        HStack {
+                            Spacer()
+                                .frame(width: calcWidth / 6, height: 45)
+                            Text("Program")
+                            .frame(width: calcWidth * 2 / 3, height: 45)
+                            .background(Color.gray)
+                            .foregroundColor(Color.white)
+                            .font(.title)
+                            Button("\u{25b7}") {
+                                withAnimation {
+                                    isFullProgram.toggle()
+                                }
                             }
+                            .frame(width: calcWidth / 6, height: 45)
                         }
                         .frame(width: calcWidth, height: 45)
                         .background(Color.gray)
