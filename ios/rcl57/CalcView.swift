@@ -84,7 +84,7 @@ struct CalcView: View {
         .frame(width: calcWidth * 2 / 3 , height: 45)
         .background(Color.gray)
         .foregroundColor(Color.white)
-        .font(.title)
+        .font(.title2)
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
@@ -103,6 +103,7 @@ struct CalcView: View {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
             ZStack {
                 VStack {
+                    // Menu bar.
                     HStack(spacing: 0) {
                         Button("\u{25c1}") {
                             withAnimation {
@@ -110,9 +111,6 @@ struct CalcView: View {
                             }
                         }
                         .frame(width: calcWidth / 6, height: 45)
-                        .background(Color.gray)
-                        .foregroundColor(Color.white)
-                        .font(.title)
                         getMenuView(scaleFactor, calcWidth)
                         Button("\u{25b7}") {
                             withAnimation {
@@ -120,10 +118,12 @@ struct CalcView: View {
                             }
                         }
                         .frame(width: calcWidth / 6, height: 45)
-                        .background(Color.gray)
-                        .foregroundColor(Color.white)
-                        .font(.title)
                     }
+                    .background(Color.gray)
+                    .foregroundColor(Color.white)
+                    .font(.title2)
+
+                    // Mini view.
                     LogView(rcl57: rcl57, isFull: false)
                         .frame(width: CGFloat(calcWidth),
                                height: CGFloat(displayHeight * 0.7))
@@ -133,64 +133,67 @@ struct CalcView: View {
                                 isFullLog.toggle()
                             }
                         }
+
+                    // Display.
                     HStack {
                         DisplayView(self.displayString)
                             .frame(width: CGFloat(calcWidth * 0.85),
                                    height: CGFloat(displayHeight))
                     }
-                        .frame(width: CGFloat(calcWidth),
-                               height: CGFloat(displayHeight))
-                        .background(.black)
+                    .frame(width: CGFloat(calcWidth), height: CGFloat(displayHeight))
+                    .background(.black)
+
+                    // Keyboard.
                     KeyboardView(rcl57: rcl57)
                 }
+
                 if isFullLog {
                     VStack {
+                        // Menu.
                         HStack(spacing: 0) {
-                            Button("\u{25c1}") {
+                            Button("\u{25c1}") {  // Left arrow.
                                 withAnimation {
                                     isFullLog.toggle()
                                 }
                             }
                             .frame(width: calcWidth / 6, height: 45)
-                            .background(Color.gray)
-                            .foregroundColor(Color.white)
-                            .font(.title)
                             Text("Log")
-                            .frame(width: calcWidth * 2 / 3, height: 45)
+                                .frame(width: calcWidth * 2 / 3, height: 45)
                             Spacer()
-                            .frame(width: calcWidth / 6, height: 45)
+                                .frame(width: calcWidth / 6, height: 45)
                         }
-                        .frame(width: calcWidth, height: 45)
                         .background(Color.gray)
                         .foregroundColor(Color.white)
-                        .font(.title)
+                        .font(.title2)
+
+                        // Full log.
                         LogView(rcl57: rcl57, isFull: true)
                             .background(logBackgroundColor)
                     }
                     .transition(.move(edge: .trailing))
                     .zIndex(1)
                 }
+
                 if isFullProgram {
                     VStack {
+                        // Menu.
                         HStack {
                             Spacer()
                                 .frame(width: calcWidth / 6, height: 45)
                             Text("Program")
-                            .frame(width: calcWidth * 2 / 3, height: 45)
-                            .background(Color.gray)
-                            .foregroundColor(Color.white)
-                            .font(.title)
-                            Button("\u{25b7}") {
+                                .frame(width: calcWidth * 2 / 3, height: 45)
+                            Button("\u{25b7}") {  // Right arrow.
                                 withAnimation {
                                     isFullProgram.toggle()
                                 }
                             }
                             .frame(width: calcWidth / 6, height: 45)
                         }
-                        .frame(width: calcWidth, height: 45)
                         .background(Color.gray)
                         .foregroundColor(Color.white)
-                        .font(.title)
+                        .font(.title2)
+
+                        // Program.
                         ProgramView(rcl57: rcl57, maxLines: 500)
                             .background(logBackgroundColor)
                     }
