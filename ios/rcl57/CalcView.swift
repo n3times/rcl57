@@ -124,15 +124,27 @@ struct CalcView: View {
                     .font(.title2)
 
                     // Mini view.
-                    LogView(rcl57: rcl57, isFull: false)
-                        .frame(width: CGFloat(calcWidth),
-                               height: CGFloat(displayHeight * 0.7))
-                        .background(logBackgroundColor)
-                        .onTapGesture(count: 2) {
-                            withAnimation {
-                                isFullLog.toggle()
+                    if rcl57.isLrnMode() {
+                        MiniProgramView(rcl57: rcl57)
+                            .frame(width: CGFloat(calcWidth),
+                                   height: CGFloat(displayHeight * 0.7))
+                            .background(logBackgroundColor)
+                            .onTapGesture(count: 2) {
+                                withAnimation {
+                                    isFullProgram.toggle()
+                                }
                             }
-                        }
+                    } else {
+                        LogView(rcl57: rcl57, isFull: false)
+                            .frame(width: CGFloat(calcWidth),
+                                   height: CGFloat(displayHeight * 0.7))
+                            .background(logBackgroundColor)
+                            .onTapGesture(count: 2) {
+                                withAnimation {
+                                    isFullLog.toggle()
+                                }
+                            }
+                    }
 
                     // Display.
                     HStack {
@@ -209,7 +221,8 @@ struct CalcView: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
+        print(Self._printChanges())
+        return GeometryReader { geometry in
             self.getView(geometry)
         }
     }

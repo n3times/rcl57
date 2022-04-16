@@ -235,7 +235,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
         return is_alphanumeric_mode ? " LRN        " : " Lrn        ";
     }
 
-    if (!op_pending  && !rcl57->at_end_program && is_hp_mode) {
+    if (!op_pending && !rcl57->at_end_program && is_hp_mode) {
         pc -= 1;
     }
 

@@ -99,7 +99,7 @@ struct KeyboardView: View {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 self.isKeyPressed = true;
                                 burst()
-                                self.rcl57.keyPress(row:Int32(c!.x + 1), col:Int32(c!.y + 1))
+                                self.rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
                             }
                         }
                         .onEnded { _ in

@@ -74,8 +74,8 @@ class RCL57 {
     }
 
     /** Should be called whenever the user presses a calculator key (row in 1..8 and col in 1..5). */
-    func keyPress(row: Int32, col: Int32) {
-        rcl57_key_press(&rcl57, row, col)
+    func keyPress(row: Int, col: Int) {
+        rcl57_key_press(&rcl57, Int32(row), Int32(col))
     }
 
     /** Should be called whenever the user releases a calculator key. */
@@ -125,7 +125,7 @@ class RCL57 {
     }
 
     /* Returns true if a given option flag is set. */
-    func getOptionFlag(option:Int32) -> Bool {
+    func getOptionFlag(option: Int32) -> Bool {
         return rcl57.options & option != 0
     }
 
@@ -186,8 +186,8 @@ class RCL57 {
         return rcl57.ti57.log.timestamp;
     }
 
-    func getProgramStep(index: Int32) -> String {
-        let instruction = ti57_get_program_op(&rcl57.ti57, index)!;
+    func getProgramStep(index: Int) -> String {
+        let instruction = ti57_get_program_op(&rcl57.ti57, Int32(index))!;
 
         let isInv = instruction.pointee.inv
         let keyName = String(cString: key57_get_unicode_name(instruction.pointee.key))
@@ -201,7 +201,19 @@ class RCL57 {
     }
 
     /** Returns the index of the first non-zero step, or -1 if none,*/
-    func getProgramLastIndex() -> Int32 {
-        return ti57_get_program_last_index(&rcl57.ti57)
+    func getProgramLastIndex() -> Int {
+        return Int(ti57_get_program_last_index(&rcl57.ti57))
+    }
+
+    /**
+     * Returns the program counter (-1..49 ), taking into account whether the mode is "HP lrn" or not.
+     * -1 if pc is at the beginning of the program in HP lrn mode.
+     */
+    func getProgramPc() -> Int {
+        return Int(rcl57_get_program_pc(&rcl57))
+    }
+
+    func isLrnMode() -> Bool {
+        return ti57_get_mode(&rcl57.ti57) == TI57_LRN
     }
 }

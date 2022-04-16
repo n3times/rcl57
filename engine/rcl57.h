@@ -109,4 +109,10 @@ char *rcl57_get_display(rcl57_t *rcl57);
 /* Clears the state while preserving the options. */
 void rcl57_clear(rcl57_t *rcl57);
 
+/**
+ * Returns the program counter (-1..49 ), taking into account whether the mode is "HP lrn" or not.
+ * -1 if pc is at the beginning of the program in HP lrn mode.
+ */
+int rcl57_get_program_pc(rcl57_t *rcl57);
+
 #endif  /* !rcl57_h */

@@ -1,25 +1,21 @@
 /**
- * The view that shows the user program.
+ * A mini view that shows the user program.
  */
 
 import SwiftUI
 
 /** Data for a LineView: a step index and an operation. */
-private struct Line: Identifiable {
-    static var lineId = 0
+private struct Line {
     let index: Int
     let op: String
     let active: Bool
     let isPc: Bool
-    let id: Int
 
     init(index: Int, op: String, active: Bool, isPc: Bool) {
         self.index = index
         self.op = op
         self.active = active
-        self.id = Line.lineId
         self.isPc = isPc
-        Line.lineId += 1
     }
 }
 
@@ -49,44 +45,49 @@ private struct LineView: View {
     }
 }
 
-/** A list of LineView's. */
-struct ProgramView: View {
-    let rcl57 : RCL57
-    @State private var lines : [Line] = []
+struct MiniProgramView: View {
+    let rcl57: RCL57
+    let middle: Int
+    @State private var pc: Int
 
-    init(rcl57: RCL57, maxLines: Int32) {
+    init(rcl57: RCL57) {
+        let pc = rcl57.getProgramPc()
         self.rcl57 = rcl57
+        self.pc = pc
+        if pc == -1 { middle = 0 }
+        else if pc == 0 && !rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
+        else if pc == 49 { middle = 48 }
+        else { middle = pc }
     }
 
     private func makeLine(index: Int, op: String, active: Bool, isPc: Bool) -> Line {
         return Line(index: index, op: op, active: active, isPc: isPc)
     }
 
-    private func getLineView(_ line: Line) -> some View {
-        return LineView(line: line)
+    private func getLineView(_ index: Int, active: Bool) -> some View {
+        let c = rcl57.getProgramPc()
+        let last = rcl57.getProgramLastIndex()
+        if index == -1 {
+            return LineView(line: Line(index: 99, op: "", active: index <= last, isPc: c == -1))
+        }
+        return LineView(line: Line(index: index,
+                                   op: rcl57.getProgramStep(index: index),
+                                   active: index <= last,
+                                   isPc: index == c))
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            List(lines) {
-                getLineView($0)
+        Self._printChanges()
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(-1...1, id: \.self) {
+                getLineView(middle + $0, active: middle + $0 == pc)
             }
-            .onAppear {
-                let last_index = rcl57.getProgramLastIndex()
-                let pc = rcl57.getProgramPc()
-                for i in 0...49 {
-                    let op = rcl57.getProgramStep(index: i)
-                    lines.append(Line(index: i, op: op, active: i <= last_index, isPc: i == pc))
-                }
-                proxy.scrollTo(lines.last!.id, anchor: .bottom)
-            }
-            .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, 10)
         }
+        .lineSpacing(0)
     }
 }
 
-struct ProgramView_Previews: PreviewProvider {
+struct MiniProgramView_Previews: PreviewProvider {
     static var previews: some View {
         ProgramView(rcl57: RCL57(), maxLines: 3)
     }

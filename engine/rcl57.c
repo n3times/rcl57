@@ -135,3 +135,14 @@ void rcl57_clear(rcl57_t *rcl57) {
     ti57_init(&rcl57->ti57);
     rcl57->at_end_program = false;
 }
+
+int rcl57_get_program_pc(rcl57_t *rcl57) {
+    int pc = ti57_get_program_pc(&rcl57->ti57);
+    bool op_pending = ti57_is_op_edit_in_lrn(&rcl57->ti57);
+    bool is_hp_mode = rcl57->options & RCL57_HP_LRN_MODE_FLAG;
+
+    if (is_hp_mode && !op_pending && !rcl57->at_end_program) {
+        return pc - 1;
+    }
+    return pc == 50 ? 49 : pc;
+}
