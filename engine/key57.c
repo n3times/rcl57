@@ -96,7 +96,7 @@ key57_t key57_get_key(int row, int col, bool is_secondary)
     case 0x74: return 0x03;
     case 0x82: return 0x00;
 
-    default: return is_secondary ? key + 5 : key;
+    default: return (row << 4) | (col + (is_secondary ? 5 : 0)) % 10;
     }
 }
 

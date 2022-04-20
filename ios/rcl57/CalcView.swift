@@ -4,9 +4,57 @@
 
 import SwiftUI
 
+final class Change: ObservableObject {
+    var rcl57: RCL57?
+    var pc: Int
+    var isAlpha: Bool
+    var isHpLrnMode: Bool
+    var isOpEditInLrn: Bool
+
+    @Published var changeCount = 0
+
+    init(rcl57: RCL57) {
+        self.rcl57 = rcl57
+        self.pc = rcl57.getProgramPc()
+        self.isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
+        self.isHpLrnMode = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        self.isOpEditInLrn = rcl57.isOpEditInLrn()
+    }
+
+    func update() {
+        let newPc = rcl57!.getProgramPc()
+        if self.pc != newPc {
+            self.pc = newPc
+            changeCount += 1
+        }
+
+        let isAlpha = rcl57!.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
+        if self.isAlpha != isAlpha {
+            self.isAlpha = isAlpha
+            changeCount += 1
+        }
+
+        let isHpLrnMode = rcl57!.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        if self.isHpLrnMode != isHpLrnMode {
+            self.isHpLrnMode = isHpLrnMode
+            changeCount += 1
+        }
+
+        let isOpEditInLrn = rcl57!.isOpEditInLrn()
+        if self.isOpEditInLrn != isOpEditInLrn {
+            self.isOpEditInLrn = isOpEditInLrn
+            changeCount += 1
+        }
+
+        if rcl57!.isLrnMode() {
+            changeCount += 1
+        }
+    }
+}
+
 struct CalcView: View {
     static var isAnimating = false
-
+    @StateObject var change: Change
     private let rcl57: RCL57
 
     @State private var displayString = ""
@@ -28,12 +76,15 @@ struct CalcView: View {
 
         isFullLog = false
         isFullProgram = false
+
+        _change = StateObject(wrappedValue: Change(rcl57: rcl57))
     }
 
     private func burst(ms: Int32) {
         _ = self.rcl57.advance(ms: ms)
         self.displayString = self.rcl57.display()
         self.currentOp = self.rcl57.currentOp()
+        ///.change.update()
     }
 
     private func runDisplayAnimationLoop() {
@@ -79,10 +130,11 @@ struct CalcView: View {
             Toggle("Alpha Display", isOn: $isAlpha)
                 .onChange(of: isAlpha) { _ in
                     setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isAlpha)
+                    change.update()
                 }
         }
         .frame(width: calcWidth * 2 / 3 , height: 45)
-        .background(Color.gray)
+        .background(Color(red: 0.1, green: 0.1, blue: 0.1))
         .foregroundColor(Color.white)
         .font(.title2)
     }
@@ -119,25 +171,21 @@ struct CalcView: View {
                         }
                         .frame(width: calcWidth / 6, height: 45)
                     }
-                    .background(Color.gray)
+                    .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                     .foregroundColor(Color.white)
                     .font(.title2)
 
                     // Mini view.
                     if rcl57.isLrnMode() {
-                        MiniProgramView(rcl57: rcl57)
+                        ProgramView(rcl57: rcl57, showPc: true)
                             .frame(width: CGFloat(calcWidth),
-                                   height: CGFloat(displayHeight * 0.7))
+                                   height: CGFloat(displayHeight * 0.85))
                             .background(logBackgroundColor)
-                            .onTapGesture(count: 2) {
-                                withAnimation {
-                                    isFullProgram.toggle()
-                                }
-                            }
+                            .environmentObject(change)
                     } else {
                         LogView(rcl57: rcl57, isFull: false)
                             .frame(width: CGFloat(calcWidth),
-                                   height: CGFloat(displayHeight * 0.7))
+                                   height: CGFloat(displayHeight * 0.85))
                             .background(logBackgroundColor)
                             .onTapGesture(count: 2) {
                                 withAnimation {
@@ -152,11 +200,12 @@ struct CalcView: View {
                             .frame(width: CGFloat(calcWidth * 0.85),
                                    height: CGFloat(displayHeight))
                     }
-                    .frame(width: CGFloat(calcWidth), height: CGFloat(displayHeight))
+                    .frame(width: CGFloat(calcWidth), height: CGFloat(displayHeight * 0.85))
                     .background(.black)
 
                     // Keyboard.
                     KeyboardView(rcl57: rcl57)
+                        .environmentObject(change)
                 }
 
                 if isFullLog {
@@ -174,7 +223,7 @@ struct CalcView: View {
                             Spacer()
                                 .frame(width: calcWidth / 6, height: 45)
                         }
-                        .background(Color.gray)
+                        .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                         .foregroundColor(Color.white)
                         .font(.title2)
 
@@ -201,13 +250,14 @@ struct CalcView: View {
                             }
                             .frame(width: calcWidth / 6, height: 45)
                         }
-                        .background(Color.gray)
+                        .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                         .foregroundColor(Color.white)
                         .font(.title2)
 
                         // Program.
-                        ProgramView(rcl57: rcl57, maxLines: 500)
+                        ProgramView(rcl57: rcl57, showPc: false)
                             .background(logBackgroundColor)
+                            .environmentObject(change)
                     }
                     .transition(.move(edge: .leading))
                     .zIndex(1)

@@ -27,7 +27,7 @@ private struct LineView: View {
 
     init(line: Line, isFull: Bool) {
         self.line = line
-        self.foregroundColor = isFull ? Color.white : Color(uiColor: UIColor.systemGray2)
+        self.foregroundColor = isFull ? Color.white : Color.white
         self.foregroundColorError = isFull ? .yellow : .yellow
     }
 
@@ -42,13 +42,12 @@ private struct LineView: View {
             Text(line.numberLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
                 .foregroundColor(getColor(entry: line.numberLogEntry))
-                .font(Font.system(.title3, design: .monospaced))
             Spacer(minLength: 25)
             Text(line.opLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                 .foregroundColor(foregroundColor)
-                .font(Font.system(.title3, design: .monospaced))
         }
+        .font(Font.system(.title3, design: .monospaced))
     }
 }
 

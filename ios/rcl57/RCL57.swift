@@ -186,18 +186,23 @@ class RCL57 {
         return rcl57.ti57.log.timestamp;
     }
 
-    func getProgramStep(index: Int) -> String {
-        let instruction = ti57_get_program_op(&rcl57.ti57, Int32(index))!;
+    func getProgramOp(index: Int, isAlpha: Bool) -> String {
+        let op = ti57_get_program_op(&rcl57.ti57, Int32(index))!;
 
-        let isInv = instruction.pointee.inv
-        let keyName = String(cString: key57_get_unicode_name(instruction.pointee.key))
-        let d = instruction.pointee.d
+        let isInv = op.pointee.inv
+        let key = op.pointee.key
+        let keyName = isAlpha ? String(cString: key57_get_unicode_name(key))
+                              : String(format: "%02d", (key >> 4) * 10 + (key & 0x0f))
+        let d = op.pointee.d
         var suffix = ""
         if d >= 0 {
             suffix = " " + String(d)
         }
+        if (ti57_is_op_edit_in_lrn(&rcl57.ti57) && index == ti57_get_program_pc(&rcl57.ti57)) {
+            suffix = " _"
+        }
 
-        return (isInv ? "INV " : "") + keyName + suffix
+        return (isInv ? (isAlpha ? "INV " : "-") : "") + keyName + suffix
     }
 
     /** Returns the index of the first non-zero step, or -1 if none,*/
@@ -215,5 +220,9 @@ class RCL57 {
 
     func isLrnMode() -> Bool {
         return ti57_get_mode(&rcl57.ti57) == TI57_LRN
+    }
+
+    func isOpEditInLrn() -> Bool {
+        ti57_is_op_edit_in_lrn(&rcl57.ti57)
     }
 }

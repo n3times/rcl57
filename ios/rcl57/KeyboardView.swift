@@ -25,6 +25,8 @@ struct KeyboardView: View {
     @State private var isInv = false
     @State private var trigUnits = TI57_DEG
 
+    @EnvironmentObject var change: Change
+
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
     }
@@ -63,6 +65,7 @@ struct KeyboardView: View {
         self.is2nd = self.rcl57.is2nd()
         self.isInv = self.rcl57.isInv()
         self.trigUnits = self.rcl57.getTrigUnits()
+        self.change.update()
     }
 
     private func getTrigOffsetY(units: ti57_trig_t, scaleFactor: Double) -> Double {
@@ -100,6 +103,8 @@ struct KeyboardView: View {
                                 self.isKeyPressed = true;
                                 burst()
                                 self.rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
+                                burst()
+                                self.change.update()
                             }
                         }
                         .onEnded { _ in
@@ -107,6 +112,7 @@ struct KeyboardView: View {
                                 self.isKeyPressed = false
                                 burst()
                                 self.rcl57.keyRelease()
+                                self.change.update()
                             }
                         }
                 )
