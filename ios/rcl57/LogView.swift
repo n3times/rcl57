@@ -25,10 +25,10 @@ private struct LineView: View {
     private let foregroundColor: Color
     private let foregroundColorError: Color
 
-    init(line: Line, isFull: Bool) {
+    init(line: Line) {
         self.line = line
-        self.foregroundColor = isFull ? Color.white : Color.white
-        self.foregroundColorError = isFull ? .yellow : .yellow
+        self.foregroundColor = Color.black
+        self.foregroundColorError = Color(red: 0.5, green: 0.0, blue: 0.0)
     }
 
     private func getColor(entry: LogEntry) -> Color {
@@ -47,7 +47,7 @@ private struct LineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                 .foregroundColor(foregroundColor)
         }
-        .font(Font.system(.title3, design: .monospaced))
+        .font(Font.system(size:20, weight:.semibold, design: .monospaced))
     }
 }
 
@@ -59,14 +59,13 @@ struct LogView: View {
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
     private let maxLines : Int
-    private let isFull: Bool
     private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
-    init(rcl57: RCL57, isFull: Bool) {
+    init(rcl57: RCL57) {
         self.rcl57 = rcl57
-        self.maxLines = isFull ? 500 : 3
-        self.isFull = isFull
+        self.maxLines = 500
+        updateLog()
     }
 
     private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> Line {
@@ -143,8 +142,9 @@ struct LogView: View {
     }
 
     private func getLineView(_ line: Line) -> some View {
-        let backgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
-        return LineView(line: line, isFull: isFull)
+        let backgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
+
+        return LineView(line: line)
             .listRowBackground(backgroundColor)
             .listRowSeparator(.hidden)
     }
@@ -155,6 +155,7 @@ struct LogView: View {
                 getLineView($0)
             }
             .onAppear {
+                updateLog()
                 if lines.count > 0 {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
@@ -168,13 +169,13 @@ struct LogView: View {
                 updateLog()
             }
             .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, 10)
+            .environment(\.defaultMinListRowHeight, 27)
         }
     }
 }
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(rcl57: RCL57(), isFull: false)
+        LogView(rcl57: RCL57())
     }
 }

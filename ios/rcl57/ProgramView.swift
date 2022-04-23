@@ -5,24 +5,30 @@
 import SwiftUI
 
 /** Data for a LineView: a step index and an operation. */
-private struct Line {
+private struct Line: Identifiable {
+    static var lineId = 0
     let index: Int
     let op: String
     let active: Bool
     let isPc: Bool
+    let id: Int
 
     init(index: Int, op: String, active: Bool, isPc: Bool) {
         self.index = index
         self.op = op
         self.active = active
         self.isPc = isPc
+        self.id = Line.lineId
+        Line.lineId += 1
     }
 }
 
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
 private struct LineView: View {
-    let line: Line
-    let inactiveColor = Color(red: 0.8, green: 0.8, blue: 0.8)
+    private let line: Line
+    private let activeBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
+    private let inactiveBackgroundColor = Color(red: 0.55, green: 0.575, blue: 0.58)
+    private let foregroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
 
     init(line: Line) {
         self.line = line
@@ -39,11 +45,10 @@ private struct LineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 20)
         }
-        .padding(3.0)
-        .font(Font.system(.title3, design: .monospaced))
-        .listRowBackground(Color.black)
-        .background(line.active ? .white : inactiveColor)
-        .foregroundColor(.black)
+        .font(Font.system(size:20, weight:.semibold, design: .monospaced))
+        .listRowBackground(line.active ? activeBackgroundColor : inactiveBackgroundColor)
+        .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
+        .foregroundColor(foregroundColor)
     }
 }
 
@@ -55,6 +60,9 @@ struct ProgramView: View {
     @State private var pc: Int
     @State private var isOpEditInLrn: Bool
     @State private var isHpLrn: Bool
+
+    @State private var lines : [Line] = []
+
     @EnvironmentObject var change: Change
 
     init(rcl57: RCL57, showPc: Bool) {
@@ -67,7 +75,7 @@ struct ProgramView: View {
         if pc == -1 { middle = 0 }
         else if pc == 0 && !rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
         else if pc == 49 { middle = 48 }
-        else { middle = pc }
+        else { middle = pc}
     }
 
     private func updateMiddle() {
@@ -89,46 +97,41 @@ struct ProgramView: View {
                                        op: "",
                                        active: index <= last,
                                        isPc: showPc && c == -1))
+            .listRowSeparator(.hidden)
         }
         return LineView(line: Line(index: index,
                                    op: rcl57.getProgramOp(index: index, isAlpha: true),
                                    active: index <= last,
                                    isPc: showPc && index == c))
+        .listRowSeparator(.hidden)
     }
 
     var body: some View {
-        Self._printChanges()
-        return ScrollView {
-            ScrollViewReader { proxy in
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach((self.isHpLrn ? -1 : 0)...49, id: \.self) {
-                        getLineView($0, active: $0 == pc)
-                            .frame(height: 28)
-                            .lineSpacing(0)
-                    }
-                }
-                .onAppear {
-                    if showPc {
-                        proxy.scrollTo(middle, anchor: .center)
-                    }
-                }
-                .onChange(of: self.isOpEditInLrn) { _ in
-                    if showPc {
-                        proxy.scrollTo(pc, anchor: .center)
-                    }
-                }
-                .onReceive(change.$changeCount) { _ in
-                    if showPc {
-                        updateMiddle()
-                        proxy.scrollTo(middle, anchor: .center)
-                    }
-                }
-                .onTapGesture(count: 1) {
-                    withAnimation {
-                        proxy.scrollTo(middle, anchor: .center)
-                    }
+        ScrollViewReader { proxy in
+            List {
+                ForEach((self.isHpLrn ? -1 : 0)...49, id: \.self) {
+                    getLineView($0, active: $0 == pc)
                 }
             }
+            .onAppear {
+                if showPc {
+                    updateMiddle()
+                    proxy.scrollTo(middle, anchor: .center)
+                }
+            }
+            .onChange(of: self.isOpEditInLrn) { _ in
+                if showPc {
+                    proxy.scrollTo(pc, anchor: .center)
+                }
+            }
+            .onReceive(change.$changeCount) { _ in
+                if showPc {
+                    updateMiddle()
+                    proxy.scrollTo(middle, anchor: .center)
+                }
+            }
+            .listStyle(PlainListStyle())
+            .environment(\.defaultMinListRowHeight, 27)
         }
     }
 }

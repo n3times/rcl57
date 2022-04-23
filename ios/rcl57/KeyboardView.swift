@@ -31,14 +31,15 @@ struct KeyboardView: View {
         self.rcl57 = rcl57
     }
 
-    private static func getCalculatorKey(standardizedLocation: CGPoint) -> CGPoint? {
+    private static func getCalculatorKey(standardizedLocation: CGPoint,
+                                         factor: Double) -> CGPoint? {
         // Top left corner of top left key ("2nd").
         let x0 = 0.0
-        let y0 = 10.0
+        let y0 = 10.0 * factor
 
         // Dimensions of each key.
         let w = 375.0 / 5
-        let h = 496.0 / 8
+        let h = 497.46 / 8 * factor
 
         let x = Double(standardizedLocation.x) - x0
         let y = Double(standardizedLocation.y) - y0
@@ -79,25 +80,28 @@ struct KeyboardView: View {
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
+        let standardCalcHeight = 497.46
 
         let calcWidth =  geometry.size.width
+        let calcHeight = geometry.size.height
 
-        let scaleFactor = calcWidth / standardCalcWidth
+        let scaleFactorH = calcWidth / standardCalcWidth
+        let scaleFactorV = calcHeight / standardCalcHeight
 
         return ZStack {
             Image(imageName)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
                 .gesture(
                     // Handle key presses as soon as the user touches the screen.
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged {
                             if self.isKeyPressed { return }
                             let standardizedLocation =
-                                CGPoint(x: $0.location.x / CGFloat(scaleFactor),
-                                        y: $0.location.y / CGFloat(scaleFactor))
+                                CGPoint(x: $0.location.x / CGFloat(scaleFactorH),
+                                        y: $0.location.y / CGFloat(scaleFactorH))
                             let c = KeyboardView.getCalculatorKey(
-                                standardizedLocation: standardizedLocation)
+                                standardizedLocation: standardizedLocation,
+                                factor: scaleFactorV / scaleFactorH)
                             if c != nil {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 self.isKeyPressed = true;
@@ -112,26 +116,27 @@ struct KeyboardView: View {
                                 self.isKeyPressed = false
                                 burst()
                                 self.rcl57.keyRelease()
+                                burst()
                                 self.change.update()
                             }
                         }
                 )
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactor))
-                    .offset(x: -152 * CGFloat(scaleFactor), y: -207 * CGFloat(scaleFactor))
-                    .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
+                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactorV))
+                    .offset(x: -152 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
+                    .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
             }
             if isInv {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactor))
-                    .offset(x: -77 * CGFloat(scaleFactor), y: -207 * CGFloat(scaleFactor))
-                    .frame(width: 56 * CGFloat(scaleFactor), height: 39 * CGFloat(scaleFactor))
+                    .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactorV))
+                    .offset(x: -77 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
+                    .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
             }
             TrigIndicator()
-                .frame(width: 10 * scaleFactor, height: 10 * scaleFactor)
-                .offset(x: 184 * scaleFactor,
-                        y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactor))
+                .frame(width: 10 * scaleFactorH, height: 10 * scaleFactorH)
+                .offset(x: 184 * scaleFactorH,
+                        y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactorV))
         }
     }
 

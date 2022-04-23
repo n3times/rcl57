@@ -33,11 +33,11 @@ static char *UNICODE_PRIMARY_KEYS[] = {
     "2nd",     "INV",       "lnx",        "CE",     "CLR",
     "LRN",     "x:t",   "x\u00b2",   "\u221ax",     "1/x",
     "SST",     "STO",       "RCL",       "SUM", "y\u02e3",
-    "BST",      "EE",         "(",         ")",  "\u00f7",
-    "GTO",         0,           0,           0,  "\uff58",
-    "SBR",         0,           0,           0,  "\uff0d",
-    "RST",         0,           0,           0,  "\uff0b",
-    "R/S",         0,         ".",       "+/-",  "\uff1d",
+    "BST",      "EE",         "(",         ")",       "/",
+    "GTO",         0,           0,           0,       "x",
+    "SBR",         0,           0,           0,       "-",
+    "RST",         0,           0,           0,       "+",
+    "R/S",         0,         ".",       "+/-",       "=",
 };
 
 static char *UNICODE_SECONDARY_KEYS[] = {
@@ -64,8 +64,13 @@ static char *get_name(key57_t key, bool unicode)
     char **secondary_keys = unicode ? UNICODE_SECONDARY_KEYS : SECONDARY_KEYS;
 
     row = ((key & 0xf0) >> 4) - 1;
-    col = (key & 0x0f) - 1;
-    sec = (key & 0x0f) >= 6;
+    if ((key & 0x0f) == 0) {
+        col = 9;
+        sec = true;
+    } else {
+        col = (key & 0x0f) - 1;
+        sec = (key & 0x0f) >= 6;
+    }
     return sec ? secondary_keys[row * 5 + col - 5]
                : primary_keys[row * 5 + col];
 }
