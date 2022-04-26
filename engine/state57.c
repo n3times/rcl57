@@ -1,6 +1,7 @@
 #include "state57.h"
 
 #include <assert.h>
+#include <string.h>
 
 /**
  * MODES
@@ -190,9 +191,7 @@ int ti57_get_program_pc(ti57_t *ti57)
 {
     int pc = (ti57->X[5][15] << 4) + ti57->X[5][14];
 
-    assert((0 <= pc) && (pc <= 50));
-
-    if (pc == 50) pc = 49;
+    if (pc > 49) pc = 49;
     return pc;
 }
 
@@ -276,4 +275,20 @@ int ti57_get_program_last_index(ti57_t *ti57)
         last_index -= 1;
     }
     return last_index;
+}
+
+void ti57_clear_program(ti57_t *ti57)
+{
+    // Clear steps.
+    for (int i = 0; i <= 5; i++) {
+        memset(ti57->Y[i], 0, sizeof(ti57_reg_t));
+    }
+    memset(&ti57->Y[6][15], 0, sizeof(unsigned char));
+    memset(&ti57->Y[6][14], 0, sizeof(unsigned char));
+    memset(&ti57->Y[7][15], 0, sizeof(unsigned char));
+    memset(&ti57->Y[7][14], 0, sizeof(unsigned char));
+
+    // Set pc to 0.
+    memset(&ti57->X[5][15], 0, sizeof(unsigned char));
+    memset(&ti57->X[5][14], 0, sizeof(unsigned char));
 }

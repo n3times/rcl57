@@ -54,6 +54,8 @@ private struct LineView: View {
 
 struct ProgramView: View {
     private let rcl57: RCL57
+    @State private var lines : [Line] = []
+
     private let showPc: Bool
 
     @State private var middle: Int
@@ -61,9 +63,8 @@ struct ProgramView: View {
     @State private var isOpEditInLrn: Bool
     @State private var isHpLrn: Bool
 
-    @State private var lines : [Line] = []
-
     @EnvironmentObject var change: Change
+    @EnvironmentObject var isMiniViewExpanded: BoolObject
 
     init(rcl57: RCL57, showPc: Bool) {
         let pc = rcl57.getProgramPc()
@@ -80,29 +81,35 @@ struct ProgramView: View {
 
     private func updateMiddle() {
         let pc = rcl57.getProgramPc()
+        middle = pc
         self.pc = pc
         self.isOpEditInLrn = rcl57.isOpEditInLrn()
         self.isHpLrn = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         if pc == -1 { middle = 0 }
-        else if pc == 0 && !rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
-        else if pc == 49 { middle = 48 }
+        else if pc == 0 && !self.isHpLrn { middle = 1 }
         else { middle = pc }
     }
 
     private func getLineView(_ index: Int, active: Bool) -> some View {
         let c = rcl57.getProgramPc()
         let last = rcl57.getProgramLastIndex()
+
+        let activeBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
+        let inactiveBackgroundColor = Color(red: 0.55, green: 0.575, blue: 0.58)
+
         if index == -1 {
             return LineView(line: Line(index: 99,
                                        op: "",
                                        active: index <= last,
                                        isPc: showPc && c == -1))
+            .listRowBackground(index <= last ? activeBackgroundColor : inactiveBackgroundColor)
             .listRowSeparator(.hidden)
         }
         return LineView(line: Line(index: index,
                                    op: rcl57.getProgramOp(index: index, isAlpha: true),
                                    active: index <= last,
                                    isPc: showPc && index == c))
+        .listRowBackground(index <= last ? activeBackgroundColor : inactiveBackgroundColor)
         .listRowSeparator(.hidden)
     }
 
@@ -116,18 +123,24 @@ struct ProgramView: View {
             .onAppear {
                 if showPc {
                     updateMiddle()
-                    proxy.scrollTo(middle, anchor: .center)
+                    proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
             .onChange(of: self.isOpEditInLrn) { _ in
                 if showPc {
-                    proxy.scrollTo(pc, anchor: .center)
+                    proxy.scrollTo(pc, anchor: .bottom)
                 }
             }
             .onReceive(change.$changeCount) { _ in
                 if showPc {
                     updateMiddle()
-                    proxy.scrollTo(middle, anchor: .center)
+                    proxy.scrollTo(middle, anchor: .bottom)
+                }
+            }
+            .onReceive(isMiniViewExpanded.$value) { _ in
+                if showPc && isMiniViewExpanded.value {
+                    updateMiddle()
+                    proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
             .listStyle(PlainListStyle())

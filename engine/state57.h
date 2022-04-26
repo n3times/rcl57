@@ -162,4 +162,6 @@ op57_t *ti57_get_program_op(ti57_t *ti57, int step);
 /** Returns the index of the first non-zero step, or -1 if none,*/
 int ti57_get_program_last_index(ti57_t *ti57);
 
+void ti57_clear_program(ti57_t *ti57);
+
 #endif  /* !state57_h */

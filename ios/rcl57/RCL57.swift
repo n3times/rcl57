@@ -162,6 +162,11 @@ class RCL57 {
         log57_reset(&rcl57.ti57.log)
     }
 
+    /** Clears the user program. */
+    func clearProgram() {
+        ti57_clear_program(&rcl57.ti57)
+    }
+
     /** Returns the number of logged items since reset. */
     func getLoggedCount() -> Int {
         return log57_get_logged_count(&rcl57.ti57.log)

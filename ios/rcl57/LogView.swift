@@ -62,6 +62,8 @@ struct LogView: View {
     private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
+    @EnvironmentObject var isMiniViewExpanded: BoolObject
+
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
         self.maxLines = 500
@@ -167,6 +169,11 @@ struct LogView: View {
             }
             .onReceive(timePublisher) { _ in
                 updateLog()
+            }
+            .onReceive(isMiniViewExpanded.$value) { _ in
+                if lines.count > 0 && isMiniViewExpanded.value {
+                    proxy.scrollTo(lines.last!.id, anchor: .bottom)
+                }
             }
             .listStyle(PlainListStyle())
             .environment(\.defaultMinListRowHeight, 27)
