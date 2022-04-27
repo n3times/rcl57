@@ -16,7 +16,7 @@ struct rcl57App: App {
 
     var body: some Scene {
         WindowGroup {
-            CalcView(rcl57: rcl57!)
+            MainView(rcl57: rcl57!)
         }
         .onChange(of: scenePhase) { (newScenePhase) in
             if newScenePhase == .inactive {

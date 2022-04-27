@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* rcl57App.swift */; };
-		150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* CalcView.swift */; };
+		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
 		150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */; };
 		150ED8E927B08CC900E01FC6 /* RCL57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* RCL57.swift */; };
 		150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* DisplayView.swift */; };
+		151EBA6D28179F87005DD283 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6C28179F87005DD283 /* CalcView.swift */; };
 		1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F65427F7DA0900DF3BAE /* KeyboardView.swift */; };
 		1533F6572801977F00DF3BAE /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F6562801977F00DF3BAE /* ProgramView.swift */; };
 		154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7127BC65C900AE38F1 /* rcl57.c */; };
@@ -33,12 +34,13 @@
 /* Begin PBXFileReference section */
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rcl57App.swift; sourceTree = "<group>"; };
-		150ED8A327B089EF00E01FC6 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
+		150ED8A327B089EF00E01FC6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		150ED8A527B089F000E01FC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		150ED8E827B08CC900E01FC6 /* RCL57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCL57.swift; sourceTree = "<group>"; };
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
+		151EBA6C28179F87005DD283 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		1533F65427F7DA0900DF3BAE /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		1533F6562801977F00DF3BAE /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		154B7A7127BC65C900AE38F1 /* rcl57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rcl57.c; sourceTree = "<group>"; };
@@ -99,12 +101,13 @@
 			isa = PBXGroup;
 			children = (
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
-				150ED8A327B089EF00E01FC6 /* CalcView.swift */,
+				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
 				159E94D72814BBD400859F10 /* FullProgramView.swift */,
 				1533F65427F7DA0900DF3BAE /* KeyboardView.swift */,
 				158D172427E2A5E6003BC323 /* LogView.swift */,
+				150ED8A327B089EF00E01FC6 /* MainView.swift */,
 				1533F6562801977F00DF3BAE /* ProgramView.swift */,
 				150ED8E827B08CC900E01FC6 /* RCL57.swift */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
@@ -224,9 +227,10 @@
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
 				158D172327E244FA003BC323 /* logger57.c in Sources */,
 				15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */,
+				151EBA6D28179F87005DD283 /* CalcView.swift in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
-				150ED8A427B089EF00E01FC6 /* CalcView.swift in Sources */,
+				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,

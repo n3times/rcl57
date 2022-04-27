@@ -6,7 +6,7 @@ import SwiftUI
 
 /** A list of LineView's. */
 struct FullLogView: View {
-    @EnvironmentObject var isFullLog: BoolObject
+    @EnvironmentObject var isFullLog: BoolLog
 
     let rcl57 : RCL57
 
@@ -36,13 +36,14 @@ struct FullLogView: View {
                 .font(.title2)
 
                 LogView(rcl57: rcl57)
-                    ///.background(logBackgroundColor)
 
                 HStack(spacing: 0) {
+                    Spacer()
                     Button("Clear") {  // Left arrow.
                         rcl57.clearLog()
                     }
                     .frame(width: calcWidth / 6, height: 45)
+                    Spacer()
                 }
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                 .foregroundColor(Color.white)
