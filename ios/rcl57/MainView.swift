@@ -75,10 +75,6 @@ final class Change: ObservableObject {
             self.logTimestamp = logTimestamp
             changeCount += 1
         }
-
-        if rcl57!.isLrnMode() {
-            changeCount += 1
-        }
     }
 }
 

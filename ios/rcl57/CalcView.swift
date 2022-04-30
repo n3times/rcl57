@@ -62,11 +62,8 @@ struct CalcView: View {
         let standardDisplayHeight = 160.0
 
         let calcWidth = geometry.size.width
-
         let scaleFactor = calcWidth / standardCalcWidth
-
         let displayHeight = standardDisplayHeight * scaleFactor
-
         let logBackgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
 
         return ZStack {
@@ -124,7 +121,6 @@ struct CalcView: View {
                 .foregroundColor(Color.white)
 
                 ZStack {
-
                     // Mini view.
                     if rcl57.isLrnMode() {
                         ProgramView(rcl57: rcl57, showPc: true)
