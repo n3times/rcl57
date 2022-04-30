@@ -2,7 +2,6 @@ import SwiftUI
 
 /** A list of LineView's. */
 struct FullProgramView: View {
-    @EnvironmentObject var isFullProgram: BoolProgram
     @EnvironmentObject var change: Change
 
     let rcl57 : RCL57
@@ -14,34 +13,39 @@ struct FullProgramView: View {
     var body: some View {
         return GeometryReader { geometry in
             let calcWidth = geometry.size.width
-            VStack {
+            VStack(spacing: 0) {
                 // Menu.
-                HStack {
+                HStack(spacing: 0) {
                     Spacer()
-                        .frame(width: calcWidth / 6, height: 45)
+                        .frame(width: calcWidth / 6, height: 55)
                     Text("Program")
-                        .frame(width: calcWidth * 2 / 3, height: 45)
-                    Button("\u{25b7}") {  // Right arrow.
+                        .frame(width: calcWidth * 2 / 3, height: 55)
+                        .font(Font.system(size: 21, weight: .regular))
+                    // Right button.
+                    Button(action: {
                         withAnimation {
-                            isFullProgram.value.toggle()
+                            change.isFullProgram.toggle()
                         }
+                    }) {
+                        Text("\u{25b7}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: calcWidth / 6, height: 45)
                 }
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                 .foregroundColor(Color.white)
-                .font(.title2)
+                .font(Font.system(size: 20, weight: .regular, design: .monospaced))
 
                 // Program.
                 ProgramView(rcl57: rcl57, showPc: false)
                     .environmentObject(change)
 
-                HStack {
+                HStack(spacing: 0) {
                     Spacer()
                         .frame(width: calcWidth / 6, height: 45)
                     Button("Clear") {  // Left arrow.
                         rcl57.clearProgram()
-                        change.update()
+                        change.forceUpdate()
                     }
                     .frame(width: calcWidth * 2 / 3, height: 45)
                     Text("")

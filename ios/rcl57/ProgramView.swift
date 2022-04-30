@@ -27,7 +27,7 @@ private struct Line: Identifiable {
 private struct LineView: View {
     private let line: Line
     private let activeBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
-    private let inactiveBackgroundColor = Color(red: 0.55, green: 0.575, blue: 0.58)
+    private let inactiveBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
     private let foregroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
 
     init(line: Line) {
@@ -64,7 +64,6 @@ struct ProgramView: View {
     @State private var isHpLrn: Bool
 
     @EnvironmentObject var change: Change
-    @EnvironmentObject var isMiniViewExpanded: BoolObject
 
     init(rcl57: RCL57, showPc: Bool) {
         let pc = rcl57.getProgramPc()
@@ -94,22 +93,17 @@ struct ProgramView: View {
         let c = rcl57.getProgramPc()
         let last = rcl57.getProgramLastIndex()
 
-        let activeBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
-        let inactiveBackgroundColor = Color(red: 0.55, green: 0.575, blue: 0.58)
-
         if index == -1 {
             return LineView(line: Line(index: 99,
                                        op: "",
                                        active: index <= last,
                                        isPc: showPc && c == -1))
-            .listRowBackground(index <= last ? activeBackgroundColor : inactiveBackgroundColor)
             .listRowSeparator(.hidden)
         }
         return LineView(line: Line(index: index,
                                    op: rcl57.getProgramOp(index: index, isAlpha: true),
                                    active: index <= last,
                                    isPc: showPc && index == c))
-        .listRowBackground(index <= last ? activeBackgroundColor : inactiveBackgroundColor)
         .listRowSeparator(.hidden)
     }
 
@@ -137,8 +131,8 @@ struct ProgramView: View {
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
-            .onReceive(isMiniViewExpanded.$value) { _ in
-                if showPc && isMiniViewExpanded.value {
+            .onReceive(change.$isMiniViewExpanded) { _ in
+                if showPc && change.isMiniViewExpanded {
                     updateMiddle()
                     proxy.scrollTo(middle, anchor: .bottom)
                 }

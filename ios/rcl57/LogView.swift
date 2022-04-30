@@ -59,12 +59,11 @@ struct LogView: View {
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
     private let maxLines : Int
-    private let timePublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
-        .autoconnect()
 
-    @EnvironmentObject var isMiniViewExpanded: BoolObject
+    @EnvironmentObject var change: Change
 
     init(rcl57: RCL57) {
+        Self._printChanges()
         self.rcl57 = rcl57
         self.maxLines = 500
         updateLog()
@@ -152,7 +151,8 @@ struct LogView: View {
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
+        Self._printChanges()
+        return ScrollViewReader { proxy in
             List(lines) {
                 getLineView($0)
             }
@@ -167,11 +167,14 @@ struct LogView: View {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .onReceive(timePublisher) { _ in
+            .onReceive(change.$displayString) { _ in
                 updateLog()
             }
-            .onReceive(isMiniViewExpanded.$value) { _ in
-                if lines.count > 0 && isMiniViewExpanded.value {
+            .onReceive(change.$changeCount) { _ in
+                updateLog()
+            }
+            .onReceive(change.$isMiniViewExpanded) { _ in
+                if lines.count > 0 && change.isMiniViewExpanded {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }

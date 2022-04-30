@@ -6,7 +6,7 @@ import SwiftUI
 
 /** A list of LineView's. */
 struct FullLogView: View {
-    @EnvironmentObject var isFullLog: BoolLog
+    @EnvironmentObject var change: Change
 
     let rcl57 : RCL57
 
@@ -17,25 +17,32 @@ struct FullLogView: View {
     var body: some View {
         return GeometryReader { geometry in
             let calcWidth = geometry.size.width
-            VStack {
+            VStack(spacing: 0) {
                 // Menu.
                 HStack(spacing: 0) {
-                    Button("\u{25c1}") {  // Left arrow.
+                    // Left button.
+                    Button(action: {
                         withAnimation {
-                            isFullLog.value.toggle()
+                            change.isFullLog.toggle()
                         }
+                    }) {
+                        Text("\u{25c1}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: calcWidth / 6, height: 45)
                     Text("Log")
-                        .frame(width: calcWidth * 2 / 3, height: 45)
+                        .frame(width: calcWidth * 2 / 3, height: 55)
+                        .font(Font.system(size: 20, weight: .regular))
                     Spacer()
-                        .frame(width: calcWidth / 6, height: 45)
+                        .frame(width: calcWidth / 6, height: 55)
                 }
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                 .foregroundColor(Color.white)
-                .font(.title2)
+                .font(Font.system(size: 20, weight: .regular, design: .monospaced))
 
                 LogView(rcl57: rcl57)
+                    .background(Color(red: 1.0, green: 1.0, blue: 0.93))
+                    .environmentObject(change)
 
                 HStack(spacing: 0) {
                     Spacer()

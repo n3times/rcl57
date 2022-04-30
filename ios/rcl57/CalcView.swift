@@ -6,19 +6,12 @@ import SwiftUI
 
 struct CalcView: View {
     private let rcl57: RCL57
-    @State private var timer: Timer?
-
-    @State private var displayString = ""
 
     @State private var isTurboMode: Bool
     @State private var isHpLRN: Bool
     @State private var isAlpha: Bool
 
     @EnvironmentObject private var change: Change
-    @EnvironmentObject private var isFullLog: BoolLog
-    @EnvironmentObject private var isFullProgram: BoolProgram
-    @EnvironmentObject private var isMiniViewExpanded: BoolObject
-    @EnvironmentObject private var leftTransition: BoolLeft
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -28,31 +21,16 @@ struct CalcView: View {
         isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
     }
 
-    private func burst(ms: Int32) {
-        _ = self.rcl57.advance(ms: ms)
-        self.displayString = self.rcl57.display()
-    }
-
-    private func runDisplayAnimationLoop() {
-        burst(ms: 20)
-        if timer == nil {
-            timer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { _ in
-                burst(ms: 20)
-            }
-        }
-    }
-
     private func setOption(option: Int32, value: Bool) {
         self.rcl57.setOptionFlag(option: option, value: value)
-        self.displayString = self.rcl57.display()
+        change.updateDisplayString()
     }
 
     private func getMenuView(_ scaleFactor: Double, _ calcWidth: Double) -> some View {
         Menu("\u{25ef}") {
             Button("Reset") {
                 rcl57.clearAll()
-                runDisplayAnimationLoop()
-                self.displayString = self.rcl57.display()
+                change.updateDisplayString()
             }
             Toggle("Turbo", isOn: $isTurboMode)
                 .onChange(of: isTurboMode) { _ in
@@ -73,24 +51,17 @@ struct CalcView: View {
         .foregroundColor(Color.white)
     }
 
-    private func getMiniViewHeight(displayHeight: Int, calcHeight: Int) -> Double {
-        if !isMiniViewExpanded.value { return 0 }
+    private func getDisplayHeight(displayHeight: Double) -> Double {
+        if !change.isMiniViewExpanded { return displayHeight }
 
-        return Double(displayHeight) * 0.85
-    }
-
-    private func getDisplayHeight(displayHeight: Int) -> Double {
-        if !isMiniViewExpanded.value { return Double(displayHeight) * 1.7 }
-
-        return Double(displayHeight) * 0.85
+        return displayHeight / 2
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let standardCalcWidth = 375.0
-        let standardDisplayHeight = 96.0
+        let standardDisplayHeight = 160.0
 
         let calcWidth = geometry.size.width
-        let calcHeight = geometry.size.height
 
         let scaleFactor = calcWidth / standardCalcWidth
 
@@ -100,76 +71,88 @@ struct CalcView: View {
 
         return ZStack {
             Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
-            VStack {
+            VStack(spacing: 0) {
                 // Menu bar.
                 HStack(spacing: 0) {
                     // Left button.
-                    Button("\u{25c1}") {
-                        leftTransition.value = true
+                    Button(action: {
+                        change.leftTransition = true
                         withAnimation {
-                            isFullProgram.value.toggle()
+                            change.isFullProgram.toggle()
                         }
+                    }) {
+                        Text("\u{25c1}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: calcWidth / 6, height: 45)
 
                     Spacer()
 
                     // Menu button.
                     getMenuView(scaleFactor, calcWidth)
-                        .frame(width: calcWidth * 1 / 6 , height: 45)
+                        .frame(width: calcWidth * 1 / 6 , height: 55)
 
                     Spacer()
 
                     // Mini view button.
-                    Button(isMiniViewExpanded.value ? "\u{25b3}" : "\u{25bd}") {
+                    Button(action: {
                         withAnimation {
-                            isMiniViewExpanded.value.toggle()
+                            change.isMiniViewExpanded.toggle()
                         }
+                    }) {
+                        Text(change.isMiniViewExpanded ? "\u{25b3}" : "\u{25bd}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: calcWidth * 1 / 6 , height: 45)
 
                     Spacer()
 
                     // Right button.
-                    Button("\u{25b7}") {
-                        leftTransition.value = false
+                    Button(action: {
+                        change.leftTransition = false
                         withAnimation {
-                            isFullLog.value.toggle()
+                            change.isFullLog.toggle()
                         }
+                    }) {
+                        Text("\u{25b7}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
                     }
-                    .frame(width: calcWidth / 6, height: 45)
                 }
-                .font(Font.system(size: 25, weight: .regular, design: .monospaced))
+                .font(Font.system(size: 20, weight: .regular, design: .monospaced))
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))
                 .foregroundColor(Color.white)
 
-                // Mini view.
-                if rcl57.isLrnMode() {
-                    ProgramView(rcl57: rcl57, showPc: true)
-                        .frame(width: CGFloat(calcWidth),
-                                height: getMiniViewHeight(displayHeight: Int(displayHeight),
-                                                             calcHeight: Int(calcHeight)))
-                        .background(logBackgroundColor)
-                        .environmentObject(change)
-                        .environmentObject(isMiniViewExpanded)
-                } else {
-                    LogView(rcl57: rcl57)
-                        .frame(width: CGFloat(calcWidth),
-                                height: getMiniViewHeight(displayHeight: Int(displayHeight),
-                                                            calcHeight: Int(calcHeight)))
-                        .background(logBackgroundColor)
-                        .environmentObject(isMiniViewExpanded)
-                }
+                ZStack {
 
-                // Display.
-                HStack {
-                    DisplayView(self.displayString)
+                    // Mini view.
+                    if rcl57.isLrnMode() {
+                        ProgramView(rcl57: rcl57, showPc: true)
+                            .frame(width: CGFloat(calcWidth),
+                                   height: displayHeight / 2)
+                            .offset(x: 0, y: -(displayHeight / 4))
+                            .background(logBackgroundColor)
+                            .environmentObject(change)
+                    } else {
+                        LogView(rcl57: rcl57)
+                            .background(Color(red: 1.0, green: 1.0, blue: 0.93))
+                            .frame(width: CGFloat(calcWidth),
+                                   height: displayHeight / 2)
+                            .offset(x: 0, y: -(displayHeight / 4))
+                            .background(Color(red: 1.0, green: 1.0, blue: 0.93))
+                            .environmentObject(change)
+                    }
+
+                    // Display.
+                    DisplayView(change.displayString)
                         .frame(width: CGFloat(calcWidth * 0.85),
-                                height: CGFloat(displayHeight * 0.85))
+                               height: CGFloat(displayHeight / 2))
+                    .frame(width: calcWidth, height: getDisplayHeight(displayHeight: displayHeight))
+                    .background(.black)
+                    .offset(x: 0, y: (displayHeight / 2 - getDisplayHeight(displayHeight: displayHeight)/2))
                 }
-                .frame(width: CGFloat(calcWidth),
-                        height: getDisplayHeight(displayHeight: Int(displayHeight)))
-                .background(.black)
+                .frame(width: calcWidth, height: displayHeight)
+                .zIndex(-1)
 
                 // Keyboard.
                 KeyboardView(rcl57: rcl57)
@@ -177,14 +160,7 @@ struct CalcView: View {
             }
         }
         .onAppear {
-            self.displayString = self.rcl57.display()
-            self.runDisplayAnimationLoop()
-        }
-        .onDisappear() {
-            if timer != nil {
-              timer!.invalidate()
-              timer = nil
-            }
+            change.updateDisplayString()
         }
     }
 

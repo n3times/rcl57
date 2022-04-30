@@ -4,22 +4,6 @@
 
 import SwiftUI
 
-final class BoolObject: ObservableObject {
-    @Published var value = false
-}
-
-final class BoolProgram: ObservableObject {
-    @Published var value = false
-}
-
-final class BoolLog: ObservableObject {
-    @Published var value = false
-}
-
-final class BoolLeft: ObservableObject {
-    @Published var value = false
-}
-
 final class Change: ObservableObject {
     var rcl57: RCL57?
     var pc: Int
@@ -28,6 +12,12 @@ final class Change: ObservableObject {
     var isOpEditInLrn: Bool
 
     @Published var changeCount = 0
+    @Published var displayString: String
+    @Published var isFullLog: Bool
+    @Published var isFullProgram: Bool
+    @Published var isMiniViewExpanded: Bool
+    @Published var leftTransition: Bool
+    @Published var logTimestamp: Int
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -35,6 +25,24 @@ final class Change: ObservableObject {
         self.isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
         self.isHpLrnMode = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         self.isOpEditInLrn = rcl57.isOpEditInLrn()
+        self.displayString = rcl57.display()
+        self.isFullLog = false
+        self.isFullProgram = false
+        self.isMiniViewExpanded = false
+        self.leftTransition = false
+        self.logTimestamp = rcl57.getLogTimestamp()
+    }
+
+    func updateDisplayString() {
+        let display = rcl57!.display()
+        if display != self.displayString {
+            self.displayString = display
+            changeCount += 1
+        }
+    }
+
+    func forceUpdate() {
+        changeCount += 1
     }
 
     func update() {
@@ -62,6 +70,12 @@ final class Change: ObservableObject {
             changeCount += 1
         }
 
+        let logTimestamp = rcl57!.getLogTimestamp()
+        if self.logTimestamp != logTimestamp {
+            self.logTimestamp = logTimestamp
+            changeCount += 1
+        }
+
         if rcl57!.isLrnMode() {
             changeCount += 1
         }
@@ -70,49 +84,42 @@ final class Change: ObservableObject {
 
 struct MainView: View {
     private let rcl57: RCL57
+    private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
+        .autoconnect()
 
     @StateObject private var change: Change
-    @StateObject private var isFullLog: BoolLog
-    @StateObject private var isFullProgram: BoolProgram
-    @StateObject private var isMiniViewExpanded: BoolObject
-    @StateObject private var leftTransition: BoolLeft
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
 
         _change = StateObject(wrappedValue: Change(rcl57: rcl57))
-        _isFullLog = StateObject(wrappedValue: BoolLog())
-        _isFullProgram = StateObject(wrappedValue: BoolProgram())
-        _isMiniViewExpanded = StateObject(wrappedValue: BoolObject())
-        _leftTransition = StateObject(wrappedValue: BoolLeft())
+    }
+
+    private func burst(ms: Int32) {
+        _ = self.rcl57.advance(ms: ms)
+        change.updateDisplayString()
+        change.update()
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
         return ZStack {
             ZStack {
-                if !isFullLog.value && !isFullProgram.value {
+                if !change.isFullLog && !change.isFullProgram {
                     CalcView(rcl57: rcl57)
                         .environmentObject(change)
-                        .environmentObject(isFullLog)
-                        .environmentObject(isFullProgram)
-                        .environmentObject(isMiniViewExpanded)
-                        .environmentObject(leftTransition)
-                        .transition(.move(edge: leftTransition.value ? .trailing : .leading))
+                        .transition(.move(edge: change.leftTransition ? .trailing : .leading))
                 }
 
-                if isFullProgram.value {
+                if change.isFullProgram {
                     FullProgramView(rcl57: rcl57)
-                        .environmentObject(isFullProgram)
                         .environmentObject(change)
-                        .environmentObject(isMiniViewExpanded)
                         .transition(.move(edge: .leading))
                         .zIndex(1)
                 }
 
-                if isFullLog.value {
+                if change.isFullLog {
                     FullLogView(rcl57: rcl57)
-                        .environmentObject(isFullLog)
-                        .environmentObject(isMiniViewExpanded)
+                        .environmentObject(change)
                         .transition(.move(edge: .trailing))
                         .zIndex(1)
                 }
@@ -124,6 +131,9 @@ struct MainView: View {
         print(Self._printChanges())
         return GeometryReader { geometry in
             self.getMainView(geometry)
+        }
+        .onReceive(timerPublisher) { _ in
+            burst(ms: 20)
         }
     }
 }
