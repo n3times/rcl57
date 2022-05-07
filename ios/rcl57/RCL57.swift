@@ -7,10 +7,6 @@ import SwiftUI
 struct LogEntry {
     let entry: UnsafeMutablePointer<log57_entry_t>
 
-    init(entry: UnsafeMutablePointer<log57_entry_t>) {
-        self.entry = entry
-    }
-
     func getMessage() -> String {
         return String(cString: UnsafeRawPointer(&entry.pointee.message).assumingMemoryBound(to: CChar.self))
     }
@@ -28,14 +24,7 @@ class RCL57 {
     private var rcl57 = rcl57_t()
 
     init() {
-        let options = RCL57_FASTER_TRACE_FLAG |
-                      RCL57_SHORT_PAUSE_FLAG |
-                      RCL57_QUICK_STOP_FLAG |
-                      RCL57_SHOW_RUN_INDICATOR_FLAG;
-        
         rcl57_init(&rcl57)
-        rcl57.options = options
-        rcl57.speedup = 1000;
     }
 
     // Initializes a RCL57 object from the state stored in a given file.
@@ -229,5 +218,24 @@ class RCL57 {
 
     func isOpEditInLrn() -> Bool {
         ti57_is_op_edit_in_lrn(&rcl57.ti57)
+    }
+
+    enum CalcMode {
+        case classic
+        case turbo
+    }
+
+    func setCalcMode(mode: CalcMode) {
+        setSpeedup(speedup: mode == .turbo ? 1000 : 2)
+        setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: mode == .turbo)
+        setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: mode == .turbo)
+        setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: mode == .turbo)
+        setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: mode == .turbo)
+        setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: mode == .turbo)
+        setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: mode == .turbo)
+    }
+
+    func getCalcMode() -> CalcMode {
+        return getSpeedup() == 1000 ? .turbo : .classic
     }
 }

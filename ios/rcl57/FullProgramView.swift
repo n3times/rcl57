@@ -3,12 +3,9 @@ import SwiftUI
 /** A list of LineView's. */
 struct FullProgramView: View {
     @EnvironmentObject var change: Change
+    @State private var isPresentingConfirm: Bool = false
 
     let rcl57 : RCL57
-
-    init(rcl57: RCL57) {
-        self.rcl57 = rcl57
-    }
 
     var body: some View {
         return GeometryReader { geometry in
@@ -38,17 +35,25 @@ struct FullProgramView: View {
 
                 // Program.
                 ProgramView(rcl57: rcl57, showPc: false)
+                    .background(ivory)
                     .environmentObject(change)
 
                 HStack(spacing: 0) {
                     Spacer()
                         .frame(width: calcWidth / 6, height: 45)
                     Button("Clear") {  // Left arrow.
-                        rcl57.clearProgram()
-                        change.forceUpdate()
+                        isPresentingConfirm = true
                     }
                     .frame(width: calcWidth * 2 / 3, height: 45)
-                    Text("")
+                    .disabled(rcl57.getProgramLastIndex() == -1)
+                    .buttonStyle(.plain)
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                        Button("Clear Program", role: .destructive) {
+                            rcl57.clearProgram()
+                            change.forceUpdate()
+                        }
+                    }
+                    Spacer()
                         .frame(width: calcWidth / 6, height: 45)
                 }
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))

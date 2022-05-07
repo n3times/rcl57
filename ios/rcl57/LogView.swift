@@ -143,7 +143,7 @@ struct LogView: View {
     }
 
     private func getLineView(_ line: Line) -> some View {
-        let backgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
+        let backgroundColor = ivory
 
         return LineView(line: line)
             .listRowBackground(backgroundColor)

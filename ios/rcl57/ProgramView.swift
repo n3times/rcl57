@@ -26,9 +26,10 @@ private struct Line: Identifiable {
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
 private struct LineView: View {
     private let line: Line
-    private let activeBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
-    private let inactiveBackgroundColor = Color(red: 1.0, green: 1.0, blue: 0.93)
+    private let activeBackgroundColor = ivory
+    private let inactiveBackgroundColor = ivory
     private let foregroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
+    private let inactiveForegroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
 
     init(line: Line) {
         self.line = line
@@ -48,7 +49,7 @@ private struct LineView: View {
         .font(Font.system(size:20, weight:.semibold, design: .monospaced))
         .listRowBackground(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
-        .foregroundColor(foregroundColor)
+        .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
     }
 }
 
@@ -110,7 +111,7 @@ struct ProgramView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach((self.isHpLrn ? -1 : 0)...49, id: \.self) {
+                ForEach(((self.isHpLrn && showPc) ? -1 : 0)...49, id: \.self) {
                     getLineView($0, active: $0 == pc)
                 }
             }

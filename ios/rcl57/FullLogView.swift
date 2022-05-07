@@ -7,12 +7,9 @@ import SwiftUI
 /** A list of LineView's. */
 struct FullLogView: View {
     @EnvironmentObject var change: Change
+    @State private var isPresentingConfirm: Bool = false
 
     let rcl57 : RCL57
-
-    init(rcl57: RCL57) {
-        self.rcl57 = rcl57
-    }
 
     var body: some View {
         return GeometryReader { geometry in
@@ -40,16 +37,32 @@ struct FullLogView: View {
                 .foregroundColor(Color.white)
                 .font(Font.system(size: 20, weight: .regular, design: .monospaced))
 
-                LogView(rcl57: rcl57)
-                    .background(Color(red: 1.0, green: 1.0, blue: 0.93))
-                    .environmentObject(change)
+                if rcl57.getLoggedCount() == 0 {
+                    Text("Log is empty")
+                        .frame(width: geometry.size.width,
+                               height: geometry.size.height - 55 - 45,
+                               alignment: .center)
+                        .background(ivory)
+                        .foregroundColor(Color.black)
+                } else {
+                    LogView(rcl57: rcl57)
+                        .background(ivory)
+                        .environmentObject(change)
+                }
 
                 HStack(spacing: 0) {
                     Spacer()
                     Button("Clear") {  // Left arrow.
-                        rcl57.clearLog()
+                        isPresentingConfirm = true
                     }
                     .frame(width: calcWidth / 6, height: 45)
+                    .disabled(rcl57.getLoggedCount() == 0)
+                    .buttonStyle(.plain)
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                        Button("Clear Log", role: .destructive) {
+                            rcl57.clearLog()
+                        }
+                     }
                     Spacer()
                 }
                 .background(Color(red: 0.1, green: 0.1, blue: 0.1))

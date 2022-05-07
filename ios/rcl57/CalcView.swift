@@ -8,47 +8,40 @@ struct CalcView: View {
     private let rcl57: RCL57
 
     @State private var isTurboMode: Bool
-    @State private var isHpLRN: Bool
-    @State private var isAlpha: Bool
+    @State private var showingOptions = false
 
     @EnvironmentObject private var change: Change
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
 
-        isTurboMode = rcl57.getSpeedup() == 1000
-        isHpLRN = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
-    }
-
-    private func setOption(option: Int32, value: Bool) {
-        self.rcl57.setOptionFlag(option: option, value: value)
-        change.updateDisplayString()
+        isTurboMode = rcl57.getCalcMode() == .turbo
     }
 
     private func getMenuView(_ scaleFactor: Double, _ calcWidth: Double) -> some View {
-        Menu("\u{25ef}") {
+        Button(action: {
+             showingOptions = true
+        }) {
+            Text("\u{25ef}")
+                .frame(width: calcWidth / 6, height: 55)
+                .contentShape(Rectangle())
+        }
+        .confirmationDialog("Select", isPresented: $showingOptions, titleVisibility: .visible) {
             Button("Reset") {
                 rcl57.clearAll()
                 change.updateDisplayString()
             }
-            Toggle("Turbo", isOn: $isTurboMode)
-                .onChange(of: isTurboMode) { _ in
-                    if isTurboMode {
-                        rcl57.setSpeedup(speedup: 1000)
-                    } else {
-                        rcl57.setSpeedup(speedup: 2)
-                    }
-                    setOption(option: RCL57_SHORT_PAUSE_FLAG, value: isTurboMode)
-                    setOption(option: RCL57_FASTER_TRACE_FLAG, value: isTurboMode)
-                    setOption(option: RCL57_QUICK_STOP_FLAG, value: isTurboMode)
-                    setOption(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isTurboMode)
-                    setOption(option: RCL57_HP_LRN_MODE_FLAG, value: isTurboMode)
-                    setOption(option: RCL57_ALPHA_LRN_MODE_FLAG, value: isTurboMode)
+            Button(action: {
+                isTurboMode.toggle()
+                rcl57.setCalcMode(mode: isTurboMode ? .turbo : .classic)
+                change.updateDisplayString()
+            }) {
+                HStack {
+                    Text(isTurboMode ? "Turbo Mode" : "Classic Mode")
+                    Image(systemName: "checkmark")
                 }
+            }
         }
-        .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-        .foregroundColor(Color.white)
     }
 
     private func getDisplayHeight(displayHeight: Double) -> Double {
@@ -85,9 +78,15 @@ struct CalcView: View {
 
                     Spacer()
 
-                    // Menu button.
-                    getMenuView(scaleFactor, calcWidth)
-                        .frame(width: calcWidth * 1 / 6 , height: 55)
+                    Button(action: {
+                        withAnimation {
+                            change.showBack.toggle()
+                        }
+                    }) {
+                        Text("\u{25ef}")
+                            .frame(width: calcWidth / 6, height: 55)
+                            .contentShape(Rectangle())
+                    }
 
                     Spacer()
 
@@ -129,13 +128,21 @@ struct CalcView: View {
                             .offset(x: 0, y: -(displayHeight / 4))
                             .background(logBackgroundColor)
                             .environmentObject(change)
+                    } else if rcl57.getLoggedCount() == 0 {
+                        ZStack {
+                            Text("Log is empty")
+                        }
+                        .frame(width: CGFloat(calcWidth),
+                               height: displayHeight / 2)
+                        .background(ivory)
+                        .foregroundColor(Color.black)
+                        .offset(x: 0, y: -(displayHeight / 4))
                     } else {
                         LogView(rcl57: rcl57)
-                            .background(Color(red: 1.0, green: 1.0, blue: 0.93))
                             .frame(width: CGFloat(calcWidth),
                                    height: displayHeight / 2)
+                            .background(ivory)
                             .offset(x: 0, y: -(displayHeight / 4))
-                            .background(Color(red: 1.0, green: 1.0, blue: 0.93))
                             .environmentObject(change)
                     }
 
@@ -148,7 +155,6 @@ struct CalcView: View {
                     .offset(x: 0, y: (displayHeight / 2 - getDisplayHeight(displayHeight: displayHeight)/2))
                 }
                 .frame(width: calcWidth, height: displayHeight)
-                .zIndex(-1)
 
                 // Keyboard.
                 KeyboardView(rcl57: rcl57)

@@ -18,6 +18,7 @@ final class Change: ObservableObject {
     @Published var isMiniViewExpanded: Bool
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
+    @Published var showBack: Bool
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -30,6 +31,7 @@ final class Change: ObservableObject {
         self.isFullProgram = false
         self.isMiniViewExpanded = false
         self.leftTransition = false
+        self.showBack = false
         self.logTimestamp = rcl57.getLogTimestamp()
     }
 
@@ -78,12 +80,52 @@ final class Change: ObservableObject {
     }
 }
 
+private struct FlipView<FrontView: View, BackView: View>: View {
+
+    let frontView: FrontView
+    let backView: BackView
+
+    @EnvironmentObject private var change: Change
+
+    var body: some View {
+        ZStack() {
+            Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
+            frontView
+                .modifier(FlipOpacity(percentage: change.showBack ? 0 : 1))
+                .rotation3DEffect(Angle.degrees(change.showBack ? 180 : 360), axis: (0,1,0))
+            backView
+                .modifier(FlipOpacity(percentage: change.showBack ? 1 : 0))
+                .rotation3DEffect(Angle.degrees(change.showBack ? 0 : 180), axis: (0,1,0))
+                .onTapGesture {
+                    withAnimation {
+                        change.showBack.toggle()
+                    }
+                }
+        }
+    }
+}
+
+private struct FlipOpacity: AnimatableModifier {
+   var percentage: CGFloat = 0
+
+   var animatableData: CGFloat {
+      get { percentage }
+      set { percentage = newValue }
+   }
+
+   func body(content: Content) -> some View {
+      content
+           .opacity(Double(percentage.rounded()))
+   }
+}
+
 struct MainView: View {
     private let rcl57: RCL57
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
     @StateObject private var change: Change
+    @State var showBack = false
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -98,26 +140,33 @@ struct MainView: View {
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
+        let text = "RCL-57 alpha 1.0\n\n"
+                    + "Please, send feedback to:\nrebooted59@gmail.com\n\n"
+                    + "Coming up:\n- Help\n- Classic Mode"
+        let front = CalcView(rcl57: rcl57)
+        let back = Text(text)
+            .frame(width: geometry.size.width,
+                   height: geometry.size.height,
+                   alignment: .center)
+            .background(.black)
+            .foregroundColor(.yellow)
+
         return ZStack {
             ZStack {
                 if !change.isFullLog && !change.isFullProgram {
-                    CalcView(rcl57: rcl57)
+                    FlipView(frontView: front, backView: back)
                         .environmentObject(change)
                         .transition(.move(edge: change.leftTransition ? .trailing : .leading))
-                }
-
-                if change.isFullProgram {
-                    FullProgramView(rcl57: rcl57)
-                        .environmentObject(change)
-                        .transition(.move(edge: .leading))
-                        .zIndex(1)
                 }
 
                 if change.isFullLog {
                     FullLogView(rcl57: rcl57)
                         .environmentObject(change)
                         .transition(.move(edge: .trailing))
-                        .zIndex(1)
+                } else if change.isFullProgram {
+                    FullProgramView(rcl57: rcl57)
+                        .environmentObject(change)
+                        .transition(.move(edge: .leading))
                 }
             }
         }
