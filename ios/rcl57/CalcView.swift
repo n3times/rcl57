@@ -23,7 +23,7 @@ struct CalcView: View {
              showingOptions = true
         }) {
             Text("\u{25ef}")
-                .frame(width: calcWidth / 6, height: 55)
+                .frame(width: calcWidth / 6, height: Style.headerHeight)
                 .contentShape(Rectangle())
         }
         .confirmationDialog("Select", isPresented: $showingOptions, titleVisibility: .visible) {
@@ -51,16 +51,12 @@ struct CalcView: View {
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
-        let standardCalcWidth = 375.0
-        let standardDisplayHeight = 160.0
-
         let calcWidth = geometry.size.width
-        let scaleFactor = calcWidth / standardCalcWidth
-        let displayHeight = standardDisplayHeight * scaleFactor
-        let logBackgroundColor = Color(red: 32.0/255, green: 32.0/255, blue: 36.0/255)
+        let displayHeight = 6 * Style.lineHeight
+        let logBackgroundColor = Style.blackish
 
         return ZStack {
-            Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
+            Style.blackish.edgesIgnoringSafeArea(.all)
             VStack(spacing: 0) {
                 // Menu bar.
                 HStack(spacing: 0) {
@@ -72,7 +68,7 @@ struct CalcView: View {
                         }
                     }) {
                         Text("\u{25c1}")
-                            .frame(width: calcWidth / 6, height: 55)
+                            .frame(width: calcWidth / 6, height: Style.headerHeight)
                             .contentShape(Rectangle())
                     }
 
@@ -84,7 +80,7 @@ struct CalcView: View {
                         }
                     }) {
                         Text("\u{25ef}")
-                            .frame(width: calcWidth / 6, height: 55)
+                            .frame(width: calcWidth / 6, height: Style.headerHeight)
                             .contentShape(Rectangle())
                     }
 
@@ -97,7 +93,7 @@ struct CalcView: View {
                         }
                     }) {
                         Text(change.isMiniViewExpanded ? "\u{25b3}" : "\u{25bd}")
-                            .frame(width: calcWidth / 6, height: 55)
+                            .frame(width: calcWidth / 6, height: Style.headerHeight)
                             .contentShape(Rectangle())
                     }
 
@@ -111,13 +107,13 @@ struct CalcView: View {
                         }
                     }) {
                         Text("\u{25b7}")
-                            .frame(width: calcWidth / 6, height: 55)
+                            .frame(width: calcWidth / 6, height: Style.headerHeight)
                             .contentShape(Rectangle())
                     }
                 }
-                .font(Font.system(size: 20, weight: .regular, design: .monospaced))
-                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-                .foregroundColor(Color.white)
+                .font(Style.directionsFont)
+                .background(Style.blackish)
+                .foregroundColor(Style.ivory)
 
                 ZStack {
                     // Mini view.
@@ -134,14 +130,14 @@ struct CalcView: View {
                         }
                         .frame(width: CGFloat(calcWidth),
                                height: displayHeight / 2)
-                        .background(ivory)
-                        .foregroundColor(Color.black)
+                        .background(Style.ivory)
+                        .foregroundColor(Style.blackish)
                         .offset(x: 0, y: -(displayHeight / 4))
                     } else {
                         LogView(rcl57: rcl57)
                             .frame(width: CGFloat(calcWidth),
                                    height: displayHeight / 2)
-                            .background(ivory)
+                            .background(Style.ivory)
                             .offset(x: 0, y: -(displayHeight / 4))
                             .environmentObject(change)
                     }

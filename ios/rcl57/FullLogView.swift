@@ -24,29 +24,29 @@ struct FullLogView: View {
                         }
                     }) {
                         Text("\u{25c1}")
-                            .frame(width: calcWidth / 6, height: 55)
+                            .frame(width: calcWidth / 6, height: Style.headerHeight)
+                            .font(Style.directionsFont)
                             .contentShape(Rectangle())
                     }
                     Text("Log")
-                        .frame(width: calcWidth * 2 / 3, height: 55)
-                        .font(Font.system(size: 20, weight: .regular))
+                        .frame(width: calcWidth * 2 / 3, height: Style.headerHeight)
+                        .font(Style.titleFont)
                     Spacer()
-                        .frame(width: calcWidth / 6, height: 55)
+                        .frame(width: calcWidth / 6, height: Style.headerHeight)
                 }
-                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-                .foregroundColor(Color.white)
-                .font(Font.system(size: 20, weight: .regular, design: .monospaced))
+                .background(Style.blackish)
+                .foregroundColor(Style.ivory)
 
                 if rcl57.getLoggedCount() == 0 {
                     Text("Log is empty")
                         .frame(width: geometry.size.width,
-                               height: geometry.size.height - 55 - 45,
+                               height: geometry.size.height - Style.headerHeight - Style.footerHeight,
                                alignment: .center)
-                        .background(ivory)
-                        .foregroundColor(Color.black)
+                        .background(Style.ivory)
+                        .foregroundColor(Style.blackish)
                 } else {
                     LogView(rcl57: rcl57)
-                        .background(ivory)
+                        .background(Style.ivory)
                         .environmentObject(change)
                 }
 
@@ -55,7 +55,8 @@ struct FullLogView: View {
                     Button("Clear") {  // Left arrow.
                         isPresentingConfirm = true
                     }
-                    .frame(width: calcWidth / 6, height: 45)
+                    .font(Style.titleFont)
+                    .frame(width: calcWidth / 6, height: Style.footerHeight)
                     .disabled(rcl57.getLoggedCount() == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
@@ -65,9 +66,8 @@ struct FullLogView: View {
                      }
                     Spacer()
                 }
-                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-                .foregroundColor(Color.white)
-                .font(.title2)
+                .background(Style.blackish)
+                .foregroundColor(Style.ivory)
             }
         }
     }

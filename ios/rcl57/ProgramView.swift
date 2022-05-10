@@ -26,10 +26,10 @@ private struct Line: Identifiable {
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
 private struct LineView: View {
     private let line: Line
-    private let activeBackgroundColor = ivory
-    private let inactiveBackgroundColor = ivory
-    private let foregroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
-    private let inactiveForegroundColor = Color(red: 0.2, green: 0.2, blue: 0.2)
+    private let activeBackgroundColor = Style.ivory
+    private let inactiveBackgroundColor = Style.ivory
+    private let foregroundColor = Style.blackish
+    private let inactiveForegroundColor = Style.blackish
 
     init(line: Line) {
         self.line = line
@@ -46,7 +46,7 @@ private struct LineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 20)
         }
-        .font(Font.system(size:20, weight:.semibold, design: .monospaced))
+        .font(Style.lineFont)
         .listRowBackground(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
@@ -139,7 +139,7 @@ struct ProgramView: View {
                 }
             }
             .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, 27)
+            .environment(\.defaultMinListRowHeight, Style.lineHeight)
         }
     }
 }

@@ -47,7 +47,7 @@ private struct LineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                 .foregroundColor(foregroundColor)
         }
-        .font(Font.system(size:20, weight:.semibold, design: .monospaced))
+        .font(Style.lineFont)
     }
 }
 
@@ -143,7 +143,7 @@ struct LogView: View {
     }
 
     private func getLineView(_ line: Line) -> some View {
-        let backgroundColor = ivory
+        let backgroundColor = Style.ivory
 
         return LineView(line: line)
             .listRowBackground(backgroundColor)
@@ -179,7 +179,7 @@ struct LogView: View {
                 }
             }
             .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, 27)
+            .environment(\.defaultMinListRowHeight, Style.lineHeight)
         }
     }
 }

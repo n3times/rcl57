@@ -89,7 +89,7 @@ private struct FlipView<FrontView: View, BackView: View>: View {
 
     var body: some View {
         ZStack() {
-            Color(red: 16.0/255, green: 16.0/255, blue: 16.0/255).edgesIgnoringSafeArea(.all)
+            Style.blackish.edgesIgnoringSafeArea(.all)
             frontView
                 .modifier(FlipOpacity(percentage: change.showBack ? 0 : 1))
                 .rotation3DEffect(Angle.degrees(change.showBack ? 180 : 360), axis: (0,1,0))
@@ -141,7 +141,7 @@ struct MainView: View {
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
         let text = "RCL-57 alpha 1.0\n\n"
-                    + "Please, send feedback to:\nrebooted59@gmail.com\n\n"
+                    + "Please, send feedback to:\nrcl.ti.59@gmail.com\n\n"
                     + "Coming up:\n- Help\n- Classic Mode"
         let front = CalcView(rcl57: rcl57)
         let back = Text(text)
@@ -149,7 +149,7 @@ struct MainView: View {
                    height: geometry.size.height,
                    alignment: .center)
             .background(.black)
-            .foregroundColor(.yellow)
+            .foregroundColor(Style.ivory)
 
         return ZStack {
             ZStack {
