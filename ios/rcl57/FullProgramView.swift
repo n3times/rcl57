@@ -37,6 +37,11 @@ struct FullProgramView: View {
                 ProgramView(rcl57: rcl57, showPc: false)
                     .background(Style.ivory)
                     .environmentObject(change)
+                    .onTapGesture(count: 2) {
+                        withAnimation {
+                            change.isFullProgram.toggle()
+                        }
+                    }
 
                 HStack(spacing: 0) {
                     Spacer()

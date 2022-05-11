@@ -42,10 +42,12 @@ private struct LineView: View {
             Text(line.numberLogEntry.getMessage())
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
                 .foregroundColor(getColor(entry: line.numberLogEntry))
-            Spacer(minLength: 25)
-            Text(line.opLogEntry.getMessage())
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
-                .foregroundColor(foregroundColor)
+            HStack {
+                Spacer(minLength: 25)
+                Text(line.opLogEntry.getMessage())
+                    .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+                    .foregroundColor(foregroundColor)
+            }
         }
         .font(Style.lineFont)
     }

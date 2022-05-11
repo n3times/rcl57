@@ -124,6 +124,12 @@ struct CalcView: View {
                             .offset(x: 0, y: -(displayHeight / 4))
                             .background(logBackgroundColor)
                             .environmentObject(change)
+                            .onTapGesture(count: 2) {
+                                change.leftTransition = true
+                                withAnimation {
+                                    change.isFullProgram.toggle()
+                                }
+                            }
                     } else if rcl57.getLoggedCount() == 0 {
                         ZStack {
                             Text("Log is empty")
@@ -133,6 +139,12 @@ struct CalcView: View {
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
                         .offset(x: 0, y: -(displayHeight / 4))
+                        .onTapGesture(count: 2) {
+                            change.leftTransition = false
+                            withAnimation {
+                                change.isFullLog.toggle()
+                            }
+                        }
                     } else {
                         LogView(rcl57: rcl57)
                             .frame(width: CGFloat(calcWidth),
@@ -140,6 +152,12 @@ struct CalcView: View {
                             .background(Style.ivory)
                             .offset(x: 0, y: -(displayHeight / 4))
                             .environmentObject(change)
+                            .onTapGesture(count: 2) {
+                                change.leftTransition = false
+                                withAnimation {
+                                    change.isFullLog.toggle()
+                                }
+                            }
                     }
 
                     // Display.
@@ -149,6 +167,11 @@ struct CalcView: View {
                     .frame(width: calcWidth, height: getDisplayHeight(displayHeight: displayHeight))
                     .background(.black)
                     .offset(x: 0, y: (displayHeight / 2 - getDisplayHeight(displayHeight: displayHeight)/2))
+                    .onTapGesture(count: 2) {
+                        withAnimation {
+                            change.isMiniViewExpanded.toggle()
+                        }
+                    }
                 }
                 .frame(width: calcWidth, height: displayHeight)
 

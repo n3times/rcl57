@@ -44,10 +44,20 @@ struct FullLogView: View {
                                alignment: .center)
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
+                        .onTapGesture(count: 2) {
+                            withAnimation {
+                                change.isFullLog.toggle()
+                            }
+                        }
                 } else {
                     LogView(rcl57: rcl57)
                         .background(Style.ivory)
                         .environmentObject(change)
+                        .onTapGesture(count: 2) {
+                            withAnimation {
+                                change.isFullLog.toggle()
+                            }
+                        }
                 }
 
                 HStack(spacing: 0) {

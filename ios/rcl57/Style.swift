@@ -8,9 +8,9 @@ struct Style {
 
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
     static let titleFont = Font.system(size: 22, weight: .medium)
-    static let lineFont = Font.system(size: isIpod ? 16 : 20, weight:.semibold, design: .monospaced)
+    static let lineFont = Font.system(size: isIpod ? 17 : 20, weight:.semibold, design: .monospaced)
 
     static let lineHeight = isIpod ? 22.0 : 27.0
-    static let headerHeight = 55.0
-    static let footerHeight = 45.0
+    static let headerHeight = 44.0
+    static let footerHeight = 44.0
 }
