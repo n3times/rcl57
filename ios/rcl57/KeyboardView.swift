@@ -34,12 +34,12 @@ struct KeyboardView: View {
     private static func getCalculatorKey(standardizedLocation: CGPoint,
                                          factor: Double) -> CGPoint? {
         // Top left corner of top left key ("2nd").
-        let x0 = 0.0
+        let x0 = 5.0 * factor
         let y0 = 10.0 * factor
 
         // Dimensions of each key.
-        let w = 375.0 / 5
-        let h = 497.46 / 8 * factor
+        let w = 365.0 / 5
+        let h = 490 / 8 * factor
 
         let x = Double(standardizedLocation.x) - x0
         let y = Double(standardizedLocation.y) - y0
@@ -124,18 +124,18 @@ struct KeyboardView: View {
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactorV))
-                    .offset(x: -152 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
+                    .offset(x: -141.5 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
                     .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
             }
             if isInv {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactorV))
-                    .offset(x: -77 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
+                    .offset(x: -71 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
                     .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
             }
             TrigIndicator()
                 .frame(width: 10 * scaleFactorH, height: 10 * scaleFactorH)
-                .offset(x: 184 * scaleFactorH,
+                .offset(x: 174 * scaleFactorH,
                         y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactorV))
         }
     }
