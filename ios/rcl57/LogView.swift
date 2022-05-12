@@ -65,7 +65,6 @@ struct LogView: View {
     @EnvironmentObject var change: Change
 
     init(rcl57: RCL57) {
-        Self._printChanges()
         self.rcl57 = rcl57
         self.maxLines = 500
         updateLog()
@@ -153,7 +152,6 @@ struct LogView: View {
     }
 
     var body: some View {
-        Self._printChanges()
         return ScrollViewReader { proxy in
             List(lines) {
                 getLineView($0)

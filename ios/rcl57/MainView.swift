@@ -173,7 +173,6 @@ struct MainView: View {
     }
 
     var body: some View {
-        print(Self._printChanges())
         return GeometryReader { geometry in
             self.getMainView(geometry)
         }

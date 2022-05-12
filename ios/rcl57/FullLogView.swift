@@ -13,7 +13,7 @@ struct FullLogView: View {
 
     var body: some View {
         return GeometryReader { geometry in
-            let calcWidth = geometry.size.width
+            let width = geometry.size.width
             VStack(spacing: 0) {
                 // Menu.
                 HStack(spacing: 0) {
@@ -23,16 +23,16 @@ struct FullLogView: View {
                             change.isFullLog.toggle()
                         }
                     }) {
-                        Text("\u{25c1}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
+                        Text(Style.leftArrow)
+                            .frame(width: width / 6, height: Style.headerHeight)
                             .font(Style.directionsFont)
                             .contentShape(Rectangle())
                     }
                     Text("Log")
-                        .frame(width: calcWidth * 2 / 3, height: Style.headerHeight)
+                        .frame(width: width * 2 / 3, height: Style.headerHeight)
                         .font(Style.titleFont)
                     Spacer()
-                        .frame(width: calcWidth / 6, height: Style.headerHeight)
+                        .frame(width: width / 6, height: Style.headerHeight)
                 }
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
@@ -44,20 +44,10 @@ struct FullLogView: View {
                                alignment: .center)
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
-                        .onTapGesture(count: 2) {
-                            withAnimation {
-                                change.isFullLog.toggle()
-                            }
-                        }
                 } else {
                     LogView(rcl57: rcl57)
                         .background(Style.ivory)
                         .environmentObject(change)
-                        .onTapGesture(count: 2) {
-                            withAnimation {
-                                change.isFullLog.toggle()
-                            }
-                        }
                 }
 
                 HStack(spacing: 0) {
@@ -66,7 +56,7 @@ struct FullLogView: View {
                         isPresentingConfirm = true
                     }
                     .font(Style.titleFont)
-                    .frame(width: calcWidth / 6, height: Style.footerHeight)
+                    .frame(width: width / 6, height: Style.footerHeight)
                     .disabled(rcl57.getLoggedCount() == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {

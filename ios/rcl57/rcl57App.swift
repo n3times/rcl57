@@ -11,7 +11,7 @@ struct rcl57App: App {
         rcl57 = RCL57(filename: stateFilename)
         if rcl57 == nil {
             rcl57 = RCL57()
-            rcl57!.setCalcMode(mode: .turbo)
+            rcl57!.setCalcMode(mode: .rebooted)
         }
     }
 

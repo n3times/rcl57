@@ -17,7 +17,7 @@ struct TrigIndicator: View {
 }
 
 struct KeyboardView: View {
-    private let rcl57: RCL57
+    let rcl57: RCL57
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
@@ -26,10 +26,6 @@ struct KeyboardView: View {
     @State private var trigUnits = TI57_DEG
 
     @EnvironmentObject var change: Change
-
-    init(rcl57: RCL57) {
-        self.rcl57 = rcl57
-    }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint,
                                          factor: Double) -> CGPoint? {
@@ -72,8 +68,8 @@ struct KeyboardView: View {
     private func getTrigOffsetY(units: ti57_trig_t, scaleFactor: Double) -> Double {
         switch (units) {
         case TI57_DEG: return 8.5 * scaleFactor
-        case TI57_RAD: return 70 * scaleFactor
-        case TI57_GRAD: return 131.5 * scaleFactor
+        case TI57_RAD: return 71 * scaleFactor
+        case TI57_GRAD: return 132.5 * scaleFactor
         default: return 0
         }
     }
@@ -82,11 +78,11 @@ struct KeyboardView: View {
         let standardCalcWidth = 375.0
         let standardCalcHeight = 497.46
 
-        let calcWidth =  geometry.size.width
-        let calcHeight = geometry.size.height
+        let width = geometry.size.width
+        let height = geometry.size.height
 
-        let scaleFactorH = calcWidth / standardCalcWidth
-        let scaleFactorV = calcHeight / standardCalcHeight
+        let scaleFactorH = width / standardCalcWidth
+        let scaleFactorV = height / standardCalcHeight
 
         return ZStack {
             Image(imageName)
@@ -134,7 +130,7 @@ struct KeyboardView: View {
                     .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
             }
             TrigIndicator()
-                .frame(width: 10 * scaleFactorH, height: 10 * scaleFactorH)
+                .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                 .offset(x: 174 * scaleFactorH,
                         y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactorV))
         }

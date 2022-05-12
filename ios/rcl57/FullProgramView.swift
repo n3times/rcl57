@@ -9,14 +9,14 @@ struct FullProgramView: View {
 
     var body: some View {
         return GeometryReader { geometry in
-            let calcWidth = geometry.size.width
+            let width = geometry.size.width
             VStack(spacing: 0) {
                 // Menu.
                 HStack(spacing: 0) {
                     Spacer()
-                        .frame(width: calcWidth / 6, height: Style.headerHeight)
+                        .frame(width: width / 6, height: Style.headerHeight)
                     Text("Program")
-                        .frame(width: calcWidth * 2 / 3, height: Style.headerHeight)
+                        .frame(width: width * 2 / 3, height: Style.headerHeight)
                         .font(Style.titleFont)
                     // Right button.
                     Button(action: {
@@ -24,8 +24,8 @@ struct FullProgramView: View {
                             change.isFullProgram.toggle()
                         }
                     }) {
-                        Text("\u{25b7}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
+                        Text(Style.rightArrow)
+                            .frame(width: width / 6, height: Style.headerHeight)
                             .font(Style.directionsFont)
                             .contentShape(Rectangle())
                     }
@@ -37,20 +37,15 @@ struct FullProgramView: View {
                 ProgramView(rcl57: rcl57, showPc: false)
                     .background(Style.ivory)
                     .environmentObject(change)
-                    .onTapGesture(count: 2) {
-                        withAnimation {
-                            change.isFullProgram.toggle()
-                        }
-                    }
 
                 HStack(spacing: 0) {
                     Spacer()
-                        .frame(width: calcWidth / 6, height: Style.footerHeight)
+                        .frame(width: width / 6, height: Style.footerHeight)
                     Button("Clear") {  // Left arrow.
                         isPresentingConfirm = true
                     }
                     .font(Style.titleFont)
-                    .frame(width: calcWidth * 2 / 3, height: Style.footerHeight)
+                    .frame(width: width * 2 / 3, height: Style.footerHeight)
                     .disabled(rcl57.getProgramLastIndex() == -1)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
@@ -60,7 +55,7 @@ struct FullProgramView: View {
                         }
                     }
                     Spacer()
-                        .frame(width: calcWidth / 6, height: Style.footerHeight)
+                        .frame(width: width / 6, height: Style.footerHeight)
                 }
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)

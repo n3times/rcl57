@@ -36,7 +36,6 @@ private struct LineView: View {
     }
 
     var body: some View {
-        Self._printChanges()
         return HStack {
             Spacer(minLength: 10)
             Text(line.index == 99 ? (line.isPc ? "> LRN" : "  LRN")

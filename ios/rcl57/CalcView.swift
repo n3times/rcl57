@@ -1,181 +1,84 @@
 /**
- * The main view. It holds the calculator with its keyboard and display.
+ * The calculator view with its keyboard and display.
  */
 
 import SwiftUI
 
 struct CalcView: View {
-    private let rcl57: RCL57
-
-    @State private var isTurboMode: Bool
-    @State private var showingOptions = false
+    let rcl57: RCL57
 
     @EnvironmentObject private var change: Change
 
-    init(rcl57: RCL57) {
-        self.rcl57 = rcl57
-
-        isTurboMode = rcl57.getCalcMode() == .turbo
+    private func getDisplayHeight() -> Double {
+        return 6 * Style.lineHeight * (change.isMiniViewExpanded ? 0.5 : 1)
     }
 
-    private func getMenuView(_ scaleFactor: Double, _ calcWidth: Double) -> some View {
+    private func getMiniView() -> some View {
+        if rcl57.isLrnMode() {
+            return AnyView(ProgramView(rcl57: rcl57, showPc: true))
+        } else if rcl57.getLoggedCount() == 0 {
+            return AnyView(ZStack {
+                Text("Log is empty")
+            })
+        } else {
+            return AnyView(LogView(rcl57: rcl57))
+        }
+    }
+
+    private func getButtonView(text: String, width: Double, prop: Binding<Bool>) -> some View {
         Button(action: {
-             showingOptions = true
+            change.leftTransition = text == Style.leftArrow
+            withAnimation {
+                prop.wrappedValue.toggle()
+            }
         }) {
-            Text("\u{25ef}")
-                .frame(width: calcWidth / 6, height: Style.headerHeight)
+            Text(text)
+                .frame(width: width, height: Style.headerHeight)
                 .contentShape(Rectangle())
         }
-        .confirmationDialog("Select", isPresented: $showingOptions, titleVisibility: .visible) {
-            Button("Reset") {
-                rcl57.clearAll()
-                change.updateDisplayString()
-            }
-            Button(action: {
-                isTurboMode.toggle()
-                rcl57.setCalcMode(mode: isTurboMode ? .turbo : .classic)
-                change.updateDisplayString()
-            }) {
-                HStack {
-                    Text(isTurboMode ? "Turbo Mode" : "Classic Mode")
-                    Image(systemName: "checkmark")
-                }
-            }
-        }
-    }
-
-    private func getDisplayHeight(displayHeight: Double) -> Double {
-        if !change.isMiniViewExpanded { return displayHeight }
-
-        return displayHeight / 2
     }
 
     private func getView(_ geometry: GeometryProxy) -> some View {
-        let calcWidth = geometry.size.width
-        let displayHeight = 6 * Style.lineHeight
-        let logBackgroundColor = Style.blackish
+        let width = geometry.size.width
+        let miniViewIcon = change.isMiniViewExpanded ? Style.downArrow : Style.upArrow
 
         return ZStack {
             Style.blackish.edgesIgnoringSafeArea(.all)
             VStack(spacing: 0) {
                 // Menu bar.
                 HStack(spacing: 0) {
-                    // Left button.
-                    Button(action: {
-                        change.leftTransition = true
-                        withAnimation {
-                            change.isFullProgram.toggle()
-                        }
-                    }) {
-                        Text("\u{25c1}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
-                            .contentShape(Rectangle())
-                    }
-
+                    getButtonView(text: Style.leftArrow, width: width / 6,
+                                  prop: $change.isFullProgram)
                     Spacer()
-
-                    Button(action: {
-                        withAnimation {
-                            change.showBack.toggle()
-                        }
-                    }) {
-                        Text("\u{25ef}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
-                            .contentShape(Rectangle())
-                    }
-
+                    getButtonView(text: Style.circle, width: width / 6, prop: $change.showBack)
                     Spacer()
-
-                    // Mini view button.
-                    Button(action: {
-                        withAnimation {
-                            change.isMiniViewExpanded.toggle()
-                        }
-                    }) {
-                        Text(change.isMiniViewExpanded ? "\u{25b3}" : "\u{25bd}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
-                            .contentShape(Rectangle())
-                    }
-
+                    getButtonView(text: miniViewIcon, width: width / 6,
+                                  prop: $change.isMiniViewExpanded)
                     Spacer()
-
-                    // Right button.
-                    Button(action: {
-                        change.leftTransition = false
-                        withAnimation {
-                            change.isFullLog.toggle()
-                        }
-                    }) {
-                        Text("\u{25b7}")
-                            .frame(width: calcWidth / 6, height: Style.headerHeight)
-                            .contentShape(Rectangle())
-                    }
+                    getButtonView(text: Style.rightArrow, width: width / 6, prop: $change.isFullLog)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
 
+                // Display + Mini View.
                 ZStack {
-                    // Mini view.
-                    if rcl57.isLrnMode() {
-                        ProgramView(rcl57: rcl57, showPc: true)
-                            .frame(width: CGFloat(calcWidth),
-                                   height: displayHeight / 2)
-                            .offset(x: 0, y: -(displayHeight / 4))
-                            .background(logBackgroundColor)
-                            .environmentObject(change)
-                            .onTapGesture(count: 2) {
-                                change.leftTransition = true
-                                withAnimation {
-                                    change.isFullProgram.toggle()
-                                }
-                            }
-                    } else if rcl57.getLoggedCount() == 0 {
-                        ZStack {
-                            Text("Log is empty")
-                        }
-                        .frame(width: CGFloat(calcWidth),
-                               height: displayHeight / 2)
+                    getMiniView()
+                        .frame(width: CGFloat(width),
+                               height: 3 * Style.lineHeight)
+                        .offset(x: 0, y: -1.5 * Style.lineHeight)
                         .background(Style.ivory)
-                        .foregroundColor(Style.blackish)
-                        .offset(x: 0, y: -(displayHeight / 4))
-                        .onTapGesture(count: 2) {
-                            change.leftTransition = false
-                            withAnimation {
-                                change.isFullLog.toggle()
-                            }
-                        }
-                    } else {
-                        LogView(rcl57: rcl57)
-                            .frame(width: CGFloat(calcWidth),
-                                   height: displayHeight / 2)
-                            .background(Style.ivory)
-                            .offset(x: 0, y: -(displayHeight / 4))
-                            .environmentObject(change)
-                            .onTapGesture(count: 2) {
-                                change.leftTransition = false
-                                withAnimation {
-                                    change.isFullLog.toggle()
-                                }
-                            }
-                    }
 
-                    // Display.
                     DisplayView(change.displayString)
-                        .frame(width: CGFloat(calcWidth * 0.85),
-                               height: CGFloat(displayHeight / 2))
-                    .frame(width: calcWidth, height: getDisplayHeight(displayHeight: displayHeight))
-                    .background(.black)
-                    .offset(x: 0, y: (displayHeight / 2 - getDisplayHeight(displayHeight: displayHeight)/2))
-                    .onTapGesture(count: 2) {
-                        withAnimation {
-                            change.isMiniViewExpanded.toggle()
-                        }
-                    }
+                        .frame(width: CGFloat(width * 0.85),
+                               height: 3 * Style.lineHeight)
+                        .frame(width: width, height: getDisplayHeight())
+                        .background(.black)
+                        .offset(x: 0, y: 3 * Style.lineHeight - getDisplayHeight() / 2)
                 }
-                .frame(width: calcWidth, height: displayHeight)
+                .frame(width: width, height: 6 * Style.lineHeight)
 
-                // Keyboard.
+                // Keyboard View.
                 KeyboardView(rcl57: rcl57)
                     .environmentObject(change)
             }
@@ -186,7 +89,6 @@ struct CalcView: View {
     }
 
     var body: some View {
-        print(Self._printChanges())
         return GeometryReader { geometry in
             self.getView(geometry)
         }

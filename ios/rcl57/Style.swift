@@ -13,4 +13,10 @@ struct Style {
     static let lineHeight = isIpod ? 22.0 : 27.0
     static let headerHeight = 44.0
     static let footerHeight = 44.0
+
+    static let leftArrow = "\u{25c1}"
+    static let rightArrow = "\u{25b7}"
+    static let downArrow = "\u{25b3}"
+    static let upArrow = "\u{25bd}"
+    static let circle = "\u{25ef}"
 }
