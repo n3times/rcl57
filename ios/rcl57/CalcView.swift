@@ -7,15 +7,18 @@ import SwiftUI
 struct CalcView: View {
     let rcl57: RCL57
 
+    private let fullDisplayHeight = 6 * Style.lineHeight
+    private let miniViewHeight = 3 * Style.lineHeight
+
     @EnvironmentObject private var change: Change
 
     private func getDisplayHeight() -> Double {
-        return 6 * Style.lineHeight * (change.isMiniViewExpanded ? 0.5 : 1)
+        return fullDisplayHeight * (change.isMiniViewVisible ? 0.5 : 1)
     }
 
     private func getMiniView() -> some View {
         if rcl57.isLrnMode() {
-            return AnyView(ProgramView(rcl57: rcl57, showPc: true))
+            return AnyView(ProgramView(rcl57: rcl57, isMiniView: true))
         } else if rcl57.getLoggedCount() == 0 {
             return AnyView(ZStack {
                 Text("Log is empty")
@@ -40,7 +43,8 @@ struct CalcView: View {
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let width = geometry.size.width
-        let miniViewIcon = change.isMiniViewExpanded ? Style.downArrow : Style.upArrow
+        let miniViewIcon = change.isMiniViewVisible ? Style.downArrow : Style.upArrow
+        let displayHeight = getDisplayHeight()
 
         return ZStack {
             Style.blackish.edgesIgnoringSafeArea(.all)
@@ -53,7 +57,7 @@ struct CalcView: View {
                     getButtonView(text: Style.circle, width: width / 6, prop: $change.showBack)
                     Spacer()
                     getButtonView(text: miniViewIcon, width: width / 6,
-                                  prop: $change.isMiniViewExpanded)
+                                  prop: $change.isMiniViewVisible)
                     Spacer()
                     getButtonView(text: Style.rightArrow, width: width / 6, prop: $change.isFullLog)
                 }
@@ -65,18 +69,18 @@ struct CalcView: View {
                 ZStack {
                     getMiniView()
                         .frame(width: CGFloat(width),
-                               height: 3 * Style.lineHeight)
-                        .offset(x: 0, y: -1.5 * Style.lineHeight)
+                               height: miniViewHeight)
+                        .offset(x: 0, y: -(fullDisplayHeight - miniViewHeight) / 2)
                         .background(Style.ivory)
 
                     DisplayView(change.displayString)
-                        .frame(width: CGFloat(width * 0.85),
-                               height: 3 * Style.lineHeight)
-                        .frame(width: width, height: getDisplayHeight())
+                        .frame(width: CGFloat(width * 0.85), height: displayHeight)
+                        .frame(width: width, height: displayHeight)
                         .background(.black)
-                        .offset(x: 0, y: 3 * Style.lineHeight - getDisplayHeight() / 2)
+                        .offset(x: 0, y: (fullDisplayHeight - displayHeight) / 2)
                 }
-                .frame(width: width, height: 6 * Style.lineHeight)
+                .frame(width: width, height: fullDisplayHeight)
+                .background(Style.ivory)
 
                 // Keyboard View.
                 KeyboardView(rcl57: rcl57)

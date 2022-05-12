@@ -27,7 +27,7 @@ private struct Line: Identifiable {
 private struct LineView: View {
     private let line: Line
     private let activeBackgroundColor = Style.ivory
-    private let inactiveBackgroundColor = Style.ivory
+    private let inactiveBackgroundColor = Color.gray
     private let foregroundColor = Style.blackish
     private let inactiveForegroundColor = Style.blackish
 
@@ -56,7 +56,7 @@ struct ProgramView: View {
     private let rcl57: RCL57
     @State private var lines : [Line] = []
 
-    private let showPc: Bool
+    private let isMiniView: Bool
 
     @State private var middle: Int
     @State private var pc: Int
@@ -65,10 +65,10 @@ struct ProgramView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: RCL57, showPc: Bool) {
+    init(rcl57: RCL57, isMiniView: Bool) {
         let pc = rcl57.getProgramPc()
         self.rcl57 = rcl57
-        self.showPc = showPc
+        self.isMiniView = isMiniView
         self.pc = pc
         self.isOpEditInLrn = rcl57.isOpEditInLrn()
         self.isHpLrn = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
@@ -96,43 +96,43 @@ struct ProgramView: View {
         if index == -1 {
             return LineView(line: Line(index: 99,
                                        op: "",
-                                       active: index <= last,
-                                       isPc: showPc && c == -1))
+                                       active: isMiniView || index <= last,
+                                       isPc: isMiniView && c == -1))
             .listRowSeparator(.hidden)
         }
         return LineView(line: Line(index: index,
                                    op: rcl57.getProgramOp(index: index, isAlpha: true),
-                                   active: index <= last,
-                                   isPc: showPc && index == c))
+                                   active: isMiniView || index <= last,
+                                   isPc: isMiniView && index == c))
         .listRowSeparator(.hidden)
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach(((self.isHpLrn && showPc) ? -1 : 0)...49, id: \.self) {
+                ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
                     getLineView($0, active: $0 == pc)
                 }
             }
             .onAppear {
-                if showPc {
+                if isMiniView {
                     updateMiddle()
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
             .onChange(of: self.isOpEditInLrn) { _ in
-                if showPc {
+                if isMiniView {
                     proxy.scrollTo(pc, anchor: .bottom)
                 }
             }
             .onReceive(change.$changeCount) { _ in
-                if showPc {
+                if isMiniView {
                     updateMiddle()
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
-            .onReceive(change.$isMiniViewExpanded) { _ in
-                if showPc && change.isMiniViewExpanded {
+            .onReceive(change.$isMiniViewVisible) { _ in
+                if isMiniView && change.isMiniViewVisible {
                     updateMiddle()
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
@@ -145,6 +145,6 @@ struct ProgramView: View {
 
 struct ProgramView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramView(rcl57: RCL57(), showPc: false)
+        ProgramView(rcl57: RCL57(), isMiniView: false)
     }
 }

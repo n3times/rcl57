@@ -173,8 +173,8 @@ struct LogView: View {
             .onReceive(change.$changeCount) { _ in
                 updateLog()
             }
-            .onReceive(change.$isMiniViewExpanded) { _ in
-                if lines.count > 0 && change.isMiniViewExpanded {
+            .onReceive(change.$isMiniViewVisible) { _ in
+                if lines.count > 0 && change.isMiniViewVisible {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }

@@ -34,7 +34,7 @@ struct FullProgramView: View {
                 .foregroundColor(Style.ivory)
 
                 // Program.
-                ProgramView(rcl57: rcl57, showPc: false)
+                ProgramView(rcl57: rcl57, isMiniView: false)
                     .background(Style.ivory)
                     .environmentObject(change)
 

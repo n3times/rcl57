@@ -15,7 +15,7 @@ final class Change: ObservableObject {
     @Published var displayString: String
     @Published var isFullLog: Bool
     @Published var isFullProgram: Bool
-    @Published var isMiniViewExpanded: Bool
+    @Published var isMiniViewVisible: Bool
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
     @Published var showBack: Bool
@@ -29,7 +29,7 @@ final class Change: ObservableObject {
         self.displayString = rcl57.display()
         self.isFullLog = false
         self.isFullProgram = false
-        self.isMiniViewExpanded = false
+        self.isMiniViewVisible = false
         self.leftTransition = false
         self.showBack = false
         self.logTimestamp = rcl57.getLogTimestamp()
