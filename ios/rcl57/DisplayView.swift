@@ -8,7 +8,7 @@ import SwiftUI
 struct DisplayView: View {
     // A string composed of up to 12 non-dot characters, each one optionally followed by a
     // a dot. The string will be right-justified within the display.
-    private var displayString: String
+    var displayString: String
 
     private static let ledColor = Color.red
     private static let maxLedCount = 12
@@ -237,10 +237,6 @@ struct DisplayView: View {
             .scale(boundingRect.width / displayRect.width)
     }
 
-    init(_ displayText: String) {
-        self.displayString = displayText
-    }
-
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
@@ -254,6 +250,6 @@ struct DisplayView: View {
 
 struct DisplayView_Previews: PreviewProvider {
     static var previews: some View {
-        DisplayView("READY")
+        DisplayView(displayString: "READY")
     }
 }

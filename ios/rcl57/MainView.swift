@@ -89,18 +89,12 @@ private struct FlipView<FrontView: View, BackView: View>: View {
 
     var body: some View {
         ZStack() {
-            Style.blackish.edgesIgnoringSafeArea(.all)
             frontView
                 .modifier(FlipOpacity(percentage: change.showBack ? 0 : 1))
                 .rotation3DEffect(Angle.degrees(change.showBack ? 180 : 360), axis: (0,1,0))
             backView
                 .modifier(FlipOpacity(percentage: change.showBack ? 1 : 0))
-                .rotation3DEffect(Angle.degrees(change.showBack ? 0 : 180), axis: (0,1,0))
-                .onTapGesture {
-                    withAnimation {
-                        change.showBack.toggle()
-                    }
-                }
+                .rotation3DEffect(Angle.degrees(change.showBack ? 0.00001 : 180), axis: (0,1,0))
         }
     }
 }
@@ -115,7 +109,7 @@ private struct FlipOpacity: AnimatableModifier {
 
    func body(content: Content) -> some View {
       content
-           .opacity(Double(percentage.rounded()))
+           .opacity(Double(percentage < 0.5 ? 0 : 0.99999))
    }
 }
 
@@ -140,21 +134,14 @@ struct MainView: View {
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
-        let text = "RCL-57 alpha 1.0\n\n"
-                    + "Please, send feedback to:\nrcl.ti.59@gmail.com\n\n"
-                    + "Coming up:\n- Help\n- Classic Mode"
         let front = CalcView(rcl57: rcl57)
-        let back = Text(text)
-            .frame(width: geometry.size.width,
-                   height: geometry.size.height,
-                   alignment: .center)
-            .background(.black)
-            .foregroundColor(Style.ivory)
+        let back2 = SettingsView(rcl57: rcl57)
 
         return ZStack {
             ZStack {
+                ///Style.blackish.edgesIgnoringSafeArea(.all)
                 if !change.isFullLog && !change.isFullProgram {
-                    FlipView(frontView: front, backView: back)
+                    FlipView(frontView: front, backView: back2)
                         .environmentObject(change)
                         .transition(.move(edge: change.leftTransition ? .trailing : .leading))
                 }

@@ -219,23 +219,4 @@ class RCL57 {
     func isOpEditInLrn() -> Bool {
         ti57_is_op_edit_in_lrn(&rcl57.ti57)
     }
-
-    enum CalcMode {
-        case original
-        case rebooted
-    }
-
-    func setCalcMode(mode: CalcMode) {
-        setSpeedup(speedup: mode == .rebooted ? 1000 : 2)
-        setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: mode == .rebooted)
-        setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: mode == .rebooted)
-        setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: mode == .rebooted)
-        setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: mode == .rebooted)
-        setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: mode == .rebooted)
-        setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: mode == .rebooted)
-    }
-
-    func getCalcMode() -> CalcMode {
-        return getSpeedup() == 1000 ? .rebooted : .original
-    }
 }

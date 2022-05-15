@@ -27,7 +27,7 @@ private struct Line: Identifiable {
 private struct LineView: View {
     private let line: Line
     private let activeBackgroundColor = Style.ivory
-    private let inactiveBackgroundColor = Color.gray
+    private let inactiveBackgroundColor = Style.ivory
     private let foregroundColor = Style.blackish
     private let inactiveForegroundColor = Style.blackish
 
@@ -46,7 +46,8 @@ private struct LineView: View {
             Spacer(minLength: 20)
         }
         .font(Style.lineFont)
-        .listRowBackground(line.active ? activeBackgroundColor : inactiveBackgroundColor)
+        .listRowBackground(line.active ? activeBackgroundColor
+                                       : inactiveBackgroundColor)
         .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
     }

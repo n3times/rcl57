@@ -84,6 +84,8 @@ struct KeyboardView: View {
         let scaleFactorH = width / standardCalcWidth
         let scaleFactorV = height / standardCalcHeight
 
+        let hapticStyle = Settings.getHapticStyle()
+
         return ZStack {
             Image(imageName)
                 .resizable()
@@ -100,6 +102,10 @@ struct KeyboardView: View {
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
                                 AudioServicesPlaySystemSound(SystemSoundID(0x450))
+                                if hapticStyle != nil {
+                                    let feedback = UIImpactFeedbackGenerator(style: hapticStyle!)
+                                    feedback.impactOccurred()
+                                }
                                 self.isKeyPressed = true;
                                 burst()
                                 self.rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)

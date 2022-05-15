@@ -14,6 +14,8 @@ struct Style {
     static let headerHeight = 44.0
     static let footerHeight = 44.0
 
+    static let lineCount = 3.0
+
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"
     static let downArrow = "\u{25b3}"

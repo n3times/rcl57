@@ -11,8 +11,10 @@ struct rcl57App: App {
         rcl57 = RCL57(filename: stateFilename)
         if rcl57 == nil {
             rcl57 = RCL57()
-            rcl57!.setCalcMode(mode: .rebooted)
         }
+        Settings.setOriginalDisplay(has_original_display: Settings.hasOriginalDisplay(), rcl57: rcl57!)
+        Settings.setOriginalLrn(has_original_lrn: Settings.hasOriginalLrn(), rcl57: rcl57!)
+        Settings.setOriginalSpeed(has_original_speed: Settings.hasOriginalSpeed(), rcl57: rcl57!)
     }
 
     var body: some Scene {

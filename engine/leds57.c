@@ -64,6 +64,7 @@ static void init() {
     LEDS_MAP['='] = 0b00000011000001;
     LEDS_MAP['('] = 0b00001000000100;
     LEDS_MAP[')'] = 0b00100000010000;
+    LEDS_MAP['|'] = 0b00010000001000;
     LEDS_MAP['^'] = 0b10001100010000;  // exponentiation
     LEDS_MAP['v'] = 0b00000110000110;  // square root
     LEDS_MAP['>'] = 0b00100010000001;  // >=

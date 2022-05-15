@@ -20,7 +20,7 @@ static char *PRIMARY_KEYS[] = {
 
 static char *SECONDARY_KEYS[] = {
     "2N2", "IN2", "LOG",  "CT", "CL2",
-    "DMS", "P~R", "SIN", "COS", "TAN",
+    "DMS", "P-R", "SIN", "COS", "TAN",
     "PAU", "INS", "EXC", "PRD",  "PI",
     "NOP", "DEL", "FIX", "INT", "|X|",
     "DSZ",     0,     0,     0, "DEG",

@@ -13,6 +13,8 @@
 		150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */; };
 		150ED8E927B08CC900E01FC6 /* RCL57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* RCL57.swift */; };
 		150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* DisplayView.swift */; };
+		15124F75282F00E200F0208F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F74282F00E200F0208F /* SettingsView.swift */; };
+		15124F7728314DAE00F0208F /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F7628314DAE00F0208F /* Settings.swift */; };
 		151EBA6D28179F87005DD283 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6C28179F87005DD283 /* CalcView.swift */; };
 		151EBA6F28238D62005DD283 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6E28238D62005DD283 /* Style.swift */; };
 		1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F65427F7DA0900DF3BAE /* KeyboardView.swift */; };
@@ -41,6 +43,8 @@
 		150ED8E827B08CC900E01FC6 /* RCL57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCL57.swift; sourceTree = "<group>"; };
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
+		15124F74282F00E200F0208F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		15124F7628314DAE00F0208F /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		151EBA6C28179F87005DD283 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		151EBA6E28238D62005DD283 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		1533F65427F7DA0900DF3BAE /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 				150ED8A327B089EF00E01FC6 /* MainView.swift */,
 				1533F6562801977F00DF3BAE /* ProgramView.swift */,
 				150ED8E827B08CC900E01FC6 /* RCL57.swift */,
+				15124F7628314DAE00F0208F /* Settings.swift */,
+				15124F74282F00E200F0208F /* SettingsView.swift */,
 				151EBA6E28238D62005DD283 /* Style.swift */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
 				150ED8A527B089F000E01FC6 /* Assets.xcassets */,
@@ -235,6 +241,7 @@
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
+				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
 				1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */,
@@ -246,6 +253,7 @@
 				1533F6572801977F00DF3BAE /* ProgramView.swift in Sources */,
 				154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */,
 				158D172527E2A5E6003BC323 /* LogView.swift in Sources */,
+				15124F75282F00E200F0208F /* SettingsView.swift in Sources */,
 				151EBA6F28238D62005DD283 /* Style.swift in Sources */,
 				154B7A7C27BC65C900AE38F1 /* state57.c in Sources */,
 			);

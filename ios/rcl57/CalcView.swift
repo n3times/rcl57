@@ -7,13 +7,13 @@ import SwiftUI
 struct CalcView: View {
     let rcl57: RCL57
 
-    private let fullDisplayHeight = 6 * Style.lineHeight
-    private let miniViewHeight = 3 * Style.lineHeight
+    private let fullDisplayHeight = (3 + Style.lineCount) * Style.lineHeight
+    private let miniViewHeight = Style.lineCount * Style.lineHeight
 
     @EnvironmentObject private var change: Change
 
     private func getDisplayHeight() -> Double {
-        return fullDisplayHeight * (change.isMiniViewVisible ? 0.5 : 1)
+        return fullDisplayHeight - (change.isMiniViewVisible ? miniViewHeight : 0)
     }
 
     private func getMiniView() -> some View {
@@ -72,8 +72,10 @@ struct CalcView: View {
                                height: miniViewHeight)
                         .offset(x: 0, y: -(fullDisplayHeight - miniViewHeight) / 2)
                         .background(Style.ivory)
+                        .foregroundColor(Style.blackish)
 
-                    DisplayView(change.displayString)
+
+                    DisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
