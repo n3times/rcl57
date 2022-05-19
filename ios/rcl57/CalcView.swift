@@ -12,6 +12,8 @@ struct CalcView: View {
 
     @EnvironmentObject private var change: Change
 
+    @Binding var showBack: Bool
+
     private func getDisplayHeight() -> Double {
         return fullDisplayHeight - (change.isMiniViewVisible ? miniViewHeight : 0)
     }
@@ -54,7 +56,7 @@ struct CalcView: View {
                     getButtonView(text: Style.leftArrow, width: width / 6,
                                   prop: $change.isFullProgram)
                     Spacer()
-                    getButtonView(text: Style.circle, width: width / 6, prop: $change.showBack)
+                    getButtonView(text: Style.circle, width: width / 6, prop: $showBack)
                     Spacer()
                     getButtonView(text: miniViewIcon, width: width / 6,
                                   prop: $change.isMiniViewVisible)
@@ -103,6 +105,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(rcl57: RCL57())
+        CalcView(rcl57: RCL57(), showBack: .constant(false))
     }
 }

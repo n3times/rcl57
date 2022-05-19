@@ -18,7 +18,6 @@ final class Change: ObservableObject {
     @Published var isMiniViewVisible: Bool
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
-    @Published var showBack: Bool
 
     init(rcl57: RCL57) {
         self.rcl57 = rcl57
@@ -31,7 +30,6 @@ final class Change: ObservableObject {
         self.isFullProgram = false
         self.isMiniViewVisible = false
         self.leftTransition = false
-        self.showBack = false
         self.logTimestamp = rcl57.getLogTimestamp()
     }
 
@@ -39,7 +37,7 @@ final class Change: ObservableObject {
         let display = rcl57!.display()
         if display != self.displayString {
             self.displayString = display
-            changeCount += 1
+            forceUpdate()
         }
     }
 
@@ -86,15 +84,16 @@ private struct FlipView<FrontView: View, BackView: View>: View {
     let backView: BackView
 
     @EnvironmentObject private var change: Change
+    @Binding var showBack: Bool
 
     var body: some View {
         ZStack() {
             frontView
-                .modifier(FlipOpacity(percentage: change.showBack ? 0 : 1))
-                .rotation3DEffect(Angle.degrees(change.showBack ? 180 : 360), axis: (0,1,0))
+                .modifier(FlipOpacity(percentage: showBack ? 0 : 1))
+                .rotation3DEffect(Angle.degrees(showBack ? 180 : 360), axis: (0,1,0))
             backView
-                .modifier(FlipOpacity(percentage: change.showBack ? 1 : 0))
-                .rotation3DEffect(Angle.degrees(change.showBack ? 0.00001 : 180), axis: (0,1,0))
+                .modifier(FlipOpacity(percentage: showBack ? 1 : 0))
+                .rotation3DEffect(Angle.degrees(showBack ? 0.00001 : 180), axis: (0,1,0))
         }
     }
 }
@@ -130,18 +129,16 @@ struct MainView: View {
     private func burst(ms: Int32) {
         _ = self.rcl57.advance(ms: ms)
         change.updateDisplayString()
-        change.update()
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
-        let front = CalcView(rcl57: rcl57)
-        let back2 = SettingsView(rcl57: rcl57)
+        let front = CalcView(rcl57: rcl57, showBack: $showBack)
+        let back2 = SettingsView(rcl57: rcl57, showBack: $showBack)
 
         return ZStack {
             ZStack {
-                ///Style.blackish.edgesIgnoringSafeArea(.all)
                 if !change.isFullLog && !change.isFullProgram {
-                    FlipView(frontView: front, backView: back2)
+                    FlipView(frontView: front, backView: back2, showBack: $showBack)
                         .environmentObject(change)
                         .transition(.move(edge: change.leftTransition ? .trailing : .leading))
                 }

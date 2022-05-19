@@ -2,6 +2,7 @@ import UIKit
 struct Settings {
     static let HAS_HAPTIC_KEY = "has_haptic"
     static let HAPTIC_STYLE_KEY = "haptic_style"
+    static let HAS_KEY_CLICK_KEY = "has_key_click"
     static let HAS_ORIGINAL_SPEED_KEY = "has_original_speed"
     static let HAS_ORIGINAL_DISPLAY_KEY = "has_original_display"
     static let HAS_ORIGINAL_LRN_KEY = "has_original_lrn"
@@ -21,6 +22,14 @@ struct Settings {
         }
         UserDefaults.standard.set(true, forKey: HAS_HAPTIC_KEY)
         UserDefaults.standard.set(style!.rawValue, forKey: HAPTIC_STYLE_KEY)
+    }
+
+    static func hasKeyClick() -> Bool {
+        return UserDefaults.standard.bool(forKey: HAS_KEY_CLICK_KEY)
+    }
+
+    static func setHasKeyClick(has_key_click: Bool, rcl57: RCL57) {
+        UserDefaults.standard.set(has_key_click, forKey: HAS_KEY_CLICK_KEY)
     }
 
     static func hasOriginalSpeed() -> Bool {

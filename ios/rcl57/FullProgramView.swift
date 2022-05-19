@@ -51,6 +51,7 @@ struct FullProgramView: View {
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Clear Program", role: .destructive) {
                             rcl57.clearProgram()
+                            change.forceUpdate()
                         }
                     }
                     Spacer()

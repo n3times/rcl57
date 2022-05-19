@@ -31,7 +31,7 @@
       "size" : "40x40"
     },
     {
-      "filename" : "rcl57_icon.png",
+      "filename" : "rcl57_icon_120.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
@@ -87,7 +87,7 @@
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "rcl57_icon(1).png",
+      "filename" : "rcl57_icon_1024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

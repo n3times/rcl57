@@ -1,20 +1,21 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject var change: Change
-
     let rcl57 : RCL57
     static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
     @State private var hapticStyle = Settings.getHapticStyle() == nil ? FEEDBACK_NONE
                                                                       : Settings.getHapticStyle()!
+    @State private var hasKeyClick = Settings.hasKeyClick()
     @State private var hasOriginalSpeed = Settings.hasOriginalSpeed()
     @State private var hasOriginalDisplay = Settings.hasOriginalDisplay()
     @State private var hasOriginalLrn = Settings.hasOriginalLrn()
 
     @State private var isPresentingConfirm = false
     @State private var showingAlert = false
+
+    @Binding var showBack: Bool
 
     private func setFlavor(isOriginal: Bool) {
         Settings.setOriginalLrn(has_original_lrn: isOriginal, rcl57: rcl57)
@@ -34,7 +35,8 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        NavigationView {
+        Self._printChanges()
+        return NavigationView {
             Form {
                 Section("Flavors") {
                     Button(action: { setFlavor(isOriginal: true) }) {
@@ -56,7 +58,7 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Section("Emulator Options") {
+                Section("Customize") {
                     Picker("Speed", selection: $hasOriginalSpeed) {
                         Text("Original").tag(true)
                         Text("Turbo").tag(false)
@@ -70,7 +72,10 @@ struct SettingsView: View {
                         Text("HP Style").tag(false)
                     }
                 }
-                Section {
+                Section("Keyboard Options") {
+                    Toggle(isOn: $hasKeyClick) {
+                        Text("Click Sound")
+                    }
                     Picker("Haptic Feedback", selection: $hapticStyle) {
                         Text("None").tag(SettingsView.FEEDBACK_NONE)
                         Text("Light").tag(UIImpactFeedbackGenerator.FeedbackStyle.light)
@@ -83,7 +88,7 @@ struct SettingsView: View {
                         showingAlert = true
                     }
                     .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("RCL-57 alpha 1.1"), message: Text(aboutText), dismissButton: .default(Text("Dismiss")))
+                        Alert(title: Text("RCL-57 alpha 1.1"), message: Text(aboutText))
                     }
                     Button("Reset") {  // Left arrow.
                         isPresentingConfirm = true
@@ -101,6 +106,9 @@ struct SettingsView: View {
                         Settings.setHapticStyle(style: hapticStyle)
                     }
                 }
+                .onChange(of: hasKeyClick) { _ in
+                    Settings.setHasKeyClick(has_key_click: hasKeyClick, rcl57: rcl57)
+                }
                 .onChange(of: hasOriginalSpeed) { _ in
                     Settings.setOriginalSpeed(has_original_speed: hasOriginalSpeed, rcl57: rcl57)
                 }
@@ -116,7 +124,7 @@ struct SettingsView: View {
                 trailing:
                     Button("Done") {
                         withAnimation {
-                            change.showBack.toggle()
+                            showBack.toggle()
                         }
                     }
             )
@@ -126,6 +134,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(rcl57: RCL57())
+        SettingsView(rcl57: RCL57(), showBack: .constant(false))
     }
 }

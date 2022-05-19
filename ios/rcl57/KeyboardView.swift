@@ -21,11 +21,16 @@ struct KeyboardView: View {
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
-    @State private var is2nd = false
-    @State private var isInv = false
-    @State private var trigUnits = TI57_DEG
+    @State private var is2nd: Bool
+    @State private var isInv: Bool
 
     @EnvironmentObject var change: Change
+
+    init(rcl57: RCL57) {
+        self.rcl57 = rcl57
+        self.is2nd = rcl57.is2nd()
+        self.isInv = rcl57.isInv()
+    }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint,
                                          factor: Double) -> CGPoint? {
@@ -57,14 +62,6 @@ struct KeyboardView: View {
         }
     }
 
-    private func burst() {
-        _ = self.rcl57.advance(ms: 20)
-        self.is2nd = self.rcl57.is2nd()
-        self.isInv = self.rcl57.isInv()
-        self.trigUnits = self.rcl57.getTrigUnits()
-        self.change.update()
-    }
-
     private func getTrigOffsetY(units: ti57_trig_t, scaleFactor: Double) -> Double {
         switch (units) {
         case TI57_DEG: return 8.5 * scaleFactor
@@ -85,6 +82,7 @@ struct KeyboardView: View {
         let scaleFactorV = height / standardCalcHeight
 
         let hapticStyle = Settings.getHapticStyle()
+        let hasKeyClick = Settings.hasKeyClick()
 
         return ZStack {
             Image(imageName)
@@ -93,7 +91,7 @@ struct KeyboardView: View {
                     // Handle key presses as soon as the user touches the screen.
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged {
-                            if self.isKeyPressed { return }
+                            if isKeyPressed { return }
                             let standardizedLocation =
                                 CGPoint(x: $0.location.x / CGFloat(scaleFactorH),
                                         y: $0.location.y / CGFloat(scaleFactorH))
@@ -101,25 +99,24 @@ struct KeyboardView: View {
                                 standardizedLocation: standardizedLocation,
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
-                                AudioServicesPlaySystemSound(SystemSoundID(0x450))
+                                if hasKeyClick {
+                                    AudioServicesPlaySystemSound(SystemSoundID(0x450))
+                                }
                                 if hapticStyle != nil {
                                     let feedback = UIImpactFeedbackGenerator(style: hapticStyle!)
                                     feedback.impactOccurred()
                                 }
-                                self.isKeyPressed = true;
-                                burst()
-                                self.rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
-                                burst()
-                                self.change.update()
+                                isKeyPressed = true;
+                                rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
                             }
                         }
                         .onEnded { _ in
-                            if self.isKeyPressed {
-                                self.isKeyPressed = false
-                                burst()
-                                self.rcl57.keyRelease()
-                                burst()
-                                self.change.update()
+                            if isKeyPressed {
+                                isKeyPressed = false
+                                is2nd = rcl57.is2nd()
+                                isInv = rcl57.isInv()
+                                rcl57.keyRelease()
+                                change.update()
                             }
                         }
                 )
@@ -140,11 +137,15 @@ struct KeyboardView: View {
                 .offset(x: 174 * scaleFactorH,
                         y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactorV))
         }
+        .onAppear() {
+            is2nd = rcl57.is2nd()
+            isInv = rcl57.isInv()
+        }
     }
 
     var body: some View {
         GeometryReader { geometry in
-            self.getView(geometry)
+            getView(geometry)
         }
     }
 }

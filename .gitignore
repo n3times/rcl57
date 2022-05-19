@@ -1,5 +1,6 @@
 a.out
 
 # Xcode
+xcshareddata/
 xcuserdata/
 .DS_Store

@@ -1,4 +1,5 @@
 #include "state57.h"
+#include "utils57.h"
 
 #include <assert.h>
 #include <string.h>
@@ -279,6 +280,19 @@ int ti57_get_program_last_index(ti57_t *ti57)
 
 void ti57_clear_program(ti57_t *ti57)
 {
+    if (ti57_get_mode(ti57) == TI57_LRN) {
+        if (ti57_is_2nd(ti57)) {
+            ti57_key_press(ti57, 1, 1);
+            utils57_burst_until_idle(ti57);
+            ti57_key_release(ti57);
+            utils57_burst_until_idle(ti57);
+        }
+        ti57_key_press(ti57, 2, 1);
+        utils57_burst_until_idle(ti57);
+        ti57_key_release(ti57);
+        utils57_burst_until_idle(ti57);
+    }
+
     // Clear steps.
     for (int i = 0; i <= 5; i++) {
         memset(ti57->Y[i], 0, sizeof(ti57_reg_t));
@@ -291,4 +305,8 @@ void ti57_clear_program(ti57_t *ti57)
     // Set pc to 0.
     memset(&ti57->X[5][15], 0, sizeof(unsigned char));
     memset(&ti57->X[5][14], 0, sizeof(unsigned char));
+
+    if (ti57_is_op_edit_in_lrn(ti57)) {
+        ti57->C[14] &= 0xe;
+    }
 }
