@@ -1,5 +1,59 @@
 import SwiftUI
 
+struct FlavorsView: View {
+    let rcl57: RCL57
+
+    @Binding var flavor: Flavor
+    @Binding var showBack: Bool
+
+    private func setFlavor(flavor: Flavor) {
+        Settings.setFlavor(flavor: flavor, rcl57: rcl57)
+    }
+
+    var body: some View {
+        Form {
+            Picker("Choose Flavor", selection: $flavor) {
+                ForEach(Flavor.allCases) { flavor in
+                    Text(flavor.rawValue)
+                        .tag(flavor)
+                }
+            }.pickerStyle(.inline)
+            Section(flavor.rawValue + " Ingredients") {
+                HStack {
+                    Text("Speed")
+                    Spacer()
+                    Text(flavor == .classic ? "Original" : "1000x")
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text("Display")
+                    Spacer()
+                    Text(flavor == .classic || flavor == .turbo ? "Original" : "Alphanumeric")
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text("LRN Mode")
+                    Spacer()
+                    Text(flavor != .rebooted ? "Original" : "HP Style")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .navigationTitle("Flavors")
+        .navigationBarItems(
+            trailing:
+                Button("Exit") {
+                    withAnimation {
+                        showBack.toggle()
+                    }
+                }
+        )
+        .onChange(of: flavor) { _ in
+            setFlavor(flavor: flavor)
+        }
+    }
+}
+
 struct SettingsView: View {
     let rcl57 : RCL57
     static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
@@ -8,71 +62,26 @@ struct SettingsView: View {
     @State private var hapticStyle = Settings.getHapticStyle() == nil ? FEEDBACK_NONE
                                                                       : Settings.getHapticStyle()!
     @State private var hasKeyClick = Settings.hasKeyClick()
-    @State private var hasOriginalSpeed = Settings.hasOriginalSpeed()
-    @State private var hasOriginalDisplay = Settings.hasOriginalDisplay()
-    @State private var hasOriginalLrn = Settings.hasOriginalLrn()
+
+    @State private var flavor = Settings.getFlavor()
 
     @State private var isPresentingConfirm = false
     @State private var showingAlert = false
 
     @Binding var showBack: Bool
 
-    private func setFlavor(isOriginal: Bool) {
-        Settings.setOriginalLrn(has_original_lrn: isOriginal, rcl57: rcl57)
-        Settings.setOriginalDisplay(has_original_display: isOriginal, rcl57: rcl57)
-        Settings.setOriginalSpeed(has_original_speed: isOriginal, rcl57: rcl57)
-        hasOriginalSpeed = Settings.hasOriginalSpeed()
-        hasOriginalLrn = Settings.hasOriginalLrn()
-        hasOriginalDisplay = Settings.hasOriginalDisplay()
-    }
-
-    private func isOriginalFlavor() -> Bool {
-        return hasOriginalSpeed && hasOriginalLrn && hasOriginalDisplay
-    }
-
-    private func isRebootedFlavor() -> Bool {
-        return !hasOriginalSpeed && !hasOriginalLrn && !hasOriginalDisplay
-    }
-
     var body: some View {
-        Self._printChanges()
         return NavigationView {
             Form {
-                Section("Flavors") {
-                    Button(action: { setFlavor(isOriginal: true) }) {
+                Section("Options") {
+                    NavigationLink(destination: FlavorsView(rcl57: rcl57, flavor: $flavor, showBack: $showBack)) {
                         HStack {
-                            Text("Original")
-                            if isOriginalFlavor() {
-                                Spacer()
-                                Image(systemName: "checkmark")
-                            }
+                            Text("Flavor")
+                            Spacer()
+                            Text(flavor.rawValue)
+                                .foregroundStyle(.secondary)
                         }
                     }
-                    Button(action: { setFlavor(isOriginal: false) }) {
-                        HStack {
-                            Text("Rebooted")
-                            if isRebootedFlavor() {
-                                Spacer()
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                }
-                Section("Customize") {
-                    Picker("Speed", selection: $hasOriginalSpeed) {
-                        Text("Original").tag(true)
-                        Text("Turbo").tag(false)
-                    }
-                    Picker("Display", selection: $hasOriginalDisplay) {
-                        Text("Original").tag(true)
-                        Text("Alphanumeric").tag(false)
-                    }
-                    Picker("LRN Mode", selection: $hasOriginalLrn) {
-                        Text("Original").tag(true)
-                        Text("HP Style").tag(false)
-                    }
-                }
-                Section("Keyboard Options") {
                     Toggle(isOn: $hasKeyClick) {
                         Text("Click Sound")
                     }
@@ -88,9 +97,9 @@ struct SettingsView: View {
                         showingAlert = true
                     }
                     .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("RCL-57 alpha 1.1"), message: Text(aboutText))
+                        Alert(title: Text("RCL-57 alpha 1.2"), message: Text(aboutText))
                     }
-                    Button("Reset") {  // Left arrow.
+                    Button("Reset") {
                         isPresentingConfirm = true
                     }
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
@@ -109,20 +118,11 @@ struct SettingsView: View {
                 .onChange(of: hasKeyClick) { _ in
                     Settings.setHasKeyClick(has_key_click: hasKeyClick, rcl57: rcl57)
                 }
-                .onChange(of: hasOriginalSpeed) { _ in
-                    Settings.setOriginalSpeed(has_original_speed: hasOriginalSpeed, rcl57: rcl57)
-                }
-                .onChange(of: hasOriginalDisplay) { _ in
-                    Settings.setOriginalDisplay(has_original_display: hasOriginalDisplay, rcl57: rcl57)
-                }
-                .onChange(of: hasOriginalLrn) { _ in
-                    Settings.setOriginalLrn(has_original_lrn: hasOriginalLrn, rcl57: rcl57)
-                }
             }
             .navigationTitle("Settings")
             .navigationBarItems(
                 trailing:
-                    Button("Done") {
+                    Button("Exit") {
                         withAnimation {
                             showBack.toggle()
                         }

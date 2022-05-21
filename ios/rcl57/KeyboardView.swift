@@ -81,9 +81,6 @@ struct KeyboardView: View {
         let scaleFactorH = width / standardCalcWidth
         let scaleFactorV = height / standardCalcHeight
 
-        let hapticStyle = Settings.getHapticStyle()
-        let hasKeyClick = Settings.hasKeyClick()
-
         return ZStack {
             Image(imageName)
                 .resizable()
@@ -99,11 +96,12 @@ struct KeyboardView: View {
                                 standardizedLocation: standardizedLocation,
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
-                                if hasKeyClick {
+                                if Settings.hasKeyClick() {
                                     AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 }
-                                if hapticStyle != nil {
-                                    let feedback = UIImpactFeedbackGenerator(style: hapticStyle!)
+                                if Settings.getHapticStyle() != nil {
+                                    let feedback = UIImpactFeedbackGenerator(
+                                        style: Settings.getHapticStyle()!)
                                     feedback.impactOccurred()
                                 }
                                 isKeyPressed = true;

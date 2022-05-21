@@ -12,9 +12,7 @@ struct rcl57App: App {
         if rcl57 == nil {
             rcl57 = RCL57()
         }
-        Settings.setOriginalDisplay(has_original_display: Settings.hasOriginalDisplay(), rcl57: rcl57!)
-        Settings.setOriginalLrn(has_original_lrn: Settings.hasOriginalLrn(), rcl57: rcl57!)
-        Settings.setOriginalSpeed(has_original_speed: Settings.hasOriginalSpeed(), rcl57: rcl57!)
+        Settings.setFlavor(flavor: Settings.getFlavor(), rcl57: rcl57!)
     }
 
     var body: some Scene {
