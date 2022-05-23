@@ -42,11 +42,16 @@ struct FlavorsView: View {
         .navigationTitle("Flavors")
         .navigationBarItems(
             trailing:
-                Button("Exit") {
+                Button(action: {
                     withAnimation {
                         showBack.toggle()
                     }
+                }) {
+                    Text(Style.circle)
+                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                        .contentShape(Rectangle())
                 }
+                .font(Style.directionsFont)
         )
         .onChange(of: flavor) { _ in
             setFlavor(flavor: flavor)
@@ -62,9 +67,7 @@ struct SettingsView: View {
     @State private var hapticStyle = Settings.getHapticStyle() == nil ? FEEDBACK_NONE
                                                                       : Settings.getHapticStyle()!
     @State private var hasKeyClick = Settings.hasKeyClick()
-
     @State private var flavor = Settings.getFlavor()
-
     @State private var isPresentingConfirm = false
     @State private var showingAlert = false
 
@@ -122,11 +125,16 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarItems(
                 trailing:
-                    Button("Exit") {
+                    Button(action: {
                         withAnimation {
                             showBack.toggle()
                         }
+                    }) {
+                        Text(Style.circle)
+                            .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                            .contentShape(Rectangle())
                     }
+                    .font(Style.directionsFont)
             )
         }
     }

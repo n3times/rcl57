@@ -1,6 +1,6 @@
 import UIKit
 
-enum Flavor: String, Equatable, CaseIterable, Identifiable {
+enum Flavor: String, CaseIterable, Identifiable {
     case classic = "Classic"
     case turbo = "Turbo"
     case alpha = "Alpha"
@@ -10,11 +10,10 @@ enum Flavor: String, Equatable, CaseIterable, Identifiable {
 }
 
 struct Settings {
+    static let FLAVOR_KEY = "flavor_key"
     static let HAS_HAPTIC_KEY = "has_haptic"
     static let HAPTIC_STYLE_KEY = "haptic_style"
     static let HAS_KEY_CLICK_KEY = "has_key_click"
-
-    static let FLAVOR_KEY = "flavor_key"
 
     static private func setOriginalSpeed(has_original_speed: Bool, rcl57: RCL57) {
         rcl57.setSpeedup(speedup: has_original_speed ? 2 : 1000)
@@ -53,11 +52,10 @@ struct Settings {
     }
 
     static func setHapticStyle(style: UIImpactFeedbackGenerator.FeedbackStyle?) {
+        UserDefaults.standard.set(style != nil, forKey: HAS_HAPTIC_KEY)
         if style == nil {
-            UserDefaults.standard.set(false, forKey: HAS_HAPTIC_KEY)
             return
         }
-        UserDefaults.standard.set(true, forKey: HAS_HAPTIC_KEY)
         UserDefaults.standard.set(style!.rawValue, forKey: HAPTIC_STYLE_KEY)
     }
 
