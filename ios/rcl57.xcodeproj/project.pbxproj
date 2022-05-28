@@ -32,6 +32,17 @@
 		159E94D82814BBD400859F10 /* FullProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* FullProgramView.swift */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
+		15F948F7283E060C00706BE5 /* hlp2html.c in Sources */ = {isa = PBXBuildFile; fileRef = 15F948F5283E060C00706BE5 /* hlp2html.c */; };
+		15F948F8283E060C00706BE5 /* help.css in Resources */ = {isa = PBXBuildFile; fileRef = 15F948F6283E060C00706BE5 /* help.css */; };
+		15F948FA283F26B200706BE5 /* Help57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F948F9283F26B200706BE5 /* Help57.swift */; };
+		15F948FD283FACE400706BE5 /* about.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F948FC283FACE400706BE5 /* about.hlp */; };
+		15F9490C283FAD7B00706BE5 /* help.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F948FF283FAD7B00706BE5 /* help.hlp */; };
+		15F94911283FAD7B00706BE5 /* flow.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F94904283FAD7B00706BE5 /* flow.hlp */; };
+		15F94913283FAD7B00706BE5 /* hello.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F94906283FAD7B00706BE5 /* hello.hlp */; };
+		15F94917283FAD7B00706BE5 /* basics.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F9490A283FAD7B00706BE5 /* basics.hlp */; };
+		15F9491928407F2B00706BE5 /* flavors.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F9491828407F2B00706BE5 /* flavors.hlp */; };
+		15F9491B284129D400706BE5 /* math.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F9491A284129D400706BE5 /* math.hlp */; };
+		15F9491D284130A400706BE5 /* registers.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15F9491C284130A400706BE5 /* registers.hlp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +84,21 @@
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
 		15DBBC4B27D6FE0B00CD4131 /* key57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = key57.c; sourceTree = "<group>"; };
+		15F948F1283E060C00706BE5 /* hlp2html.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hlp2html.h; sourceTree = "<group>"; };
+		15F948F2283E060C00706BE5 /* hlp_ops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hlp_ops.h; sourceTree = "<group>"; };
+		15F948F3283E060C00706BE5 /* hlp2html_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hlp2html_internal.h; sourceTree = "<group>"; };
+		15F948F4283E060C00706BE5 /* hlp_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hlp_print.h; sourceTree = "<group>"; };
+		15F948F5283E060C00706BE5 /* hlp2html.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hlp2html.c; sourceTree = "<group>"; };
+		15F948F6283E060C00706BE5 /* help.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = help.css; sourceTree = "<group>"; };
+		15F948F9283F26B200706BE5 /* Help57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help57.swift; sourceTree = "<group>"; };
+		15F948FC283FACE400706BE5 /* about.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = about.hlp; sourceTree = "<group>"; };
+		15F948FF283FAD7B00706BE5 /* help.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = help.hlp; sourceTree = "<group>"; };
+		15F94904283FAD7B00706BE5 /* flow.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flow.hlp; sourceTree = "<group>"; };
+		15F94906283FAD7B00706BE5 /* hello.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.hlp; sourceTree = "<group>"; };
+		15F9490A283FAD7B00706BE5 /* basics.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basics.hlp; sourceTree = "<group>"; };
+		15F9491828407F2B00706BE5 /* flavors.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = flavors.hlp; sourceTree = "<group>"; };
+		15F9491A284129D400706BE5 /* math.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = math.hlp; sourceTree = "<group>"; };
+		15F9491C284130A400706BE5 /* registers.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = registers.hlp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +115,8 @@
 		150ED89527B089EF00E01FC6 = {
 			isa = PBXGroup;
 			children = (
+				15F948FB283FACE400706BE5 /* help */,
+				15F948F0283E060C00706BE5 /* hlp2html */,
 				154B7A7027BC65C900AE38F1 /* engine */,
 				150ED8A027B089EF00E01FC6 /* rcl57 */,
 				150ED89F27B089EF00E01FC6 /* Products */,
@@ -112,6 +140,7 @@
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
 				159E94D72814BBD400859F10 /* FullProgramView.swift */,
 				1533F65427F7DA0900DF3BAE /* KeyboardView.swift */,
+				15F948F9283F26B200706BE5 /* Help57.swift */,
 				158D172427E2A5E6003BC323 /* LogView.swift */,
 				150ED8A327B089EF00E01FC6 /* MainView.swift */,
 				1533F6562801977F00DF3BAE /* ProgramView.swift */,
@@ -161,6 +190,36 @@
 			);
 			name = engine;
 			path = ../engine;
+			sourceTree = "<group>";
+		};
+		15F948F0283E060C00706BE5 /* hlp2html */ = {
+			isa = PBXGroup;
+			children = (
+				15F948F1283E060C00706BE5 /* hlp2html.h */,
+				15F948F2283E060C00706BE5 /* hlp_ops.h */,
+				15F948F3283E060C00706BE5 /* hlp2html_internal.h */,
+				15F948F4283E060C00706BE5 /* hlp_print.h */,
+				15F948F5283E060C00706BE5 /* hlp2html.c */,
+				15F948F6283E060C00706BE5 /* help.css */,
+			);
+			name = hlp2html;
+			path = ../hlp2html;
+			sourceTree = "<group>";
+		};
+		15F948FB283FACE400706BE5 /* help */ = {
+			isa = PBXGroup;
+			children = (
+				15F948FC283FACE400706BE5 /* about.hlp */,
+				15F9490A283FAD7B00706BE5 /* basics.hlp */,
+				15F9491828407F2B00706BE5 /* flavors.hlp */,
+				15F94904283FAD7B00706BE5 /* flow.hlp */,
+				15F94906283FAD7B00706BE5 /* hello.hlp */,
+				15F948FF283FAD7B00706BE5 /* help.hlp */,
+				15F9491A284129D400706BE5 /* math.hlp */,
+				15F9491C284130A400706BE5 /* registers.hlp */,
+			);
+			name = help;
+			path = ../help;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,8 +280,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15F9491D284130A400706BE5 /* registers.hlp in Resources */,
 				150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */,
+				15F94917283FAD7B00706BE5 /* basics.hlp in Resources */,
 				150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */,
+				15F94911283FAD7B00706BE5 /* flow.hlp in Resources */,
+				15F9490C283FAD7B00706BE5 /* help.hlp in Resources */,
+				15F9491928407F2B00706BE5 /* flavors.hlp in Resources */,
+				15F9491B284129D400706BE5 /* math.hlp in Resources */,
+				15F94913283FAD7B00706BE5 /* hello.hlp in Resources */,
+				15F948FD283FACE400706BE5 /* about.hlp in Resources */,
+				15F948F8283E060C00706BE5 /* help.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +306,9 @@
 				15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */,
 				151EBA6D28179F87005DD283 /* CalcView.swift in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
+				15F948FA283F26B200706BE5 /* Help57.swift in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
+				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
 				15124F7728314DAE00F0208F /* Settings.swift in Sources */,

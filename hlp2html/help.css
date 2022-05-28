@@ -1,0 +1,120 @@
+body {
+    -webkit-text-size-adjust: auto;
+    text-size-adjust: auto;
+}
+
+h3,
+h2 {
+  color:#222222;
+  padding-bottom: 2px;
+  font-size: 135%;
+  line-height: 1.3em;
+  border-bottom: 1px solid #bebebe;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+h2 {
+  font-size: 115%;
+}
+
+h1 {
+  color:#222222;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 105%;
+  line-height: 1.3em;
+  xborder-bottom: 1px solid #bebebe;
+  font-family:Arial, Helvetica, sans-serif;
+  background-color:#bebebe;
+}
+
+.bbutton2,
+.wbutton,
+.ybutton,
+.bbutton {
+  border:#000000 2px solid;
+  display:inline-block;
+  font-size:15px;
+  font-weight:bolder;
+  padding-right: 3px;
+  padding-left: 3px;
+  padding-bottom:2px;
+  padding-top:4px;
+  width: 34px;
+  text-align:center;
+  margin:3px;
+}
+.bbutton2,
+.bbutton {
+  background-color:#442211;
+  color:#f2f2f2;
+}
+.bbutton2 {
+  width:42px;
+}
+.ybutton {
+  background-color:#ffd700;
+  color:#000000;
+}
+.wbutton {
+  background-color:#f2f2f2;
+  color:#000000;
+}
+
+.display,
+.display2 {
+  font-family:Courier;
+  font-size:18px;
+  font-weight:bolder;
+  padding:3px 10px;
+  padding-bottom:0px;
+  padding-top:2px;
+  margin:2px 4px;
+  white-space: pre;
+  color:#000000;
+}
+
+.display {
+  border:#000000 2px solid;
+  display:inline-block;
+  text-align:center;
+  background-color:#111111;
+  color:#ff0000;
+}
+
+.number {
+  display:inline-block;
+  color:#000000;
+  font-size:16px;
+  font-weight:bold;
+  padding:0px 0px;
+  margin:2px 5px;
+}
+
+.print1 {
+  display:inline-block;
+  font-size:16px;
+  font-weight:bold;
+  font-family:monospace;
+  padding:0px 10px;
+  width: 210px;
+  text-align:center;
+  white-space:pre;
+  margin:0px 0px;
+  background-color:#FFFACD;
+  color:#555555;
+}
+
+.print2 {
+  display:inline-block;
+  font-size:16px;
+  font-weight:bold;
+  font-family:monospace;
+  padding:0px 0px;
+  text-align:center;
+  white-space:pre;
+  margin:0px 0px;
+  color:#555555;
+}

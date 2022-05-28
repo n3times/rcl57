@@ -1,0 +1,53 @@
+==Inconditional Branching==
+
+As we saw in the '''Hello World''' program, $$$GTO$$$ '''d''' directly branches to $$$Lbl$$$ '''d'''.
+
+==Conditional Branching==
+
+Quite often one would like to go to a given label, if and only if some condition holds. For example, if the display reaches @@10@@, we may want to stop our '''Hello World''' program. This can be implemented as follows:
+
+:$$$Lbl 0$$$
+:$$$x:t 10 x:t$$$
+:$$$+ 1 =$$$
+:$$$Pau$$$
+:$$$INV x=t GTO 0$$$
+:$$$R/S$$$
+
+The second line:
+:$$x:t 10 x:t$$
+looks a little confusing, but it just places $$$10$$$ in a special register '''T''', used for comparisons.
+
+Otherwise, this is very similar to the original program, except that we go to $$$Lbl 0$$$ '''if and only if''' the display (register '''X''') is different from ''10'' (that is the number in register '''T'''):
+:$$INV 2nd x=t GTO 0$$
+Otherwise, in case of equality, we skip this step. Since the next step is $$R/S$$, we stop.
+
+Conditional branching is at the heart of programming because it makes arbitrary logic and therefore arbitrary computation possible. Besides $$2nd x=t$$, there is:
+:$$2nd x>=t$$
+:$$2nd Dsz$$
+
+This last function:
+# Decrements register 0 by 1
+# Then checks whether the value of register 0 is 0.
+If it is zero the next step will be skipped ('''decrement and skip if 0''')
+
+==Subroutines==
+
+One last important flow control operator is $$SBR$$. A subroutine is a sequence of steps that ends with $$INV SBR$$ (Which can also be written as $$$RTN$$$). It is also known as a (parameterless) function.
+
+It can be called from any piece of code. For example, consider:
+
+:$$$Lbl 0$$$
+:$$$SBR 1$$$
+:$$$Pau$$$
+:$$$GTO 0$$$
+:$$$Lbl 1$$$
+:$$$+ 1 =$$$
+:$$$INV SBR$$$
+
+In this case the subroutine starts at:
+:$$2nd Lbl 1$$
+and ends with:
+:$$INV SBR$$
+It is called with:
+:$$SBR 1$$
+which means: '''Go to label 1 and execute the next steps until reaching INV SBR. Then return.''' In the above example, which is functionally equivalent to our original '''Hello World''', a subroutine may be overkill. But, in more complex situations, subroutines allow the programmer to write code in a modular and cleaner way.

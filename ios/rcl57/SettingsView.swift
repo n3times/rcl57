@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 struct FlavorsView: View {
     let rcl57: RCL57
@@ -39,7 +40,7 @@ struct FlavorsView: View {
                 }
             }
         }
-        .navigationTitle("Flavors")
+        .navigationTitle("Flavor")
         .navigationBarItems(
             trailing:
                 Button(action: {
@@ -56,6 +57,103 @@ struct FlavorsView: View {
         .onChange(of: flavor) { _ in
             setFlavor(flavor: flavor)
         }
+    }
+}
+
+struct WebView: UIViewRepresentable {
+    let headerString = "<head><meta name='viewport' content='width=device-width, " +
+        "initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></head>"
+    let htmlString: String
+
+    init(htmlString: String) {
+        self.htmlString = htmlString
+    }
+
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        return webView
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        webView.loadHTMLString(headerString + htmlString, baseURL: Bundle.main.bundleURL)
+    }
+}
+
+struct PageView: View {
+    @Binding var showBack: Bool
+
+    let title: String
+    let hlp: String
+    var url: URL {
+        Bundle.main.url(forResource: hlp, withExtension: "hlp")!
+    }
+
+    var body: some View {
+
+        HStack {
+            WebView(htmlString: Help57.getHTML(url: url))
+        }
+        .navigationBarItems(
+            trailing:
+                Button(action: {
+                    withAnimation {
+                        showBack.toggle()
+                    }
+                }) {
+                    Text(Style.circle)
+                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                        .contentShape(Rectangle())
+                }
+                .font(Style.directionsFont)
+        )
+    }
+}
+
+struct HelpView: View {
+    @Binding var showBack: Bool
+
+    var body: some View {
+        List {
+            NavigationLink(destination: PageView(showBack: $showBack, title: "About", hlp: "about")) {
+                Text("About RCL-57")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Flavors", hlp: "flavors")) {
+                Text("Emulator Flavors")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Basics", hlp: "basics")) {
+                Text("Calculator Basics")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Math", hlp: "math")) {
+                Text("Math Functions")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Registers", hlp: "registers")) {
+                Text("Registers")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Hello World", hlp: "hello")) {
+                Text("Hello World")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Flow Control", hlp: "flow")) {
+                Text("Flow Control")
+            }
+            NavigationLink(destination: PageView(showBack: $showBack, title: "Help Files", hlp: "help")) {
+                Text("Help Files")
+            }
+        }
+        .listStyle(PlainListStyle())
+        .navigationTitle("Help")
+        .navigationBarItems(
+            trailing:
+                Button(action: {
+                    withAnimation {
+                        showBack.toggle()
+                    }
+                }) {
+                    Text(Style.circle)
+                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                        .contentShape(Rectangle())
+                }
+                .font(Style.directionsFont)
+        )
     }
 }
 
@@ -76,6 +174,11 @@ struct SettingsView: View {
     var body: some View {
         return NavigationView {
             Form {
+                NavigationLink(destination: HelpView(showBack: $showBack)) {
+                    HStack {
+                        Text("Help")
+                    }
+                }
                 Section("Options") {
                     NavigationLink(destination: FlavorsView(rcl57: rcl57, flavor: $flavor, showBack: $showBack)) {
                         HStack {
@@ -96,7 +199,7 @@ struct SettingsView: View {
                     }
                 }
                 Section {
-                    Button("About") {
+                    Button("Contact") {
                         showingAlert = true
                     }
                     .alert(isPresented: $showingAlert) {
@@ -104,6 +207,11 @@ struct SettingsView: View {
                     }
                     Button("Reset") {
                         isPresentingConfirm = true
+                    }
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                        Button("Clear Program, Log and Memory", role: .destructive) {
+                            rcl57.clearAll()
+                        }
                     }
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Clear Program, Log and Memory", role: .destructive) {
@@ -122,7 +230,6 @@ struct SettingsView: View {
                     Settings.setHasKeyClick(has_key_click: hasKeyClick, rcl57: rcl57)
                 }
             }
-            .navigationTitle("Settings")
             .navigationBarItems(
                 trailing:
                     Button(action: {

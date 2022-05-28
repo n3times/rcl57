@@ -1,0 +1,62 @@
+This document explains how to write ''help files'' so you can document your own programs.
+
+A help file is a text file where some sequences of characters are used for formatting and allow the user to nicely display:
+* Keys: $$2nd Lbl 0$$
+* The Display: @@        57.  @@
+
+Your typical plain text file is, by defaut, a help file. So if no special mark-up is needed, a plain text file will do. But the additional formatting will make your help files much more enjoyable to read.
+
+''Note:'' This document itself is a help file and uses the formatting that we describe next.
+
+==Basics==
+*''bold'' : \'\'bold\'\' (2 '''single''' quotes) 
+*'''italic''' : \'\'\'italic\'\'\' (3 '''single''' quotes) 
+*$$RCL 7$$ : \$\$RCL 7\$\$
+*@@57@@ : \@\@57\@\@
+
+==Headings and subheadings ==
+
+Headings are marked up by starting a line ('''very first''' character) with ''='' and terminating it with ''='':
+ =This is a heading=
+Subheadings are marked up by starting a line ('''very first''' character) with ''=='' and terminating it with ''=='':
+ ==Headings and sunheadings==
+
+==Indentation==
+
+A line can be indented by starting the line ('''very first''' character) with a special character.
+* For bullet style, use ''*''
+# For numbered style, use ''#''
+: For simply indented style, use '':''
+
+For example, write this:
+ # One
+ # Two
+to get this:
+# One
+# Two
+
+==Keys==
+
+If possible, keys are spelled the same way they are written on the keyboard using ASCII characters (case insensitive).
+For example:
+:$$x=t$$: x = t
+:$$D.MS$$: D.MS
+:$$yx$$: yx
+
+There are a few exceptions:
+:$$x:t$$ x:t
+:$$vx$$ vx
+:$$/$$ /
+:$$*$$ *
+:$$P/R$$ P/R
+:$$pi$$ pi
+:$$x>=t$$ x>=t
+:$$S+$$ S+
+:$$avg$$ avg
+:$$var$$ var
+
+==Alternatives==
+
+For a lighter version of \$\$ and \@\@ triple the character:
+:$$$RCL 7$$$ : \$\$\$RCL 7\$\$\$
+:@@@57@@@ : \@\@\@57\@\@\@

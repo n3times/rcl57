@@ -1,0 +1,23 @@
+==Basics==
+There are 8 user registers (0 to 7).
+The number in the display can be stored in register d with
+:$$STO$$ '''d'''
+and recalled with
+:$$RCL$$ '''d'''
+
+==Arithmetic on Registers==
+$$SUM$$ '''d''' adds the value on the display to register d.
+$$INV SUM$$ '''d''' substracts.
+$$2nd Prd$$ '''d''' multiplies.
+$$INV 2nd Prd$$ '''d''' divides.
+
+==Exchange==
+$$2nd Exc$$ '''d''' exchanges the value on the display with register d.
+
+==Clearing==
+$$INV 2nd C.t$$ resets all the registers.
+
+==Notes==
+The TI-57 uses some of these registers in other contexts:
+* Registers 5 and 6 are shared with the arithmetic stack
+* Register 7 is shared with Register T

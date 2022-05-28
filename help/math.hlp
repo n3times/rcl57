@@ -1,0 +1,50 @@
+==Trigonometry==
+
+Make sure to select the appropriate trigonometric units: $$2nd Deg$$, $$2nd Rad$$ or $$2nd Grd$$.
+
+To compute the standard trigonometric functions, press $$2nd sin$$, $$2nd cos$$ or $$2nd tan$$.
+
+Use the $$INV$$ modifier to compute their inverses.
+
+==Other Functions==
+
+$$lnx$$ computes the natural logarithm.
+$$INV lnx$$ e^x.
+$$2nd log$$ the decimal logarithm.
+$$INV 2nd log$$ 10^x.
+$$2nd Int$$ the integer part.
+$$INV 2nd Int$$ the fractional part.
+
+==Polar/Rectangular Conversions==
+
+''Polar to Rectangular:''
+:'''radius''' $$x:t$$ '''angle''' $$2nd P/R$$.
+The display will show '''y''' and $$x:t$$ '''x'''.
+''Rectangular to Polar:''
+:'''x''' $$x:t$$ '''y''' $$INV 2nd P/R$$.
+The display will show '''angle''' and $$x:t$$ '''radius'''.
+
+==Degrees Conversions==
+
+''Degrees/minutes/seconds to decimal degrees:''
+:$$2nd d.ms$$
+
+''Decimal degrees to degrees/minutes/seconds:''
+:$$INV 2nd d.ms$$
+
+==Statistics==
+
+Before using the Statistics functions, press
+:$$Inv 2nd C.t$$.
+This will reset the registers used by these functions.
+
+Numbers are entered with $$2nd S+$$:
+: $$5 2nd S+$$: @@1@@
+: $$7 2nd S+$$: @@2@@
+: $$12 2nd S+$$: @@3@@
+
+Note that the display shows how many numbers have been entered so far. To compute the average of these numbers:
+: $$2nd avg$$: @@8@@
+And to compute the variance:
+: $$INV var$$: @@8.6666667@@
+

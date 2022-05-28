@@ -1,0 +1,35 @@
+==Hello World==
+
+This is a basic program that iterates through all the integers:
+
+:$$$Lbl 0$$$
+:$$$+ 1 =$$$
+:$$$Pau$$$
+:$$$GTO 0$$$
+
+The first line is just a label that marks a place in the program. Then comes the real computation:
+:$$$+ 1 =$$$
+that is we are adding 1 to whatever number is on the display. The $$$Pause$$$ instruction makes the display pause for 1 second or so, so the user can see it. Finally, the program loops back to the beginning by '''going to''' $$$Lbl 0$$$.
+
+==Program Editing==
+
+To enter the program, first clear the program or reset the emulator so we can start afresh. Then type the following:
+
+:$$LRN$$
+:$$2nd Lbl 0$$
+:$$+ 1 =$$
+:$$2nd Pau$$
+:$$GTO 0$$
+:$$LRN$$
+
+The first $$LRN$$ will place the calculator in ''learning mode''. You will see on the display @@00 00@@. The first 2 digits mean that we are at the beginning of the program, at step ''00'', and the ''00'' means that this first step is blank. As you type, you will see the step number being incremented 1 by 1.
+
+In case of mistake, the program can be edited with $$BST$$ and $$SST$$, to go one step backward or forward, as well as with $$2nd Del$$ and $$2nd Ins$$, to delete or insert a step.
+
+The second $$LRN$$ will place the calculator out of learning mode, back to ''normal mode''.
+
+==Running==
+
+Simply press $$CLR$$ (to clear the display) and then press $$SBR 0$$. You should see the display flash the numbers 1, 2, 3...
+
+This program loops indefinitely. To stop it, press the key $$R/S$$. The program can be resumed by pressing $$R/S$$ again.
