@@ -7,7 +7,7 @@ $$( 1 + 2 ) * 3 =$$ @@9@@
 ==Modifier Keys==
 
 To access secondary functions use the $$2nd$$ key.
-Some of the TI-57 functions have inverses. These can be accessed using the $$INV$$ key.
+Some of the TI-57 functions have inverses. They can be accessed using the $$INV$$ key.
 
 For example, to compute arcsin(0.5), press
 :$$0.5 INV 2nd sin$$.
@@ -19,5 +19,6 @@ Press $$INV EE$$ or $$CLR$$ to go back to regular mode.
 
 ==Fix Notation==
 
-Press $$2nd Fix$$ '''d''' to display d digits after the decimal point: $$2nd pi 2nd fix 2 =$$ @@3.14@@.
+Press $$2nd Fix$$ '''d''' to display d digits after the decimal point:
+:$$2nd pi 2nd fix 2 =$$ @@3.14@@.
 Press $$INV 2nd Fix$$ to go back to regular mode.

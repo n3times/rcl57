@@ -2,7 +2,7 @@ This document explains how to write ''help files'' so you can document your own 
 
 A help file is a text file where some sequences of characters are used for formatting and allow the user to nicely display:
 * Keys: $$2nd Lbl 0$$
-* The Display: @@        57.  @@
+* The Display: @@      57. @@
 
 Your typical plain text file is, by defaut, a help file. So if no special mark-up is needed, a plain text file will do. But the additional formatting will make your help files much more enjoyable to read.
 

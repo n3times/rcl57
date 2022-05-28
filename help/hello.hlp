@@ -22,7 +22,7 @@ To enter the program, first clear the program or reset the emulator so we can st
 :$$GTO 0$$
 :$$LRN$$
 
-The first $$LRN$$ will place the calculator in ''learning mode''. You will see on the display @@00 00@@. The first 2 digits mean that we are at the beginning of the program, at step ''00'', and the ''00'' means that this first step is blank. As you type, you will see the step number being incremented 1 by 1.
+The first $$LRN$$ will place the calculator in ''learning mode''. You will see on the display @@00 00@@. The first 2 digits mean that we are at the beginning of the program, at step ''00'', and the ''00'' on the right means that this first step is blank. As you type, you will see the step number being incremented 1 by 1.
 
 In case of mistake, the program can be edited with $$BST$$ and $$SST$$, to go one step backward or forward, as well as with $$2nd Del$$ and $$2nd Ins$$, to delete or insert a step.
 

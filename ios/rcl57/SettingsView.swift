@@ -112,31 +112,20 @@ struct PageView: View {
 struct HelpView: View {
     @Binding var showBack: Bool
 
+    let hlpPages = [["About", "about", "About RCL-57"],
+                    ["Flavors", "flavors", "Emulator Flavors"],
+                    ["Basics", "basics", "Calculator Basics"],
+                    ["Math", "math", "Math Functions"],
+                    ["Registers", "registers", "Registers"],
+                    ["Hello World", "hello", "Hello World"],
+                    ["Flow Control", "flow", "Flow Control"]]
+
     var body: some View {
         List {
-            NavigationLink(destination: PageView(showBack: $showBack, title: "About", hlp: "about")) {
-                Text("About RCL-57")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Flavors", hlp: "flavors")) {
-                Text("Emulator Flavors")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Basics", hlp: "basics")) {
-                Text("Calculator Basics")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Math", hlp: "math")) {
-                Text("Math Functions")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Registers", hlp: "registers")) {
-                Text("Registers")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Hello World", hlp: "hello")) {
-                Text("Hello World")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Flow Control", hlp: "flow")) {
-                Text("Flow Control")
-            }
-            NavigationLink(destination: PageView(showBack: $showBack, title: "Help Files", hlp: "help")) {
-                Text("Help Files")
+            ForEach(hlpPages, id: \.self) {hlpPage in
+                NavigationLink(destination: PageView(showBack: $showBack, title: hlpPage[0], hlp: hlpPage[1])) {
+                    Text(hlpPage[2])
+                }
             }
         }
         .listStyle(PlainListStyle())
@@ -203,7 +192,7 @@ struct SettingsView: View {
                         showingAlert = true
                     }
                     .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("RCL-57 alpha 1.2"), message: Text(aboutText))
+                        Alert(title: Text("RCL-57 alpha 1.3"), message: Text(aboutText))
                     }
                     Button("Reset") {
                         isPresentingConfirm = true

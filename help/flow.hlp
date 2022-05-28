@@ -1,6 +1,6 @@
-==Inconditional Branching==
+==Unconditional Branching==
 
-As we saw in the '''Hello World''' program, $$$GTO$$$ '''d''' directly branches to $$$Lbl$$$ '''d'''.
+As we saw in the '''Hello World''' program, $$$GTO$$$ '''d''' branches directly to $$$Lbl$$$ '''d'''.
 
 ==Conditional Branching==
 
@@ -25,14 +25,14 @@ Conditional branching is at the heart of programming because it makes arbitrary 
 :$$2nd x>=t$$
 :$$2nd Dsz$$
 
-This last function:
+This last instruction:
 # Decrements register 0 by 1
 # Then checks whether the value of register 0 is 0.
-If it is zero the next step will be skipped ('''decrement and skip if 0''')
+If it is zero the next step will be skipped ('''decrement and skip if 0''').
 
 ==Subroutines==
 
-One last important flow control operator is $$SBR$$. A subroutine is a sequence of steps that ends with $$INV SBR$$ (Which can also be written as $$$RTN$$$). It is also known as a (parameterless) function.
+One last important flow control instruction is $$SBR$$. A subroutine is a sequence of steps that ends with $$INV SBR$$ (Which can also be written as $$$RTN$$$). It is also known as a (parameterless) function.
 
 It can be called from any piece of code. For example, consider:
 

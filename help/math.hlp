@@ -1,12 +1,18 @@
 ==Trigonometry==
 
-Make sure to select the appropriate trigonometric units: $$2nd Deg$$, $$2nd Rad$$ or $$2nd Grd$$.
+First, make sure to select the appropriate trigonometric unit
+:$$2nd Deg$$
+:$$2nd Rad$$
+:$$2nd Grd$$.
 
-To compute the standard trigonometric functions, press $$2nd sin$$, $$2nd cos$$ or $$2nd tan$$.
+To compute the standard trigonometric functions, press one of the following
+:$$2nd sin$$
+:$$2nd cos$$
+:$$2nd tan$$.
 
 Use the $$INV$$ modifier to compute their inverses.
 
-==Other Functions==
+==Other Mathematical Functions==
 
 $$lnx$$ computes the natural logarithm.
 $$INV lnx$$ e^x.
@@ -46,5 +52,5 @@ Numbers are entered with $$2nd S+$$:
 Note that the display shows how many numbers have been entered so far. To compute the average of these numbers:
 : $$2nd avg$$: @@8@@
 And to compute the variance:
-: $$INV var$$: @@8.6666667@@
+: $$2nd var$$: @@8.6666667@@
 
