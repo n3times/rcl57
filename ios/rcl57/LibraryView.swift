@@ -8,11 +8,11 @@ struct LibraryView: View {
                     ["3n + 1", "3n+1", "3n + 1"],
                     ["Biorhythms", "biorhythms", "Biorhythms"],
                     ["Chess", "chess", "Chess"],
+                    ["Equation Solver", "solver", "Equation Solver"],
                     ["Factors", "factors", "Factors"],
                     ["Hello World", "world", "Hello World"],
                     ["Hi-Lo", "hilo", "Hi-Lo"],
                     ["Lunar Lander", "lander", "Lunar Lander"],
-                    ["Equation Solver", "solver", "Equation Solver"],
                    ]
 
     var body: some View {
