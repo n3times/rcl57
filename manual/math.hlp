@@ -15,9 +15,9 @@ Use the $$INV$$ modifier to compute their inverses.
 ==Other Mathematical Functions==
 
 $$lnx$$ computes the natural logarithm.
-$$INV lnx$$ e^x.
+$$INV lnx$$ e<sup>x</sup>.
 $$2nd log$$ the decimal logarithm.
-$$INV 2nd log$$ 10^x.
+$$INV 2nd log$$ 10<sup>x</sup>.
 $$2nd Int$$ the integer part.
 $$INV 2nd Int$$ the fractional part.
 

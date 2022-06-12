@@ -1,6 +1,6 @@
 ==Unconditional Branching==
 
-As we saw in the '''Hello World''' program, $$$GTO$$$ '''d''' branches directly to $$$Lbl$$$ '''d'''.
+As we saw in the '''Hello World''' program, $$$GTO$$$ ''d'' branches directly to $$$Lbl$$$ ''d''.
 
 ==Conditional Branching==
 
@@ -15,11 +15,11 @@ Quite often one would like to go to a given label, if and only if some condition
 
 The second line:
 :$$x:t 10 x:t$$
-looks a little confusing, but it just places $$$10$$$ in a special register '''T''', used for comparisons.
+looks a little confusing, but it just places $$$10$$$ in a special register ''t'', used for comparisons.
 
-Otherwise, this is very similar to the original program, except that we go to $$$Lbl 0$$$ '''if and only if''' the display (register '''X''') is different from ''10'' (that is the number in register '''T'''):
+Otherwise, this is very similar to the original program, except that we go to $$$Lbl 0$$$ '''if and only if''' the display (register ''x'') is different from ''10'' (that is the number in register ''t''):
 :$$INV 2nd x=t GTO 0$$
-Otherwise, in case of equality, we skip this step. Since the next step is $$R/S$$, we stop.
+Otherwise, in case of equality, we skip this step. Since the following step is $$R/S$$, we stop.
 
 Conditional branching is at the heart of programming because it makes arbitrary logic and therefore arbitrary computation possible. Besides $$2nd x=t$$, there is:
 :$$2nd x>=t$$
@@ -32,7 +32,7 @@ If it is zero the next step will be skipped ('''decrement and skip if 0''').
 
 ==Subroutines==
 
-One last important flow control instruction is $$SBR$$. A subroutine is a sequence of steps that ends with $$INV SBR$$ (Which can also be written as $$$RTN$$$). It is also known as a (parameterless) function.
+One last important flow control instruction is $$SBR$$. A subroutine is a sequence of steps that ends with $$INV SBR$$. It is also known as a (parameterless) function.
 
 It can be called from any piece of code. For example, consider:
 

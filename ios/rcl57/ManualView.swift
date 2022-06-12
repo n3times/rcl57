@@ -1,0 +1,68 @@
+import SwiftUI
+
+struct ManualView: View {
+    @Binding var showBack: Bool
+
+    let hlpPages = [["About", "about", "About RCL-57"],
+                    ["Flavors", "flavors", "Flavors Explained"],
+                    ["Basics", "basics", "Calculator Basics"],
+                    ["Math", "math", "Math Functions"],
+                    ["Registers", "registers", "Registers"],
+                    ["Hello World", "hello", "Hello World"],
+                    ["Flow Control", "flow", "Flow Control"]]
+
+    var body: some View {
+        List {
+            ForEach(hlpPages, id: \.self) { hlpPage in
+                NavigationLink(destination: ManualPageView(showBack: $showBack, title: hlpPage[0], hlpResource: hlpPage[1])) {
+                    Text(hlpPage[2])
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+        .navigationTitle("Manual")
+        .navigationBarItems(
+            trailing:
+                Button(action: {
+                    withAnimation {
+                        showBack.toggle()
+                    }
+                }) {
+                    Text(Style.circle)
+                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                        .contentShape(Rectangle())
+                }
+                .font(Style.directionsFont)
+        )
+    }
+}
+
+struct ManualPageView: View {
+    @Binding var showBack: Bool
+
+    let title: String
+    let hlpResource: String
+    var hlpURL: URL {
+        Bundle.main.url(forResource: hlpResource, withExtension: "hlp")!
+    }
+
+    var body: some View {
+
+        HStack {
+            HlpView(hlpString: Hlp57.getHlpAsString(url: hlpURL))
+        }
+        .navigationBarItems(
+            trailing:
+                Button(action: {
+                    withAnimation {
+                        showBack.toggle()
+                    }
+                }) {
+                    Text(Style.circle)
+                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
+                        .contentShape(Rectangle())
+                }
+                .font(Style.directionsFont)
+        )
+    }
+}

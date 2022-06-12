@@ -1,0 +1,17 @@
+RCL-57 comes in 4 different flavors, each one building on the previous one.
+
+==Classic==
+
+The Classic flavor is faithful to the original. Note that it can be quite slow, for example for trigonometric functions and programming editing.
+
+==Turbo==
+
+The Turbo flavor is true to the original while being 1000 times faster. It may be more enjoyable for everyday use than the Classic flavor.
+
+==Alpha==
+
+Besides being as fast as the Turbo flavor, this flavor uses an alphanumeric display to represent instructions in LRN mode: for example @@STO 2@@ instead of @@32 2@@ on an actual TI-57.
+
+==Rebooted==
+
+This flavor builds on the Alpha flavor and makes the TI-57 behave like a classic HP calculator in LRN mode: it displays the last step entered instead of the upcoming one. Note that steps are automatically inserted with this flavor and therefore the "Ins" key is superfluous.

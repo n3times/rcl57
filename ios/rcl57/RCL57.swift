@@ -102,9 +102,34 @@ class RCL57 {
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileURL: URL? = dirURL?.appendingPathComponent(filename)
 
+        saveState()
+
         if fileURL != nil {
             do {
                 try rawData.write(to: fileURL!, options: .atomic)
+                return true
+            } catch {
+                // Nothing
+            }
+        }
+        return false
+    }
+
+    func saveState() -> Bool {
+        let filename = "tmp.r57"
+        var X = rcl57.ti57.X
+        var Y = rcl57.ti57.Y
+        let sizeX = MemoryLayout.size(ofValue: X)
+        var rawDataX = Data(bytes: &X, count: sizeX)
+        let rawDataY = Data(bytes: &Y, count: sizeX)
+        rawDataX.append(contentsOf: rawDataY)
+        let dirURL: URL? =
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
+
+        if fileURL != nil {
+            do {
+                try rawDataX.write(to: fileURL!, options: .atomic)
                 return true
             } catch {
                 // Nothing
@@ -154,6 +179,29 @@ class RCL57 {
     /** Clears the user program. */
     func clearProgram() {
         ti57_clear_program(&rcl57.ti57)
+    }
+
+    func loadProgram(programURL: URL) {
+        var programRawData: Data?
+        var programRawBuffer: UnsafePointer<Int8>?
+
+        do {
+            try programRawData = Data(contentsOf: programURL)
+        } catch {
+            return
+        }
+        if programRawData == nil {
+            return
+        }
+        programRawBuffer = programRawData!.withUnsafeBytes({
+            (ptr) -> UnsafePointer<Int8> in
+            return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
+        })
+        if programRawBuffer == nil {
+            return
+        }
+        let sizeX = MemoryLayout.size(ofValue: rcl57.ti57.X)
+        memcpy(&rcl57.ti57.X, programRawBuffer, sizeX * 2)
     }
 
     /** Returns the number of logged items since reset. */

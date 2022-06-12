@@ -1,5 +1,4 @@
 import SwiftUI
-import WebKit
 
 struct FlavorsView: View {
     let rcl57: RCL57
@@ -60,92 +59,6 @@ struct FlavorsView: View {
     }
 }
 
-struct WebView: UIViewRepresentable {
-    let headerString = "<head><meta name='viewport' content='width=device-width, " +
-        "initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></head>"
-    let htmlString: String
-
-    init(htmlString: String) {
-        self.htmlString = htmlString
-    }
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        return webView
-    }
-
-    func updateUIView(_ webView: WKWebView, context: Context) {
-        webView.loadHTMLString(headerString + htmlString, baseURL: Bundle.main.bundleURL)
-    }
-}
-
-struct PageView: View {
-    @Binding var showBack: Bool
-
-    let title: String
-    let hlp: String
-    var url: URL {
-        Bundle.main.url(forResource: hlp, withExtension: "hlp")!
-    }
-
-    var body: some View {
-
-        HStack {
-            WebView(htmlString: Help57.getHTML(url: url))
-        }
-        .navigationBarItems(
-            trailing:
-                Button(action: {
-                    withAnimation {
-                        showBack.toggle()
-                    }
-                }) {
-                    Text(Style.circle)
-                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
-                        .contentShape(Rectangle())
-                }
-                .font(Style.directionsFont)
-        )
-    }
-}
-
-struct HelpView: View {
-    @Binding var showBack: Bool
-
-    let hlpPages = [["About", "about", "About RCL-57"],
-                    ["Flavors", "flavors", "Emulator Flavors"],
-                    ["Basics", "basics", "Calculator Basics"],
-                    ["Math", "math", "Math Functions"],
-                    ["Registers", "registers", "Registers"],
-                    ["Hello World", "hello", "Hello World"],
-                    ["Flow Control", "flow", "Flow Control"]]
-
-    var body: some View {
-        List {
-            ForEach(hlpPages, id: \.self) {hlpPage in
-                NavigationLink(destination: PageView(showBack: $showBack, title: hlpPage[0], hlp: hlpPage[1])) {
-                    Text(hlpPage[2])
-                }
-            }
-        }
-        .listStyle(PlainListStyle())
-        .navigationTitle("Help")
-        .navigationBarItems(
-            trailing:
-                Button(action: {
-                    withAnimation {
-                        showBack.toggle()
-                    }
-                }) {
-                    Text(Style.circle)
-                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
-                        .contentShape(Rectangle())
-                }
-                .font(Style.directionsFont)
-        )
-    }
-}
-
 struct SettingsView: View {
     let rcl57 : RCL57
     static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
@@ -163,9 +76,14 @@ struct SettingsView: View {
     var body: some View {
         return NavigationView {
             Form {
-                NavigationLink(destination: HelpView(showBack: $showBack)) {
+                NavigationLink(destination: ManualView(showBack: $showBack)) {
                     HStack {
-                        Text("Help")
+                        Text("Manual")
+                    }
+                }
+                NavigationLink(destination: LibraryView(showBack: $showBack, rcl57: rcl57)) {
+                    HStack {
+                        Text("Library")
                     }
                 }
                 Section("Options") {

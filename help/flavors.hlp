@@ -1,9 +1,0 @@
-RCL-57 comes in 4 different flavors, each one building on the previous one.
-
-''Classic:'' Behaves like an actual TI-57.
-
-''Turbo:'' True to the original while being 1000 times faster. Recommended for most users.
-
-''Alpha'': Uses an alphanumeric display to represent instructions in LRN mode: for example @@STO 2@@ instead of @@32 2@@ on an actual TI-57.
-
-''Rebooted:'' Makes the TI-57 behave like an HP calculator in LRN mode: it displays the last step entered instead of the upcoming one.
