@@ -148,7 +148,7 @@ struct MainView: View {
                         .environmentObject(change)
                         .transition(.move(edge: .trailing))
                 } else if change.isFullProgram {
-                    FullProgramView(rcl57: rcl57)
+                    FullLrnView(rcl57: rcl57)
                         .environmentObject(change)
                         .transition(.move(edge: .leading))
                 }

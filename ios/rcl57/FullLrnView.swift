@@ -1,7 +1,7 @@
 import SwiftUI
 
 /** A list of LineView's. */
-struct FullProgramView: View {
+struct FullLrnView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
 
@@ -34,7 +34,7 @@ struct FullProgramView: View {
                 .foregroundColor(Style.ivory)
 
                 // Program.
-                ProgramView(rcl57: rcl57, isMiniView: false)
+                LrnView(rcl57: rcl57, isMiniView: false)
                     .background(Style.ivory)
                     .environmentObject(change)
 
@@ -64,8 +64,8 @@ struct FullProgramView: View {
     }
 }
 
-struct FullProgramView_Previews: PreviewProvider {
+struct FullLrnView_Previews: PreviewProvider {
     static var previews: some View {
-        FullProgramView(rcl57: RCL57())
+        FullLrnView(rcl57: RCL57())
     }
 }

@@ -53,7 +53,7 @@ private struct LineView: View {
     }
 }
 
-struct ProgramView: View {
+struct LrnView: View {
     private let rcl57: RCL57
     @State private var lines : [Line] = []
 
@@ -144,8 +144,8 @@ struct ProgramView: View {
     }
 }
 
-struct ProgramView_Previews: PreviewProvider {
+struct LrnView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramView(rcl57: RCL57(), isMiniView: false)
+        LrnView(rcl57: RCL57(), isMiniView: false)
     }
 }

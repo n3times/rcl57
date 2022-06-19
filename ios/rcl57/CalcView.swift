@@ -20,7 +20,7 @@ struct CalcView: View {
 
     private func getMiniView() -> some View {
         if rcl57.isLrnMode() {
-            return AnyView(ProgramView(rcl57: rcl57, isMiniView: true))
+            return AnyView(LrnView(rcl57: rcl57, isMiniView: true))
         } else if rcl57.getLoggedCount() == 0 {
             return AnyView(ZStack {
                 Text("Log is empty")

@@ -7,7 +7,6 @@ struct LibraryView: View {
     let hlpPages = [
                     ["3n + 1", "3n+1", "3n + 1"],
                     ["Biorhythms", "biorhythms", "Biorhythms"],
-                    ["Chess", "chess", "Chess"],
                     ["Equation Solver", "solver", "Equation Solver"],
                     ["Factors", "factors", "Factors"],
                     ["Hello World", "world", "Hello World"],
@@ -19,7 +18,7 @@ struct LibraryView: View {
         List {
             ForEach(hlpPages, id: \.self) {hlpPage in
                 let programView =
-                LibraryProgramView(showBack: $showBack, rcl57: rcl57, title: hlpPage[0], resource: hlpPage[1])
+                ProgramView(showBack: $showBack, rcl57: rcl57, title: hlpPage[0], resource: hlpPage[1])
                 NavigationLink(destination: programView) {
                     Text(hlpPage[2])
                 }
@@ -43,7 +42,7 @@ struct LibraryView: View {
     }
 }
 
-struct LibraryProgramView: View {
+struct ProgramView: View {
     @Binding var showBack: Bool
 
     let rcl57: RCL57
@@ -59,10 +58,9 @@ struct LibraryProgramView: View {
     var body: some View {
         VStack(spacing: 0) {
             HlpView(hlpString: Hlp57.getHlpAsString(url: hlpURL))
-            if resource != "chess" {
             HStack(spacing: 0) {
                 Spacer()
-                Button("Load") {  // Left arrow.
+                Button("Load") {
                     rcl57.loadProgram(programURL: programURL)
                     withAnimation {
                         showBack.toggle()
@@ -75,7 +73,6 @@ struct LibraryProgramView: View {
             }
             .background(Color.gray)
             .foregroundColor(Style.ivory)
-            }
         }
         .navigationBarItems(
             trailing:
