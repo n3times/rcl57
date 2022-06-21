@@ -1,3 +1,6 @@
+>>> NAME
+Biorhythms
+>>> HELP
 =Biorhythms=
 
 Computes the biorhythm in 3 areas: physical, emotional and intellectual.
@@ -16,3 +19,20 @@ The biorhythm is given by a number between -1 and +1, where 0 is neutral, -1 is 
 
 ==Notes==
 Dates should be between 01/01/1901 and 12/31/2099.
+>>> STATE
+0000000000000000
+0000000000000000
+1000000000603000
+6000000052563000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+71bd772f1b3f772b
+75006030353b3562
+20ad7f3972711815
+ad4bad0f392b2e88
+6bfd300d392b2e5b
+0d39755073657b7e
+000000000000000b
+40000000000012d1

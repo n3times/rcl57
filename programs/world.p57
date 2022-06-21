@@ -1,9 +1,18 @@
 >>> NAME
-Test
+Hello World
 >>> HELP
-=Title=
-# One
-# Two
+=Hello World=
+
+This is the '''Hello World''' program from the tutorial:
+:$$$lbl 0$$$
+:$$$+ 1 =$$$
+:$$$Pause$$$
+:$$$Gto 0$$$
+
+Start with:
+:$$CLR RST R/S$$
+And stop with:
+:$$R/S$$
 >>> STATE
 0000000000000000
 0000000000000000
@@ -13,7 +22,7 @@ Test
 0000000000000000
 0000000000000000
 0000000000000000
-1600000000000061
+0000f22675106572
 0000000000000000
 0000000000000000
 0000000000000000

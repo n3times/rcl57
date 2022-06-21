@@ -30,6 +30,11 @@ class Prog57 {
         return Hlp57.getHTML(hlp: String(cString: help!))
     }
 
+    func getHelp() -> String {
+        let help = prog57_get_help(&prog57)
+        return String(cString: help!)
+    }
+
     func setHelp(help: String) {
         prog57_set_help(&prog57, (help as NSString).utf8String)
     }

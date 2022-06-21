@@ -1,3 +1,6 @@
+>>> NAME
+Hi-Lo
+>>> HELP
 =Hi-Lo=
 
 The goal of this game is to find a mistery number between ''100'' and ''999'' in at most ''10'' guesses.
@@ -12,3 +15,20 @@ The goal of this game is to find a mistery number between ''100'' and ''999'' in
 
 ==Notes==
 If you play in Classic mode, try not to peek at the display when the mystery number is being generated...
+>>> STATE
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+b9758025752a651f
+001065000090451f
+050f10107f397500
+66e35671e2c67572
+1bc27b62f27410e4
+1064611bc2056361
+00000000000000f2
+0000000000000000

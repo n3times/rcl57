@@ -1,3 +1,6 @@
+>>> NAME
+Lunar Lander
+>>> HELP
 =Lunar Lander=
 
 You are commander of Lunar Module Eagle and you are 2,500 feet from the Moon surface. Your spacecraft is descending at 100 feet per second and has 100 gallons of fuel left.
@@ -17,3 +20,20 @@ Your mission: land safely.
 ==Notes==
 * A value of @@0@@ indicates a perfectly smooth landing
 * You can skip steps 1 to 3 if you have just loaded or reloaded the program
+>>> STATE
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000050
+0000000000000000
+2000000000001001
+30000000000520f1
+e67410121b26b83b
+1b658840352b4574
+4fe63b124f71d775
+1b61c6720f50bd4b
+e6092b9d4b1d50ad
+752b653a1b1260c2
+2000000000001066
+00000000000000f2

@@ -34,7 +34,9 @@ static void append_line(char **text_out, char *str) {
 
 static int hex(char c) {
     if (c >= '0' && c <= '9') return c - '0';
-    else return c - 'A' + 10;
+    else if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    else if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    else return 0;
 }
 
 void prog57_from_text(prog57_t *program, char *text_in) {
@@ -73,7 +75,7 @@ char *prog57_to_text(prog57_t *program) {
 }
 
 void prog57_load_state(prog57_t *program_in, rcl57_t *rcl57) {
-    memcpy(rcl57->ti57.X, program_in->state, sizeof(program_in->state));
+    memcpy(rcl57->ti57.X, program_in->state, 16 * sizeof(ti57_reg_t));
 }
 
 void prog57_save_state(prog57_t *program_out, rcl57_t *rcl57) {

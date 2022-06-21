@@ -31,26 +31,17 @@
 		159E94D62814AA2000859F10 /* FullLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D52814AA2000859F10 /* FullLogView.swift */; };
 		159E94D82814BBD400859F10 /* FullLrnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* FullLrnView.swift */; };
 		15B085AE284F149B0018418A /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualView.swift */; };
-		15B085B2285173940018418A /* lander.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085B0285173940018418A /* lander.hlp */; };
-		15B085B3285173940018418A /* lander.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085B1285173940018418A /* lander.r57 */; };
 		15B085B52852C6060018418A /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B42852C6060018418A /* HelpView.swift */; };
 		15B085B72852CAEE0018418A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* LibraryView.swift */; };
-		15B085B92853EE8A0018418A /* 3n+1.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085B82853EE8A0018418A /* 3n+1.r57 */; };
-		15B085BB2853EECF0018418A /* 3n+1.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085BA2853EECF0018418A /* 3n+1.hlp */; };
-		15B085BD28540A570018418A /* factors.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085BC28540A570018418A /* factors.hlp */; };
-		15B085BF2854103E0018418A /* factors.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085BE2854103E0018418A /* factors.r57 */; };
-		15B085C3285426810018418A /* solver.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085C2285426810018418A /* solver.hlp */; };
-		15B085C5285427090018418A /* solver.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085C4285427090018418A /* solver.r57 */; };
-		15B085C7285446D20018418A /* biorhythms.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085C6285446D20018418A /* biorhythms.r57 */; };
-		15B085C9285446E70018418A /* biorhythms.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085C8285446E70018418A /* biorhythms.hlp */; };
-		15B085CF285486100018418A /* hilo.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085CE285486100018418A /* hilo.hlp */; };
-		15B085D12854861A0018418A /* hilo.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085D02854861A0018418A /* hilo.r57 */; };
-		15B085D5285494B00018418A /* world.r57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085D4285494B00018418A /* world.r57 */; };
-		15B085D7285494C20018418A /* world.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085D6285494C20018418A /* world.hlp */; };
-		15B085D9285592C50018418A /* chess.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 15B085D8285592C50018418A /* chess.hlp */; };
-		15B085E0286107590018418A /* test.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085DF286107590018418A /* test.p57 */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
+		15B085E82861610B0018418A /* 3n+1.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085E72861610B0018418A /* 3n+1.p57 */; };
+		15B085EA28616DD50018418A /* biorhythms.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085E928616DD50018418A /* biorhythms.p57 */; };
+		15B085EC286171800018418A /* factors.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085EB2861717F0018418A /* factors.p57 */; };
+		15B085EE2861723F0018418A /* solver.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085ED2861723F0018418A /* solver.p57 */; };
+		15B085F02861738B0018418A /* world.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085EF2861738B0018418A /* world.p57 */; };
+		15B085F2286174800018418A /* lander.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085F1286174800018418A /* lander.p57 */; };
+		15B085F4286175270018418A /* hilo.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085F3286175270018418A /* hilo.p57 */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
 		15F948F7283E060C00706BE5 /* hlp2html.c in Sources */ = {isa = PBXBuildFile; fileRef = 15F948F5283E060C00706BE5 /* hlp2html.c */; };
@@ -102,27 +93,18 @@
 		159E94D52814AA2000859F10 /* FullLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLogView.swift; sourceTree = "<group>"; };
 		159E94D72814BBD400859F10 /* FullLrnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLrnView.swift; sourceTree = "<group>"; };
 		15B085AD284F149B0018418A /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
-		15B085B0285173940018418A /* lander.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lander.hlp; sourceTree = "<group>"; };
-		15B085B1285173940018418A /* lander.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = lander.r57; sourceTree = "<group>"; };
 		15B085B42852C6060018418A /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		15B085B62852CAEE0018418A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
-		15B085B82853EE8A0018418A /* 3n+1.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "3n+1.r57"; sourceTree = "<group>"; };
-		15B085BA2853EECF0018418A /* 3n+1.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "3n+1.hlp"; sourceTree = "<group>"; };
-		15B085BC28540A570018418A /* factors.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = factors.hlp; sourceTree = "<group>"; };
-		15B085BE2854103E0018418A /* factors.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = factors.r57; sourceTree = "<group>"; };
-		15B085C2285426810018418A /* solver.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = solver.hlp; sourceTree = "<group>"; };
-		15B085C4285427090018418A /* solver.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = solver.r57; sourceTree = "<group>"; };
-		15B085C6285446D20018418A /* biorhythms.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = biorhythms.r57; sourceTree = "<group>"; };
-		15B085C8285446E70018418A /* biorhythms.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = biorhythms.hlp; sourceTree = "<group>"; };
-		15B085CE285486100018418A /* hilo.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hilo.hlp; sourceTree = "<group>"; };
-		15B085D02854861A0018418A /* hilo.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hilo.r57; sourceTree = "<group>"; };
-		15B085D4285494B00018418A /* world.r57 */ = {isa = PBXFileReference; lastKnownFileType = file; path = world.r57; sourceTree = "<group>"; };
-		15B085D6285494C20018418A /* world.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = world.hlp; sourceTree = "<group>"; };
-		15B085D8285592C50018418A /* chess.hlp */ = {isa = PBXFileReference; lastKnownFileType = text; path = chess.hlp; sourceTree = "<group>"; };
-		15B085DF286107590018418A /* test.p57 */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.p57; sourceTree = "<group>"; };
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
+		15B085E72861610B0018418A /* 3n+1.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "3n+1.p57"; sourceTree = "<group>"; };
+		15B085E928616DD50018418A /* biorhythms.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = biorhythms.p57; sourceTree = "<group>"; };
+		15B085EB2861717F0018418A /* factors.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = factors.p57; sourceTree = "<group>"; };
+		15B085ED2861723F0018418A /* solver.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = solver.p57; sourceTree = "<group>"; };
+		15B085EF2861738B0018418A /* world.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = world.p57; sourceTree = "<group>"; };
+		15B085F1286174800018418A /* lander.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lander.p57; sourceTree = "<group>"; };
+		15B085F3286175270018418A /* hilo.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hilo.p57; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -244,22 +226,13 @@
 		15B085AF285173940018418A /* programs */ = {
 			isa = PBXGroup;
 			children = (
-				15B085BA2853EECF0018418A /* 3n+1.hlp */,
-				15B085B82853EE8A0018418A /* 3n+1.r57 */,
-				15B085C8285446E70018418A /* biorhythms.hlp */,
-				15B085C6285446D20018418A /* biorhythms.r57 */,
-				15B085D8285592C50018418A /* chess.hlp */,
-				15B085BC28540A570018418A /* factors.hlp */,
-				15B085BE2854103E0018418A /* factors.r57 */,
-				15B085CE285486100018418A /* hilo.hlp */,
-				15B085D02854861A0018418A /* hilo.r57 */,
-				15B085B0285173940018418A /* lander.hlp */,
-				15B085B1285173940018418A /* lander.r57 */,
-				15B085C2285426810018418A /* solver.hlp */,
-				15B085C4285427090018418A /* solver.r57 */,
-				15B085D6285494C20018418A /* world.hlp */,
-				15B085D4285494B00018418A /* world.r57 */,
-				15B085DF286107590018418A /* test.p57 */,
+				15B085E72861610B0018418A /* 3n+1.p57 */,
+				15B085E928616DD50018418A /* biorhythms.p57 */,
+				15B085EB2861717F0018418A /* factors.p57 */,
+				15B085F3286175270018418A /* hilo.p57 */,
+				15B085F1286174800018418A /* lander.p57 */,
+				15B085ED2861723F0018418A /* solver.p57 */,
+				15B085EF2861738B0018418A /* world.p57 */,
 			);
 			name = programs;
 			path = ../programs;
@@ -364,32 +337,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				15F9491D284130A400706BE5 /* registers.hlp in Resources */,
-				15B085B92853EE8A0018418A /* 3n+1.r57 in Resources */,
 				150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */,
-				15B085C7285446D20018418A /* biorhythms.r57 in Resources */,
-				15B085BB2853EECF0018418A /* 3n+1.hlp in Resources */,
+				15B085E82861610B0018418A /* 3n+1.p57 in Resources */,
 				15F94917283FAD7B00706BE5 /* basics.hlp in Resources */,
-				15B085D12854861A0018418A /* hilo.r57 in Resources */,
-				15B085C5285427090018418A /* solver.r57 in Resources */,
 				150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */,
-				15B085CF285486100018418A /* hilo.hlp in Resources */,
+				15B085F2286174800018418A /* lander.p57 in Resources */,
 				15F94911283FAD7B00706BE5 /* flow.hlp in Resources */,
-				15B085E0286107590018418A /* test.p57 in Resources */,
 				15F9490C283FAD7B00706BE5 /* help.hlp in Resources */,
 				15F9491928407F2B00706BE5 /* flavors.hlp in Resources */,
-				15B085D5285494B00018418A /* world.r57 in Resources */,
 				15F9491B284129D400706BE5 /* math.hlp in Resources */,
+				15B085F4286175270018418A /* hilo.p57 in Resources */,
 				15F94913283FAD7B00706BE5 /* hello.hlp in Resources */,
 				15F948FD283FACE400706BE5 /* about.hlp in Resources */,
-				15B085B3285173940018418A /* lander.r57 in Resources */,
-				15B085BF2854103E0018418A /* factors.r57 in Resources */,
-				15B085B2285173940018418A /* lander.hlp in Resources */,
-				15B085D7285494C20018418A /* world.hlp in Resources */,
+				15B085EA28616DD50018418A /* biorhythms.p57 in Resources */,
 				15F948F8283E060C00706BE5 /* help.css in Resources */,
-				15B085BD28540A570018418A /* factors.hlp in Resources */,
-				15B085D9285592C50018418A /* chess.hlp in Resources */,
-				15B085C3285426810018418A /* solver.hlp in Resources */,
-				15B085C9285446E70018418A /* biorhythms.hlp in Resources */,
+				15B085EE2861723F0018418A /* solver.p57 in Resources */,
+				15B085EC286171800018418A /* factors.p57 in Resources */,
+				15B085F02861738B0018418A /* world.p57 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

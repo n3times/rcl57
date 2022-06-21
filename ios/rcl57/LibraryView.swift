@@ -4,23 +4,24 @@ struct LibraryView: View {
     @Binding var showBack: Bool
     let rcl57: Rcl57
 
-    let hlpPages = [
-                    ["3n + 1", "3n+1", "3n + 1"],
-                    ["Biorhythms", "biorhythms", "Biorhythms"],
-                    ["Equation Solver", "solver", "Equation Solver"],
-                    ["Factors", "factors", "Factors"],
-                    ["Hello World", "world", "Hello World"],
-                    ["Hi-Lo", "hilo", "Hi-Lo"],
-                    ["Lunar Lander", "lander", "Lunar Lander"],
+    let programs = [
+                    "3n+1",
+                    "biorhythms",
+                    "solver",
+                    "factors",
+                    "world",
+                    "hilo",
+                    "lander",
                    ]
 
     var body: some View {
         List {
-            ForEach(hlpPages, id: \.self) {hlpPage in
-                let programView =
-                ProgramView(showBack: $showBack, rcl57: rcl57, title: hlpPage[0], resource: hlpPage[1])
+            ForEach(programs, id: \.self) { program in
+                let url = Bundle.main.url(forResource: program, withExtension: "p57")!
+                let program = Prog57(url: url)
+                let programView = ProgramView(showBack: $showBack, rcl57: rcl57, program: program!)
                 NavigationLink(destination: programView) {
-                    Text(hlpPage[2])
+                    Text(program!.getName())
                 }
             }
         }
@@ -46,22 +47,15 @@ struct ProgramView: View {
     @Binding var showBack: Bool
 
     let rcl57: Rcl57
-    let title: String
-    let resource: String
-    var hlpURL: URL {
-        Bundle.main.url(forResource: resource, withExtension: "hlp")!
-    }
-    var programURL: URL {
-        Bundle.main.url(forResource: resource, withExtension: "r57")!
-    }
+    let program: Prog57
 
     var body: some View {
         VStack(spacing: 0) {
-            HelpView(hlpURL: hlpURL)
+            HelpView(hlpString: program.getHelp())
             HStack(spacing: 0) {
                 Spacer()
                 Button("Load") {
-                    rcl57.loadProgram(programURL: programURL)
+                    program.loadState(rcl57: rcl57)
                     withAnimation {
                         showBack.toggle()
                     }
