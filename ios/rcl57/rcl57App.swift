@@ -5,12 +5,12 @@ struct rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
     let stateFilename = "rcl57.dat"
-    var rcl57:RCL57?
+    var rcl57:Rcl57?
 
     init() {
-        rcl57 = RCL57(filename: stateFilename)
+        rcl57 = Rcl57(filename: stateFilename)
         if rcl57 == nil {
-            rcl57 = RCL57()
+            rcl57 = Rcl57()
         }
         Settings.setFlavor(flavor: Settings.getFlavor(), rcl57: rcl57!)
     }

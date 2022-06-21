@@ -54,7 +54,7 @@ private struct LineView: View {
 }
 
 struct LrnView: View {
-    private let rcl57: RCL57
+    private let rcl57: Rcl57
     @State private var lines : [Line] = []
 
     private let isMiniView: Bool
@@ -66,7 +66,7 @@ struct LrnView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: RCL57, isMiniView: Bool) {
+    init(rcl57: Rcl57, isMiniView: Bool) {
         let pc = rcl57.getProgramPc()
         self.rcl57 = rcl57
         self.isMiniView = isMiniView
@@ -146,6 +146,6 @@ struct LrnView: View {
 
 struct LrnView_Previews: PreviewProvider {
     static var previews: some View {
-        LrnView(rcl57: RCL57(), isMiniView: false)
+        LrnView(rcl57: Rcl57(), isMiniView: false)
     }
 }

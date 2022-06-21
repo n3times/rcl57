@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FlavorsView: View {
-    let rcl57: RCL57
+    let rcl57: Rcl57
 
     @Binding var flavor: Flavor
     @Binding var showBack: Bool
@@ -60,7 +60,7 @@ struct FlavorsView: View {
 }
 
 struct SettingsView: View {
-    let rcl57 : RCL57
+    let rcl57 : Rcl57
     static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
@@ -156,6 +156,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(rcl57: RCL57(), showBack: .constant(false))
+        SettingsView(rcl57: Rcl57(), showBack: .constant(false))
     }
 }

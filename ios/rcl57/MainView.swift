@@ -5,7 +5,7 @@
 import SwiftUI
 
 final class Change: ObservableObject {
-    var rcl57: RCL57?
+    var rcl57: Rcl57?
     var pc: Int
     var isAlpha: Bool
     var isHpLrnMode: Bool
@@ -19,7 +19,7 @@ final class Change: ObservableObject {
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
 
-    init(rcl57: RCL57) {
+    init(rcl57: Rcl57) {
         self.rcl57 = rcl57
         self.pc = rcl57.getProgramPc()
         self.isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
@@ -113,14 +113,14 @@ private struct FlipOpacity: AnimatableModifier {
 }
 
 struct MainView: View {
-    private let rcl57: RCL57
+    private let rcl57: Rcl57
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
     @StateObject private var change: Change
     @State var showBack = false
 
-    init(rcl57: RCL57) {
+    init(rcl57: Rcl57) {
         self.rcl57 = rcl57
 
         _change = StateObject(wrappedValue: Change(rcl57: rcl57))
@@ -168,6 +168,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(rcl57: RCL57())
+        MainView(rcl57: Rcl57())
     }
 }

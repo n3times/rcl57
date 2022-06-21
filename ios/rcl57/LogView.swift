@@ -55,7 +55,7 @@ private struct LineView: View {
 
 /** A list of LineView's. */
 struct LogView: View {
-    let rcl57 : RCL57
+    let rcl57 : Rcl57
     @State private var lines : [Line] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
@@ -64,7 +64,7 @@ struct LogView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: RCL57) {
+    init(rcl57: Rcl57) {
         self.rcl57 = rcl57
         self.maxLines = 500
         updateLog()
@@ -186,6 +186,6 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(rcl57: RCL57())
+        LogView(rcl57: Rcl57())
     }
 }

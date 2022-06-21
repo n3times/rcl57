@@ -49,7 +49,7 @@ struct ManualPageView: View {
     var body: some View {
 
         HStack {
-            HlpView(hlpString: Hlp57.getHlpAsString(url: hlpURL))
+            HelpView(hlpURL: hlpURL)
         }
         .navigationBarItems(
             trailing:

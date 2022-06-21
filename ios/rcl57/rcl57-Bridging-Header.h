@@ -3,6 +3,7 @@
 
 #include "hlp2html.h"
 #include "leds57.h"
+#include "prog57.h"
 #include "rcl57.h"
 
 #endif /* rcl57_Bridging_Header_h */

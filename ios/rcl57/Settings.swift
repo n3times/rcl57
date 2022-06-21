@@ -15,7 +15,7 @@ struct Settings {
     static let HAPTIC_STYLE_KEY = "haptic_style"
     static let HAS_KEY_CLICK_KEY = "has_key_click"
 
-    static private func setOriginalSpeed(has_original_speed: Bool, rcl57: RCL57) {
+    static private func setOriginalSpeed(has_original_speed: Bool, rcl57: Rcl57) {
         rcl57.setSpeedup(speedup: has_original_speed ? 2 : 1000)
         rcl57.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: !has_original_speed)
         rcl57.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: !has_original_speed)
@@ -23,7 +23,7 @@ struct Settings {
         rcl57.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: !has_original_speed)
     }
 
-    static func setFlavor(flavor: Flavor, rcl57: RCL57) {
+    static func setFlavor(flavor: Flavor, rcl57: Rcl57) {
         UserDefaults.standard.set(flavor.rawValue, forKey: FLAVOR_KEY)
         setOriginalSpeed(has_original_speed: flavor == .classic, rcl57: rcl57)
         rcl57.setOptionFlag(
@@ -63,7 +63,7 @@ struct Settings {
         return UserDefaults.standard.bool(forKey: HAS_KEY_CLICK_KEY)
     }
 
-    static func setHasKeyClick(has_key_click: Bool, rcl57: RCL57) {
+    static func setHasKeyClick(has_key_click: Bool, rcl57: Rcl57) {
         UserDefaults.standard.set(has_key_click, forKey: HAS_KEY_CLICK_KEY)
     }
 }

@@ -17,7 +17,7 @@ struct TrigIndicator: View {
 }
 
 struct KeyboardView: View {
-    let rcl57: RCL57
+    let rcl57: Rcl57
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
@@ -26,7 +26,7 @@ struct KeyboardView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: RCL57) {
+    init(rcl57: Rcl57) {
         self.rcl57 = rcl57
         self.is2nd = rcl57.is2nd()
         self.isInv = rcl57.isInv()
@@ -150,6 +150,6 @@ struct KeyboardView: View {
 
 struct KeyboardView_Previews: PreviewProvider {
     static var previews: some View {
-        KeyboardView(rcl57: RCL57())
+        KeyboardView(rcl57: Rcl57())
     }
 }

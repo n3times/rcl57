@@ -5,7 +5,7 @@ struct FullLrnView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
 
-    let rcl57 : RCL57
+    let rcl57 : Rcl57
 
     var body: some View {
         return GeometryReader { geometry in
@@ -66,6 +66,6 @@ struct FullLrnView: View {
 
 struct FullLrnView_Previews: PreviewProvider {
     static var previews: some View {
-        FullLrnView(rcl57: RCL57())
+        FullLrnView(rcl57: Rcl57())
     }
 }

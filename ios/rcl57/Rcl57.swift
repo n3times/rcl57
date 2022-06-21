@@ -20,8 +20,8 @@ struct LogEntry {
     }
 }
 
-class RCL57 {
-    private var rcl57 = rcl57_t()
+class Rcl57 {
+    var rcl57 = rcl57_t()
 
     init() {
         rcl57_init(&rcl57)
@@ -101,8 +101,6 @@ class RCL57 {
         let dirURL: URL? =
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileURL: URL? = dirURL?.appendingPathComponent(filename)
-
-        saveState()
 
         if fileURL != nil {
             do {

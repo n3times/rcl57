@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LibraryView: View {
     @Binding var showBack: Bool
-    let rcl57: RCL57
+    let rcl57: Rcl57
 
     let hlpPages = [
                     ["3n + 1", "3n+1", "3n + 1"],
@@ -45,7 +45,7 @@ struct LibraryView: View {
 struct ProgramView: View {
     @Binding var showBack: Bool
 
-    let rcl57: RCL57
+    let rcl57: Rcl57
     let title: String
     let resource: String
     var hlpURL: URL {
@@ -57,7 +57,7 @@ struct ProgramView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HlpView(hlpString: Hlp57.getHlpAsString(url: hlpURL))
+            HelpView(hlpURL: hlpURL)
             HStack(spacing: 0) {
                 Spacer()
                 Button("Load") {

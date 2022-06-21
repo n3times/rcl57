@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct CalcView: View {
-    let rcl57: RCL57
+    let rcl57: Rcl57
 
     private let fullDisplayHeight = (3 + Style.lineCount) * Style.lineHeight
     private let miniViewHeight = Style.lineCount * Style.lineHeight
@@ -105,6 +105,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(rcl57: RCL57(), showBack: .constant(false))
+        CalcView(rcl57: Rcl57(), showBack: .constant(false))
     }
 }
