@@ -3,25 +3,26 @@ import SwiftUI
 struct LibraryView: View {
     @Binding var showBack: Bool
     let rcl57: Rcl57
+    let url: URL
 
-    let programs = [
-                    "3n+1",
-                    "biorhythms",
-                    "solver",
-                    "factors",
-                    "world",
-                    "hilo",
-                    "lander",
-                   ]
+    func getPrograms(_ folderURL: URL) -> [Prog57] {
+        var programs: [Prog57] = []
+        let enumerator = FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
+        while let urlObject = enumerator!.nextObject() {
+            let url = urlObject as! URL
+            if url.path.hasSuffix(".p57") {
+                programs.append(Prog57(url: url)!)
+            }
+        }
+        return programs
+    }
 
     var body: some View {
         List {
-            ForEach(programs, id: \.self) { program in
-                let url = Bundle.main.url(forResource: program, withExtension: "p57")!
-                let program = Prog57(url: url)
-                let programView = ProgramView(showBack: $showBack, rcl57: rcl57, program: program!)
+            ForEach(getPrograms(url), id: \.self) { program in
+                let programView = ProgramView(showBack: $showBack, rcl57: rcl57, program: program)
                 NavigationLink(destination: programView) {
-                    Text(program!.getName())
+                    Text(program.getName())
                 }
             }
         }

@@ -35,13 +35,7 @@
 		15B085B72852CAEE0018418A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* LibraryView.swift */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
-		15B085E82861610B0018418A /* 3n+1.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085E72861610B0018418A /* 3n+1.p57 */; };
-		15B085EA28616DD50018418A /* biorhythms.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085E928616DD50018418A /* biorhythms.p57 */; };
-		15B085EC286171800018418A /* factors.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085EB2861717F0018418A /* factors.p57 */; };
-		15B085EE2861723F0018418A /* solver.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085ED2861723F0018418A /* solver.p57 */; };
-		15B085F02861738B0018418A /* world.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085EF2861738B0018418A /* world.p57 */; };
-		15B085F2286174800018418A /* lander.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085F1286174800018418A /* lander.p57 */; };
-		15B085F4286175270018418A /* hilo.p57 in Resources */ = {isa = PBXBuildFile; fileRef = 15B085F3286175270018418A /* hilo.p57 */; };
+		15B0860E286413270018418A /* example_programs in Resources */ = {isa = PBXBuildFile; fileRef = 15B0860D286413260018418A /* example_programs */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
 		15F948F7283E060C00706BE5 /* hlp2html.c in Sources */ = {isa = PBXBuildFile; fileRef = 15F948F5283E060C00706BE5 /* hlp2html.c */; };
@@ -98,13 +92,7 @@
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
-		15B085E72861610B0018418A /* 3n+1.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "3n+1.p57"; sourceTree = "<group>"; };
-		15B085E928616DD50018418A /* biorhythms.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = biorhythms.p57; sourceTree = "<group>"; };
-		15B085EB2861717F0018418A /* factors.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = factors.p57; sourceTree = "<group>"; };
-		15B085ED2861723F0018418A /* solver.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = solver.p57; sourceTree = "<group>"; };
-		15B085EF2861738B0018418A /* world.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = world.p57; sourceTree = "<group>"; };
-		15B085F1286174800018418A /* lander.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lander.p57; sourceTree = "<group>"; };
-		15B085F3286175270018418A /* hilo.p57 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hilo.p57; sourceTree = "<group>"; };
+		15B0860D286413260018418A /* example_programs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = example_programs; path = ../example_programs; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -140,11 +128,11 @@
 		150ED89527B089EF00E01FC6 = {
 			isa = PBXGroup;
 			children = (
+				15B0860D286413260018418A /* example_programs */,
 				154B7A7027BC65C900AE38F1 /* engine */,
 				15F948F0283E060C00706BE5 /* hlp2html */,
 				15F948FB283FACE400706BE5 /* manual */,
 				15B085E1286152770018418A /* program */,
-				15B085AF285173940018418A /* programs */,
 				150ED8A027B089EF00E01FC6 /* rcl57 */,
 				150ED89F27B089EF00E01FC6 /* Products */,
 			);
@@ -221,21 +209,6 @@
 			);
 			name = engine;
 			path = ../engine;
-			sourceTree = "<group>";
-		};
-		15B085AF285173940018418A /* programs */ = {
-			isa = PBXGroup;
-			children = (
-				15B085E72861610B0018418A /* 3n+1.p57 */,
-				15B085E928616DD50018418A /* biorhythms.p57 */,
-				15B085EB2861717F0018418A /* factors.p57 */,
-				15B085F3286175270018418A /* hilo.p57 */,
-				15B085F1286174800018418A /* lander.p57 */,
-				15B085ED2861723F0018418A /* solver.p57 */,
-				15B085EF2861738B0018418A /* world.p57 */,
-			);
-			name = programs;
-			path = ../programs;
 			sourceTree = "<group>";
 		};
 		15B085E1286152770018418A /* program */ = {
@@ -338,22 +311,16 @@
 			files = (
 				15F9491D284130A400706BE5 /* registers.hlp in Resources */,
 				150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */,
-				15B085E82861610B0018418A /* 3n+1.p57 in Resources */,
 				15F94917283FAD7B00706BE5 /* basics.hlp in Resources */,
+				15B0860E286413270018418A /* example_programs in Resources */,
 				150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */,
-				15B085F2286174800018418A /* lander.p57 in Resources */,
 				15F94911283FAD7B00706BE5 /* flow.hlp in Resources */,
 				15F9490C283FAD7B00706BE5 /* help.hlp in Resources */,
 				15F9491928407F2B00706BE5 /* flavors.hlp in Resources */,
 				15F9491B284129D400706BE5 /* math.hlp in Resources */,
-				15B085F4286175270018418A /* hilo.p57 in Resources */,
 				15F94913283FAD7B00706BE5 /* hello.hlp in Resources */,
 				15F948FD283FACE400706BE5 /* about.hlp in Resources */,
-				15B085EA28616DD50018418A /* biorhythms.p57 in Resources */,
 				15F948F8283E060C00706BE5 /* help.css in Resources */,
-				15B085EE2861723F0018418A /* solver.p57 in Resources */,
-				15B085EC286171800018418A /* factors.p57 in Resources */,
-				15B085F02861738B0018418A /* world.p57 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

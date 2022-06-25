@@ -63,6 +63,7 @@ struct SettingsView: View {
     let rcl57 : Rcl57
     static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
+    let url = Bundle.main.bundleURL.appendingPathComponent("example_programs")
 
     @State private var hapticStyle = Settings.getHapticStyle() == nil ? FEEDBACK_NONE
                                                                       : Settings.getHapticStyle()!
@@ -81,7 +82,7 @@ struct SettingsView: View {
                         Text("Manual")
                     }
                 }
-                NavigationLink(destination: LibraryView(showBack: $showBack, rcl57: rcl57)) {
+                NavigationLink(destination: LibraryView(showBack: $showBack, rcl57: rcl57, url: url)) {
                     HStack {
                         Text("Library")
                     }
