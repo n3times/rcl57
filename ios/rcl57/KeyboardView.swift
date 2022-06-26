@@ -17,7 +17,6 @@ struct TrigIndicator: View {
 }
 
 struct KeyboardView: View {
-    let rcl57: Rcl57
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
@@ -26,10 +25,9 @@ struct KeyboardView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: Rcl57) {
-        self.rcl57 = rcl57
-        self.is2nd = rcl57.is2nd()
-        self.isInv = rcl57.isInv()
+    init() {
+        self.is2nd = Rcl57.shared.is2nd()
+        self.isInv = Rcl57.shared.isInv()
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint,
@@ -105,15 +103,15 @@ struct KeyboardView: View {
                                     feedback.impactOccurred()
                                 }
                                 isKeyPressed = true;
-                                rcl57.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
+                                Rcl57.shared.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
                             }
                         }
                         .onEnded { _ in
                             if isKeyPressed {
                                 isKeyPressed = false
-                                is2nd = rcl57.is2nd()
-                                isInv = rcl57.isInv()
-                                rcl57.keyRelease()
+                                is2nd = Rcl57.shared.is2nd()
+                                isInv = Rcl57.shared.isInv()
+                                Rcl57.shared.keyRelease()
                                 change.update()
                             }
                         }
@@ -133,11 +131,11 @@ struct KeyboardView: View {
             TrigIndicator()
                 .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                 .offset(x: 174 * scaleFactorH,
-                        y: getTrigOffsetY(units: rcl57.getTrigUnits(), scaleFactor: scaleFactorV))
+                        y: getTrigOffsetY(units: Rcl57.shared.getTrigUnits(), scaleFactor: scaleFactorV))
         }
         .onAppear() {
-            is2nd = rcl57.is2nd()
-            isInv = rcl57.isInv()
+            is2nd = Rcl57.shared.is2nd()
+            isInv = Rcl57.shared.isInv()
         }
     }
 
@@ -150,6 +148,6 @@ struct KeyboardView: View {
 
 struct KeyboardView_Previews: PreviewProvider {
     static var previews: some View {
-        KeyboardView(rcl57: Rcl57())
+        KeyboardView()
     }
 }

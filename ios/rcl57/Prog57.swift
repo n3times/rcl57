@@ -1,17 +1,5 @@
 import SwiftUI
 
-class Lib57 {
-    let path: URL
-    let name: String
-    let readonly: Bool
-
-    init(path: URL, name: String, readonly: Bool) {
-        self.path = path
-        self.name = name
-        self.readonly = readonly
-    }
-}
-
 class Prog57 : Hashable, Equatable {
     private var prog57 = prog57_t()
 
@@ -39,7 +27,7 @@ class Prog57 : Hashable, Equatable {
 
     func getHTMLHelp() -> String {
         let help = prog57_get_help(&prog57)
-        return Hlp57.getHTML(hlp: String(cString: help!))
+        return Help57.toHTML(hlpString: String(cString: help!))
     }
 
     func getHelp() -> String {

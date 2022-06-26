@@ -9,8 +9,6 @@ struct FullLogView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
 
-    let rcl57 : Rcl57
-
     var body: some View {
         return GeometryReader { geometry in
             let width = geometry.size.width
@@ -37,7 +35,7 @@ struct FullLogView: View {
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
 
-                if rcl57.getLoggedCount() == 0 {
+                if Rcl57.shared.getLoggedCount() == 0 {
                     Text("Log is empty")
                         .frame(width: geometry.size.width,
                                height: geometry.size.height - Style.headerHeight - Style.footerHeight,
@@ -45,7 +43,7 @@ struct FullLogView: View {
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
                 } else {
-                    LogView(rcl57: rcl57)
+                    LogView()
                         .background(Style.ivory)
                         .environmentObject(change)
                 }
@@ -57,11 +55,11 @@ struct FullLogView: View {
                     }
                     .font(Style.titleFont)
                     .frame(width: width / 6, height: Style.footerHeight)
-                    .disabled(rcl57.getLoggedCount() == 0)
+                    .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Clear Log", role: .destructive) {
-                            rcl57.clearLog()
+                            Rcl57.shared.clearLog()
                         }
                      }
                     Spacer()
@@ -75,6 +73,6 @@ struct FullLogView: View {
 
 struct FullLogView_Previews: PreviewProvider {
     static var previews: some View {
-        FullLogView(rcl57: Rcl57())
+        FullLogView()
     }
 }

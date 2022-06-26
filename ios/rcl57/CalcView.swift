@@ -5,8 +5,6 @@
 import SwiftUI
 
 struct CalcView: View {
-    let rcl57: Rcl57
-
     private let fullDisplayHeight = (3 + Style.lineCount) * Style.lineHeight
     private let miniViewHeight = Style.lineCount * Style.lineHeight
 
@@ -19,14 +17,14 @@ struct CalcView: View {
     }
 
     private func getMiniView() -> some View {
-        if rcl57.isLrnMode() {
-            return AnyView(LrnView(rcl57: rcl57, isMiniView: true))
-        } else if rcl57.getLoggedCount() == 0 {
+        if Rcl57.shared.isLrnMode() {
+            return AnyView(LrnView(isMiniView: true))
+        } else if Rcl57.shared.getLoggedCount() == 0 {
             return AnyView(ZStack {
                 Text("Log is empty")
             })
         } else {
-            return AnyView(LogView(rcl57: rcl57))
+            return AnyView(LogView())
         }
     }
 
@@ -87,7 +85,7 @@ struct CalcView: View {
                 .background(Style.ivory)
 
                 // Keyboard View.
-                KeyboardView(rcl57: rcl57)
+                KeyboardView()
                     .environmentObject(change)
             }
         }
@@ -105,6 +103,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(rcl57: Rcl57(), showBack: .constant(false))
+        CalcView(showBack: .constant(false))
     }
 }

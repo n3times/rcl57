@@ -55,7 +55,6 @@ private struct LineView: View {
 
 /** A list of LineView's. */
 struct LogView: View {
-    let rcl57 : Rcl57
     @State private var lines : [Line] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
@@ -64,8 +63,7 @@ struct LogView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: Rcl57) {
-        self.rcl57 = rcl57
+    init() {
         self.maxLines = 500
         updateLog()
     }
@@ -83,14 +81,14 @@ struct LogView: View {
 
     private func updateLog() {
         // Return right away if there are no changes.
-        let newTimestamp = rcl57.getLogTimestamp()
+        let newTimestamp = Rcl57.shared.getLogTimestamp()
         if newTimestamp == lastTimestamp {
             return
         }
         lastTimestamp = newTimestamp
 
         // Clear log and return if necessary.
-        let newLoggedCount = rcl57.getLoggedCount()
+        let newLoggedCount = Rcl57.shared.getLoggedCount()
         if newLoggedCount == 0 {
             clear();
             return
@@ -100,11 +98,11 @@ struct LogView: View {
         if lastLoggedCount > 0 {
             var numberEntry = lines.last?.numberLogEntry
             var opEntry = lines.last?.opLogEntry
-            let type = rcl57.getLogEntry(index: lastLoggedCount).getType()
+            let type = Rcl57.shared.getLogEntry(index: lastLoggedCount).getType()
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = rcl57.getLogEntry(index: lastLoggedCount)
+                opEntry = Rcl57.shared.getLogEntry(index: lastLoggedCount)
             } else {
-                numberEntry = rcl57.getLogEntry(index: lastLoggedCount)
+                numberEntry = Rcl57.shared.getLogEntry(index: lastLoggedCount)
             }
             lines.removeLast()
             lines.append(makeLine(numberEntry: numberEntry!, opEntry: opEntry!))
@@ -114,7 +112,7 @@ struct LogView: View {
         if newLoggedCount > lastLoggedCount {
             let start = max(lastLoggedCount+1, newLoggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
             for i in start...newLoggedCount {
-                let entry = rcl57.getLogEntry(index: i)
+                let entry = Rcl57.shared.getLogEntry(index: i)
                 let type = entry.getType()
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
                     let numberEntry = lines.last?.numberLogEntry
@@ -186,6 +184,6 @@ struct LogView: View {
 
 struct LogView_Previews: PreviewProvider {
     static var previews: some View {
-        LogView(rcl57: Rcl57())
+        LogView()
     }
 }

@@ -21,6 +21,10 @@ struct LogEntry {
 }
 
 class Rcl57 {
+    static private let stateFilename = "rcl57.dat"
+
+    static let shared = Rcl57(filename: stateFilename)
+
     var rcl57 = rcl57_t()
 
     init() {
@@ -28,8 +32,7 @@ class Rcl57 {
     }
 
     // Initializes a RCL57 object from the state stored in a given file.
-    // Returns nil if the object was not successfully initialized.
-    init?(filename: String) {
+    init(filename: String) {
         var fileRawData: Data?
         var fileRawBuffer: UnsafePointer<Int8>?
         let dirURL: URL? =
@@ -37,22 +40,26 @@ class Rcl57 {
         let fileURL: URL? = dirURL?.appendingPathComponent(filename)
 
         if fileURL == nil {
-            return nil
+            rcl57_init(&rcl57)
+            return
         }
         do {
             try fileRawData = Data(contentsOf: fileURL!)
         } catch {
-            return nil
+            rcl57_init(&rcl57)
+            return
         }
         if fileRawData == nil {
-            return nil
+            rcl57_init(&rcl57)
+            return
         }
         fileRawBuffer = fileRawData!.withUnsafeBytes({
             (ptr) -> UnsafePointer<Int8> in
             return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
         })
         if fileRawBuffer == nil {
-            return nil
+            rcl57_init(&rcl57)
+            return
         }
         memcpy(&rcl57, fileRawBuffer, MemoryLayout.size(ofValue: rcl57))
     }

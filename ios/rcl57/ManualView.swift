@@ -20,7 +20,7 @@ struct ManualView: View {
             }
         }
         .listStyle(PlainListStyle())
-        .navigationTitle("Manual")
+        .navigationTitle("Help")
         .navigationBarItems(
             trailing:
                 Button(action: {

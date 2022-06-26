@@ -113,27 +113,24 @@ private struct FlipOpacity: AnimatableModifier {
 }
 
 struct MainView: View {
-    private let rcl57: Rcl57
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
     @StateObject private var change: Change
     @State var showBack = false
 
-    init(rcl57: Rcl57) {
-        self.rcl57 = rcl57
-
-        _change = StateObject(wrappedValue: Change(rcl57: rcl57))
+    init() {
+        _change = StateObject(wrappedValue: Change(rcl57: Rcl57.shared))
     }
 
     private func burst(ms: Int32) {
-        _ = self.rcl57.advance(ms: ms)
+        _ = Rcl57.shared.advance(ms: ms)
         change.updateDisplayString()
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
-        let front = CalcView(rcl57: rcl57, showBack: $showBack)
-        let back2 = SettingsView(rcl57: rcl57, showBack: $showBack)
+        let front = CalcView(showBack: $showBack)
+        let back2 = SettingsView(rcl57: Rcl57.shared, showBack: $showBack)
 
         return ZStack {
             ZStack {
@@ -144,11 +141,11 @@ struct MainView: View {
                 }
 
                 if change.isFullLog {
-                    FullLogView(rcl57: rcl57)
+                    FullLogView()
                         .environmentObject(change)
                         .transition(.move(edge: .trailing))
                 } else if change.isFullProgram {
-                    FullLrnView(rcl57: rcl57)
+                    FullLrnView()
                         .environmentObject(change)
                         .transition(.move(edge: .leading))
                 }
@@ -168,6 +165,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(rcl57: Rcl57())
+        MainView()
     }
 }

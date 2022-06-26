@@ -54,7 +54,6 @@ private struct LineView: View {
 }
 
 struct LrnView: View {
-    private let rcl57: Rcl57
     @State private var lines : [Line] = []
 
     private let isMiniView: Bool
@@ -66,33 +65,32 @@ struct LrnView: View {
 
     @EnvironmentObject var change: Change
 
-    init(rcl57: Rcl57, isMiniView: Bool) {
-        let pc = rcl57.getProgramPc()
-        self.rcl57 = rcl57
+    init(isMiniView: Bool) {
+        let pc = Rcl57.shared.getProgramPc()
         self.isMiniView = isMiniView
         self.pc = pc
-        self.isOpEditInLrn = rcl57.isOpEditInLrn()
-        self.isHpLrn = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
+        self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         if pc == -1 { middle = 0 }
-        else if pc == 0 && !rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
+        else if pc == 0 && !Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
         else if pc == 49 { middle = 48 }
         else { middle = pc}
     }
 
     private func updateMiddle() {
-        let pc = rcl57.getProgramPc()
+        let pc = Rcl57.shared.getProgramPc()
         middle = pc
         self.pc = pc
-        self.isOpEditInLrn = rcl57.isOpEditInLrn()
-        self.isHpLrn = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
+        self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         if pc == -1 { middle = 0 }
         else if pc == 0 && !self.isHpLrn { middle = 1 }
         else { middle = pc }
     }
 
     private func getLineView(_ index: Int, active: Bool) -> some View {
-        let c = rcl57.getProgramPc()
-        let last = rcl57.getProgramLastIndex()
+        let c = Rcl57.shared.getProgramPc()
+        let last = Rcl57.shared.getProgramLastIndex()
 
         if index == -1 {
             return LineView(line: Line(index: 99,
@@ -102,7 +100,7 @@ struct LrnView: View {
             .listRowSeparator(.hidden)
         }
         return LineView(line: Line(index: index,
-                                   op: rcl57.getProgramOp(index: index, isAlpha: true),
+                                   op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
                                    active: isMiniView || index <= last,
                                    isPc: isMiniView && index == c))
         .listRowSeparator(.hidden)
@@ -146,6 +144,6 @@ struct LrnView: View {
 
 struct LrnView_Previews: PreviewProvider {
     static var previews: some View {
-        LrnView(rcl57: Rcl57(), isMiniView: false)
+        LrnView(isMiniView: false)
     }
 }

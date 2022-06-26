@@ -5,8 +5,6 @@ struct FullLrnView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
 
-    let rcl57 : Rcl57
-
     var body: some View {
         return GeometryReader { geometry in
             let width = geometry.size.width
@@ -34,7 +32,7 @@ struct FullLrnView: View {
                 .foregroundColor(Style.ivory)
 
                 // Program.
-                LrnView(rcl57: rcl57, isMiniView: false)
+                LrnView(isMiniView: false)
                     .background(Style.ivory)
                     .environmentObject(change)
 
@@ -46,11 +44,11 @@ struct FullLrnView: View {
                     }
                     .font(Style.titleFont)
                     .frame(width: width * 2 / 3, height: Style.footerHeight)
-                    .disabled(rcl57.getProgramLastIndex() == -1)
+                    .disabled(Rcl57.shared.getProgramLastIndex() == -1)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Clear Program", role: .destructive) {
-                            rcl57.clearProgram()
+                            Rcl57.shared.clearProgram()
                             change.forceUpdate()
                         }
                     }
@@ -66,6 +64,6 @@ struct FullLrnView: View {
 
 struct FullLrnView_Previews: PreviewProvider {
     static var previews: some View {
-        FullLrnView(rcl57: Rcl57())
+        FullLrnView()
     }
 }
