@@ -8,7 +8,12 @@
 
 static bool is_post_pause(ti57_t *ti57) {
     long diff = ti57->current_cycle - ti57->last_pause_cycle;
-    return diff > 0 && diff <= 1000;
+    return diff > 0 && diff <= 500;
+}
+
+static bool is_post_eval(ti57_t *ti57) {
+    long diff = ti57->current_cycle - ti57->last_eval_cycle;
+    return diff > 0 && diff <= 500;
 }
 
 // -1 means as fast as possible.
@@ -34,7 +39,6 @@ static double get_goal_speed(rcl57_t *rcl57)
             rcl57->options & RCL57_QUICK_STOP_FLAG) {
             return -1;
         } else if (ti57->activity == TI57_PAUSE) {
-            ti57->last_pause_cycle = ti57->current_cycle;
             if (rcl57->options & RCL57_SHORT_PAUSE_FLAG) {
                 return 2;
             } else {
@@ -47,6 +51,8 @@ static double get_goal_speed(rcl57_t *rcl57)
                 return 1;
             }
         } else if (is_post_pause(ti57)) {
+            return 1;
+        } else if (is_post_eval(ti57)) {
             return 1;
         }
         return -1;
@@ -125,7 +131,8 @@ char *rcl57_get_display(rcl57_t *rcl57)
 
     if (ti57->mode == TI57_RUN &&
         rcl57->options & RCL57_SHOW_RUN_INDICATOR_FLAG &&
-        (get_goal_speed(rcl57) < 0 || is_post_pause(ti57))) {
+        ti57->activity != TI57_PAUSE &&
+        (get_goal_speed(rcl57) < 0 || is_post_pause(ti57) || is_post_eval(ti57))) {
         return "[           ";
     }
 

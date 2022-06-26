@@ -319,6 +319,7 @@ static void update_mode(ti57_t *ti57)
         ti57->mode = TI57_RUN;
     } else {
         ti57->mode = TI57_EVAL;
+        ti57->last_eval_cycle = ti57->current_cycle;
     }
 }
 
@@ -338,6 +339,7 @@ static void update_activity(ti57_t *ti57)
 {
     if (ti57->stack[0] == 0x010a || ti57->stack[1] == 0x010a) {
         ti57->activity = TI57_PAUSE;
+        ti57->last_pause_cycle = ti57->current_cycle;
     } else if (is_pc_in(ti57, 0x01fc, 0x01fe, -1)) {
         ti57->activity = TI57_POLL_RS_RELEASE;
     } else if (is_pc_in(ti57, 0x04a3, 0x04a5, -1)) {
