@@ -15,20 +15,20 @@ struct Settings {
     static let HAPTIC_STYLE_KEY = "haptic_style"
     static let HAS_KEY_CLICK_KEY = "has_key_click"
 
-    static private func setOriginalSpeed(has_original_speed: Bool, rcl57: Rcl57) {
-        rcl57.setSpeedup(speedup: has_original_speed ? 2 : 1000)
-        rcl57.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: !has_original_speed)
-        rcl57.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: !has_original_speed)
-        rcl57.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: !has_original_speed)
-        rcl57.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: !has_original_speed)
+    static private func setOriginalSpeed(has_original_speed: Bool) {
+        Rcl57.shared.setSpeedup(speedup: has_original_speed ? 2 : 1000)
+        Rcl57.shared.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: !has_original_speed)
+        Rcl57.shared.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: !has_original_speed)
+        Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: !has_original_speed)
+        Rcl57.shared.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: !has_original_speed)
     }
 
-    static func setFlavor(flavor: Flavor, rcl57: Rcl57) {
+    static func setFlavor(flavor: Flavor) {
         UserDefaults.standard.set(flavor.rawValue, forKey: FLAVOR_KEY)
-        setOriginalSpeed(has_original_speed: flavor == .classic, rcl57: rcl57)
-        rcl57.setOptionFlag(
+        setOriginalSpeed(has_original_speed: flavor == .classic)
+        Rcl57.shared.setOptionFlag(
             option: RCL57_ALPHA_LRN_MODE_FLAG, value: flavor == .alpha || flavor == .rebooted)
-        rcl57.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: flavor == .rebooted)
+        Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: flavor == .rebooted)
     }
 
     static func getFlavor() -> Flavor {

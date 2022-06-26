@@ -4,18 +4,18 @@
 
 #include "utils57.h"
 
-#define NAME_HEADER  ">>> NAME"
-#define HELP_HEADER  ">>> HELP"
-#define STATE_HEADER ">>> STATE"
+#define NAME_HEADER  "@!# name"
+#define HELP_HEADER  "@!# help"
+#define STATE_HEADER "@!# state"
 
 static bool find_next_section(char *str, char *section_title_out, char *section_out) {
-    char *start = strstr(str, ">>> ");
+    char *start = strstr(str, "@!# ");
     if (start == NULL) return false;
     char *end = strchr(str, '\n');
     memcpy(section_title_out, start, end - start);
     section_title_out[end - start] = '\0';
     start = end + 1;
-    end = strstr(start, ">>> ");
+    end = strstr(start, "@!# ");
     if (end == NULL) {
         end = strchr(start, '\0');
     }
@@ -41,13 +41,13 @@ static int hex(char c) {
 
 void prog57_from_text(prog57_t *program, char *text_in) {
     memset(program, '\0', sizeof(prog57_t));
-    char title[1000];
+    char title[100];
     char section[5000];
     while (find_next_section(text_in, title, section)) {
         if (!strcmp(title, NAME_HEADER)) {
-            strcpy(program->name, section);
+            strncpy(program->name, section, sizeof(program->name) - 1);
         } else if (!strcmp(title, HELP_HEADER)) {
-            strcpy(program->help, section);
+            strncpy(program->help, section, sizeof(program->help) - 1);
         } else if (!strcmp(title, STATE_HEADER)) {
             for (int i = 0; i < 16; i++) {
                 for (int j = 0; j < 16; j++) {

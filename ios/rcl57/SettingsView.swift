@@ -1,13 +1,11 @@
 import SwiftUI
 
 struct FlavorsView: View {
-    let rcl57: Rcl57
-
     @Binding var flavor: Flavor
     @Binding var showBack: Bool
 
     private func setFlavor(flavor: Flavor) {
-        Settings.setFlavor(flavor: flavor, rcl57: rcl57)
+        Settings.setFlavor(flavor: flavor)
     }
 
     var body: some View {
@@ -83,11 +81,11 @@ struct SettingsView: View {
                 }
                 NavigationLink(destination: LibraryView(showBack: $showBack, lib: Lib57.examplesLib)) {
                     HStack {
-                        Text("Library")
+                        Text(Lib57.examplesLib.name)
                     }
                 }
                 Section("Options") {
-                    NavigationLink(destination: FlavorsView(rcl57: rcl57, flavor: $flavor, showBack: $showBack)) {
+                    NavigationLink(destination: FlavorsView(flavor: $flavor, showBack: $showBack)) {
                         HStack {
                             Text("Flavor")
                             Spacer()

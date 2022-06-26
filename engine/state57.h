@@ -63,6 +63,7 @@ typedef struct ti57_s {
     ti57_reg_t dA, dB;               // Copy of A and B for display purposes.
     unsigned long current_cycle;     // The number of cycles the emulator has been running for.
     unsigned long last_disp_cycle;   // The cycle DISP (display refresh) was executed last.
+    unsigned long last_pause_cycle;  // The cycle the calculator was last paused.
     ti57_mode_t mode;                // The current mode.
     ti57_activity_t activity;        // The current activity.
 

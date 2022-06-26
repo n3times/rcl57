@@ -14,7 +14,7 @@ struct LibraryView: View {
             }
         }
         .listStyle(PlainListStyle())
-        .navigationTitle("Library")
+        .navigationTitle(lib.name)
         .navigationBarItems(
             trailing:
                 Button(action: {

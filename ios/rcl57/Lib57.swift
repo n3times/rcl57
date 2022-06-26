@@ -1,12 +1,14 @@
 import SwiftUI
 
 class Lib57 {
-    let url: URL
+    private let url: URL
+    private let readonly: Bool
+
     let name: String
-    let readonly: Bool
     var programs: [Prog57]
 
-    static let examplesURL = Bundle.main.bundleURL.appendingPathComponent("example_programs")
+    private static let examplesURL =
+        Bundle.main.bundleURL.appendingPathComponent("example_programs")
     static let examplesLib = Lib57(url: examplesURL, name: "Example Programs", readonly: true)
 
     init(url: URL, name: String, readonly: Bool) {

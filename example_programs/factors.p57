@@ -1,6 +1,6 @@
->>> NAME
+@!# name
 Factors
->>> HELP
+@!# help
 =Factors=
 
 This program allows the user to decompose an integer into the product of its prime factors.
@@ -13,7 +13,7 @@ You will see on the display the prime factors flashing one after the other. The 
 ==Notes==
 
 In Turbo mode this program takes 13 seconds to determine that 99,999,989 is prime and around 7 minutes to determine that 99,999,999,977 is prime.
->>> STATE
+@!# state
 0000000000000000
 0000000000000000
 0000000000000000

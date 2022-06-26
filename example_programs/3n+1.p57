@@ -1,6 +1,6 @@
->>> NAME
+@!# name
 3n + 1
->>> HELP
+@!# help
 =3n + 1=
 
 This program allows the user to test the ''3n + 1 conjecture'', a problem that has baffled mathematicians since it was proposed by ''Lothar Collatz'' in 1937.
@@ -17,7 +17,7 @@ The question is: if we start with an arbitrary integer, will we always reach 1? 
 : Enter ''n'' and press $$RST R/S$$
 The display will show the corresponding sequence. This sequence will also appear in the log.
 To have a sense of why this conjecture is not obvious, start with 27...
->>> STATE
+@!# state
 0000000000000000
 0000000000000000
 0000000000000000
