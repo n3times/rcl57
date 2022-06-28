@@ -13,6 +13,12 @@ The goal of this game is to find a mistery number between ''100'' and ''999'' in
 # The game ends when the display blinks. If it shows @@0@@, you won. Otherwise you lost.
 # For a new game, press $$CLR R/S$$ and go back to step ''3.''
 
+==Example==
+$$0.3227 RST R/S$$
+$$500$$ @@1@@
+$$200$$ @@-1@@
+$$...$$
+
 ==Notes==
 If you play in Classic mode, try not to peek at the display when the mystery number is being generated...
 @!# state

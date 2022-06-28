@@ -10,9 +10,13 @@ This program allows the user to decompose an integer into the product of its pri
 
 You will see on the display the prime factors flashing one after the other. The last factor is preceded by the minus sign.
 
-==Notes==
+==Example==
+$$30 RST R/S$$ @@[ 2@@ @@[ 3@@ @@-5@@
+$$17 R/S$$ @@-17@@
 
-In Turbo mode this program takes 13 seconds to determine that 99,999,989 is prime and around 7 minutes to determine that 99,999,999,977 is prime.
+==Notes==
+* The input should be an integer between 0 and 99,999,999,999.
+* In Turbo mode this program takes 13 seconds to determine that 99,999,989 is prime and around 7 minutes to determine that 99,999,999,977 is prime.
 @!# state
 0000000000000000
 0000000000000000

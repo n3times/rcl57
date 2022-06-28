@@ -9,10 +9,13 @@ This is the '''Hello World''' program from the tutorial:
 :$$$Pause$$$
 :$$$Gto 0$$$
 
+==Instructions==
 Start with:
 :$$CLR RST R/S$$
 And stop with:
 :$$R/S$$
+==Example==
+$$CLR RST R/S$$ @@[ 1@@ @@[ 2@@ @@[ 3@@ @@[ 4@@ ...
 @!# state
 0000000000000000
 0000000000000000

@@ -15,6 +15,14 @@ The user needs to provide ''f'' and 2 numbers ''x<sub>1</sub>'' and ''x<sub>2</s
 # ''x<sub>2</sub>'' $$STO 2$$
 # $$RST R/S$$
 
+==Example==
+# $$GTO 0 LRN$$
+# $$x2 - 2 = INV SBR$$
+# $$LRN$$
+# $$0 STO 1$$ @@-2@@
+# $$2 STO 2$$ @@2@@
+# $$RST R/S$$ @@1.4142136@@
+
 ==Notes==
 * ''f'' can use up to 18 steps
 * ''f'' can use registers 4, 5, 6 and 7
