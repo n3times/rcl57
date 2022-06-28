@@ -41,6 +41,14 @@ final class Change: ObservableObject {
         }
     }
 
+    func updateLogTimestamp() {
+        let logTimestamp = rcl57!.getLogTimestamp()
+        if self.logTimestamp != logTimestamp {
+            self.logTimestamp = logTimestamp
+            changeCount += 1
+        }
+    }
+
     func forceUpdate() {
         changeCount += 1
     }
@@ -125,6 +133,7 @@ struct MainView: View {
 
     private func burst(ms: Int32) {
         _ = Rcl57.shared.advance(ms: ms)
+        change.updateLogTimestamp()
         change.updateDisplayString()
     }
 

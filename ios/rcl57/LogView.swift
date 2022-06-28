@@ -165,6 +165,9 @@ struct LogView: View {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
+            .onReceive(change.$logTimestamp) { _ in
+                updateLog()
+            }
             .onReceive(change.$displayString) { _ in
                 updateLog()
             }
