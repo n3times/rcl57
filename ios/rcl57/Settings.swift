@@ -1,46 +1,44 @@
 import UIKit
 
-enum Flavor: String, CaseIterable, Identifiable {
-    case classic = "Classic"
-    case turbo = "Turbo"
-    case alpha = "Alpha"
-    case rebooted = "Rebooted"
-
-    var id: Self { self }
-}
-
 struct Settings {
-    static let FLAVOR_KEY = "flavor_key"
     static let HAS_HAPTIC_KEY = "has_haptic"
     static let HAPTIC_STYLE_KEY = "haptic_style"
     static let HAS_KEY_CLICK_KEY = "has_key_click"
+    static let TURBO_KEY = "turbo_key"
+    static let ALPHA_KEY = "alpha_key"
+    static let HP_KEY = "hp_key"
 
-    static private func setOriginalSpeed(has_original_speed: Bool) {
-        Rcl57.shared.setSpeedup(speedup: has_original_speed ? 2 : 1000)
-        Rcl57.shared.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: !has_original_speed)
-        Rcl57.shared.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: !has_original_speed)
-        Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: !has_original_speed)
-        Rcl57.shared.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: !has_original_speed)
+    static func setTurboSpeed(turbo: Bool) {
+        UserDefaults.standard.set(turbo, forKey: TURBO_KEY)
+        Rcl57.shared.setSpeedup(speedup: turbo ? 1000 : 2)
+        Rcl57.shared.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: turbo)
+
+        // We set these values to always true since the original behavior can be very frustrating.
+        Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: true)
+        Rcl57.shared.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: true)
+        Rcl57.shared.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: true)
     }
 
-    static func setFlavor(flavor: Flavor) {
-        UserDefaults.standard.set(flavor.rawValue, forKey: FLAVOR_KEY)
-        setOriginalSpeed(has_original_speed: flavor == .classic)
-        Rcl57.shared.setOptionFlag(
-            option: RCL57_ALPHA_LRN_MODE_FLAG, value: flavor == .alpha || flavor == .rebooted)
-        Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: flavor == .rebooted)
+    static func getTurboSpeed() -> Bool {
+        return UserDefaults.standard.bool(forKey: TURBO_KEY)
     }
 
-    static func getFlavor() -> Flavor {
-        let rawFlavor = UserDefaults.standard.string(forKey: FLAVOR_KEY)
-        if rawFlavor == nil {
-            return .turbo
-        }
-        let flavor = Flavor(rawValue: rawFlavor!)
-        if flavor == nil {
-            return .turbo
-        }
-        return flavor!
+    static func setAlphaDisplay(alpha: Bool) {
+        UserDefaults.standard.set(alpha, forKey: ALPHA_KEY)
+        Rcl57.shared.setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: alpha)
+    }
+
+    static func getAlphaDisplay() -> Bool {
+        return UserDefaults.standard.bool(forKey: ALPHA_KEY)
+    }
+
+    static func setHPLrnMode(hpLrn: Bool) {
+        UserDefaults.standard.set(hpLrn, forKey: HP_KEY)
+        Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: hpLrn)
+    }
+
+    static func getHPLrnMode() -> Bool {
+        return UserDefaults.standard.bool(forKey: HP_KEY)
     }
 
     static func getHapticStyle() -> UIImpactFeedbackGenerator.FeedbackStyle? {
@@ -63,7 +61,7 @@ struct Settings {
         return UserDefaults.standard.bool(forKey: HAS_KEY_CLICK_KEY)
     }
 
-    static func setHasKeyClick(has_key_click: Bool, rcl57: Rcl57) {
+    static func setHasKeyClick(has_key_click: Bool) {
         UserDefaults.standard.set(has_key_click, forKey: HAS_KEY_CLICK_KEY)
     }
 }

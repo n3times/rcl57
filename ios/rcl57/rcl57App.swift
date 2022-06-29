@@ -7,7 +7,9 @@ struct rcl57App: App {
     let stateFilename = "rcl57.dat"
 
     init() {
-        Settings.setFlavor(flavor: Settings.getFlavor())
+        Settings.setTurboSpeed(turbo: Settings.getTurboSpeed())
+        Settings.setAlphaDisplay(alpha: Settings.getAlphaDisplay())
+        Settings.setHPLrnMode(hpLrn: Settings.getHPLrnMode())
     }
 
     var body: some Scene {

@@ -54,10 +54,12 @@ struct CalcView: View {
                     getButtonView(text: Style.leftArrow, width: width / 6,
                                   prop: $change.isFullProgram)
                     Spacer()
+                    getButtonView(text: Style.circle, width: width / 6, prop: $showBack)
+                    Spacer()
                     getButtonView(text: miniViewIcon, width: width / 6,
                                   prop: $change.isMiniViewVisible)
                     Spacer()
-                    getButtonView(text: Style.circle, width: width / 6, prop: $showBack)
+                    getButtonView(text: Style.square, width: width / 6, prop: $showBack)
                     Spacer()
                     getButtonView(text: Style.rightArrow, width: width / 6, prop: $change.isFullLog)
                 }

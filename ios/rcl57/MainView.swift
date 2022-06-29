@@ -5,7 +5,6 @@
 import SwiftUI
 
 final class Change: ObservableObject {
-    var rcl57: Rcl57?
     var pc: Int
     var isAlpha: Bool
     var isHpLrnMode: Bool
@@ -19,22 +18,21 @@ final class Change: ObservableObject {
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
 
-    init(rcl57: Rcl57) {
-        self.rcl57 = rcl57
-        self.pc = rcl57.getProgramPc()
-        self.isAlpha = rcl57.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
-        self.isHpLrnMode = rcl57.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        self.isOpEditInLrn = rcl57.isOpEditInLrn()
-        self.displayString = rcl57.display()
+    init() {
+        self.pc = Rcl57.shared.getProgramPc()
+        self.isAlpha = Rcl57.shared.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
+        self.isHpLrnMode = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
+        self.displayString = Rcl57.shared.display()
         self.isFullLog = false
         self.isFullProgram = false
         self.isMiniViewVisible = false
         self.leftTransition = false
-        self.logTimestamp = rcl57.getLogTimestamp()
+        self.logTimestamp = Rcl57.shared.getLogTimestamp()
     }
 
     func updateDisplayString() {
-        let display = rcl57!.display()
+        let display = Rcl57.shared.display()
         if display != self.displayString {
             self.displayString = display
             forceUpdate()
@@ -42,7 +40,7 @@ final class Change: ObservableObject {
     }
 
     func updateLogTimestamp() {
-        let logTimestamp = rcl57!.getLogTimestamp()
+        let logTimestamp = Rcl57.shared.getLogTimestamp()
         if self.logTimestamp != logTimestamp {
             self.logTimestamp = logTimestamp
             changeCount += 1
@@ -54,31 +52,31 @@ final class Change: ObservableObject {
     }
 
     func update() {
-        let newPc = rcl57!.getProgramPc()
+        let newPc = Rcl57.shared.getProgramPc()
         if self.pc != newPc {
             self.pc = newPc
             changeCount += 1
         }
 
-        let isAlpha = rcl57!.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
+        let isAlpha = Rcl57.shared.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
         if self.isAlpha != isAlpha {
             self.isAlpha = isAlpha
             changeCount += 1
         }
 
-        let isHpLrnMode = rcl57!.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
+        let isHpLrnMode = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         if self.isHpLrnMode != isHpLrnMode {
             self.isHpLrnMode = isHpLrnMode
             changeCount += 1
         }
 
-        let isOpEditInLrn = rcl57!.isOpEditInLrn()
+        let isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         if self.isOpEditInLrn != isOpEditInLrn {
             self.isOpEditInLrn = isOpEditInLrn
             changeCount += 1
         }
 
-        let logTimestamp = rcl57!.getLogTimestamp()
+        let logTimestamp = Rcl57.shared.getLogTimestamp()
         if self.logTimestamp != logTimestamp {
             self.logTimestamp = logTimestamp
             changeCount += 1
@@ -128,7 +126,7 @@ struct MainView: View {
     @State var showBack = false
 
     init() {
-        _change = StateObject(wrappedValue: Change(rcl57: Rcl57.shared))
+        _change = StateObject(wrappedValue: Change())
     }
 
     private func burst(ms: Int32) {
@@ -139,7 +137,7 @@ struct MainView: View {
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
         let front = CalcView(showBack: $showBack)
-        let back2 = SettingsView(rcl57: Rcl57.shared, showBack: $showBack)
+        let back2 = SettingsView(showBack: $showBack)
 
         return ZStack {
             ZStack {

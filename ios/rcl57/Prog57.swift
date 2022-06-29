@@ -39,12 +39,12 @@ class Prog57 : Hashable, Equatable {
         prog57_set_help(&prog57, (help as NSString).utf8String)
     }
 
-    func loadState(rcl57: Rcl57) {
-        prog57_load_state(&prog57, &rcl57.rcl57)
+    func loadState() {
+        prog57_load_state(&prog57, &Rcl57.shared.rcl57)
     }
 
-    func saveState(rcl57: Rcl57) {
-        prog57_save_state(&prog57, &rcl57.rcl57)
+    func saveState() {
+        prog57_save_state(&prog57, &Rcl57.shared.rcl57)
     }
 
     func save(filename: String) -> Bool {

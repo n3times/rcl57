@@ -11,7 +11,7 @@ struct ProgramView: View {
             HStack(spacing: 0) {
                 Spacer()
                 Button("Load") {
-                    program.loadState(rcl57: Rcl57.shared)
+                    program.loadState()
                     withAnimation {
                         showBack.toggle()
                     }

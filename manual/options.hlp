@@ -1,0 +1,11 @@
+==Turbo Speed==
+
+Makes RCL-57 approximately 1000 times faster than the original TI-57.
+
+==Alpha Display==
+
+Uses an alphanumeric display to represent instructions in LRN mode: for example @@STO 2@@ instead of @@32 2@@ on an actual TI-57.
+
+==HP LRN Mode==
+
+Makes the TI-57 behave like a classic HP calculator in LRN mode: it displays the last step entered instead of the upcoming one.

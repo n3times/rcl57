@@ -4,7 +4,7 @@ struct ManualView: View {
     @Binding var showBack: Bool
 
     let hlpPages = [["About", "about", "About RCL-57"],
-                    ["Flavors", "flavors", "Flavors Explained"],
+                    ["Options", "options", "Options Explained"],
                     ["Basics", "basics", "Calculator Basics"],
                     ["Math", "math", "Math Functions"],
                     ["Registers", "registers", "Registers"],

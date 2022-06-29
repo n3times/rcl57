@@ -21,4 +21,5 @@ struct Style {
     static let downArrow = "\u{25b3}"
     static let upArrow = "\u{25bd}"
     static let circle = "\u{25ef}"
+    static let square = "\u{25a2}"
 }
