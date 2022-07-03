@@ -1,7 +1,7 @@
 import SwiftUI
 
 /** A list of LineView's. */
-struct FullLrnView: View {
+struct FullStateView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
 
@@ -12,8 +12,18 @@ struct FullLrnView: View {
                 // Menu.
                 HStack(spacing: 0) {
                     Spacer()
-                        .frame(width: width / 6, height: Style.headerHeight)
-                    Text("Program")
+                        .frame(width: width / 24, height: Style.headerHeight)
+                    Button(action: {
+                        change.showProgram.toggle()
+                    }) {
+                        Text(!change.showProgram ? Style.ying : Style.yang)
+                            .frame(width: width / 12, height: Style.headerHeight)
+                            .font(Style.directionsFontLarge)
+                            .contentShape(Rectangle())
+                    }
+                    Spacer()
+                        .frame(width: width / 24, height: Style.headerHeight)
+                    Text(change.showProgram ? "Program" : "Registers")
                         .frame(width: width * 2 / 3, height: Style.headerHeight)
                         .font(Style.titleFont)
                     // Right button.
@@ -32,7 +42,7 @@ struct FullLrnView: View {
                 .foregroundColor(Style.ivory)
 
                 // Program.
-                LrnView(isMiniView: false)
+                StateView(isMiniView: false)
                     .background(Style.ivory)
                     .environmentObject(change)
 
@@ -44,11 +54,12 @@ struct FullLrnView: View {
                     }
                     .font(Style.titleFont)
                     .frame(width: width * 2 / 3, height: Style.footerHeight)
-                    .disabled(Rcl57.shared.getProgramLastIndex() == -1)
+                    .disabled(change.showProgram ? Rcl57.shared.getProgramLastIndex() == -1
+                                                 : Rcl57.shared.getRegistersLastIndex() == -1)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                        Button("Clear Program", role: .destructive) {
-                            Rcl57.shared.clearProgram()
+                        Button(change.showProgram ? "Clear Program" : "Clear Registers", role: .destructive) {
+                            change.showProgram ? Rcl57.shared.clearProgram() : Rcl57.shared.clearRegisters()
                             change.forceUpdate()
                         }
                     }
@@ -62,8 +73,8 @@ struct FullLrnView: View {
     }
 }
 
-struct FullLrnView_Previews: PreviewProvider {
+struct FullStateView_Previews: PreviewProvider {
     static var previews: some View {
-        FullLrnView()
+        FullStateView()
     }
 }

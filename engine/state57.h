@@ -148,6 +148,12 @@ ti57_reg_t *ti57_get_regX(ti57_t *ti57);
 /** The T register, same as user register 7. */
 ti57_reg_t *ti57_get_regT(ti57_t *ti57);
 
+/** Returns the index of the last non-zero register, or -1 if none,*/
+int ti57_get_registers_last_index(ti57_t *ti57);
+
+void ti57_clear_registers(ti57_t *ti57);
+
+
 /**
  * USER PROGRAM
  */
@@ -161,7 +167,7 @@ int ti57_get_program_ret(ti57_t *ti57, int i);
 /** Returns the operation at a given step (step in 0..49). */
 op57_t *ti57_get_program_op(ti57_t *ti57, int step);
 
-/** Returns the index of the first non-zero step, or -1 if none,*/
+/** Returns the index of the last non-zero step, or -1 if none,*/
 int ti57_get_program_last_index(ti57_t *ti57);
 
 void ti57_clear_program(ti57_t *ti57);

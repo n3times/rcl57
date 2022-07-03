@@ -184,6 +184,23 @@ ti57_reg_t *ti57_get_regT(ti57_t *ti57)
     return &ti57->X[4];
 }
 
+int ti57_get_registers_last_index(ti57_t *ti57)
+{
+    int last_index = 7;
+    while (last_index >= 0 && (*ti57_get_user_reg(ti57, last_index))[12] == 0) {
+        last_index -= 1;
+    }
+    return last_index;
+}
+
+void ti57_clear_registers(ti57_t *ti57)
+{
+    for (int i = 0; i < 8; i++) {
+        ti57_reg_t *reg = ti57_get_user_reg(ti57, i);
+        memset(reg, 0, 14 * sizeof(unsigned char));
+    }
+}
+
 /**
  * USER PROGRAM
  */
@@ -280,6 +297,7 @@ int ti57_get_program_last_index(ti57_t *ti57)
 
 void ti57_clear_program(ti57_t *ti57)
 {
+    // Get out of LRN mode (by pressing 2nd LRN) if necessary.
     if (ti57_get_mode(ti57) == TI57_LRN) {
         if (ti57_is_2nd(ti57)) {
             ti57_key_press(ti57, 1, 1);

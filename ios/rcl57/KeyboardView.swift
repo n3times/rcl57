@@ -97,9 +97,8 @@ struct KeyboardView: View {
                                 if Settings.hasKeyClick() {
                                     AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 }
-                                if Settings.getHapticStyle() != nil {
-                                    let feedback = UIImpactFeedbackGenerator(
-                                        style: Settings.getHapticStyle()!)
+                                if Settings.hasHaptic() {
+                                    let feedback = UIImpactFeedbackGenerator(style: .medium)
                                     feedback.impactOccurred()
                                 }
                                 isKeyPressed = true;

@@ -7,6 +7,7 @@ struct Style {
     static let blackish = Color(red: 0.1, green: 0.1, blue: 0.11)
 
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
+    static let directionsFontLarge = Font.system(size: 28, weight: .regular, design: .monospaced)
     static let titleFont = Font.system(size: 22, weight: .medium)
     static let lineFont = Font.system(size: isIpod ? 17 : 20, weight:.semibold, design: .monospaced)
 
@@ -22,4 +23,6 @@ struct Style {
     static let upArrow = "\u{25bd}"
     static let circle = "\u{25ef}"
     static let square = "\u{25a2}"
+    static let ying = "\u{25d0}"
+    static let yang = "\u{25d1}"
 }

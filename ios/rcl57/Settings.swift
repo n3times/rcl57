@@ -41,20 +41,12 @@ struct Settings {
         return UserDefaults.standard.bool(forKey: HP_KEY)
     }
 
-    static func getHapticStyle() -> UIImpactFeedbackGenerator.FeedbackStyle? {
-        if !UserDefaults.standard.bool(forKey: HAS_HAPTIC_KEY) {
-            return nil
-        }
-        let rawValue = UserDefaults.standard.integer(forKey: HAPTIC_STYLE_KEY)
-        return UIImpactFeedbackGenerator.FeedbackStyle(rawValue: rawValue)
+    static func hasHaptic() -> Bool {
+        return UserDefaults.standard.bool(forKey: HAS_HAPTIC_KEY)
     }
 
-    static func setHapticStyle(style: UIImpactFeedbackGenerator.FeedbackStyle?) {
-        UserDefaults.standard.set(style != nil, forKey: HAS_HAPTIC_KEY)
-        if style == nil {
-            return
-        }
-        UserDefaults.standard.set(style!.rawValue, forKey: HAPTIC_STYLE_KEY)
+    static func setHasHaptic(has_haptic: Bool) {
+        UserDefaults.standard.set(has_haptic, forKey: HAS_HAPTIC_KEY)
     }
 
     static func hasKeyClick() -> Bool {

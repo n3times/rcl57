@@ -8,8 +8,7 @@ struct SettingsView: View {
     @State private var hasAlphaDisplay = Settings.getAlphaDisplay()
     @State private var hasHPLrnMode = Settings.getHPLrnMode()
 
-    @State private var hapticStyle = Settings.getHapticStyle() == nil ? FEEDBACK_NONE
-                                                                      : Settings.getHapticStyle()!
+    @State private var hasHaptic = Settings.hasHaptic()
     @State private var hasKeyClick = Settings.hasKeyClick()
     @State private var isPresentingConfirm = false
     @State private var showingAlert = false
@@ -44,11 +43,8 @@ struct SettingsView: View {
                     Toggle(isOn: $hasKeyClick) {
                         Text("Key Click")
                     }
-                    Picker("Haptic Feedback", selection: $hapticStyle) {
-                        Text("None").tag(SettingsView.FEEDBACK_NONE)
-                        Text("Light").tag(UIImpactFeedbackGenerator.FeedbackStyle.light)
-                        Text("Medium").tag(UIImpactFeedbackGenerator.FeedbackStyle.medium)
-                        Text("Heavy").tag(UIImpactFeedbackGenerator.FeedbackStyle.heavy)
+                    Toggle(isOn: $hasHaptic) {
+                        Text("Haptic Feedback")
                     }
                 }
                 Section {
@@ -72,12 +68,8 @@ struct SettingsView: View {
                         }
                     }
                 }
-                .onChange(of: hapticStyle) { _ in
-                    if hapticStyle == SettingsView.FEEDBACK_NONE {
-                        Settings.setHapticStyle(style: nil)
-                    } else {
-                        Settings.setHapticStyle(style: hapticStyle)
-                    }
+                .onChange(of: hasHaptic) { _ in
+                    Settings.setHasHaptic(has_haptic: hasHaptic)
                 }
                 .onChange(of: hasKeyClick) { _ in
                     Settings.setHasKeyClick(has_key_click: hasKeyClick)

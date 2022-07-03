@@ -17,6 +17,8 @@ final class Change: ObservableObject {
     @Published var isMiniViewVisible: Bool
     @Published var leftTransition: Bool
     @Published var logTimestamp: Int
+    @Published var showProgram: Bool
+    @Published var showHelp: Bool
 
     init() {
         self.pc = Rcl57.shared.getProgramPc()
@@ -28,6 +30,8 @@ final class Change: ObservableObject {
         self.isFullProgram = false
         self.isMiniViewVisible = false
         self.leftTransition = false
+        self.showProgram = true
+        self.showHelp = false
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
     }
 
@@ -152,7 +156,7 @@ struct MainView: View {
                         .environmentObject(change)
                         .transition(.move(edge: .trailing))
                 } else if change.isFullProgram {
-                    FullLrnView()
+                    FullStateView()
                         .environmentObject(change)
                         .transition(.move(edge: .leading))
                 }

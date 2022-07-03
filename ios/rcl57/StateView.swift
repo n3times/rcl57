@@ -24,7 +24,7 @@ private struct Line: Identifiable {
 }
 
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
-private struct LineView: View {
+private struct ProgramLineView: View {
     private let line: Line
     private let activeBackgroundColor = Style.ivory
     private let inactiveBackgroundColor = Style.ivory
@@ -53,7 +53,46 @@ private struct LineView: View {
     }
 }
 
-struct LrnView: View {
+private struct RegisterLine: Identifiable {
+    static var lineId = 0
+    let index: Int
+    let reg: String
+    let id: Int
+
+    init(index: Int, reg: String) {
+        self.index = index
+        self.reg = reg
+        self.id = Line.lineId
+        RegisterLine.lineId += 1
+    }
+}
+
+private struct RegisterLineView: View {
+    private let line: RegisterLine
+    private let backgroundColor = Style.ivory
+    private let foregroundColor = Style.blackish
+
+    init(line: RegisterLine) {
+        self.line = line
+    }
+
+    var body: some View {
+        return HStack {
+            Spacer(minLength: 10)
+            Text(String(format: "    %d", line.index))
+                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+            Text(line.reg)
+                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
+            Spacer(minLength: 20)
+        }
+        .font(Style.lineFont)
+        .listRowBackground(backgroundColor)
+        .background(backgroundColor)
+        .foregroundColor(foregroundColor)
+    }
+}
+
+struct StateView: View {
     @State private var lines : [Line] = []
 
     private let isMiniView: Bool
@@ -88,18 +127,24 @@ struct LrnView: View {
         else { middle = pc }
     }
 
-    private func getLineView(_ index: Int, active: Bool) -> some View {
+    private func getRegisterLineView(_ index: Int) -> some View {
+        return RegisterLineView(line: RegisterLine(index: index,
+                                                   reg: Rcl57.shared.getRegister(index: index)))
+        .listRowSeparator(.hidden)
+    }
+
+    private func getProgramLineView(_ index: Int, active: Bool) -> some View {
         let c = Rcl57.shared.getProgramPc()
         let last = Rcl57.shared.getProgramLastIndex()
 
         if index == -1 {
-            return LineView(line: Line(index: 99,
+            return ProgramLineView(line: Line(index: 99,
                                        op: "",
                                        active: isMiniView || index <= last,
                                        isPc: isMiniView && c == -1))
             .listRowSeparator(.hidden)
         }
-        return LineView(line: Line(index: index,
+        return ProgramLineView(line: Line(index: index,
                                    op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
                                    active: isMiniView || index <= last,
                                    isPc: isMiniView && index == c))
@@ -109,10 +154,17 @@ struct LrnView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
-                    getLineView($0, active: $0 == pc)
+                if ($change.showProgram.wrappedValue) {
+                    ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
+                        getProgramLineView($0, active: $0 == pc)
+                    }
+                } else {
+                    ForEach(0...7, id: \.self) {
+                        getRegisterLineView($0)
+                    }
                 }
             }
+            .background(Style.ivory)
             .onAppear {
                 if isMiniView {
                     updateMiddle()
@@ -142,8 +194,8 @@ struct LrnView: View {
     }
 }
 
-struct LrnView_Previews: PreviewProvider {
+struct StateView_Previews: PreviewProvider {
     static var previews: some View {
-        LrnView(isMiniView: false)
+        StateView(isMiniView: false)
     }
 }

@@ -9,7 +9,7 @@ class Lib57 {
 
     private static let examplesURL =
         Bundle.main.bundleURL.appendingPathComponent("example_programs")
-    static let examplesLib = Lib57(url: examplesURL, name: "Example Programs", readonly: true)
+    static let examplesLib = Lib57(url: examplesURL, name: "Examples Library", readonly: true)
 
     init(url: URL, name: String, readonly: Bool) {
         self.url = url
