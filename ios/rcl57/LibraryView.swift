@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @Binding var showBack: Bool
     let lib: Lib57
+
+    @EnvironmentObject private var change: Change
 
     var body: some View {
         List {
             ForEach(lib.programs, id: \.self) { program in
-                let programView = ProgramView(showBack: $showBack, program: program)
+                let programView = ProgramView(program: program)
                 NavigationLink(destination: programView) {
                     Text(program.getName())
                 }
@@ -19,7 +20,7 @@ struct LibraryView: View {
             trailing:
                 Button(action: {
                     withAnimation {
-                        showBack.toggle()
+                        change.currentView = .calc
                     }
                 }) {
                     Text(Style.circle)

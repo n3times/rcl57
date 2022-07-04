@@ -4,6 +4,14 @@
 
 import SwiftUI
 
+enum CurrentView {
+    case calc
+    case log
+    case state
+    case settings
+    case library
+}
+
 final class Change: ObservableObject {
     var pc: Int
     var isAlpha: Bool
@@ -12,13 +20,13 @@ final class Change: ObservableObject {
 
     @Published var changeCount = 0
     @Published var displayString: String
-    @Published var isFullLog: Bool
-    @Published var isFullProgram: Bool
-    @Published var isMiniViewVisible: Bool
-    @Published var leftTransition: Bool
     @Published var logTimestamp: Int
-    @Published var showProgram: Bool
-    @Published var showHelp: Bool
+
+    @Published var currentView = CurrentView.calc
+
+    @Published var showMiniView = false
+    @Published var showStepsInState = true
+    @Published var leftTransition = false
 
     init() {
         self.pc = Rcl57.shared.getProgramPc()
@@ -26,12 +34,6 @@ final class Change: ObservableObject {
         self.isHpLrnMode = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         self.displayString = Rcl57.shared.display()
-        self.isFullLog = false
-        self.isFullProgram = false
-        self.isMiniViewVisible = false
-        self.leftTransition = false
-        self.showProgram = true
-        self.showHelp = false
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
     }
 
@@ -94,16 +96,15 @@ private struct FlipView<FrontView: View, BackView: View>: View {
     let backView: BackView
 
     @EnvironmentObject private var change: Change
-    @Binding var showBack: Bool
 
     var body: some View {
         ZStack() {
             frontView
-                .modifier(FlipOpacity(percentage: showBack ? 0 : 1))
-                .rotation3DEffect(Angle.degrees(showBack ? 180 : 360), axis: (0,1,0))
+                .modifier(FlipOpacity(percentage: change.currentView == .settings ? 0 : 1))
+                .rotation3DEffect(Angle.degrees(change.currentView == .settings ? 180 : 360), axis: (0,1,0))
             backView
-                .modifier(FlipOpacity(percentage: showBack ? 1 : 0))
-                .rotation3DEffect(Angle.degrees(showBack ? 0.00001 : 180), axis: (0,1,0))
+                .modifier(FlipOpacity(percentage: change.currentView == .settings ? 1 : 0))
+                .rotation3DEffect(Angle.degrees(change.currentView == .settings ? 0.00001 : 180), axis: (0,1,0))
         }
     }
 }
@@ -140,25 +141,26 @@ struct MainView: View {
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
-        let front = CalcView(showBack: $showBack)
-        let back2 = SettingsView(showBack: $showBack)
-
         return ZStack {
             ZStack {
-                if !change.isFullLog && !change.isFullProgram {
-                    FlipView(frontView: front, backView: back2, showBack: $showBack)
+                if change.currentView != .log && change.currentView != .state {
+                    FlipView(frontView: CalcView(), backView: SettingsView())
                         .environmentObject(change)
                         .transition(.move(edge: change.leftTransition ? .trailing : .leading))
                 }
 
-                if change.isFullLog {
+                if change.currentView == .log {
                     FullLogView()
                         .environmentObject(change)
                         .transition(.move(edge: .trailing))
-                } else if change.isFullProgram {
+                } else if change.currentView == .state {
                     FullStateView()
                         .environmentObject(change)
                         .transition(.move(edge: .leading))
+                } else if change.currentView == .library {
+                    LibraryView(lib: Lib57.examplesLib)
+                        .environmentObject(change)
+                        .transition(.move(edge: .bottom))
                 }
             }
         }

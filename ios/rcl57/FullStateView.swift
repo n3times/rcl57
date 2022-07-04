@@ -14,22 +14,22 @@ struct FullStateView: View {
                     Spacer()
                         .frame(width: width / 24, height: Style.headerHeight)
                     Button(action: {
-                        change.showProgram.toggle()
+                        change.showStepsInState.toggle()
                     }) {
-                        Text(!change.showProgram ? Style.ying : Style.yang)
+                        Text(!change.showStepsInState ? Style.ying : Style.yang)
                             .frame(width: width / 12, height: Style.headerHeight)
                             .font(Style.directionsFontLarge)
                             .contentShape(Rectangle())
                     }
                     Spacer()
                         .frame(width: width / 24, height: Style.headerHeight)
-                    Text(change.showProgram ? "Program" : "Registers")
+                    Text(change.showStepsInState ? "Program" : "Data")
                         .frame(width: width * 2 / 3, height: Style.headerHeight)
                         .font(Style.titleFont)
                     // Right button.
                     Button(action: {
                         withAnimation {
-                            change.isFullProgram.toggle()
+                            change.currentView = .calc
                         }
                     }) {
                         Text(Style.rightArrow)
@@ -44,7 +44,6 @@ struct FullStateView: View {
                 // Program.
                 StateView(isMiniView: false)
                     .background(Style.ivory)
-                    .environmentObject(change)
 
                 HStack(spacing: 0) {
                     Spacer()
@@ -54,12 +53,12 @@ struct FullStateView: View {
                     }
                     .font(Style.titleFont)
                     .frame(width: width * 2 / 3, height: Style.footerHeight)
-                    .disabled(change.showProgram ? Rcl57.shared.getProgramLastIndex() == -1
+                    .disabled(change.showStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
                                                  : Rcl57.shared.getRegistersLastIndex() == -1)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                        Button(change.showProgram ? "Clear Program" : "Clear Registers", role: .destructive) {
-                            change.showProgram ? Rcl57.shared.clearProgram() : Rcl57.shared.clearRegisters()
+                        Button(change.showStepsInState ? "Clear Program" : "Clear Registers", role: .destructive) {
+                            change.showStepsInState ? Rcl57.shared.clearProgram() : Rcl57.shared.clearRegisters()
                             change.forceUpdate()
                         }
                     }

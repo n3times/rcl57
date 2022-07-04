@@ -8,4 +8,18 @@ Uses an alphanumeric display to represent instructions in LRN mode: for example 
 
 ==HP LRN Mode==
 
-Makes the TI-57 behave like a classic HP calculator in LRN mode: it displays the last step entered instead of the upcoming one.
+Makes RCL-57 behave like a classic HP calculator in LRN mode: it displays the last step entered instead of the upcoming one. In addition keystrokes are auto-inserted instead of overriding the current step.
+
+For example, let's assume that the program contains the following steps, with the user seeing step 00.
+:$$$ 00 Lbl 0 <=$$$
+:$$$ 01 7$$$
+:$$$ 02 0$$$
+Now assume the user presses 5.
+In normal mode, it results in:
+:$$$ 00 5$$$
+:$$$ 01 7 <=$$$
+:$$$ 02 0$$$
+In HP LRN mode, it results in:
+:$$$ 00 Lbl 0$$$
+:$$$ 01 5 <=$$$
+:$$$ 02 7$$$

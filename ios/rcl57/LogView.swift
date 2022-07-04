@@ -49,7 +49,7 @@ private struct LineView: View {
                     .foregroundColor(foregroundColor)
             }
         }
-        .font(Style.lineFont)
+        .font(Style.listLineFont)
     }
 }
 
@@ -174,13 +174,13 @@ struct LogView: View {
             .onReceive(change.$changeCount) { _ in
                 updateLog()
             }
-            .onReceive(change.$isMiniViewVisible) { _ in
-                if lines.count > 0 && change.isMiniViewVisible {
+            .onReceive(change.$showMiniView) { _ in
+                if lines.count > 0 && change.showMiniView {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
             .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, Style.lineHeight)
+            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }
     }
 }

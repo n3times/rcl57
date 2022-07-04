@@ -5,15 +5,13 @@
 import SwiftUI
 
 struct CalcView: View {
-    private let fullDisplayHeight = (3 + Style.lineCount) * Style.lineHeight
-    private let miniViewHeight = Style.lineCount * Style.lineHeight
+    private let fullDisplayHeight = (3 + Style.miniViewLineCount) * Style.listLineHeight
+    private let miniViewHeight = Style.miniViewLineCount * Style.listLineHeight
 
     @EnvironmentObject private var change: Change
 
-    @Binding var showBack: Bool
-
     private func getDisplayHeight() -> Double {
-        return fullDisplayHeight - (change.isMiniViewVisible ? miniViewHeight : 0)
+        return fullDisplayHeight - (change.showMiniView ? miniViewHeight : 0)
     }
 
     private func getMiniView() -> some View {
@@ -28,11 +26,11 @@ struct CalcView: View {
         }
     }
 
-    private func getButtonView(text: String, width: Double, prop: Binding<Bool>) -> some View {
+    private func getButtonView(text: String, width: Double, destination: CurrentView) -> some View {
         Button(action: {
             change.leftTransition = text == Style.leftArrow
             withAnimation {
-                prop.wrappedValue.toggle()
+                change.currentView = destination
             }
         }) {
             Text(text)
@@ -43,7 +41,7 @@ struct CalcView: View {
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let width = geometry.size.width
-        let miniViewIcon = change.isMiniViewVisible ? Style.downArrow : Style.upArrow
+        let miniViewIcon = change.showMiniView ? Style.downArrow : Style.upArrow
         let displayHeight = getDisplayHeight()
 
         return ZStack {
@@ -52,16 +50,23 @@ struct CalcView: View {
                 // Menu bar.
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6,
-                                  prop: $change.isFullProgram)
+                                  destination: .state)
                     Spacer()
-                    getButtonView(text: Style.circle, width: width / 6, prop: $showBack)
+                    getButtonView(text: Style.circle, width: width / 6, destination: .settings)
                     Spacer()
-                    getButtonView(text: miniViewIcon, width: width / 6,
-                                  prop: $change.isMiniViewVisible)
+                    Button(action: {
+                        withAnimation {
+                            change.showMiniView.toggle()
+                        }
+                    }) {
+                        Text(miniViewIcon)
+                            .frame(width: width / 6, height: Style.headerHeight)
+                            .contentShape(Rectangle())
+                    }
                     Spacer()
-                    getButtonView(text: Style.square, width: width / 6, prop: $showBack)
+                    getButtonView(text: Style.square, width: width / 6, destination: .settings)
                     Spacer()
-                    getButtonView(text: Style.rightArrow, width: width / 6, prop: $change.isFullLog)
+                    getButtonView(text: Style.rightArrow, width: width / 6, destination: .log)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)
@@ -88,7 +93,6 @@ struct CalcView: View {
 
                 // Keyboard View.
                 KeyboardView()
-                    .environmentObject(change)
             }
         }
         .onAppear {
@@ -105,6 +109,6 @@ struct CalcView: View {
 
 struct CalcView_Previews: PreviewProvider {
     static var previews: some View {
-        CalcView(showBack: .constant(false))
+        CalcView()
     }
 }

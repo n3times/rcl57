@@ -75,6 +75,25 @@ char *prog57_to_text(prog57_t *program) {
 }
 
 void prog57_load_state(prog57_t *program_in, rcl57_t *rcl57) {
+    ti57_t *ti57 = &rcl57->ti57;
+
+    // Get out of LRN mode.
+    if (ti57_get_mode(ti57) == TI57_LRN) {
+        // Undo '2nd' if necessary.
+        if (ti57_is_2nd(ti57)) {
+            ti57_key_press(ti57, 1, 1);
+            utils57_burst_until_idle(ti57);
+            ti57_key_release(ti57);
+            utils57_burst_until_idle(ti57);
+        }
+
+        // Press R/S.
+        ti57_key_press(ti57, 2, 1);
+        utils57_burst_until_idle(ti57);
+        ti57_key_release(ti57);
+        utils57_burst_until_idle(ti57);
+    }
+
     memcpy(rcl57->ti57.X, program_in->state, 16 * sizeof(ti57_reg_t));
 }
 

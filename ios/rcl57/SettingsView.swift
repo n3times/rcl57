@@ -13,17 +13,17 @@ struct SettingsView: View {
     @State private var isPresentingConfirm = false
     @State private var showingAlert = false
 
-    @Binding var showBack: Bool
+    @EnvironmentObject private var change: Change
 
     var body: some View {
         return NavigationView {
             Form {
-                NavigationLink(destination: ManualView(showBack: $showBack)) {
+                NavigationLink(destination: ManualView()) {
                     HStack {
                         Text("Help")
                     }
                 }
-                NavigationLink(destination: LibraryView(showBack: $showBack, lib: Lib57.examplesLib)) {
+                NavigationLink(destination: LibraryView(lib: Lib57.examplesLib)) {
                     HStack {
                         Text(Lib57.examplesLib.name)
                     }
@@ -88,7 +88,7 @@ struct SettingsView: View {
                 trailing:
                     Button(action: {
                         withAnimation {
-                            showBack.toggle()
+                            change.currentView = .calc
                         }
                     }) {
                         Text(Style.circle)
@@ -103,6 +103,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(showBack: .constant(false))
+        SettingsView()
     }
 }

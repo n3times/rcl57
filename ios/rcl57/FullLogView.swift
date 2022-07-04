@@ -18,7 +18,7 @@ struct FullLogView: View {
                     // Left button.
                     Button(action: {
                         withAnimation {
-                            change.isFullLog.toggle()
+                            change.currentView = .calc
                         }
                     }) {
                         Text(Style.leftArrow)
@@ -45,7 +45,6 @@ struct FullLogView: View {
                 } else {
                     LogView()
                         .background(Style.ivory)
-                        .environmentObject(change)
                 }
 
                 HStack(spacing: 0) {

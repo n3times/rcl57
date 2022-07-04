@@ -45,7 +45,7 @@ private struct ProgramLineView: View {
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 20)
         }
-        .font(Style.lineFont)
+        .font(Style.listLineFont)
         .listRowBackground(line.active ? activeBackgroundColor
                                        : inactiveBackgroundColor)
         .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
@@ -79,13 +79,13 @@ private struct RegisterLineView: View {
     var body: some View {
         return HStack {
             Spacer(minLength: 10)
-            Text(String(format: "    %d", line.index))
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+            Text(String(format: "   %d", line.index))
+                .frame(maxWidth: 100, idealHeight:10, alignment: .leading)
             Text(line.reg)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 20)
         }
-        .font(Style.lineFont)
+        .font(Style.listLineFont)
         .listRowBackground(backgroundColor)
         .background(backgroundColor)
         .foregroundColor(foregroundColor)
@@ -154,7 +154,7 @@ struct StateView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if ($change.showProgram.wrappedValue) {
+                if (isMiniView || $change.showStepsInState.wrappedValue) {
                     ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
                         getProgramLineView($0, active: $0 == pc)
                     }
@@ -182,14 +182,14 @@ struct StateView: View {
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
-            .onReceive(change.$isMiniViewVisible) { _ in
-                if isMiniView && change.isMiniViewVisible {
+            .onReceive(change.$showMiniView) { _ in
+                if isMiniView && change.showMiniView {
                     updateMiddle()
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
             .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, Style.lineHeight)
+            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }
     }
 }

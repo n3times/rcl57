@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProgramView: View {
-    @Binding var showBack: Bool
+    @EnvironmentObject private var change: Change
 
     let program: Prog57
 
@@ -13,7 +13,7 @@ struct ProgramView: View {
                 Button("Load") {
                     program.loadState()
                     withAnimation {
-                        showBack.toggle()
+                        change.currentView = .calc
                     }
                 }
                 .font(Style.titleFont)
@@ -28,7 +28,7 @@ struct ProgramView: View {
             trailing:
                 Button(action: {
                     withAnimation {
-                        showBack.toggle()
+                        change.currentView = .calc
                     }
                 }) {
                     Text(Style.circle)

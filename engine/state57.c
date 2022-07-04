@@ -297,7 +297,7 @@ int ti57_get_program_last_index(ti57_t *ti57)
 
 void ti57_clear_program(ti57_t *ti57)
 {
-    // Get out of LRN mode (by pressing 2nd LRN) if necessary.
+    // Get out of LRN mode (by pressing LRN) if necessary.
     if (ti57_get_mode(ti57) == TI57_LRN) {
         if (ti57_is_2nd(ti57)) {
             ti57_key_press(ti57, 1, 1);

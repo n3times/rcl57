@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct ManualView: View {
-    @Binding var showBack: Bool
+    @EnvironmentObject private var change: Change
 
     let hlpPages = [["About", "about", "About RCL-57"],
-                    ["Options", "options", "Options Explained"],
+                    ["Options", "options", "Emulator Options"],
                     ["Basics", "basics", "Calculator Basics"],
                     ["Math", "math", "Math Functions"],
                     ["Registers", "registers", "Registers"],
@@ -14,7 +14,7 @@ struct ManualView: View {
     var body: some View {
         List {
             ForEach(hlpPages, id: \.self) { hlpPage in
-                NavigationLink(destination: ManualPageView(showBack: $showBack, title: hlpPage[0], hlpResource: hlpPage[1])) {
+                NavigationLink(destination: ManualPageView(title: hlpPage[0], hlpResource: hlpPage[1])) {
                     Text(hlpPage[2])
                 }
             }
@@ -25,7 +25,7 @@ struct ManualView: View {
             trailing:
                 Button(action: {
                     withAnimation {
-                        showBack.toggle()
+                        change.currentView = .calc
                     }
                 }) {
                     Text(Style.circle)
@@ -38,7 +38,7 @@ struct ManualView: View {
 }
 
 struct ManualPageView: View {
-    @Binding var showBack: Bool
+    @EnvironmentObject private var change: Change
 
     let title: String
     let hlpResource: String
@@ -55,7 +55,7 @@ struct ManualPageView: View {
             trailing:
                 Button(action: {
                     withAnimation {
-                        showBack.toggle()
+                        change.currentView = .calc
                     }
                 }) {
                     Text(Style.circle)

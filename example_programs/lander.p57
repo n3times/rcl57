@@ -7,15 +7,14 @@ You are commander of Lunar Module Eagle and you are 2,500 feet from the Moon sur
 
 Your mission: land safely.
 
-''Note:'' we recommend you play this game in ''Classic'' mode.
-
 ==Instructions==
+''Note:'' you can skip steps 1 through 3 if you just have loaded or reloaded the game.
 # ''100'' $$STO 1$$ (velocity)
 # ''2500'' $$STO 2$$ (altitude)
 # ''100'' $$STO 3$$ (fuel)
 # $$RST R/S$$. You will see @@100@@ (fuel) followed by @@100.2500@@ (velocity.altitude)
 # ''n'' $$R/S$$ where n is the number of gallons of fuel to burn in the next 4 seconds. Note that n must be a nonnegative integer. You will see ''fuel'' followed by ''velocity.altitude''
-# Repeat step 5 until the display blinks. If the value on the display is positive or zero (e.g. @@2@@) you have landed safely. Otherwise (e.g. @@-10@@) you have crashed
+# Repeat step 5 until the display blinks. If the value on the display is positive or zero (e.g. @@2.0000@@) you have landed safely. Otherwise (e.g. @@-10.0000@@) you have crashed
 
 ==Example==
 $$100 STO 1$$
@@ -26,8 +25,7 @@ $$10 R/S$$ @@[ 90@@ @@80.2130@@
 $$...$$
 
 ==Notes==
-* A value of @@0@@ indicates a perfectly smooth landing
-* You can skip steps 1 to 3 if you have just loaded or reloaded the program
+* A value of @@0.0000@@ indicates a perfectly smooth landing
 @!# state
 0000000000000000
 0000000000000000
