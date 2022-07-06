@@ -22,6 +22,8 @@ struct LogEntry {
 
 class Rcl57 {
     static private let stateFilename = "rcl57.dat"
+    static private let versionKey = "version"
+    static private let version = "alpha 1.6"
 
     static let shared = Rcl57(filename: stateFilename)
 
@@ -37,7 +39,18 @@ class Rcl57 {
         var fileRawBuffer: UnsafePointer<Int8>?
         let dirURL: URL? =
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
+        var fileURL: URL? = dirURL?.appendingPathComponent(filename)
+
+        let version = UserDefaults.standard.string(forKey: Rcl57.versionKey)
+        if version != Rcl57.version {
+            do {
+                try FileManager.default.removeItem(at: fileURL!)
+            } catch {
+                // Nothing.
+            }
+            fileURL = nil
+            UserDefaults.standard.set(Rcl57.version, forKey: Rcl57.versionKey)
+        }
 
         if fileURL == nil {
             rcl57_init(&rcl57)
