@@ -154,6 +154,8 @@ struct LogView: View {
             List(lines) {
                 getLineView($0)
             }
+            .listStyle(PlainListStyle())
+            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
                 updateLog()
                 if lines.count > 0 {
@@ -179,8 +181,6 @@ struct LogView: View {
                     proxy.scrollTo(lines.last!.id, anchor: .bottom)
                 }
             }
-            .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }
     }
 }

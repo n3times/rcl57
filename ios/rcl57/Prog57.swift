@@ -4,13 +4,13 @@ class Prog57 : Hashable, Equatable {
     private var prog57 = prog57_t()
 
     init?(url: URL) {
-        let text: String
+        var text: String
         do {
             text = try String(contentsOf: url)
         } catch {
-            text = "Error"
+            return nil
         }
-        prog57_from_text(&prog57, UnsafeMutablePointer(mutating: text))
+        prog57_from_text(&prog57, text)
     }
 
     func toText() -> String {
@@ -23,11 +23,6 @@ class Prog57 : Hashable, Equatable {
 
     func setName(name: String) {
         prog57_set_name(&prog57, (name as NSString).utf8String)
-    }
-
-    func getHTMLHelp() -> String {
-        let help = prog57_get_help(&prog57)
-        return Help57.toHTML(hlpString: String(cString: help!))
     }
 
     func getHelp() -> String {
@@ -57,7 +52,7 @@ class Prog57 : Hashable, Equatable {
         do {
             try text.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
         } catch {
-            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+            // failed to write file.
             return false
         }
 

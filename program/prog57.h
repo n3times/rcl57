@@ -9,7 +9,7 @@ typedef struct prog57_s {
     ti57_reg_t state[16];
 } prog57_t;
 
-void prog57_from_text(prog57_t *program, char *text_in);
+void prog57_from_text(prog57_t *program, const char *text_in);
 
 char *prog57_to_text(prog57_t *program);
 

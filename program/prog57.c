@@ -8,7 +8,7 @@
 #define HELP_HEADER  "@!# help"
 #define STATE_HEADER "@!# state"
 
-static bool find_next_section(char *str, char *section_title_out, char *section_out) {
+static bool find_next_section(const char *str, char *section_title_out, char *section_out) {
     char *start = strstr(str, "@!# ");
     if (start == NULL) return false;
     char *end = strchr(str, '\n');
@@ -39,7 +39,7 @@ static int hex(char c) {
     else return 0;
 }
 
-void prog57_from_text(prog57_t *program, char *text_in) {
+void prog57_from_text(prog57_t *program, const char *text_in) {
     memset(program, '\0', sizeof(prog57_t));
     char title[100];
     char section[5000];

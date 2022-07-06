@@ -8,7 +8,12 @@ struct LogEntry {
     let entry: UnsafeMutablePointer<log57_entry_t>
 
     func getMessage() -> String {
-        return String(cString: UnsafeRawPointer(&entry.pointee.message).assumingMemoryBound(to: CChar.self))
+        let message = withUnsafePointer(to: entry.pointee.message) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout.size(ofValue: $0)) {
+                String(cString: $0)
+            }
+        }
+        return message
     }
 
     func getType() -> log57_type_t {
@@ -21,9 +26,9 @@ struct LogEntry {
 }
 
 class Rcl57 {
-    static private let stateFilename = "rcl57.dat"
-    static private let versionKey = "version"
-    static private let version = "alpha 1.6"
+    private static let stateFilename = "rcl57.dat"
+    private static let versionKey = "version"
+    private static let version = "alpha 1.6"
 
     static let shared = Rcl57(filename: stateFilename)
 
@@ -114,13 +119,13 @@ class Rcl57 {
         return ti57_get_trig(&rcl57.ti57)
     }
 
-    /** Saves the RCL57 object in a given file. Returns 'true' if the object was saved successfully. */
-    func save(filename: String) -> Bool {
+    /** Saves the RCL57 object. Returns 'true' if the object was saved successfully. */
+    func save() -> Bool {
         let size = MemoryLayout.size(ofValue: rcl57)
         let rawData = Data(bytes: &rcl57, count: size)
         let dirURL: URL? =
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
+        let fileURL: URL? = dirURL?.appendingPathComponent(Rcl57.stateFilename)
 
         if fileURL != nil {
             do {

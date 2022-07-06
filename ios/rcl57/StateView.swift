@@ -4,8 +4,8 @@
 
 import SwiftUI
 
-/** Data for a LineView: a step index and an operation. */
-private struct Line: Identifiable {
+/** Data for a ProgramLineView: a step index and an operation. */
+private struct ProgramLine: Identifiable {
     static var lineId = 0
     let index: Int
     let op: String
@@ -18,20 +18,20 @@ private struct Line: Identifiable {
         self.op = op
         self.active = active
         self.isPc = isPc
-        self.id = Line.lineId
-        Line.lineId += 1
+        self.id = ProgramLine.lineId
+        ProgramLine.lineId += 1
     }
 }
 
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
 private struct ProgramLineView: View {
-    private let line: Line
+    private let line: ProgramLine
     private let activeBackgroundColor = Style.ivory
     private let inactiveBackgroundColor = Style.ivory
     private let foregroundColor = Style.blackish
     private let inactiveForegroundColor = Style.blackish
 
-    init(line: Line) {
+    init(line: ProgramLine) {
         self.line = line
     }
 
@@ -62,7 +62,7 @@ private struct RegisterLine: Identifiable {
     init(index: Int, reg: String) {
         self.index = index
         self.reg = reg
-        self.id = Line.lineId
+        self.id = ProgramLine.lineId
         RegisterLine.lineId += 1
     }
 }
@@ -93,7 +93,7 @@ private struct RegisterLineView: View {
 }
 
 struct StateView: View {
-    @State private var lines : [Line] = []
+    @State private var lines : [ProgramLine] = []
 
     private let isMiniView: Bool
 
@@ -138,13 +138,13 @@ struct StateView: View {
         let last = Rcl57.shared.getProgramLastIndex()
 
         if index == -1 {
-            return ProgramLineView(line: Line(index: 99,
+            return ProgramLineView(line: ProgramLine(index: 99,
                                        op: "",
                                        active: isMiniView || index <= last,
                                        isPc: isMiniView && c == -1))
             .listRowSeparator(.hidden)
         }
-        return ProgramLineView(line: Line(index: index,
+        return ProgramLineView(line: ProgramLine(index: index,
                                    op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
                                    active: isMiniView || index <= last,
                                    isPc: isMiniView && index == c))
@@ -154,7 +154,7 @@ struct StateView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if (isMiniView || $change.showStepsInState.wrappedValue) {
+                if (isMiniView || change.showStepsInState) {
                     ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
                         getProgramLineView($0, active: $0 == pc)
                     }
@@ -165,6 +165,8 @@ struct StateView: View {
                 }
             }
             .background(Style.ivory)
+            .listStyle(PlainListStyle())
+            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
                 if isMiniView {
                     updateMiddle()
@@ -188,8 +190,6 @@ struct StateView: View {
                     proxy.scrollTo(middle, anchor: .bottom)
                 }
             }
-            .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }
     }
 }

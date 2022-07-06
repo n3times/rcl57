@@ -52,7 +52,7 @@ struct FullLogView: View {
                     Button("Clear") {  // Left arrow.
                         isPresentingConfirm = true
                     }
-                    .font(Style.titleFont)
+                    .font(Style.footerFont)
                     .frame(width: width / 6, height: Style.footerHeight)
                     .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)

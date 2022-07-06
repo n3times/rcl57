@@ -306,7 +306,7 @@ done:
  * converts it into HTML.
  *
  * \return NULL if no match, or a pointer to the first character in the new
- * line located after the bold part, that is after </b>.
+ * line located after the bold part.
  */
 static char * make_bold(char * line)
 {

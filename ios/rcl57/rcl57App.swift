@@ -4,9 +4,8 @@ import SwiftUI
 struct rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
-    let stateFilename = "rcl57.dat"
-
     init() {
+        // Technically this is only necessary the state is not loaded from a file.
         Settings.setTurboSpeed(turbo: Settings.getTurboSpeed())
         Settings.setAlphaDisplay(alpha: Settings.getAlphaDisplay())
         Settings.setHPLrnMode(hpLrn: Settings.getHPLrnMode())
@@ -18,7 +17,7 @@ struct rcl57App: App {
         }
         .onChange(of: scenePhase) { (newScenePhase) in
             if newScenePhase == .inactive {
-                _ = Rcl57.shared.save(filename: stateFilename)
+                _ = Rcl57.shared.save()
             }
         }
     }

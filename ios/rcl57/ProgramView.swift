@@ -16,7 +16,7 @@ struct ProgramView: View {
                         change.currentView = .calc
                     }
                 }
-                .font(Style.titleFont)
+                .font(Style.footerFont)
                 .frame(width: 100, height: Style.footerHeight)
                 .buttonStyle(.plain)
                 Spacer()

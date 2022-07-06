@@ -17,7 +17,6 @@ class Lib57 {
         self.readonly = readonly
 
         programs = []
-
         let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [])
         while let programURLObject = enumerator!.nextObject() {
             let programURL = programURLObject as! URL
@@ -25,5 +24,6 @@ class Lib57 {
                 programs.append(Prog57(url: programURL)!)
             }
         }
+        programs = programs.sorted { $0.getName() < $1.getName() }
     }
 }

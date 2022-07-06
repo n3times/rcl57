@@ -51,7 +51,7 @@ struct FullStateView: View {
                     Button("Clear") {  // Left arrow.
                         isPresentingConfirm = true
                     }
-                    .font(Style.titleFont)
+                    .font(Style.footerFont)
                     .frame(width: width * 2 / 3, height: Style.footerHeight)
                     .disabled(change.showStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
                                                  : Rcl57.shared.getRegistersLastIndex() == -1)

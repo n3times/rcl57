@@ -2,7 +2,6 @@ import SwiftUI
 
 struct FullLibraryView: View {
     @EnvironmentObject var change: Change
-    @State private var isPresentingConfirm: Bool = false
 
     var body: some View {
         ZStack {

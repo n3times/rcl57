@@ -1,17 +1,24 @@
 import SwiftUI
 
 struct Help57 {
+    /** Converts a string in hlp format into HTML. */
     static func toHTML(hlpString: String) -> String {
-        let hlp2html = UnsafeMutablePointer<hlp2html_t>.allocate(capacity: 1)
-        var html = ""
-        let out = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
+        let BUFFER_SIZE: Int32 = 5000
+        let CSS_FILENAME = "help.css"
 
-        hlp2html_init(hlp2html, "help.css", out, 10000)
-        html += String(cString: UnsafeRawPointer(&out.pointee).assumingMemoryBound(to: CChar.self))
-        hlp2html_next(hlp2html, hlpString, out, 10000)
-        html += String(cString: UnsafeRawPointer(&out.pointee).assumingMemoryBound(to: CChar.self))
-        hlp2html_done(hlp2html, out, 10000)
-        html += String(cString: UnsafeRawPointer(&out.pointee).assumingMemoryBound(to: CChar.self))
+        var hlp2html = hlp2html_t()
+        var html = ""
+        let outBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(BUFFER_SIZE))
+
+        hlp2html_init(&hlp2html, CSS_FILENAME, outBuffer, BUFFER_SIZE)
+        html += String(cString: &outBuffer.pointee)
+
+        hlp2html_next(&hlp2html, hlpString, outBuffer, BUFFER_SIZE)
+        html += String(cString: &outBuffer.pointee)
+
+        hlp2html_done(&hlp2html, outBuffer, BUFFER_SIZE)
+        html += String(cString: &outBuffer.pointee)
+
         return html
     }
 }

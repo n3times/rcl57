@@ -5,8 +5,8 @@
 import SwiftUI
 
 struct CalcView: View {
-    private let fullDisplayHeight = (3 + Style.miniViewLineCount) * Style.listLineHeight
-    private let miniViewHeight = Style.miniViewLineCount * Style.listLineHeight
+    private let fullDisplayHeight = (3 + Double(Style.miniViewLineCount)) * Style.listLineHeight
+    private let miniViewHeight = Double(Style.miniViewLineCount) * Style.listLineHeight
 
     @EnvironmentObject private var change: Change
 
