@@ -26,7 +26,11 @@ final class Change: ObservableObject {
 
     @Published var showMiniView = false
     @Published var showStepsInState = true
-    @Published var leftTransition = false
+    @Published var transitionEdge: Edge = .trailing
+
+    @Published var program: Prog57? = nil
+
+    @Published var showLibrary = false
 
     init() {
         self.pc = Rcl57.shared.getProgramPc()
@@ -141,27 +145,27 @@ struct MainView: View {
     }
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
-        return ZStack {
-            ZStack {
-                if change.currentView != .log && change.currentView != .state {
-                    FlipView(frontView: CalcView(), backView: SettingsView())
-                        .environmentObject(change)
-                        .transition(.move(edge: change.leftTransition ? .trailing : .leading))
-                }
-
-                if change.currentView == .log {
-                    FullLogView()
-                        .environmentObject(change)
-                        .transition(.move(edge: .trailing))
-                } else if change.currentView == .state {
-                    FullStateView()
-                        .environmentObject(change)
-                        .transition(.move(edge: .leading))
-                } else if change.currentView == .library {
-                    LibraryView(lib: Lib57.examplesLib)
+        ZStack {
+            if change.currentView == .calc || change.currentView == .settings || change.currentView == .library {
+                FlipView(frontView: CalcView(), backView: SettingsView())
+                    .environmentObject(change)
+                    .transition(.move(edge: change.transitionEdge))
+                if change.currentView == .library {
+                    FullLibraryView()
                         .environmentObject(change)
                         .transition(.move(edge: .bottom))
+                        .zIndex(1)
                 }
+            }
+
+            if change.currentView == .log {
+                FullLogView()
+                    .environmentObject(change)
+                    .transition(.move(edge: .trailing))
+            } else if change.currentView == .state {
+                FullStateView()
+                    .environmentObject(change)
+                    .transition(.move(edge: .leading))
             }
         }
     }

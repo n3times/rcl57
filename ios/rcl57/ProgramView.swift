@@ -21,21 +21,8 @@ struct ProgramView: View {
                 .buttonStyle(.plain)
                 Spacer()
             }
-            .background(Color.gray)
+            .background(Style.blackish)
             .foregroundColor(Style.ivory)
         }
-        .navigationBarItems(
-            trailing:
-                Button(action: {
-                    withAnimation {
-                        change.currentView = .calc
-                    }
-                }) {
-                    Text(Style.circle)
-                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
-                        .contentShape(Rectangle())
-                }
-                .font(Style.directionsFont)
-        )
     }
 }

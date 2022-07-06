@@ -23,11 +23,6 @@ struct SettingsView: View {
                         Text("Help")
                     }
                 }
-                NavigationLink(destination: LibraryView(lib: Lib57.examplesLib)) {
-                    HStack {
-                        Text(Lib57.examplesLib.name)
-                    }
-                }
                 Section("Emulator Options") {
                     Toggle(isOn: $hasTurboSpeed) {
                         Text("Turbo Speed")

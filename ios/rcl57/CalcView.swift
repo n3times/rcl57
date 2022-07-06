@@ -26,9 +26,9 @@ struct CalcView: View {
         }
     }
 
-    private func getButtonView(text: String, width: Double, destination: CurrentView) -> some View {
+    private func getButtonView(text: String, width: Double, destination: CurrentView, edge: Edge) -> some View {
         Button(action: {
-            change.leftTransition = text == Style.leftArrow
+            change.transitionEdge = edge
             withAnimation {
                 change.currentView = destination
             }
@@ -50,9 +50,9 @@ struct CalcView: View {
                 // Menu bar.
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6,
-                                  destination: .state)
+                                  destination: .state, edge: .trailing)
                     Spacer()
-                    getButtonView(text: Style.circle, width: width / 6, destination: .settings)
+                    getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .trailing)
                     Spacer()
                     Button(action: {
                         withAnimation {
@@ -64,9 +64,9 @@ struct CalcView: View {
                             .contentShape(Rectangle())
                     }
                     Spacer()
-                    getButtonView(text: Style.square, width: width / 6, destination: .settings)
+                    getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
                     Spacer()
-                    getButtonView(text: Style.rightArrow, width: width / 6, destination: .log)
+                    getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)

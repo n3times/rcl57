@@ -1,8 +1,6 @@
 @!# name
 3n + 1
 @!# help
-=3n + 1=
-
 This program allows the user to test the ''3n + 1 conjecture'', a problem that has baffled mathematicians since it was proposed by ''Lothar Collatz'' in 1937.
 
 Consider an integer '''n'''. If it's even, divide it by 2: '''n/2'''. If it's odd, multiply it by 3 and add 1: '''3n + 1'''.

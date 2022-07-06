@@ -1,8 +1,6 @@
 @!# name
 Equation Solver
 @!# help
-=Equation Solver=
-
 Solves an equation ''f(x) = 0'' using binary seach (dichotomy).
 
 The user needs to provide ''f'' and 2 numbers ''x<sub>1</sub>'' and ''x<sub>2</sub>'' such that ''f(x<sub>1</sub>)'' and ''f(x<sub>2</sub>)'' have different signs.

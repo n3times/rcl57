@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15071C352873811C0075D722 /* FullLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* FullLibraryView.swift */; };
+		15071C372874CEA90075D722 /* FullProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* FullProgramView.swift */; };
 		150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* rcl57App.swift */; };
 		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
@@ -54,6 +56,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		15071C342873811C0075D722 /* FullLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLibraryView.swift; sourceTree = "<group>"; };
+		15071C362874CEA90075D722 /* FullProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullProgramView.swift; sourceTree = "<group>"; };
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rcl57App.swift; sourceTree = "<group>"; };
 		150ED8A327B089EF00E01FC6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -156,7 +160,9 @@
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
+				15071C342873811C0075D722 /* FullLibraryView.swift */,
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
+				15071C362874CEA90075D722 /* FullProgramView.swift */,
 				159E94D72814BBD400859F10 /* FullStateView.swift */,
 				1533F65427F7DA0900DF3BAE /* KeyboardView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
@@ -339,6 +345,7 @@
 			files = (
 				15B085B72852CAEE0018418A /* LibraryView.swift in Sources */,
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
+				15071C372874CEA90075D722 /* FullProgramView.swift in Sources */,
 				15B085E4286152770018418A /* prog57.c in Sources */,
 				15B085B52852C6060018418A /* HelpView.swift in Sources */,
 				158D172327E244FA003BC323 /* logger57.c in Sources */,
@@ -351,6 +358,7 @@
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
+				15071C352873811C0075D722 /* FullLibraryView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
 				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
