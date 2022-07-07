@@ -72,6 +72,13 @@ struct CalcView: View {
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
 
+                // Program
+                Text(change.loadedProgram != nil ? change.loadedProgram!.getName() : "")
+                    .foregroundColor(Style.ivory)
+                    .font(Style.programFont)
+                    .frame(width: width, height: 20, alignment: .leading)
+                    .offset(x: 15, y: -2)
+
                 // Display + Mini View.
                 ZStack {
                     getMiniView()

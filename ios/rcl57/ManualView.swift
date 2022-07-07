@@ -47,7 +47,6 @@ struct ManualPageView: View {
     }
 
     var body: some View {
-
         HStack {
             HelpView(hlpURL: hlpURL)
         }

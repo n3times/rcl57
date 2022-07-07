@@ -32,6 +32,10 @@ final class Change: ObservableObject {
 
     @Published var showLibrary = false
 
+    @Published var loadedProgram: Prog57?
+
+    let PROGRAM_KEY = "program"
+
     init() {
         self.pc = Rcl57.shared.getProgramPc()
         self.isAlpha = Rcl57.shared.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
@@ -39,6 +43,17 @@ final class Change: ObservableObject {
         self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         self.displayString = Rcl57.shared.display()
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
+        let programName = UserDefaults.standard.string(forKey: PROGRAM_KEY)
+        if let program = Lib57.examplesLib.programs.first(where: {$0.getName() == programName}) {
+            self.loadedProgram = program
+        } else {
+            self.loadedProgram = nil
+        }
+    }
+
+    func setLoadedProgram(program: Prog57?) {
+        loadedProgram = program
+        UserDefaults.standard.set(program?.getName(), forKey: PROGRAM_KEY)
     }
 
     func updateDisplayString() {

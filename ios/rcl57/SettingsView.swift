@@ -55,11 +55,7 @@ struct SettingsView: View {
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Clear Program, Log and Memory", role: .destructive) {
                             Rcl57.shared.clearAll()
-                        }
-                    }
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                        Button("Clear Program, Log and Memory", role: .destructive) {
-                            Rcl57.shared.clearAll()
+                            change.setLoadedProgram(program: nil)
                         }
                     }
                 }

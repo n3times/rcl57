@@ -48,7 +48,7 @@ struct FullStateView: View {
                 HStack(spacing: 0) {
                     Spacer()
                         .frame(width: width / 6, height: Style.footerHeight)
-                    Button("Clear") {  // Left arrow.
+                    Button("Clear") {
                         isPresentingConfirm = true
                     }
                     .font(Style.footerFont)
@@ -57,9 +57,17 @@ struct FullStateView: View {
                                                  : Rcl57.shared.getRegistersLastIndex() == -1)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                        Button(change.showStepsInState ? "Clear Program" : "Clear Registers", role: .destructive) {
-                            change.showStepsInState ? Rcl57.shared.clearProgram() : Rcl57.shared.clearRegisters()
-                            change.forceUpdate()
+                        if change.showStepsInState {
+                            Button("Clear Program", role: .destructive) {
+                                change.setLoadedProgram(program: nil)
+                                Rcl57.shared.clearProgram()
+                                change.forceUpdate()
+                            }
+                        } else {
+                            Button("Clear Registers", role: .destructive) {
+                                Rcl57.shared.clearRegisters()
+                                change.forceUpdate()
+                            }
                         }
                     }
                     Spacer()
