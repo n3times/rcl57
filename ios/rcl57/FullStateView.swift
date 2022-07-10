@@ -9,37 +9,13 @@ struct FullStateView: View {
         return GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                // Menu.
-                HStack(spacing: 0) {
-                    Spacer()
-                        .frame(width: width / 24, height: Style.headerHeight)
-                    Button(action: {
-                        change.showStepsInState.toggle()
-                    }) {
-                        Text(!change.showStepsInState ? Style.ying : Style.yang)
-                            .frame(width: width / 12, height: Style.headerHeight)
-                            .font(Style.directionsFontLarge)
-                            .contentShape(Rectangle())
-                    }
-                    Spacer()
-                        .frame(width: width / 24, height: Style.headerHeight)
-                    Text(change.showStepsInState ? "Program" : "Data")
-                        .frame(width: width * 2 / 3, height: Style.headerHeight)
-                        .font(Style.titleFont)
-                    // Right button.
-                    Button(action: {
-                        withAnimation {
-                            change.currentView = .calc
-                        }
-                    }) {
-                        Text(Style.rightArrow)
-                            .frame(width: width / 6, height: Style.headerHeight)
-                            .font(Style.directionsFont)
-                            .contentShape(Rectangle())
-                    }
-                }
-                .background(Style.blackish)
-                .foregroundColor(Style.ivory)
+                MenuBarView(change: change,
+                            left: !change.showStepsInState ? Style.ying : Style.yang,
+                            title: change.showStepsInState ? "Program" : "Data",
+                            right: Style.rightArrow,
+                            width: width,
+                            leftAction: { change.showStepsInState.toggle() },
+                            rightAction: { withAnimation {change.currentView = .calc} })
 
                 // Program.
                 StateView(isMiniView: false)

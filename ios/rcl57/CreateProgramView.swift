@@ -11,7 +11,6 @@ struct CreateProgramView: View {
             GeometryReader { geometry in
                 let width = geometry.size.width
                 VStack(spacing: 0) {
-                    // Menu.
                     HStack(spacing: 0) {
                         Button(action: {
                             if name.isEmpty && help.isEmpty {

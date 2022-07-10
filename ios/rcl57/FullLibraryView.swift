@@ -9,29 +9,23 @@ struct FullLibraryView: View {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
-                        // Menu.
-                        HStack(spacing: 0) {
-                            Spacer()
-                                .frame(width: width / 6, height: Style.headerHeight)
-                            Text("Library")
-                                .frame(width: width * 2 / 3, height: Style.headerHeight)
-                                .font(Style.titleFont)
-                            Button(action: {
-                                withAnimation {
-                                    change.currentView = .calc
-                                }
-                            }) {
-                                Text(Style.downArrow)
-                                    .frame(width: width / 6, height: Style.headerHeight)
-                                    .font(Style.directionsFont)
-                                    .contentShape(Rectangle())
+                        MenuBarView(change: change,
+                                    left: nil,
+                                    title: "Library",
+                                    right: Style.downArrow,
+                                    width: width,
+                                    leftAction: {},
+                                    rightAction: { withAnimation {change.currentView = .calc} })
+                            .frame(width: width)
+
+                        List {
+                            Section(header: Text("User Programs")) {
+                                LibraryView(lib: Lib57.userLib, change: change)
+                            }
+                            Section(header: Text("Examples")) {
+                                LibraryView(lib: Lib57.examplesLib, change: change)
                             }
                         }
-                        .background(Style.blackish)
-                        .foregroundColor(Style.ivory)
-
-                        LibraryView()
-                            .background(Style.ivory)
 
                         HStack(spacing: 0) {
                             Spacer()

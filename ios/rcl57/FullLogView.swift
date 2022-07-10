@@ -13,27 +13,13 @@ struct FullLogView: View {
         return GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                // Menu.
-                HStack(spacing: 0) {
-                    // Left button.
-                    Button(action: {
-                        withAnimation {
-                            change.currentView = .calc
-                        }
-                    }) {
-                        Text(Style.leftArrow)
-                            .frame(width: width / 6, height: Style.headerHeight)
-                            .font(Style.directionsFont)
-                            .contentShape(Rectangle())
-                    }
-                    Text("Log")
-                        .frame(width: width * 2 / 3, height: Style.headerHeight)
-                        .font(Style.titleFont)
-                    Spacer()
-                        .frame(width: width / 6, height: Style.headerHeight)
-                }
-                .background(Style.blackish)
-                .foregroundColor(Style.ivory)
+                MenuBarView(change: change,
+                            left: Style.leftArrow,
+                            title: "Log",
+                            right: nil,
+                            width: width,
+                            leftAction: { withAnimation {change.currentView = .calc} },
+                            rightAction: {})
 
                 if Rcl57.shared.getLoggedCount() == 0 {
                     Text("Log is empty")
