@@ -3,6 +3,9 @@ import SwiftUI
 struct ManualView: View {
     @EnvironmentObject private var change: Change
 
+    @State var pageTitle = ""
+    @State var pageURL = ""
+
     let hlpPages = [["About", "about", "About RCL-57"],
                     ["Options", "options", "Emulator Options"],
                     ["Basics", "basics", "Calculator Basics"],
@@ -13,56 +16,67 @@ struct ManualView: View {
                     ["Help Files", "help", "Help Files"]]
 
     var body: some View {
-        List {
-            ForEach(hlpPages, id: \.self) { hlpPage in
-                NavigationLink(destination: ManualPageView(title: hlpPage[0], hlpResource: hlpPage[1])) {
-                    Text(hlpPage[2])
+        ZStack {
+            if change.showPageInHelp {
+                ManualPageView(title: pageTitle, hlpResource: pageURL)
+                    .transition(.move(edge: .trailing))
+            }
+
+            if !change.showPageInHelp {
+                GeometryReader { geometry in
+                    let width = geometry.size.width
+
+                    VStack(spacing: 0) {
+                        MenuBarView(change: change,
+                                    left: Style.leftArrow,
+                                    title: "Help",
+                                    right: Style.downArrow,
+                                    width: width,
+                                    leftAction: { withAnimation {change.showHelpInSettings = false} },
+                                    rightAction: { withAnimation {change.currentView = .calc} })
+                        List {
+                            ForEach(hlpPages, id: \.self) { hlpPage in
+                                Button(hlpPage[2]) {
+                                    pageTitle = hlpPage[0]
+                                    pageURL = hlpPage[1]
+                                    withAnimation {
+                                        change.showPageInHelp = true
+                                    }
+                                }
+                            }
+                        }
+                        .listStyle(PlainListStyle())
+                    }
+                }
+                .transition(.move(edge: .leading))
+            }
+        }
+    }
+
+    struct ManualPageView: View {
+        @EnvironmentObject private var change: Change
+
+        let title: String
+        let hlpResource: String
+        var hlpURL: URL {
+            Bundle.main.url(forResource: hlpResource, withExtension: "hlp")!
+        }
+
+        var body: some View {
+            GeometryReader { geometry in
+                let width = geometry.size.width
+
+                VStack(spacing: 0) {
+                    MenuBarView(change: change,
+                                left: Style.leftArrow,
+                                title: title,
+                                right: Style.downArrow,
+                                width: width,
+                                leftAction: { withAnimation {change.showPageInHelp = false} },
+                                rightAction: { withAnimation {change.currentView = .calc} })
+                    HelpView(hlpURL: hlpURL)
                 }
             }
         }
-        .listStyle(PlainListStyle())
-        .navigationTitle("Help")
-        .navigationBarItems(
-            trailing:
-                Button(action: {
-                    withAnimation {
-                        change.currentView = .calc
-                    }
-                }) {
-                    Text(Style.circle)
-                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
-                        .contentShape(Rectangle())
-                }
-                .font(Style.directionsFont)
-        )
-    }
-}
-
-struct ManualPageView: View {
-    @EnvironmentObject private var change: Change
-
-    let title: String
-    let hlpResource: String
-    var hlpURL: URL {
-        Bundle.main.url(forResource: hlpResource, withExtension: "hlp")!
-    }
-
-    var body: some View {
-        HStack {
-            HelpView(hlpURL: hlpURL)
-        }
-        .navigationBarItems(
-            trailing:
-                Button(action: {
-                    withAnimation {
-                        change.currentView = .calc
-                    }
-                }) {
-                    Text(Style.circle)
-                        .frame(width: 70, height: Style.headerHeight, alignment: .trailing)
-                        .contentShape(Rectangle())
-                }
-                .font(Style.directionsFont)
-        )
     }
 }

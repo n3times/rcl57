@@ -26,6 +26,8 @@ final class Change: ObservableObject {
 
     @Published var showMiniView = false
     @Published var showStepsInState = true
+    @Published var showHelpInSettings = false
+    @Published var showPageInHelp = false
     @Published var transitionEdge: Edge = .trailing
 
     @Published var program: Prog57? = nil
@@ -172,6 +174,12 @@ struct MainView: View {
                         .transition(.move(edge: .bottom))
                         .zIndex(1)
                 }
+                /*if change.currentView == .settings {
+                    SettingsView()
+                        .environmentObject(change)
+                        .transition(.move(edge: .bottom))
+                        .zIndex(1)
+                }*/
             }
 
             if change.currentView == .log {
