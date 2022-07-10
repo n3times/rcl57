@@ -5,7 +5,7 @@ struct FullLibraryView: View {
 
     var body: some View {
         ZStack {
-            if (change.program == nil) {
+            if (change.program == nil && !change.createProgram) {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
@@ -21,7 +21,7 @@ struct FullLibraryView: View {
                                     change.currentView = .calc
                                 }
                             }) {
-                                Text(Style.square)
+                                Text(Style.downArrow)
                                     .frame(width: width / 6, height: Style.headerHeight)
                                     .font(Style.directionsFont)
                                     .contentShape(Rectangle())
@@ -30,8 +30,25 @@ struct FullLibraryView: View {
                         .background(Style.blackish)
                         .foregroundColor(Style.ivory)
 
-                        LibraryView(lib: Lib57.examplesLib)
+                        LibraryView()
                             .background(Style.ivory)
+
+                        HStack(spacing: 0) {
+                            Spacer()
+                                .frame(width: width / 6, height: Style.footerHeight)
+                            Button("Create Program") {
+                                withAnimation {
+                                    change.createProgram = true
+                                }
+                            }
+                            .font(Style.footerFont)
+                            .frame(width: width * 2 / 3, height: Style.footerHeight)
+                            .buttonStyle(.plain)
+                            Spacer()
+                                .frame(width: width / 6, height: Style.footerHeight)
+                        }
+                        .background(Style.blackish)
+                        .foregroundColor(Style.ivory)
                     }
                 }
                 .transition(.move(edge: .leading))
@@ -39,6 +56,11 @@ struct FullLibraryView: View {
 
             if (change.program != nil) {
                 FullProgramView(program: change.program!)
+                    .environmentObject(change)
+                    .transition(.move(edge: .trailing))
+            }
+            if (change.createProgram) {
+                CreateProgramView()
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))
             }

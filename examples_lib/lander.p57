@@ -6,18 +6,13 @@ You are commander of Lunar Module Eagle and you are 2,500 feet from the Moon sur
 Your mission: land safely.
 
 ==Instructions==
-''Note:'' you can skip steps 1 through 3 if you just have loaded or reloaded the game.
-# ''100'' $$STO 1$$ (velocity)
-# ''2500'' $$STO 2$$ (altitude)
-# ''100'' $$STO 3$$ (fuel)
-# $$RST R/S$$. You will see @@100@@ (fuel) followed by @@100.2500@@ (velocity.altitude)
-# ''n'' $$R/S$$ where n is the number of gallons of fuel to burn in the next 4 seconds. Note that n must be a nonnegative integer. You will see ''fuel'' followed by ''velocity.altitude''
-# Repeat step 5 until the display blinks. If the value on the display is positive or zero (e.g. @@2.0000@@) you have landed safely. Otherwise (e.g. @@-10.0000@@) you have crashed
+# Load or reload the program.
+# Initialize: $$RST R/S$$. You will see @@[ 100@@ (fuel left) followed by @@100.2500@@ (velocity.altitude)
+# Burst fuel: ''n'' $$R/S$$ where n is the number of gallons of fuel to burn in the next 4 seconds. Note that n must be a nonnegative integer. You will see ''fuel'' followed by ''velocity.altitude''.
+# Repeat step 3 until the display blinks: if the display is &ge; 0, you have landed safely. Otherwise (&lt; 0), you have crashed.
 
 ==Example==
-$$100 STO 1$$
-$$2500 STO 2$$
-$$100 STO 3$$
+Load or reload Program.
 $$RST R/S$$ @@[ 100@@ @@100.2500@@
 $$10 R/S$$ @@[ 90@@ @@80.2130@@
 $$...$$

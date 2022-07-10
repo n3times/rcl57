@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		15071C352873811C0075D722 /* FullLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* FullLibraryView.swift */; };
 		15071C372874CEA90075D722 /* FullProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* FullProgramView.swift */; };
+		15071C392879F1160075D722 /* CreateProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* CreateProgramView.swift */; };
 		150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* rcl57App.swift */; };
 		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
@@ -37,7 +38,7 @@
 		15B085B72852CAEE0018418A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* LibraryView.swift */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
-		15B0860E286413270018418A /* example_programs in Resources */ = {isa = PBXBuildFile; fileRef = 15B0860D286413260018418A /* example_programs */; };
+		15B0860E286413270018418A /* examples_lib in Resources */ = {isa = PBXBuildFile; fileRef = 15B0860D286413260018418A /* examples_lib */; };
 		15B08610286805FC0018418A /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B0860F286805FC0018418A /* ProgramView.swift */; };
 		15B0861228680BB40018418A /* Lib57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B0861128680BB40018418A /* Lib57.swift */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
@@ -58,6 +59,7 @@
 /* Begin PBXFileReference section */
 		15071C342873811C0075D722 /* FullLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLibraryView.swift; sourceTree = "<group>"; };
 		15071C362874CEA90075D722 /* FullProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullProgramView.swift; sourceTree = "<group>"; };
+		15071C382879F1160075D722 /* CreateProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProgramView.swift; sourceTree = "<group>"; };
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rcl57App.swift; sourceTree = "<group>"; };
 		150ED8A327B089EF00E01FC6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -98,7 +100,7 @@
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
-		15B0860D286413260018418A /* example_programs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = example_programs; path = ../example_programs; sourceTree = "<group>"; };
+		15B0860D286413260018418A /* examples_lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = examples_lib; path = ../examples_lib; sourceTree = "<group>"; };
 		15B0860F286805FC0018418A /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15B0861128680BB40018418A /* Lib57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lib57.swift; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
@@ -136,7 +138,7 @@
 		150ED89527B089EF00E01FC6 = {
 			isa = PBXGroup;
 			children = (
-				15B0860D286413260018418A /* example_programs */,
+				15B0860D286413260018418A /* examples_lib */,
 				154B7A7027BC65C900AE38F1 /* engine */,
 				15F948F0283E060C00706BE5 /* hlp2html */,
 				15F948FB283FACE400706BE5 /* manual */,
@@ -159,6 +161,7 @@
 			children = (
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
+				15071C382879F1160075D722 /* CreateProgramView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
 				15071C342873811C0075D722 /* FullLibraryView.swift */,
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
@@ -324,7 +327,7 @@
 				15F9491D284130A400706BE5 /* registers.hlp in Resources */,
 				150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */,
 				15F94917283FAD7B00706BE5 /* basics.hlp in Resources */,
-				15B0860E286413270018418A /* example_programs in Resources */,
+				15B0860E286413270018418A /* examples_lib in Resources */,
 				150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */,
 				15F94911283FAD7B00706BE5 /* flow.hlp in Resources */,
 				15F9490C283FAD7B00706BE5 /* help.hlp in Resources */,
@@ -344,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				15B085B72852CAEE0018418A /* LibraryView.swift in Sources */,
+				15071C392879F1160075D722 /* CreateProgramView.swift in Sources */,
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
 				15071C372874CEA90075D722 /* FullProgramView.swift in Sources */,
 				15B085E4286152770018418A /* prog57.c in Sources */,

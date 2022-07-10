@@ -4,9 +4,8 @@ Hi-Lo
 The goal of this game is to find a mistery number between ''100'' and ''999'' in at most ''10'' guesses.
 
 ==Instructions==
-# Type a random number between ''0'' and ''1'', such as ''0.1234''
-# Press $$RST R/S$$ to generate the mystery number
-# Introduce your guess (''100'' to ''999'') and press $$R/S$$
+# Generate mystery number: ''0.xyzt'' $$RST R/S$$ where ''0.xyzt'' is a random number between ''0'' and ''1''.
+# Enter guess: ''n'' $$R/S$$ where ''n'' is between ''100'' and ''999''.
 # @@-1@@ means that your guess is too small and @@1@@ that it is too big. In this case go back to step ''3.''
 # The game ends when the display blinks. If it shows @@0@@, you won. Otherwise you lost.
 # For a new game, press $$CLR R/S$$ and go back to step ''3.''
@@ -16,9 +15,6 @@ $$0.3227 RST R/S$$
 $$500$$ @@1@@
 $$200$$ @@-1@@
 $$...$$
-
-==Notes==
-If you play in Classic mode, try not to peek at the display when the mystery number is being generated...
 @!# state
 0000000000000000
 0000000000000000

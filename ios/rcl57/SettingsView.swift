@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-    static let FEEDBACK_NONE = UIImpactFeedbackGenerator.FeedbackStyle.soft
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
     @State private var hasTurboSpeed = Settings.getTurboSpeed()

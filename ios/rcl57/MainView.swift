@@ -29,6 +29,7 @@ final class Change: ObservableObject {
     @Published var transitionEdge: Edge = .trailing
 
     @Published var program: Prog57? = nil
+    @Published var createProgram = false
 
     @Published var showLibrary = false
 

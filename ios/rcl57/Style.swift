@@ -30,8 +30,8 @@ struct Style {
     // Directions.
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"
-    static let downArrow = "\u{25b3}"
-    static let upArrow = "\u{25bd}"
+    static let downArrow = "\u{25bd}"
+    static let upArrow = "\u{25b3}"
     static let circle = "\u{25ef}"
     static let square = "\u{25a2}"
     static let ying = "\u{25d0}"

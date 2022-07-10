@@ -30,7 +30,7 @@ struct FullProgramView: View {
                                 change.currentView = .calc
                             }
                         }) {
-                            Text(Style.square)
+                            Text(Style.downArrow)
                                 .frame(width: width / 6, height: Style.headerHeight)
                                 .font(Style.directionsFont)
                                 .contentShape(Rectangle())

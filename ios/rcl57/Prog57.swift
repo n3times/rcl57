@@ -13,6 +13,12 @@ class Prog57 : Hashable, Equatable {
         prog57_from_text(&prog57, text)
     }
 
+    init(name: String, help: String) {
+        prog57_set_name(&prog57, (name as NSString).utf8String)
+        prog57_set_help(&prog57, (help as NSString).utf8String)
+        prog57_save_state(&prog57, &Rcl57.shared.rcl57)
+    }
+
     func toText() -> String {
         return String(cString: prog57_to_text(&prog57))
     }

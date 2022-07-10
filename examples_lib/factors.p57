@@ -6,7 +6,7 @@ Decomposes an integer into the product of its prime factors.
 ==Instructions==
 : Enter ''n'' and press $$RST R/S$$
 
-The display will flash the prime factors one after the other. The last factor is preceded by the minus sign.
+The display will flash the prime factors of ''n'' one after the other. The last factor will be preceded by the minus sign.
 
 ==Example==
 $$30 RST R/S$$ @@[ 2@@ @@[ 3@@ @@-5@@

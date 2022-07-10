@@ -114,5 +114,5 @@ char *prog57_get_help(prog57_t *program) {
 }
 
 void prog57_set_help(prog57_t *program, const char * const help) {
-    strcpy(program->name, help);
+    strcpy(program->help, help);
 }

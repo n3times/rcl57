@@ -41,7 +41,7 @@ struct CalcView: View {
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let width = geometry.size.width
-        let miniViewIcon = change.showMiniView ? Style.downArrow : Style.upArrow
+        let miniViewIcon = change.showMiniView ? Style.upArrow : Style.downArrow
         let displayHeight = getDisplayHeight()
 
         return ZStack {
@@ -87,7 +87,6 @@ struct CalcView: View {
                         .offset(x: 0, y: -(fullDisplayHeight - miniViewHeight) / 2)
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
-
 
                     DisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)

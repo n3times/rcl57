@@ -9,7 +9,8 @@ struct ManualView: View {
                     ["Math", "math", "Math Functions"],
                     ["Registers", "registers", "Registers"],
                     ["Hello World", "hello", "Hello World"],
-                    ["Flow Control", "flow", "Flow Control"]]
+                    ["Flow Control", "flow", "Flow Control"],
+                    ["Help Files", "help", "Help Files"]]
 
     var body: some View {
         List {
