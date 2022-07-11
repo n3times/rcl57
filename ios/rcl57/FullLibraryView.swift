@@ -27,7 +27,7 @@ struct FullLibraryView: View {
                             }
                         }
 
-                        HStack(spacing: 0) {
+                        /*HStack(spacing: 0) {
                             Spacer()
                                 .frame(width: width / 6, height: Style.footerHeight)
                             Button("Create Program") {
@@ -42,7 +42,7 @@ struct FullLibraryView: View {
                                 .frame(width: width / 6, height: Style.footerHeight)
                         }
                         .background(Style.blackish)
-                        .foregroundColor(Style.ivory)
+                        .foregroundColor(Style.ivory)*/
                     }
                 }
                 .transition(.move(edge: .leading))

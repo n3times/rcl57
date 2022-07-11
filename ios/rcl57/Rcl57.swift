@@ -28,7 +28,7 @@ struct LogEntry {
 class Rcl57 {
     private static let stateFilename = "rcl57.dat"
     private static let versionKey = "version"
-    private static let version = "alpha 1.6"
+    static let version = "alpha 1.8"
 
     static let shared = Rcl57(filename: stateFilename)
 

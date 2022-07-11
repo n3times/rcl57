@@ -64,7 +64,7 @@ struct SettingsView: View {
                                     showingAlert = true
                                 }
                                 .alert(isPresented: $showingAlert) {
-                                    Alert(title: Text("RCL-57 alpha 1.6"), message: Text(aboutText))
+                                    Alert(title: Text("RCL-57 " + Rcl57.version), message: Text(aboutText))
                                 }
                                 Button("Reset") {
                                     isPresentingConfirm = true

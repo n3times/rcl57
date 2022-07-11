@@ -33,7 +33,7 @@ struct Style {
     static let downArrow = "\u{25bd}"
     static let upArrow = "\u{25b3}"
     static let circle = "\u{25ef}"
-    static let square = "\u{25a2}"
+    static let square = "\u{25fb}"
     static let ying = "\u{25d0}"
     static let yang = "\u{25d1}"
 }
