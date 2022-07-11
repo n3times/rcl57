@@ -45,7 +45,6 @@ struct ManualView: View {
                                 }
                             }
                         }
-                        .listStyle(PlainListStyle())
                     }
                 }
                 .transition(.move(edge: .leading))
