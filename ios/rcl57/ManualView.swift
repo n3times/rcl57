@@ -3,22 +3,19 @@ import SwiftUI
 struct ManualView: View {
     @EnvironmentObject private var change: Change
 
-    @State var pageTitle = ""
-    @State var pageURL = ""
-
-    let hlpPages = [["About", "about", "About RCL-57"],
-                    ["Options", "options", "Emulator Options"],
-                    ["Basics", "basics", "Calculator Basics"],
-                    ["Math", "math", "Math Functions"],
-                    ["Registers", "registers", "Registers"],
-                    ["Hello World", "hello", "Hello World"],
-                    ["Flow Control", "flow", "Flow Control"],
-                    ["Help Files", "help", "Help Files"]]
+    let hlpPages = [["About RCL-57", "about"],
+                    ["Emulator Options", "options"],
+                    ["Calculator Basics", "basics"],
+                    ["Math Functions", "math"],
+                    ["Registers", "registers"],
+                    ["Hello World", "hello"],
+                    ["Flow Control", "flow"],
+                    ["Help Files", "help"]]
 
     var body: some View {
         ZStack {
             if change.showPageInHelp {
-                ManualPageView(title: pageTitle, hlpResource: pageURL)
+                ManualPageView(title: change.pageTitle, hlpResource: change.pageURL)
                     .transition(.move(edge: .trailing))
             }
 
@@ -32,20 +29,25 @@ struct ManualView: View {
                                     title: "Help",
                                     right: Style.downArrow,
                                     width: width,
+                                    background: Style.deepGreen,
                                     leftAction: { withAnimation {change.showHelpInSettings = false} },
                                     rightAction: { withAnimation {change.currentView = .calc} })
                         List {
                             ForEach(hlpPages, id: \.self) { hlpPage in
-                                Button(hlpPage[2]) {
-                                    pageTitle = hlpPage[0]
-                                    pageURL = hlpPage[1]
+                                Button(hlpPage[0]) {
+                                    change.pageTitle = hlpPage[0]
+                                    change.pageURL = hlpPage[1]
                                     withAnimation {
                                         change.showPageInHelp = true
                                     }
                                 }
                             }
                         }
+                        .background(Color.white)
+                        .foregroundColor(Color.black)
+                        .listStyle(.plain)
                     }
+                    .background(Color.white)
                 }
                 .transition(.move(edge: .leading))
             }
@@ -71,6 +73,7 @@ struct ManualView: View {
                                 title: title,
                                 right: Style.downArrow,
                                 width: width,
+                                background: Style.deepGreen,
                                 leftAction: { withAnimation {change.showPageInHelp = false} },
                                 rightAction: { withAnimation {change.currentView = .calc} })
                     HelpView(hlpURL: hlpURL)

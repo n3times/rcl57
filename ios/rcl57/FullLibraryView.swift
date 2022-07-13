@@ -5,7 +5,7 @@ struct FullLibraryView: View {
 
     var body: some View {
         ZStack {
-            if (change.program == nil && !change.createProgram) {
+            if change.program == nil {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
@@ -14,6 +14,7 @@ struct FullLibraryView: View {
                                     title: "Library",
                                     right: Style.downArrow,
                                     width: width,
+                                    background: Style.deepBlue,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
                             .frame(width: width)
@@ -26,23 +27,6 @@ struct FullLibraryView: View {
                                 LibraryView(lib: Lib57.examplesLib, change: change)
                             }
                         }
-
-                        /*HStack(spacing: 0) {
-                            Spacer()
-                                .frame(width: width / 6, height: Style.footerHeight)
-                            Button("Create Program") {
-                                withAnimation {
-                                    change.createProgram = true
-                                }
-                            }
-                            .font(Style.footerFont)
-                            .frame(width: width * 2 / 3, height: Style.footerHeight)
-                            .buttonStyle(.plain)
-                            Spacer()
-                                .frame(width: width / 6, height: Style.footerHeight)
-                        }
-                        .background(Style.blackish)
-                        .foregroundColor(Style.ivory)*/
                     }
                 }
                 .transition(.move(edge: .leading))
@@ -50,11 +34,6 @@ struct FullLibraryView: View {
 
             if (change.program != nil) {
                 FullProgramView(program: change.program!)
-                    .environmentObject(change)
-                    .transition(.move(edge: .trailing))
-            }
-            if (change.createProgram) {
-                CreateProgramView()
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))
             }

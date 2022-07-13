@@ -4,7 +4,7 @@ This is a basic program that iterates through all the integers:
 
 :$$$Lbl 0$$$
 :$$$+ 1 =$$$
-:$$$Pau$$$
+:$$$Pause$$$
 :$$$GTO 0$$$
 
 The first line is just a label that marks a place in the program. Then comes the real computation:
@@ -18,7 +18,7 @@ To enter the program, first clear the program or reset the emulator so we can st
 :$$LRN$$
 :$$2nd Lbl 0$$
 :$$+ 1 =$$
-:$$2nd Pau$$
+:$$2nd Pause$$
 :$$GTO 0$$
 :$$LRN$$
 

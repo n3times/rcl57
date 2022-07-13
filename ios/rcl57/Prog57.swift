@@ -3,7 +3,9 @@ import SwiftUI
 class Prog57 : Hashable, Equatable {
     private var prog57 = prog57_t()
 
-    init?(url: URL) {
+    var readOnly = true
+
+    init?(url: URL, readOnly: Bool) {
         var text: String
         do {
             text = try String(contentsOf: url)
@@ -11,12 +13,14 @@ class Prog57 : Hashable, Equatable {
             return nil
         }
         prog57_from_text(&prog57, text)
+        self.readOnly = readOnly
     }
 
-    init(name: String, help: String) {
+    init(name: String, help: String, readOnly: Bool) {
         prog57_set_name(&prog57, (name as NSString).utf8String)
         prog57_set_help(&prog57, (help as NSString).utf8String)
         prog57_save_state(&prog57, &Rcl57.shared.rcl57)
+        self.readOnly = readOnly
     }
 
     func toText() -> String {
@@ -53,7 +57,7 @@ class Prog57 : Hashable, Equatable {
 
         let folderURLs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 
-        let fileURL = folderURLs[0].appendingPathComponent(filename)
+        let fileURL = folderURLs[0].appendingPathComponent(filename + ".p57")
 
         do {
             try text.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)

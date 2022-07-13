@@ -38,8 +38,11 @@ struct CreateProgramView: View {
                             .font(Style.titleFont)
                         Button(action: {
                             withAnimation {
-                                Lib57.userLib.add(program: Prog57(name: name, help: help))
+                                let program = Prog57(name: name, help: help, readOnly: false)
+                                Lib57.userLib.add(program: program)
+                                _ = program.save(filename: program.getName())
                                 change.createProgram = false
+                                change.loadedProgram = program
                             }
                         }) {
                             Text(Style.rightArrow)
@@ -69,6 +72,6 @@ struct CreateProgramView: View {
 
 struct CreateProgramView_Previews: PreviewProvider {
     static var previews: some View {
-        FullLibraryView()
+        CreateProgramView()
     }
 }

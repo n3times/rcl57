@@ -2,12 +2,10 @@
 #define _HLP2HTML_H_
 
 /**
- * \file hlp2html.h
- *
- * \brief Utility to transform hlp (TI-59 help) files into HTML files.
+ * Utility to transform hlp (TI-57 help) files into HTML files.
  *
  * A hlp file is a text file (ASCII) where some tags are used for formatting
- * and to indicate TI-59 specific elements:
+ * and to indicate TI-57 specific elements:
  * - bold   => ''...''
  * - italic => '''...'''
  * - For headers, lines start with 1 or 2 '=':
@@ -19,16 +17,13 @@
  *   - simply indented => :
  * - TI-59 elements:
  *   - display      => &&...&&
- *   - printed line => @@...@@
  *   - operators    => $$...$$
  * - TI-59 elements written in alternative form (visually lighter):
  *   - display      => &&&...&&&
- *   - printed line => @@@...@@@
  *   - operators    => $$$...$$$
  *
  * The typical usage is as follows:
  *
- * \code
  * hlp2html_t hlp2html; // User does not initialize this structure
  * char html[1000];
  *
@@ -40,11 +35,10 @@
  * }
  * hlp2html_done(&hlp2html, html, sizeof(html));
  * printf("%s", html);
- * \endcode
  *
- * \see hlp_ops.h for the list of operators and how they are represented
+ * See hlp_ops.h for the list of operators and how they are represented
  * in a hlp file.
- * \see hlp_print.h for the list of characters which cannot be represented
+ * See hlp_print.h for the list of characters which cannot be represented
  * in ASCII and how they are mapped from hlp form to HTML form.
  */
 

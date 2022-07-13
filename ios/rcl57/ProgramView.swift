@@ -7,7 +7,7 @@ struct ProgramView: View {
 
     var body: some View {
         let loaded = program == change.loadedProgram
-        let loadButtonText = loaded ? "Reload" : "Load"
+        let loadButtonText = loaded ? "RELOAD" : "LOAD"
 
         return VStack(spacing: 0) {
             HelpView(hlpString: program.getHelp())
@@ -27,7 +27,7 @@ struct ProgramView: View {
                 .buttonStyle(.plain)
                 Spacer()
             }
-            .background(Style.blackish)
+            .background(Style.deepBlue)
             .foregroundColor(Style.ivory)
         }
     }

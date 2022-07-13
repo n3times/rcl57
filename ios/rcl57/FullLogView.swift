@@ -10,7 +10,7 @@ struct FullLogView: View {
     @State private var isPresentingConfirm: Bool = false
 
     var body: some View {
-        return GeometryReader { geometry in
+        GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
                 MenuBarView(change: change,
@@ -35,7 +35,7 @@ struct FullLogView: View {
 
                 HStack(spacing: 0) {
                     Spacer()
-                    Button("Clear") {  // Left arrow.
+                    Button("CLEAR") {  // Left arrow.
                         isPresentingConfirm = true
                     }
                     .font(Style.footerFont)
@@ -46,7 +46,7 @@ struct FullLogView: View {
                         Button("Clear Log", role: .destructive) {
                             Rcl57.shared.clearLog()
                         }
-                     }
+                    }
                     Spacer()
                 }
                 .background(Style.blackish)
@@ -54,10 +54,10 @@ struct FullLogView: View {
             }
         }
     }
-}
 
-struct FullLogView_Previews: PreviewProvider {
-    static var previews: some View {
-        FullLogView()
+    struct FullLogView_Previews: PreviewProvider {
+        static var previews: some View {
+            FullLogView()
+        }
     }
 }

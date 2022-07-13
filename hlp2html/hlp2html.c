@@ -1,9 +1,5 @@
 /**
- * \file hlp2html.c
- *
- * \brief Utility to transform hlp (TI-59 help) files into HTML files.
- *
- * \see hlp2html.h
+ * Utility to transform hlp (TI-57 help) files into HTML files.
  */
 
 #include <stdio.h>
@@ -11,7 +7,6 @@
 
 #include "hlp2html.h"
 #include "hlp_ops.h"
-#include "hlp_print.h"
 
 /* Tags in hlp files */
 
@@ -23,9 +18,6 @@
 #define HLP_LIST_BULLET   '*'
 #define HLP_LIST_NUMBER   '#'
 #define HLP_LIST_INDENT   ':'
-
-#define HLP_PRINT_STD     "&&"
-#define HLP_PRINT_LIGHT   "&&&"
 
 #define HLP_OPS_STD       "$$"
 #define HLP_OPS_LIGHT     "$$$"
@@ -52,15 +44,13 @@
 /* HTML footer and header */
 
 #define HTML_HEADER_FORMAT "<html><head>\n" \
-  "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"></head><body bgcolor=#fffff0>"
+  "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"></head><body bgcolor=#ffffff>"
 
 #define HTML_FOOTER "</body></html>"
 
 /* CSS classes used to represent the different elements */
 
 #define CSS_NUMBER         "number"
-#define CSS_PRINT_STD      "print1"
-#define CSS_PRINT_LIGHT    "print2"
 #define CSS_DISPLAY_STD    "display"
 #define CSS_DISPLAY_LIGHT  "display2"
 
@@ -73,26 +63,6 @@
 
 #define CSS_OPEN_SPAN(CLASS) "<span class=\"" CLASS "\">"
 #define CSS_CLOSE_SPAN       "</span>"
-
-/**
- * Characters not in this list (such as 'A') do not need special translation
- * into HTML.
- */
-print_t special_prints[] = {
-  {'x', "&#215;"},  /*!< multiplication symbol */
-  {'v', "&#8730;"}, /*!< square root */
-  {'p', "&#960;"},  /*!< pi */
-  {'^', "&#8593;"}, /*!< up arrow */
-  {':', ":"},       /*!< exchange arrows as used in "x exchange t" */
-  {'`', "&#739;"},  /*!< upper script x */
-  {'a', "x&#772;"}, /*!< average (x-bar). Alternative "&#7821" (x-diaeresis) */
-  {'"', "&#178;"},  /*!< upper script 2 */
-  {'|', "&#247;"},  /*!< division symbol */
-  {'#', "&#8545;"}, /*!< Roman II */
-  {'_', "&#9652;"}, /*!< small up arrow */
-  {'n', "&#8719;"}, /*!< upper case Pi */
-  {'s', "&#8721;"}  /*!< Sigma */
-};
 
 /******************************************************************************
  *                                                                            *
@@ -153,48 +123,9 @@ done:
   return end;
 }
 
-/**
- * Transforms a sequence of print characters from hlp format to HTML format.
- *
- * \see hlp_print.h
- */
-static void escape_printer(const char * line, char * escaped_line)
-{
-  char * c = (char *) line;
-  char * escaped_c = escaped_line;
-
-  while (*c != '\0') {
-    int i;
-    char * print_html = NULL;
-
-    for (i=0; i < sizeof(special_prints)/sizeof(special_prints[0]); i++) {
-      if (special_prints[i].hlp_char == *c) {
-        print_html = special_prints[i].html_string;
-        break;
-      }
-    }
-
-    if (print_html == NULL) {
-      *escaped_c = *c;
-      escaped_c++;
-    } else {
-      char new_c[10];
-      char * new_c_p = new_c;
-      sprintf(new_c, "%s", print_html);
-      while (*new_c_p != '\0') {
-        *escaped_c = *new_c_p;
-        escaped_c++;
-        new_c_p++;
-      }
-    }
-    c++;
-  }
-  *escaped_c = '\0';
-}
-
 static int is_caption_long(const char * op_string)
 {
-    char * long_ops[] = {"wrt", "pau", "stf", "iff", "d.ms"};
+    char * long_ops[] = {"wrt", "pause", "stf", "iff", "d.ms"};
     int n = sizeof(long_ops) / sizeof(long_ops[0]);
     int i;
     for (i = 0; i < n; i++) {
@@ -225,9 +156,8 @@ static void get_html_info_for_op(const char * op_string, int light,
           /* Only display "2nd" in yellow. Looks better */
           *css_class = strcmp(op_string, "2nd") == 0 ? CSS_BUTTON_YELLOW : CSS_BUTTON_WHITE;
           break;
-        case BUTTON_BROWN:   *css_class = CSS_BUTTON_BROWN;   break;
-        case BUTTON_ABOVE:   *css_class = is_caption_long(op_string) ? CSS_BUTTON_ABOVE2 : CSS_BUTTON_ABOVE; break;
-        case BUTTON_VIRTUAL: *css_class = CSS_BUTTON_VIRTUAL; break;
+        case BUTTON_DEFAULT:   *css_class = CSS_BUTTON_BROWN;   break;
+        case BUTTON_SECONDARY:   *css_class = is_caption_long(op_string) ? CSS_BUTTON_ABOVE2 : CSS_BUTTON_ABOVE; break;
       }
     }
   }
@@ -369,57 +299,6 @@ static char * unescape_slashes(char * line)
 
   return end;
 }
-/**
- * Looks for the first occurrence of a print item (&&...&& or &&&...&&&)
- * and converts it into HTML.
- *
- * The print item is placed within the appropriate HTML span tag (look and
- * feel will be dictated by the CSS file). In addition, the print characters
- * will be converted from ASCII into the appropriate characters, following
- * the convention of help files (for example 'p' will be converted into the
- * character 'pi', "&#960;" in HTML).
- */
-static char * make_print(char * line)
-{
-  char * start = NULL;
-  char * end   = NULL;
-  char print_line[1000];
-  char escaped_line[1000];
-  int print_light = 0;
-
-  if ((start = strstr(line, HLP_PRINT_LIGHT)) != NULL &&
-      (end = strstr(start + 3, HLP_PRINT_LIGHT)) != NULL) {
-    print_light = 1;
-    start += 3;
-  } else if ((start = strstr(line, HLP_PRINT_STD)) != NULL &&
-            (end = strstr(start + 2, HLP_PRINT_STD)) != NULL) {
-    print_light = 0;
-    start += 2;
-  } else {
-    end = NULL;
-    goto done;
-  }
-
-  strcpy(print_line, start);
-  print_line[end - start] = '\0';
-  escape_printer(print_line, escaped_line);
-
-  replace(line, print_line, escaped_line);
-
-  if (print_light) {
-    end =  replace_matching_tags(line, HLP_PRINT_LIGHT,
-                                       CSS_OPEN_SPAN(CSS_PRINT_LIGHT),
-                                       HLP_PRINT_LIGHT, CSS_CLOSE_SPAN);
-  } else {
-    end =  replace_matching_tags(line, HLP_PRINT_STD,
-                                       CSS_OPEN_SPAN(CSS_PRINT_STD),
-                                       HLP_PRINT_STD, CSS_CLOSE_SPAN);
-  }
-
-done:
-
-  return end;
-}
 
 /**
  * Looks for the first occurrence of a ops item ($$...$$ or $$$...$$$)
@@ -549,9 +428,6 @@ static line_type_t line2html(char * line, char * html)
     if (make_display(line) == NULL) break;
   }
   while (1) {
-    if (make_print(line) == NULL) break;
-  }
-  while (1) {
     if (make_ops(line) == NULL) break;
   }
 
@@ -581,9 +457,6 @@ static line_type_t line2html(char * line, char * html)
  *                                                                            *
  ******************************************************************************/
 
-/**
- * \see hlp2html.h
- */
 int hlp2html_init(hlp2html_t * hlp2html, const char * css_path,
                   char * html_out, int out_size)
 {
@@ -597,9 +470,6 @@ int hlp2html_init(hlp2html_t * hlp2html, const char * css_path,
   return ret;
 }
 
-/**
- * \see hlp2html.h
- */
 int hlp2html_done(hlp2html_t * hlp2html,
                   char * html_out, int out_size)
 {
@@ -629,9 +499,6 @@ int hlp2html_done(hlp2html_t * hlp2html,
   return ret;
 }
 
-/**
- * \see hlp2html.h
- */
 int hlp2html_next(hlp2html_t * hlp2html, const char * hlp_lines,
                   char * html_out, int out_size)
 {

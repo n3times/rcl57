@@ -7,6 +7,7 @@ struct MenuBarView: View {
     let title: String
     let right: String?
     let width: CGFloat
+    var background = Style.blackish
     let leftAction: () -> Void?
     let rightAction: () -> Void?
 
@@ -42,7 +43,7 @@ struct MenuBarView: View {
                     .frame(width: width / 6, height: Style.headerHeight)
             }
         }
-        .background(Style.blackish)
+        .background(background)
         .foregroundColor(Style.ivory)
     }
 }

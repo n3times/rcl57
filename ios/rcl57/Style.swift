@@ -5,7 +5,9 @@ struct Style {
 
     // Colors.
     static let ivory = Color(red: 1.0, green: 1.0, blue: 0.93)
-    static let blackish = Color(red: 0.1, green: 0.1, blue: 0.11)
+    static let blackish = Color(red: 0.137, green: 0.149, blue: 0.153)
+    static let deepBlue = Color(red: 0.18, green: 0.35, blue: 0.58)
+    static let deepGreen = Color(red: 0.18, green: 0.58, blue: 0.35)
 
     // Header.
     static let titleFont = Font.system(size: 22, weight: .medium)
@@ -21,7 +23,7 @@ struct Style {
     static let listLineHeight = isIpod ? 22.0 : 27.0
 
     // Footer.
-    static let footerFont = Font.system(size: 22, weight: .medium)
+    static let footerFont = Font.system(size: 18, weight: .medium)
     static let footerHeight = 44.0
 
     // Mini View.

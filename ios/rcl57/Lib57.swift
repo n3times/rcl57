@@ -12,7 +12,7 @@ class Lib57 {
     static let examplesLib = Lib57(url: examplesLibURL, name: "Examples Library", readonly: true)
 
     private static let userLibURL =
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     static let userLib = Lib57(url: userLibURL!, name: "User Library", readonly: false)
 
     init(url: URL, name: String, readonly: Bool) {
@@ -21,11 +21,11 @@ class Lib57 {
         self.readonly = readonly
 
         programs = []
-        let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [])
+        let enumerator = Foundation.FileManager.default.enumerator(at: url, includingPropertiesForKeys: [])
         while let programURLObject = enumerator!.nextObject() {
             let programURL = programURLObject as! URL
             if programURL.path.hasSuffix(".p57") {
-                programs.append(Prog57(url: programURL)!)
+                programs.append(Prog57(url: programURL, readOnly: readonly)!)
             }
         }
         programs = programs.sorted { $0.getName() < $1.getName() }

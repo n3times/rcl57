@@ -30,6 +30,7 @@ struct SettingsView: View {
                                     title: "Settings and Help",
                                     right: Style.downArrow,
                                     width: width,
+                                    background: Style.deepGreen,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
                         .frame(width: width)

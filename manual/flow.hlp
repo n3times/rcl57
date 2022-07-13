@@ -1,17 +1,17 @@
 ==Unconditional Branching==
 
-As we saw in the '''Hello World''' program, $$$GTO$$$ ''d'' branches directly to $$$Lbl$$$ ''d''.
+As we saw in the '''Hello World''' program, $$GTO$$ ''d'' branches directly to $$Lbl$$ ''d''.
 
 ==Conditional Branching==
 
 Quite often one would like to go to a given label, if and only if some condition holds. For example, if the display reaches @@10@@, we may want to stop our '''Hello World''' program. This can be implemented as follows:
 
-:$$$Lbl 0$$$
-:$$$x:t 10 x:t$$$
-:$$$+ 1 =$$$
-:$$$Pau$$$
-:$$$INV x=t GTO 0$$$
-:$$$R/S$$$
+:$$2nd Lbl 0$$
+:$$x:t 10 x:t$$
+:$$+ 1 =$$
+:$$2nd Pause$$
+:$$INV 2nd x=t GTO 0$$
+:$$R/S$$
 
 The second line:
 :$$x:t 10 x:t$$
@@ -23,12 +23,25 @@ Otherwise, in case of equality, we skip this step. Since the following step is $
 
 Conditional branching is at the heart of programming because it makes arbitrary logic and therefore arbitrary computation possible. Besides $$2nd x=t$$, there is:
 :$$2nd x>=t$$
-:$$2nd Dsz$$
 
-This last instruction:
+==Decrement and Skip if Zero (Dsz)==
+
+$$2nd Dsz$$
 # Decrements register 0 by 1
 # Then checks whether the value of register 0 is 0.
-If it is zero the next step will be skipped ('''decrement and skip if 0''').
+If it is zero the next step will be skipped.
+
+For example, the following program, counts from ''n'' down to 0:
+:$$STO 0$$
+:$$2nd lbl 0$$
+:$$RCL 0$$
+:$$2nd Pause$$
+:$$2nd Dsz GTO 0$$
+:$$0 GTO 1$$
+
+Note the last step that goes to an inexisting label, making the execution stop and the display blink.
+
+Usage: ''n'' $$RST R/S$$
 
 ==Subroutines==
 
@@ -36,13 +49,13 @@ One last important flow control instruction is $$SBR$$. A subroutine is a sequen
 
 It can be called from any piece of code. For example, consider:
 
-:$$$Lbl 0$$$
-:$$$SBR 1$$$
-:$$$Pau$$$
-:$$$GTO 0$$$
-:$$$Lbl 1$$$
-:$$$+ 1 =$$$
-:$$$INV SBR$$$
+:$$2nd Lbl 0$$
+:$$SBR 1$$
+:$$2nd Pause$$
+:$$GTO 0$$
+:$$2nd Lbl 1$$
+:$$+ 1 =$$
+:$$INV SBR$$
 
 In this case the subroutine starts at:
 :$$2nd Lbl 1$$

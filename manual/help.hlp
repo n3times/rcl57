@@ -39,7 +39,7 @@ to get this:
 
 If possible, keys are spelled the same way they are written on the keyboard using ASCII characters (case insensitive).
 For example:
-:$$x=t$$: x = t
+:$$x=t$$: x=t
 :$$D.MS$$: D.MS
 :$$yx$$: yx
 
@@ -48,12 +48,13 @@ There are a few exceptions:
 :$$vx$$ vx
 :$$/$$ /
 :$$*$$ *
-:$$P/R$$ P/R
+:$$P->R$$ P->R
 :$$pi$$ pi
 :$$x>=t$$ x>=t
 :$$S+$$ S+
-:$$avg$$ avg
-:$$var$$ var
+:$$xbar$$ avg
+:$$s2$$ var
+:$$s2$$ S2
 
 ==Alternatives==
 

@@ -35,6 +35,9 @@ final class Change: ObservableObject {
 
     @Published var showLibrary = false
 
+    @Published var pageTitle = ""
+    @Published var pageURL = ""
+
     @Published var loadedProgram: Prog57?
 
     let PROGRAM_KEY = "program"

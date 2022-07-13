@@ -45,7 +45,8 @@ struct CalcView: View {
         let displayHeight = getDisplayHeight()
 
         return ZStack {
-            Style.blackish.edgesIgnoringSafeArea(.all)
+            Style.blackish.edgesIgnoringSafeArea(.top)
+            Color.black.edgesIgnoringSafeArea(.bottom)
             VStack(spacing: 0) {
                 // Menu bar.
                 HStack(spacing: 0) {
@@ -78,6 +79,7 @@ struct CalcView: View {
                     .font(Style.programFont)
                     .frame(width: width, height: 20, alignment: .leading)
                     .offset(x: 15, y: -2)
+                    .background(Style.blackish)
 
                 // Display + Mini View.
                 ZStack {

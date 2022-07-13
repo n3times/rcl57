@@ -36,7 +36,7 @@ struct FullProgramView: View {
                                 .contentShape(Rectangle())
                         }
                     }
-                    .background(Style.blackish)
+                    .background(Style.deepBlue)
                     .foregroundColor(Style.ivory)
 
                     ProgramView(program: program)

@@ -3,7 +3,7 @@
 First, make sure to select the appropriate trigonometric unit
 :$$2nd Deg$$
 :$$2nd Rad$$
-:$$2nd Grd$$.
+:$$2nd Grad$$.
 
 To compute the standard trigonometric functions, press one of the following
 :$$2nd sin$$
@@ -50,7 +50,7 @@ Numbers are entered with $$2nd S+$$:
 : $$12 2nd S+$$: @@3@@
 
 Note that the display shows how many numbers have been entered so far. To compute the average of these numbers:
-: $$2nd avg$$: @@8@@
+: $$2nd xbar$$: @@8@@
 And to compute the variance:
-: $$2nd var$$: @@8.6666667@@
+: $$2nd s2$$: @@8.6666667@@
 
