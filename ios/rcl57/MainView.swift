@@ -34,6 +34,7 @@ final class Change: ObservableObject {
     @Published var createProgram = false
 
     @Published var showLibrary = false
+    @Published var showPreview = false
 
     @Published var pageTitle = ""
     @Published var pageURL = ""

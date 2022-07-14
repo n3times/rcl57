@@ -11,6 +11,7 @@ struct Style {
 
     // Header.
     static let titleFont = Font.system(size: 22, weight: .medium)
+    static let smallFont = Font.system(size: 14, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
     static let directionsFontLarge = Font.system(size: 28, weight: .regular, design: .monospaced)
     static let headerHeight = 44.0

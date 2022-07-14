@@ -39,7 +39,7 @@ struct FullLogView: View {
                         isPresentingConfirm = true
                     }
                     .font(Style.footerFont)
-                    .frame(width: width / 6, height: Style.footerHeight)
+                    .frame(width: width / 3, height: Style.footerHeight)
                     .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {

@@ -7,6 +7,8 @@ struct FullStateView: View {
     @State private var isPresentingSave: Bool = false
     @State private var isPresentingClose: Bool = false
 
+    func placeOrder() { }
+
     var body: some View {
         ZStack {
             if !change.createProgram {
@@ -15,6 +17,7 @@ struct FullStateView: View {
                     let program = change.loadedProgram
                     let typeName = change.showStepsInState ? "Program" : "Data"
                     let title = program == nil ? typeName : program!.getName()
+
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: !change.showStepsInState ? Style.ying : Style.yang,
@@ -68,7 +71,7 @@ struct FullStateView: View {
                                         change.forceUpdate()
                                     }
                                 } else {
-                                    Button("Clear Registers", role: .destructive) {
+                                    Button("Clear Data", role: .destructive) {
                                         Rcl57.shared.clearRegisters()
                                         change.forceUpdate()
                                     }
@@ -86,6 +89,7 @@ struct FullStateView: View {
                             }
                             .font(Style.footerFont)
                             .frame(width: width / 3, height: Style.footerHeight)
+                            .disabled(program != nil && program!.readOnly)
                             .buttonStyle(.plain)
                             .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
                                 if change.loadedProgram != nil {
