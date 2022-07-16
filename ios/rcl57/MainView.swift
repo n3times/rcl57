@@ -12,7 +12,7 @@ enum CurrentView {
     case library
 }
 
-final class Change: ObservableObject {
+class Change: ObservableObject {
     var pc: Int
     var isAlpha: Bool
     var isHpLrnMode: Bool
@@ -176,7 +176,7 @@ struct MainView: View {
                     .environmentObject(change)
                     .transition(.move(edge: change.transitionEdge))
                 if change.currentView == .library {
-                    FullLibraryView()
+                    LibraryView()
                         .environmentObject(change)
                         .transition(.move(edge: .bottom))
                         .zIndex(1)

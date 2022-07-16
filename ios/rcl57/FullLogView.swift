@@ -35,7 +35,7 @@ struct FullLogView: View {
 
                 HStack(spacing: 0) {
                     Spacer()
-                    Button("CLEAR") {  // Left arrow.
+                    Button("CLEAR") {
                         isPresentingConfirm = true
                     }
                     .font(Style.footerFont)

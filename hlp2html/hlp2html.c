@@ -44,7 +44,7 @@
 /* HTML footer and header */
 
 #define HTML_HEADER_FORMAT "<html><head>\n" \
-  "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"></head><body bgcolor=#ffffff>"
+  "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"></head><body>"
 
 #define HTML_FOOTER "</body></html>"
 

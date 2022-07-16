@@ -10,30 +10,46 @@ struct FullStateView: View {
     func placeOrder() { }
 
     var body: some View {
+        let program = change.loadedProgram
+        let typeName = change.showStepsInState ? "Program" : "Data"
+        let programName = program?.getName()
+        let isNew = program == nil
+        let isReadOnly = !isNew && program!.readOnly
+        let isReadWrite = !isNew && !isReadOnly
+        let title = isNew ? "" : (program!.readOnly ? "" : "") + programName!
+
         ZStack {
-            if !change.createProgram {
+            if true { /// change.createProgram {
                 GeometryReader { geometry in
                     let width = geometry.size.width
-                    let program = change.loadedProgram
-                    let typeName = change.showStepsInState ? "Program" : "Data"
-                    let title = program == nil ? typeName : program!.getName()
 
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
-                                    left: !change.showStepsInState ? Style.ying : Style.yang,
+                                    left: change.showStepsInState ? Style.yang : Style.ying,
                                     title: title,
                                     right: Style.rightArrow,
                                     width: width,
                                     leftAction: { change.showStepsInState.toggle() },
                                     rightAction: { withAnimation {change.currentView = .calc} })
 
-                        // Program Name
-                        Text(program != nil ? typeName : "")
-                            .foregroundColor(Style.ivory)
-                            .font(Style.programFont)
-                            .frame(width: width, height: 20, alignment: .leading)
-                            .offset(x:15, y: -5)
-                            .background(Style.blackish)
+                        // Type (program or data)
+                        HStack(spacing: 0) {
+                            Button(typeName) {
+                                change.showStepsInState.toggle()
+                            }
+                            .frame(width: width / 6, height: 20)
+                            .offset(x: change.showStepsInState ? 5 : 0, y: -3)
+
+                            Text(isReadOnly ? "Examples" : "")
+                                .frame(width: width * 2 / 3, height: 20)
+
+                            Spacer()
+                                .frame(width: width / 6, height: 20)
+                        }
+                        .offset(y: -3)
+                        .background(Style.blackish)
+                        .foregroundColor(Style.ivory)
+                        .font(Style.programFont)
 
                         // State
                         StateView(isMiniView: false)
@@ -45,11 +61,11 @@ struct FullStateView: View {
                             }
                             .font(Style.footerFont)
                             .frame(width: width / 3, height: Style.footerHeight)
-                            .disabled(change.loadedProgram == nil)
+                            .disabled(isNew)
                             .buttonStyle(.plain)
                             .confirmationDialog("Are you sure?", isPresented: $isPresentingClose) {
-                                if change.loadedProgram != nil {
-                                    Button("Close " + change.loadedProgram!.getName(), role: .destructive) {
+                                if !isNew {
+                                    Button("Close " + programName!, role: .destructive) {
                                         change.setLoadedProgram(program: nil)
                                         change.forceUpdate()
                                     }
@@ -78,25 +94,24 @@ struct FullStateView: View {
                                 }
                             }
 
-                            Button(change.loadedProgram == nil ? "NEW" : "SAVE") {
-                                if change.loadedProgram == nil {
+                            Button(isReadWrite ? "SAVE" : "NEW") {
+                                if isReadWrite {
+                                    isPresentingSave = true
+                                } else {
+                                    change.showPreview = false
                                     withAnimation {
                                         change.createProgram = true
                                     }
-                                } else {
-                                    isPresentingSave = true
                                 }
                             }
                             .font(Style.footerFont)
                             .frame(width: width / 3, height: Style.footerHeight)
-                            .disabled(program != nil && program!.readOnly)
                             .buttonStyle(.plain)
                             .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
-                                if change.loadedProgram != nil {
-                                    Button("Save " + change.loadedProgram!.getName(), role: .destructive) {
-                                        let program = change.loadedProgram!
-                                        program.saveState()
-                                        _ = program.save(filename: program.getName())
+                                if isReadWrite {
+                                    Button("Save " + programName!, role: .destructive) {
+                                        program!.saveState()
+                                        _ = program!.save(filename: programName!)
                                         change.forceUpdate()
                                     }
                                 }
@@ -112,6 +127,7 @@ struct FullStateView: View {
                 CreateProgramView()
                     .environmentObject(change)
                     .transition(.move(edge: .bottom))
+                    .zIndex(1)
             }
         }
     }

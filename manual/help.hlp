@@ -37,24 +37,23 @@ to get this:
 
 ==Keys==
 
-If possible, keys are spelled the same way they are written on the keyboard using ASCII characters (case insensitive).
+If possible, keys are spelled exactly the same way they are written on the keyboard using ASCII characters (case insensitive).
 For example:
 :$$x=t$$: x=t
 :$$D.MS$$: D.MS
 :$$yx$$: yx
 
-There are a few exceptions:
-:$$x:t$$ x:t
+Note the following special cases:
 :$$vx$$ vx
+:$$x:t$$ x:t
 :$$/$$ /
 :$$*$$ *
 :$$P->R$$ P->R
 :$$pi$$ pi
 :$$x>=t$$ x>=t
 :$$S+$$ S+
-:$$xbar$$ avg
-:$$s2$$ var
-:$$s2$$ S2
+:$$xbar$$ xbar
+:$$s2$$ s2
 
 ==Alternatives==
 

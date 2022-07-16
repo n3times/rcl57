@@ -36,7 +36,7 @@ struct SettingsView: View {
                         .frame(width: width)
 
                         Form {
-                            Button("Help") {
+                            Button("RCL-57 Manual") {
                                 withAnimation {
                                     change.showHelpInSettings = true
                                 }

@@ -16,41 +16,59 @@ struct PreviewProgramView: View {
                                 change.showPreview = false
                             }
                         }) {
-                            Text("Back")
-                                .frame(width: width / 5, height: Style.headerHeight)
+                            Text(Style.leftArrow)
+                                .frame(width: width / 6, height: Style.headerHeight)
                                 .font(Style.smallFont)
                                 .contentShape(Rectangle())
                         }
+
                         Text(program.getName())
-                            .frame(width: width * 3 / 5, height: Style.headerHeight)
+                            .frame(width: width * 2 / 3, height: Style.headerHeight)
                             .font(Style.titleFont)
-                        Button(action: {
+
+                        Spacer()
+                            .frame(width: width / 6, height: Style.headerHeight)
+                    }
+                    .background(Style.deepBlue)
+                    .foregroundColor(Style.ivory)
+
+                    if program.getHelp() == "" {
+                        Text("No description available")
+                            .frame(width: geometry.size.width,
+                                   height: geometry.size.height - Style.headerHeight - Style.footerHeight,
+                                   alignment: .center)
+                            .background(Style.ivory)
+                            .foregroundColor(Style.blackish)
+                    } else {
+                        HelpView(hlpString: program.getHelp())
+                    }
+
+                    // Footer
+                    HStack(spacing: 0) {
+                        Spacer()
+                        Button("CONFIRM") {
                             withAnimation {
                                 Lib57.userLib.add(program: program)
                                 _ = program.save(filename: program.getName())
                                 change.createProgram = false
                                 change.loadedProgram = program
                             }
-                        }) {
-                            Text("Confirm")
-                                .frame(width: width / 5, height: Style.headerHeight)
-                                .font(Style.smallFont)
-                                .contentShape(Rectangle())
                         }
+                        .font(Style.footerFont)
+                        .frame(width: 100, height: Style.footerHeight)
+                        .buttonStyle(.plain)
+                        Spacer()
                     }
                     .background(Style.deepBlue)
                     .foregroundColor(Style.ivory)
-
-                    HelpView(hlpString: program.getHelp())
                 }
             }
-            .transition(.move(edge: .leading))
         }
     }
 }
 
-struct CreateProgramView_Previews: PreviewProvider {
+struct PreviewProgramView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateProgramView()
+        PreviewProgramView(program: Prog57(name: "", help: "", readOnly: false))
     }
 }

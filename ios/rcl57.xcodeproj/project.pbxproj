@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15071C352873811C0075D722 /* FullLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* FullLibraryView.swift */; };
-		15071C372874CEA90075D722 /* FullProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* FullProgramView.swift */; };
+		15071C352873811C0075D722 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* LibraryView.swift */; };
+		15071C372874CEA90075D722 /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* ProgramView.swift */; };
 		15071C392879F1160075D722 /* CreateProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* CreateProgramView.swift */; };
 		15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C3A287B7EF00075D722 /* MenuBarView.swift */; };
 		150DE99E28805BE6008E651B /* PreviewProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* PreviewProgramView.swift */; };
@@ -37,11 +37,10 @@
 		159E94D82814BBD400859F10 /* FullStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* FullStateView.swift */; };
 		15B085AE284F149B0018418A /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualView.swift */; };
 		15B085B52852C6060018418A /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B42852C6060018418A /* HelpView.swift */; };
-		15B085B72852CAEE0018418A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* LibraryView.swift */; };
+		15B085B72852CAEE0018418A /* SingleLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* SingleLibraryView.swift */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
 		15B0860E286413270018418A /* examples_lib in Resources */ = {isa = PBXBuildFile; fileRef = 15B0860D286413260018418A /* examples_lib */; };
-		15B08610286805FC0018418A /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B0860F286805FC0018418A /* ProgramView.swift */; };
 		15B0861228680BB40018418A /* Lib57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B0861128680BB40018418A /* Lib57.swift */; };
 		15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4827CF2A7400CD4131 /* log57.c */; };
 		15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15DBBC4B27D6FE0B00CD4131 /* key57.c */; };
@@ -59,8 +58,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		15071C342873811C0075D722 /* FullLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullLibraryView.swift; sourceTree = "<group>"; };
-		15071C362874CEA90075D722 /* FullProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullProgramView.swift; sourceTree = "<group>"; };
+		15071C342873811C0075D722 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		15071C362874CEA90075D722 /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15071C382879F1160075D722 /* CreateProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProgramView.swift; sourceTree = "<group>"; };
 		15071C3A287B7EF00075D722 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		150DE99D28805BE6008E651B /* PreviewProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProgramView.swift; sourceTree = "<group>"; };
@@ -100,12 +99,11 @@
 		159E94D72814BBD400859F10 /* FullStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullStateView.swift; sourceTree = "<group>"; };
 		15B085AD284F149B0018418A /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
 		15B085B42852C6060018418A /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		15B085B62852CAEE0018418A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		15B085B62852CAEE0018418A /* SingleLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLibraryView.swift; sourceTree = "<group>"; };
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
 		15B0860D286413260018418A /* examples_lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = examples_lib; path = ../examples_lib; sourceTree = "<group>"; };
-		15B0860F286805FC0018418A /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15B0861128680BB40018418A /* Lib57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lib57.swift; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
@@ -166,20 +164,19 @@
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				15071C382879F1160075D722 /* CreateProgramView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
-				15071C342873811C0075D722 /* FullLibraryView.swift */,
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
-				15071C362874CEA90075D722 /* FullProgramView.swift */,
 				159E94D72814BBD400859F10 /* FullStateView.swift */,
 				1533F65427F7DA0900DF3BAE /* KeyboardView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
-				15B085B62852CAEE0018418A /* LibraryView.swift */,
+				15071C342873811C0075D722 /* LibraryView.swift */,
 				158D172427E2A5E6003BC323 /* LogView.swift */,
 				150ED8A327B089EF00E01FC6 /* MainView.swift */,
 				15B085AD284F149B0018418A /* ManualView.swift */,
 				15071C3A287B7EF00075D722 /* MenuBarView.swift */,
 				150DE99D28805BE6008E651B /* PreviewProgramView.swift */,
-				15B0860F286805FC0018418A /* ProgramView.swift */,
+				15071C362874CEA90075D722 /* ProgramView.swift */,
 				15124F74282F00E200F0208F /* SettingsView.swift */,
+				15B085B62852CAEE0018418A /* SingleLibraryView.swift */,
 				1533F6562801977F00DF3BAE /* StateView.swift */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
 				15124F7628314DAE00F0208F /* Settings.swift */,
@@ -350,10 +347,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15B085B72852CAEE0018418A /* LibraryView.swift in Sources */,
+				15B085B72852CAEE0018418A /* SingleLibraryView.swift in Sources */,
 				15071C392879F1160075D722 /* CreateProgramView.swift in Sources */,
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
-				15071C372874CEA90075D722 /* FullProgramView.swift in Sources */,
+				15071C372874CEA90075D722 /* ProgramView.swift in Sources */,
 				15B085E4286152770018418A /* prog57.c in Sources */,
 				15B085B52852C6060018418A /* HelpView.swift in Sources */,
 				158D172327E244FA003BC323 /* logger57.c in Sources */,
@@ -367,7 +364,7 @@
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
-				15071C352873811C0075D722 /* FullLibraryView.swift in Sources */,
+				15071C352873811C0075D722 /* LibraryView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
 				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
@@ -375,7 +372,6 @@
 				150DE99E28805BE6008E651B /* PreviewProgramView.swift in Sources */,
 				1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */,
 				159E94D82814BBD400859F10 /* FullStateView.swift in Sources */,
-				15B08610286805FC0018418A /* ProgramView.swift in Sources */,
 				159E94D62814AA2000859F10 /* FullLogView.swift in Sources */,
 				154B7A8427BF667700AE38F1 /* leds57.c in Sources */,
 				150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */,
@@ -444,6 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -499,6 +496,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

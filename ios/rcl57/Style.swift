@@ -8,10 +8,11 @@ struct Style {
     static let blackish = Color(red: 0.137, green: 0.149, blue: 0.153)
     static let deepBlue = Color(red: 0.18, green: 0.35, blue: 0.58)
     static let deepGreen = Color(red: 0.18, green: 0.58, blue: 0.35)
+    static let postIt = Color(red: 1.0, green: 1.0, blue: 0.85)
 
     // Header.
     static let titleFont = Font.system(size: 22, weight: .medium)
-    static let smallFont = Font.system(size: 14, weight: .medium)
+    static let smallFont = Font.system(size: isIpod ? 14 : 18, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
     static let directionsFontLarge = Font.system(size: 28, weight: .regular, design: .monospaced)
     static let headerHeight = 44.0
@@ -33,6 +34,7 @@ struct Style {
     // Directions.
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"
+    static let rightArrowFull = "\u{25b6}"
     static let downArrow = "\u{25bd}"
     static let upArrow = "\u{25b3}"
     static let circle = "\u{25ef}"

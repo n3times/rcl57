@@ -26,7 +26,7 @@ struct ManualView: View {
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: Style.leftArrow,
-                                    title: "Help",
+                                    title: "Manual",
                                     right: Style.downArrow,
                                     width: width,
                                     background: Style.deepGreen,
@@ -43,11 +43,9 @@ struct ManualView: View {
                                 }
                             }
                         }
-                        .background(Color.white)
-                        .foregroundColor(Color.black)
                         .listStyle(.plain)
+                        .background(Color(UIColor.systemBackground))
                     }
-                    .background(Color.white)
                 }
                 .transition(.move(edge: .leading))
             }
@@ -66,7 +64,6 @@ struct ManualView: View {
         var body: some View {
             GeometryReader { geometry in
                 let width = geometry.size.width
-
                 VStack(spacing: 0) {
                     MenuBarView(change: change,
                                 left: Style.leftArrow,
@@ -79,6 +76,7 @@ struct ManualView: View {
                     HelpView(hlpURL: hlpURL)
                 }
             }
+            .background(Color.white.edgesIgnoringSafeArea(.bottom))
         }
     }
 }

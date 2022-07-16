@@ -6,11 +6,18 @@ struct CreateProgramView: View {
     @State private var name = ""
     @State private var help = ""
 
+    @FocusState private var nameIsFocused: Bool
+
     var body: some View {
-        ZStack {
+        UITextView.appearance().backgroundColor = .clear
+
+        return ZStack {
             if change.showPreview {
-                let program = Prog57(name: name, help: help, readOnly: false)
+                let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+                let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
+                let program = Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
                 PreviewProgramView(change: _change, program: program)
+                    .transition(.move(edge: .trailing))
             }
             if !change.showPreview {
                 GeometryReader { geometry in
@@ -19,6 +26,7 @@ struct CreateProgramView: View {
                         HStack(spacing: 0) {
                             Button(action: {
                                 if name.isEmpty && help.isEmpty {
+                                    nameIsFocused = false
                                     withAnimation {
                                         change.createProgram = false
                                     }
@@ -26,13 +34,14 @@ struct CreateProgramView: View {
                                     isPresentingConfirm = true
                                 }
                             }) {
-                                Text("Cancel")
+                                Text(Style.downArrow)
                                     .frame(width: width / 5, height: Style.headerHeight)
                                     .font(Style.smallFont)
                                     .contentShape(Rectangle())
                             }
                             .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                                 Button("Exit", role: .destructive) {
+                                    nameIsFocused = false
                                     withAnimation {
                                         change.createProgram = false
                                     }
@@ -42,39 +51,44 @@ struct CreateProgramView: View {
                                 .frame(width: width * 3 / 5, height: Style.headerHeight)
                                 .font(Style.titleFont)
                             Button(action: {
+                                nameIsFocused = false
                                 withAnimation {
                                     change.showPreview = true
                                 }
                             }) {
-                                Text("Preview")
-                                    .frame(width: width / 5, height: Style.headerHeight)
-                                    .font(Style.smallFont)
-                                    .contentShape(Rectangle())
+                                Text(name.trimmingCharacters(in: CharacterSet.whitespaces) == ""
+                                     ? Style.rightArrow : Style.rightArrowFull)
+                                .frame(width: width / 5, height: Style.headerHeight)
+                                .font(Style.smallFont)
+                                .contentShape(Rectangle())
                             }
                             .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces) == "")
+                            .buttonStyle(.plain)
                         }
                         .background(Style.deepBlue)
                         .foregroundColor(Style.ivory)
 
                         TextField("Name", text: $name)
-                            .background(Color.white)
-                            .frame(height: 44)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .frame(height: 52)
                             .offset(x: 10, y: 0)
+                            .focused($nameIsFocused)
 
                         TextEditor(text: $help)
+                            .textFieldStyle(PlainTextFieldStyle())
                             .lineLimit(4)
                             .multilineTextAlignment(.leading)
-                            .background(Color.white)
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: .infinity, alignment: .topLeading)
                     }
                 }
                 .transition(.move(edge: .leading))
             }
         }
+        .background(Color(UIColor.systemBackground))
     }
 }
 
-struct PreviewProgramView_Previews: PreviewProvider {
+struct CreateProgramView_Previews: PreviewProvider {
     static var previews: some View {
         CreateProgramView()
     }
