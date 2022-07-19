@@ -52,6 +52,14 @@ class Prog57 : Hashable, Equatable {
         prog57_save_state(&prog57, &Rcl57.shared.rcl57)
     }
 
+    func hasSameStepsAsState() -> Bool {
+        return prog57_has_same_steps_as_state(&prog57, &Rcl57.shared.rcl57)
+    }
+
+    func hasSameRegistersAsState() -> Bool {
+        return prog57_has_same_registers_as_state(&prog57, &Rcl57.shared.rcl57)
+    }
+
     func save(filename: String) -> Bool {
         let text = toText()
 

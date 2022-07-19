@@ -78,7 +78,7 @@ struct CalcView: View {
                     .foregroundColor(Style.ivory)
                     .font(Style.programFont)
                     .frame(width: width, height: 20, alignment: .leading)
-                    .offset(x: 15, y: -2)
+                    .offset(x: 15, y: -3)
                     .background(Style.blackish)
 
                 // Display + Mini View.

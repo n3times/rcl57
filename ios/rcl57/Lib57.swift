@@ -9,11 +9,11 @@ class Lib57 {
 
     private static let examplesLibURL =
         Bundle.main.bundleURL.appendingPathComponent("examples_lib")
-    static let examplesLib = Lib57(url: examplesLibURL, name: "Examples Library", readonly: true)
+    static let examplesLib = Lib57(url: examplesLibURL, name: "Example Programs", readonly: true)
 
     private static let userLibURL =
         Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    static let userLib = Lib57(url: userLibURL!, name: "User Library", readonly: false)
+    static let userLib = Lib57(url: userLibURL!, name: "User Programs", readonly: false)
 
     init(url: URL, name: String, readonly: Bool) {
         self.libURL = url

@@ -1,5 +1,33 @@
 import SwiftUI
 
+struct ManualPageView: View {
+    @EnvironmentObject private var change: Change
+
+    let title: String
+    let hlpResource: String
+    var hlpURL: URL {
+        Bundle.main.url(forResource: hlpResource, withExtension: "hlp")!
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            VStack(spacing: 0) {
+                MenuBarView(change: change,
+                            left: Style.leftArrow,
+                            title: title,
+                            right: Style.downArrow,
+                            width: width,
+                            background: Style.deepGreen,
+                            leftAction: { withAnimation {change.showPageInHelp = false} },
+                            rightAction: { withAnimation {change.currentView = .calc} })
+                HelpView(hlpURL: hlpURL)
+            }
+        }
+        .background(Color.white.edgesIgnoringSafeArea(.bottom))
+    }
+}
+
 struct ManualView: View {
     @EnvironmentObject private var change: Change
 
@@ -26,7 +54,7 @@ struct ManualView: View {
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: Style.leftArrow,
-                                    title: "Manual",
+                                    title: "RCL-57 Manual",
                                     right: Style.downArrow,
                                     width: width,
                                     background: Style.deepGreen,
@@ -49,34 +77,6 @@ struct ManualView: View {
                 }
                 .transition(.move(edge: .leading))
             }
-        }
-    }
-
-    struct ManualPageView: View {
-        @EnvironmentObject private var change: Change
-
-        let title: String
-        let hlpResource: String
-        var hlpURL: URL {
-            Bundle.main.url(forResource: hlpResource, withExtension: "hlp")!
-        }
-
-        var body: some View {
-            GeometryReader { geometry in
-                let width = geometry.size.width
-                VStack(spacing: 0) {
-                    MenuBarView(change: change,
-                                left: Style.leftArrow,
-                                title: title,
-                                right: Style.downArrow,
-                                width: width,
-                                background: Style.deepGreen,
-                                leftAction: { withAnimation {change.showPageInHelp = false} },
-                                rightAction: { withAnimation {change.currentView = .calc} })
-                    HelpView(hlpURL: hlpURL)
-                }
-            }
-            .background(Color.white.edgesIgnoringSafeArea(.bottom))
         }
     }
 }

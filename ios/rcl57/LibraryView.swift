@@ -1,5 +1,33 @@
 import SwiftUI
 
+private struct LibraryNode: Identifiable {
+    let id = UUID()
+    let name: String
+    var children: [LibraryNode] = []
+    var program: Prog57?
+
+    init(program: Prog57) {
+        self.name = program.getName()
+        self.program = program
+    }
+
+    init(library: Lib57) {
+        self.name = library.name
+        let programs = library.programs
+        if (programs.count > 0) {
+            children = []
+            for program in programs {
+                children.append(LibraryNode(program: program))
+            }
+        }
+    }
+
+    static let examplesLib = LibraryNode(library: Lib57.examplesLib)
+    var userLib: LibraryNode {
+        LibraryNode(library: Lib57.examplesLib)
+    }
+}
+
 struct LibraryView: View {
     @EnvironmentObject var change: Change
 
@@ -17,19 +45,57 @@ struct LibraryView: View {
                                     background: Style.deepBlue,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
-                            .frame(width: width)
+                        .frame(width: width)
+
+                        let userLib = LibraryNode(library: Lib57.userLib)
+                        let items: [LibraryNode] = [.examplesLib, userLib]
 
                         List {
-                            Section(header: Text("Examples Library")) {
-                                SingleLibraryView(lib: Lib57.examplesLib, change: change)
+                            DisclosureGroup(isExpanded: $change.examplesLibExpanded) {
+                                ForEach(items[0].children) { item in
+                                    Button(item.name) {
+                                        withAnimation {
+                                            change.program = item.program
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Label(items[0].name, systemImage: "folder")
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation {
+                                            change.examplesLibExpanded.toggle()
+                                        }
+                                    }
+                                    .foregroundColor(Color.black)
                             }
-                            Section(header: Text("User Programs")) {
-                                SingleLibraryView(lib: Lib57.userLib, change: change)
+
+                            DisclosureGroup(isExpanded: $change.userLibExpanded) {
+                                if items[1].children.count == 0 {
+
+                                } else {
+                                    ForEach(items[1].children) { item in
+                                        Button(item.name) {
+                                            withAnimation {
+                                                change.program = item.program
+                                            }
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Label(items[1].name, systemImage: "folder")
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation {
+                                            change.userLibExpanded.toggle()
+                                        }
+                                    }
                             }
                         }
-                        .listStyle(.plain)
+                        .listStyle(PlainListStyle())
                     }
                 }
+                .background(Color.white)
                 .transition(.move(edge: .leading))
             }
 
@@ -39,11 +105,11 @@ struct LibraryView: View {
                     .transition(.move(edge: .trailing))
             }
         }
-        .background(Color(UIColor.systemBackground))
+        .foregroundColor(Color.black)
     }
 }
 
-struct FullLibraryView_Previews: PreviewProvider {
+struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
         LibraryView()
     }

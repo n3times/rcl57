@@ -116,3 +116,22 @@ char *prog57_get_help(prog57_t *program) {
 void prog57_set_help(prog57_t *program, const char * const help) {
     strcpy(program->help, help);
 }
+
+bool prog57_has_same_steps_as_state(prog57_t *program, rcl57_t *rcl57) {
+    return memcmp(rcl57->ti57.Y, program->state + 8, 6 * sizeof(ti57_reg_t)) == 0 &&
+           rcl57->ti57.Y[6][14] == program->state[14][14] &&
+           rcl57->ti57.Y[6][15] == program->state[14][15] &&
+           rcl57->ti57.Y[7][14] == program->state[15][14] &&
+           rcl57->ti57.Y[7][15] == program->state[15][15];
+}
+
+bool prog57_has_same_registers_as_state(prog57_t *program, rcl57_t *rcl57) {
+    return memcmp(rcl57->ti57.X + 5, program->state +  5, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.X + 6, program->state +  6, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.X + 7, program->state +  7, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.Y + 6, program->state + 14, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.Y + 7, program->state + 15, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.X + 3, program->state +  3, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.X + 2, program->state +  2, 14 * sizeof(unsigned char)) == 0 &&
+           memcmp(rcl57->ti57.X + 4, program->state +  4, 14 * sizeof(unsigned char)) == 0;
+}

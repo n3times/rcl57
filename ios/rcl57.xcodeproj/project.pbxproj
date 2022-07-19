@@ -30,6 +30,7 @@
 		154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7827BC65C900AE38F1 /* utils57.c */; };
 		154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7927BC65C900AE38F1 /* rom57.c */; };
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
+		1567D59F28832CA000273C3C /* Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D59E28832CA000273C3C /* Change.swift */; };
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
 		158D172327E244FA003BC323 /* logger57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D172227E24441003BC323 /* logger57.c */; };
 		158D172527E2A5E6003BC323 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D172427E2A5E6003BC323 /* LogView.swift */; };
@@ -37,7 +38,6 @@
 		159E94D82814BBD400859F10 /* FullStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* FullStateView.swift */; };
 		15B085AE284F149B0018418A /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualView.swift */; };
 		15B085B52852C6060018418A /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B42852C6060018418A /* HelpView.swift */; };
-		15B085B72852CAEE0018418A /* SingleLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B62852CAEE0018418A /* SingleLibraryView.swift */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
 		15B0860E286413270018418A /* examples_lib in Resources */ = {isa = PBXBuildFile; fileRef = 15B0860D286413260018418A /* examples_lib */; };
@@ -89,6 +89,7 @@
 		154B7A7A27BC65C900AE38F1 /* ti57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ti57.h; sourceTree = "<group>"; };
 		154B7A8227BF667700AE38F1 /* leds57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leds57.h; sourceTree = "<group>"; };
 		154B7A8327BF667700AE38F1 /* leds57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = leds57.c; sourceTree = "<group>"; };
+		1567D59E28832CA000273C3C /* Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Change.swift; sourceTree = "<group>"; };
 		158D171827E01A89003BC323 /* op57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = op57.h; sourceTree = "<group>"; };
 		158D171D27E032EC003BC323 /* lrn57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lrn57.h; sourceTree = "<group>"; };
 		158D171E27E032EC003BC323 /* lrn57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lrn57.c; sourceTree = "<group>"; };
@@ -99,7 +100,6 @@
 		159E94D72814BBD400859F10 /* FullStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullStateView.swift; sourceTree = "<group>"; };
 		15B085AD284F149B0018418A /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
 		15B085B42852C6060018418A /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
-		15B085B62852CAEE0018418A /* SingleLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLibraryView.swift; sourceTree = "<group>"; };
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
@@ -176,9 +176,9 @@
 				150DE99D28805BE6008E651B /* PreviewProgramView.swift */,
 				15071C362874CEA90075D722 /* ProgramView.swift */,
 				15124F74282F00E200F0208F /* SettingsView.swift */,
-				15B085B62852CAEE0018418A /* SingleLibraryView.swift */,
 				1533F6562801977F00DF3BAE /* StateView.swift */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
+				1567D59E28832CA000273C3C /* Change.swift */,
 				15124F7628314DAE00F0208F /* Settings.swift */,
 				151EBA6E28238D62005DD283 /* Style.swift */,
 				15F948F9283F26B200706BE5 /* Help57.swift */,
@@ -347,7 +347,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15B085B72852CAEE0018418A /* SingleLibraryView.swift in Sources */,
 				15071C392879F1160075D722 /* CreateProgramView.swift in Sources */,
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
 				15071C372874CEA90075D722 /* ProgramView.swift in Sources */,
@@ -358,6 +357,7 @@
 				151EBA6D28179F87005DD283 /* CalcView.swift in Sources */,
 				15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
+				1567D59F28832CA000273C3C /* Change.swift in Sources */,
 				15B085AE284F149B0018418A /* ManualView.swift in Sources */,
 				15B0861228680BB40018418A /* Lib57.swift in Sources */,
 				15F948FA283F26B200706BE5 /* Help57.swift in Sources */,

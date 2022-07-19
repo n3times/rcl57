@@ -46,7 +46,7 @@ struct PreviewProgramView: View {
                     // Footer
                     HStack(spacing: 0) {
                         Spacer()
-                        Button("CONFIRM") {
+                        Button("CREATE") {
                             withAnimation {
                                 Lib57.userLib.add(program: program)
                                 _ = program.save(filename: program.getName())

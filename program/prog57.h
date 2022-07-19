@@ -25,4 +25,8 @@ char *prog57_get_help(prog57_t *program);
 
 void prog57_set_help(prog57_t *program, const char * const help);
 
+bool prog57_has_same_steps_as_state(prog57_t *program, rcl57_t *rcl57);
+
+bool prog57_has_same_registers_as_state(prog57_t *program, rcl57_t *rcl57);
+
 #endif /* prog57_h */

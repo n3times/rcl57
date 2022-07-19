@@ -41,6 +41,7 @@ struct SettingsView: View {
                                     change.showHelpInSettings = true
                                 }
                             }
+
                             Section("Emulator Options") {
                                 Toggle(isOn: $hasTurboSpeed) {
                                     Text("Turbo Speed")
@@ -71,7 +72,7 @@ struct SettingsView: View {
                                     isPresentingConfirm = true
                                 }
                                 .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                                    Button("Clear Program, Log and Memory", role: .destructive) {
+                                    Button("Clear Steps, Registers and Log", role: .destructive) {
                                         Rcl57.shared.clearAll()
                                         change.setLoadedProgram(program: nil)
                                     }
