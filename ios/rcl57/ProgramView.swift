@@ -57,21 +57,7 @@ struct ProgramView: View {
 
                     // Footer
                     HStack(spacing: 0) {
-                        Button("MORE") {
-                            program.loadState()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                change.setLoadedProgram(program: program)
-                            }
-                            withAnimation {
-                                change.currentView = .calc
-                            }
-                        }
-                        .font(Style.footerFont)
-                        .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .center)
-                        .buttonStyle(.plain)
-
-                        Style.ivory
-                            .frame(width: 2, height: 15)
+                        Spacer()
 
                         Button(loadButtonText) {
                             program.loadState()
@@ -86,21 +72,7 @@ struct ProgramView: View {
                         .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .center)
                         .buttonStyle(.plain)
 
-                        Style.ivory
-                            .frame(width: 2, height: 15)
-
-                        Button("EDIT") {
-                            program.loadState()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                change.setLoadedProgram(program: program)
-                            }
-                            withAnimation {
-                                change.currentView = .calc
-                            }
-                        }
-                        .font(Style.footerFont)
-                        .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .center)
-                        .buttonStyle(.plain)
+                        Spacer()
                     }
                     .background(Style.deepBlue)
                     .foregroundColor(Style.ivory)
