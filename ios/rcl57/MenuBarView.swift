@@ -27,7 +27,7 @@ struct MenuBarView: View {
                     .frame(width: width / 6, height: Style.headerHeight)
             }
             Text(title)
-                .frame(width: width * 2 / 3, height: Style.headerHeight)
+                .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
                 .font(Style.titleFont)
             if (right != nil) {
                 Button(action: {

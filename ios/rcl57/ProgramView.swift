@@ -26,7 +26,7 @@ struct ProgramView: View {
                                 .contentShape(Rectangle())
                         }
                         Text(program.getName())
-                            .frame(width: width * 2 / 3, height: Style.headerHeight)
+                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
                             .font(Style.titleFont)
                         Button(action: {
                             withAnimation {

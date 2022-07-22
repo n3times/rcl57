@@ -48,7 +48,7 @@ struct CreateProgramView: View {
                                 }
                             }
                             Text("Create Program")
-                                .frame(width: width * 3 / 5, height: Style.headerHeight)
+                                .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
                                 .font(Style.titleFont)
                             Button(action: {
                                 nameIsFocused = false

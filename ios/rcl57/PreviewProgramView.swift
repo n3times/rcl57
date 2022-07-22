@@ -23,7 +23,7 @@ struct PreviewProgramView: View {
                         }
 
                         Text(program.getName())
-                            .frame(width: width * 2 / 3, height: Style.headerHeight)
+                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
                             .font(Style.titleFont)
 
                         Spacer()
@@ -34,8 +34,8 @@ struct PreviewProgramView: View {
 
                     if program.getHelp() == "" {
                         Text("No description available")
-                            .frame(width: geometry.size.width,
-                                   height: geometry.size.height - Style.headerHeight - Style.footerHeight,
+                            .frame(maxWidth: geometry.size.width,
+                                   maxHeight: geometry.size.height - Style.headerHeight - Style.footerHeight,
                                    alignment: .center)
                             .background(Style.ivory)
                             .foregroundColor(Style.blackish)

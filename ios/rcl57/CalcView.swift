@@ -34,7 +34,7 @@ struct CalcView: View {
             }
         }) {
             Text(text)
-                .frame(width: width, height: Style.headerHeight)
+                .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
                 .contentShape(Rectangle())
         }
     }
@@ -52,21 +52,17 @@ struct CalcView: View {
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6,
                                   destination: .state, edge: .trailing)
-                    Spacer()
                     getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .trailing)
-                    Spacer()
                     Button(action: {
                         withAnimation {
                             change.showMiniView.toggle()
                         }
                     }) {
                         Text(miniViewIcon)
-                            .frame(width: width / 6, height: Style.headerHeight)
+                            .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
                             .contentShape(Rectangle())
                     }
-                    Spacer()
                     getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
-                    Spacer()
                     getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
                 }
                 .font(Style.directionsFont)
