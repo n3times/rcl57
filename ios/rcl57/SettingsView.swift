@@ -27,7 +27,7 @@ struct SettingsView: View {
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: nil,
-                                    title: "Settings and Help",
+                                    title: "Settings and Manual",
                                     right: Style.downArrow,
                                     width: width,
                                     background: Style.deepGreen,

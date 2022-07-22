@@ -106,7 +106,9 @@ char *prog57_get_name(prog57_t *program) {
 }
 
 void prog57_set_name(prog57_t *program, const char * const name) {
-    strcpy(program->name, name);
+    int size = sizeof(program->name);
+    strncpy(program->name, name, size - 1);
+    program->name[size - 1] = '\0';
 }
 
 char *prog57_get_help(prog57_t *program) {

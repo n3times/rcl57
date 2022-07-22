@@ -71,14 +71,18 @@ struct CreateProgramView: View {
                         TextField("Name", text: $name)
                             .textFieldStyle(PlainTextFieldStyle())
                             .frame(height: 52)
-                            .offset(x: 10, y: 0)
+                            .offset(x: 10)
                             .focused($nameIsFocused)
+
+                        Style.blackish
+                            .frame(height: 2)
 
                         TextEditor(text: $help)
                             .textFieldStyle(PlainTextFieldStyle())
                             .lineLimit(4)
                             .multilineTextAlignment(.leading)
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: .infinity, alignment: .topLeading)
+                            .offset(x: 5, y: 5)
                     }
                 }
                 .transition(.move(edge: .leading))
