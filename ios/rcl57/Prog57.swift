@@ -3,6 +3,7 @@ import SwiftUI
 class Prog57 : Hashable, Equatable {
     private var prog57 = prog57_t()
 
+    var url: URL? = nil
     var readOnly = true
 
     init?(url: URL, readOnly: Bool) {
@@ -14,6 +15,7 @@ class Prog57 : Hashable, Equatable {
         }
         prog57_from_text(&prog57, text)
         self.readOnly = readOnly
+        self.url = url
     }
 
     init(name: String, help: String, readOnly: Bool) {
@@ -73,6 +75,8 @@ class Prog57 : Hashable, Equatable {
             // failed to write file.
             return false
         }
+
+        self.url = fileURL
 
         return true
     }

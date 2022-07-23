@@ -57,7 +57,39 @@ struct ProgramView: View {
 
                     // Footer
                     HStack(spacing: 0) {
-                        Spacer()
+                        Menu {
+                            Button(action: {
+
+                            }) {
+                                Text("Export")
+                            }
+                            Button(action: {
+                                isPresentingConfirm = true
+                            }) {
+                                Text("Delete")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .leading)
+                                .contentShape(Rectangle())
+                        }
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                            Button("Delete " + program.getName(), role: .destructive) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    Lib57.userLib.delete(program: program)
+                                    if program == change.loadedProgram {
+                                        change.loadedProgram = nil
+                                    }
+                                    change.program = nil
+                                }
+                                withAnimation {
+                                    change.currentView = .calc
+                                }
+                            }
+                        }
+                        .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .leading)
+                        .offset(x: 10)
+
 
                         Button(loadButtonText) {
                             program.loadState()

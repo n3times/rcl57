@@ -54,4 +54,18 @@ class Lib57 {
             // failed to write file.
         }
     }
+
+    func delete(program: Prog57) {
+        do {
+            try FileManager.default.removeItem(atPath: program.url!.path)
+            for i in 0..<programs.count {
+                if programs[i] == program {
+                    programs.remove(at: i)
+                    break
+                }
+            }
+        } catch {
+
+        }
+    }
 }
