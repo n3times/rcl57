@@ -1,9 +1,17 @@
 import SwiftUI
 
-struct PreviewProgramView: View {
+struct ConfirmProgramView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
+    let originalProgram: Prog57?
     let program: Prog57
+    let context: CreateProgramContext
+
+    init(originalProgram: Prog57?, program: Prog57, context: CreateProgramContext) {
+        self.originalProgram = originalProgram
+        self.program = program
+        self.context = context
+    }
 
     var body: some View {
         ZStack {
@@ -46,16 +54,27 @@ struct PreviewProgramView: View {
                     // Footer
                     HStack(spacing: 0) {
                         Spacer()
-                        Button("CREATE") {
+                        Button(context == .edit ? "CONFIRM EDIT" : "CONFIRM CREATE") {
                             withAnimation {
+                                if context == .edit {
+                                    Lib57.userLib.delete(program: originalProgram!)
+                                }
                                 Lib57.userLib.add(program: program)
                                 _ = program.save(filename: program.getName())
-                                change.createProgram = false
-                                change.loadedProgram = program
+                                if context == .create {
+                                    change.loadedProgram = program
+                                    change.createProgram = false
+                                } else {
+                                    change.editProgram = false
+                                    change.program = program
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        change.showPreview = false
+                                    }
+                                }
                             }
                         }
                         .font(Style.footerFont)
-                        .frame(width: 100, height: Style.footerHeight)
+                        .frame(width: 200, height: Style.footerHeight)
                         .buttonStyle(.plain)
                         Spacer()
                     }
@@ -67,8 +86,8 @@ struct PreviewProgramView: View {
     }
 }
 
-struct PreviewProgramView_Previews: PreviewProvider {
+struct ConfirmProgramView_Previews: PreviewProvider {
     static var previews: some View {
-        PreviewProgramView(program: Prog57(name: "", help: "", readOnly: false))
+        ConfirmProgramView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
     }
 }

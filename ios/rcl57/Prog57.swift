@@ -1,11 +1,16 @@
 import SwiftUI
 
+struct ProgramState {
+
+}
+
 class Prog57 : Hashable, Equatable {
     private var prog57 = prog57_t()
 
     var url: URL? = nil
     var readOnly = true
 
+    /** For loading from memory. */
     init?(url: URL, readOnly: Bool) {
         var text: String
         do {
@@ -18,11 +23,24 @@ class Prog57 : Hashable, Equatable {
         self.url = url
     }
 
+    /** For importing. */
+    init(text: String, readOnly: Bool) {
+        prog57_from_text(&prog57, text)
+        self.readOnly = readOnly
+    }
+
+    /** For creating new program. */
     init(name: String, help: String, readOnly: Bool) {
         prog57_set_name(&prog57, (name as NSString).utf8String)
         prog57_set_help(&prog57, (help as NSString).utf8String)
         prog57_save_state(&prog57, &Rcl57.shared.rcl57)
         self.readOnly = readOnly
+    }
+
+    init(program: Prog57) {
+        prog57_set_name(&prog57, program.getName())
+        prog57_set_help(&prog57, program.getHelp())
+        prog57.state = program.prog57.state
     }
 
     func toText() -> String {
@@ -44,6 +62,14 @@ class Prog57 : Hashable, Equatable {
 
     func setHelp(help: String) {
         prog57_set_help(&prog57, (help as NSString).utf8String)
+    }
+
+    func getState() -> (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t) {
+        return prog57.state
+    }
+
+    func setState(state: (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)) {
+        prog57.state = state
     }
 
     func loadState() {

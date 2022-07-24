@@ -1,22 +1,53 @@
 import SwiftUI
 
+enum CreateProgramContext {
+    case create
+    case edit
+    case imported
+}
+
 struct CreateProgramView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
-    @State private var name = ""
-    @State private var help = ""
+    @State var name: String
+    @State var help: String
+
+    var originalProgram: Prog57? = nil
+
+    var context: CreateProgramContext = .create
 
     @FocusState private var nameIsFocused: Bool
+
+    init(program: Prog57) {
+        self.context = .edit
+        self.name = program.getName()
+        self.help = program.getHelp()
+        self.originalProgram = program
+    }
+
+    init() {
+        name = ""
+        help = ""
+    }
+
+    func getProgram() -> Prog57 {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
+        if (context == .create) {
+            return Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
+        } else {
+            let program = Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
+            program.setState(state: originalProgram!.getState())
+            return program
+        }
+    }
 
     var body: some View {
         UITextView.appearance().backgroundColor = .clear
 
         return ZStack {
             if change.showPreview {
-                let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
-                let program = Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
-                PreviewProgramView(change: _change, program: program)
+                ConfirmProgramView(originalProgram: originalProgram, program: getProgram(), context: context)
                     .transition(.move(edge: .trailing))
             }
             if !change.showPreview {
@@ -25,14 +56,7 @@ struct CreateProgramView: View {
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
                             Button(action: {
-                                if name.isEmpty && help.isEmpty {
-                                    nameIsFocused = false
-                                    withAnimation {
-                                        change.createProgram = false
-                                    }
-                                } else {
-                                    isPresentingConfirm = true
-                                }
+                                isPresentingConfirm = true
                             }) {
                                 Text(Style.downArrow)
                                     .frame(width: width / 5, height: Style.headerHeight)
@@ -43,11 +67,15 @@ struct CreateProgramView: View {
                                 Button("Exit", role: .destructive) {
                                     nameIsFocused = false
                                     withAnimation {
-                                        change.createProgram = false
+                                        if context == .create {
+                                            change.createProgram = false
+                                        } else {
+                                            change.editProgram = false
+                                        }
                                     }
                                 }
                             }
-                            Text("Create Program")
+                            Text(context == .edit ? "Edit Program" : "Create Program")
                                 .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
                                 .font(Style.titleFont)
                             Button(action: {

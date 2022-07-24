@@ -30,6 +30,7 @@ class Change: ObservableObject {
 
     @Published var program: Prog57? = nil
     @Published var createProgram = false
+    @Published var editProgram = false
 
     @Published var showLibrary = false
     @Published var showPreview = false

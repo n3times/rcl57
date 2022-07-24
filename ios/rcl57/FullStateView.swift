@@ -37,7 +37,7 @@ struct FullStateView: View {
                         .offset(x: 15, y: -3)
                         .frame(width: width / 6, height: 20, alignment: .leading)
 
-                        Text(isReadOnly ? "Examples" : "")
+                        Text(isReadOnly ? "Examples" : isReadWrite ? "User" : "")
                             .offset(y: -3)
                             .frame(width: width * 2 / 3, height: 20)
 

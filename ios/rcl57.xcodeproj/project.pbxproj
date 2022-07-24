@@ -11,7 +11,7 @@
 		15071C372874CEA90075D722 /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* ProgramView.swift */; };
 		15071C392879F1160075D722 /* CreateProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* CreateProgramView.swift */; };
 		15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C3A287B7EF00075D722 /* MenuBarView.swift */; };
-		150DE99E28805BE6008E651B /* PreviewProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* PreviewProgramView.swift */; };
+		150DE99E28805BE6008E651B /* ConfirmProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* ConfirmProgramView.swift */; };
 		150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* rcl57App.swift */; };
 		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
@@ -62,7 +62,7 @@
 		15071C362874CEA90075D722 /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15071C382879F1160075D722 /* CreateProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProgramView.swift; sourceTree = "<group>"; };
 		15071C3A287B7EF00075D722 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
-		150DE99D28805BE6008E651B /* PreviewProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProgramView.swift; sourceTree = "<group>"; };
+		150DE99D28805BE6008E651B /* ConfirmProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmProgramView.swift; sourceTree = "<group>"; };
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rcl57App.swift; sourceTree = "<group>"; };
 		150ED8A327B089EF00E01FC6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -162,6 +162,7 @@
 			children = (
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
+				150DE99D28805BE6008E651B /* ConfirmProgramView.swift */,
 				15071C382879F1160075D722 /* CreateProgramView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
 				159E94D52814AA2000859F10 /* FullLogView.swift */,
@@ -173,7 +174,6 @@
 				150ED8A327B089EF00E01FC6 /* MainView.swift */,
 				15B085AD284F149B0018418A /* ManualView.swift */,
 				15071C3A287B7EF00075D722 /* MenuBarView.swift */,
-				150DE99D28805BE6008E651B /* PreviewProgramView.swift */,
 				15071C362874CEA90075D722 /* ProgramView.swift */,
 				15124F74282F00E200F0208F /* SettingsView.swift */,
 				1533F6562801977F00DF3BAE /* StateView.swift */,
@@ -369,7 +369,7 @@
 				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
-				150DE99E28805BE6008E651B /* PreviewProgramView.swift in Sources */,
+				150DE99E28805BE6008E651B /* ConfirmProgramView.swift in Sources */,
 				1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */,
 				159E94D82814BBD400859F10 /* FullStateView.swift in Sources */,
 				159E94D62814AA2000859F10 /* FullLogView.swift in Sources */,
