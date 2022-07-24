@@ -25,7 +25,7 @@ class Change: ObservableObject {
     @Published var showMiniView = false
     @Published var showStepsInState = true
     @Published var showHelpInSettings = false
-    @Published var showPageInHelp = false
+    @Published var showPageInManual = false
     @Published var transitionEdge: Edge = .trailing
 
     @Published var program: Prog57? = nil

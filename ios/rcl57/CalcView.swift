@@ -70,7 +70,7 @@ struct CalcView: View {
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
 
-                // Program
+                // Program Name.
                 Text(change.loadedProgram != nil ? change.loadedProgram!.getName() : "")
                     .foregroundColor(Style.ivory)
                     .font(Style.programFont)

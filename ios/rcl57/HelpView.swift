@@ -4,17 +4,17 @@ import WebKit
 struct HelpView: UIViewRepresentable {
     let headerString = "<head><meta name='viewport' content='width=device-width, " +
         "initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></head>"
-    let hlpString: String
+    let helpString: String
 
-    init(hlpString: String) {
-        self.hlpString = hlpString
+    init(helpString: String) {
+        self.helpString = helpString
     }
 
-    init(hlpURL: URL) {
+    init(helpURL: URL) {
         do {
-            hlpString = try String(contentsOf: hlpURL)
+            helpString = try String(contentsOf: helpURL)
         } catch {
-            hlpString = "Error"
+            helpString = "Error"
         }
     }
 
@@ -24,7 +24,7 @@ struct HelpView: UIViewRepresentable {
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        let htmlString = Help57.toHTML(hlpString: hlpString)
+        let htmlString = Help57.toHTML(helpString: helpString)
         webView.loadHTMLString(headerString + htmlString, baseURL: Bundle.main.bundleURL)
     }
 }

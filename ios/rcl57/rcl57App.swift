@@ -15,7 +15,7 @@ struct rcl57App: App {
         WindowGroup {
             MainView()
         }
-        .onChange(of: scenePhase) { (newScenePhase) in
+        .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .inactive {
                 _ = Rcl57.shared.save()
             }

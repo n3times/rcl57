@@ -2,7 +2,7 @@ import SwiftUI
 
 struct Help57 {
     /** Converts a string in hlp format into HTML. */
-    static func toHTML(hlpString: String) -> String {
+    static func toHTML(helpString: String) -> String {
         let BUFFER_SIZE: Int32 = 5000
         let CSS_FILENAME = "help.css"
 
@@ -13,7 +13,7 @@ struct Help57 {
         hlp2html_init(&hlp2html, CSS_FILENAME, outBuffer, BUFFER_SIZE)
         html += String(cString: &outBuffer.pointee)
 
-        hlp2html_next(&hlp2html, hlpString, outBuffer, BUFFER_SIZE)
+        hlp2html_next(&hlp2html, helpString, outBuffer, BUFFER_SIZE)
         html += String(cString: &outBuffer.pointee)
 
         hlp2html_done(&hlp2html, outBuffer, BUFFER_SIZE)

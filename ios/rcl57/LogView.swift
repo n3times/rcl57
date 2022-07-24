@@ -4,9 +4,8 @@
 
 import SwiftUI
 
-/** A list of LineView's. */
 struct LogView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
     @State private var isPresentingConfirm: Bool = false
 
     var body: some View {

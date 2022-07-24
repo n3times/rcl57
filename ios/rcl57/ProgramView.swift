@@ -53,7 +53,7 @@ struct ProgramView: View {
                                 .foregroundColor(Style.blackish)
                         }
                     } else {
-                        HelpView(hlpString: program.getHelp())
+                        HelpView(helpString: program.getHelp())
                     }
 
                     // Footer

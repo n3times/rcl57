@@ -48,7 +48,7 @@ struct ProgramSaverView: View {
                             .background(Style.ivory)
                             .foregroundColor(Style.blackish)
                     } else {
-                        HelpView(hlpString: program.getHelp())
+                        HelpView(helpString: program.getHelp())
                     }
 
                     // Footer
