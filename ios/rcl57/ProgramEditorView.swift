@@ -6,7 +6,7 @@ enum CreateProgramContext {
     case imported
 }
 
-struct CreateProgramView: View {
+struct ProgramEditorView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
     @State var name: String
@@ -47,7 +47,7 @@ struct CreateProgramView: View {
 
         return ZStack {
             if change.showPreview {
-                ConfirmProgramView(originalProgram: originalProgram, program: getProgram(), context: context)
+                ProgramSaverView(originalProgram: originalProgram, program: getProgram(), context: context)
                     .transition(.move(edge: .trailing))
             }
             if !change.showPreview {
@@ -120,8 +120,8 @@ struct CreateProgramView: View {
     }
 }
 
-struct CreateProgramView_Previews: PreviewProvider {
+struct ProgramEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateProgramView()
+        ProgramEditorView()
     }
 }

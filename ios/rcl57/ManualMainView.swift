@@ -28,7 +28,7 @@ struct ManualPageView: View {
     }
 }
 
-struct ManualView: View {
+struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
     let hlpPages = [["About RCL-57", "about"],

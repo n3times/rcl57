@@ -42,11 +42,11 @@ struct MainView: View {
             }
 
             if change.currentView == .log {
-                FullLogView()
+                LogView()
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))
             } else if change.currentView == .state {
-                FullStateView()
+                StateView()
                     .environmentObject(change)
                     .transition(.move(edge: .leading))
             }

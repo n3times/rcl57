@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct DisplayView: View {
+struct CalcDisplayView: View {
     // A string composed of up to 12 non-dot characters, each one optionally followed by a
     // a dot. The string will be right-justified within the display.
     var displayString: String
@@ -118,7 +118,7 @@ struct DisplayView: View {
 
     // Returns true if the segment of a given index is on.
     private func isSegmentOn(segments: Int32, i: Int) -> Bool {
-        return segments & (1 << (DisplayView.segmentCount - 1 - i)) != 0
+        return segments & (1 << (CalcDisplayView.segmentCount - 1 - i)) != 0
     }
 
     /*
@@ -138,23 +138,23 @@ struct DisplayView: View {
 
         // Draw the combined LED segments.
         if combineSegments {
-            for pair in DisplayView.combinedRightSegmentsData.keys {
+            for pair in CalcDisplayView.combinedRightSegmentsData.keys {
                 if isSegmentOn(segments: segments, i: pair[0]) &&
                    isSegmentOn(segments: segments, i: pair[1]) {
-                    let rect = useShortSegments ? DisplayView.combinedShorterRightSegmentsData[pair]
-                                                : DisplayView.combinedRightSegmentsData[pair]
+                    let rect = useShortSegments ? CalcDisplayView.combinedShorterRightSegmentsData[pair]
+                                                : CalcDisplayView.combinedRightSegmentsData[pair]
                     let segmentPath = getRectSegmentPath(rect: rect!)
                     path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
                     isSegmentResolved[pair[0]] = true
                     isSegmentResolved[pair[1]] = true
                 }
             }
-            for pair in DisplayView.combinedAngledSegmentsData.keys {
+            for pair in CalcDisplayView.combinedAngledSegmentsData.keys {
                 if isSegmentOn(segments: segments, i: pair[0]) &&
                    isSegmentOn(segments: segments, i: pair[1]) {
                     let points =
-                        useShortSegments ? DisplayView.combinedShorterAngledSegmentsData[pair]
-                                         : DisplayView.combinedAngledSegmentsData[pair]
+                        useShortSegments ? CalcDisplayView.combinedShorterAngledSegmentsData[pair]
+                                         : CalcDisplayView.combinedAngledSegmentsData[pair]
                     let segmentPath = getAngledSegmentPath(points: points!)
                     path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
                     isSegmentResolved[pair[0]] = true
@@ -164,15 +164,15 @@ struct DisplayView: View {
         }
 
         // Draw the non-combined LED segments.
-        for i in 0...(DisplayView.segmentCount - 1) {
+        for i in 0...(CalcDisplayView.segmentCount - 1) {
             if isSegmentOn(segments: segments, i: i) {
                 let segmentPath: Path?
                 let isAngled = i == 2 || i == 4 || i == 9 || i == 11
                 if isAngled {
                     segmentPath =
-                        getAngledSegmentPath(points: DisplayView.angledSegmentsData[i]!)
+                        getAngledSegmentPath(points: CalcDisplayView.angledSegmentsData[i]!)
                 } else {
-                    segmentPath = getRectSegmentPath(rect: DisplayView.rightSegmentsData[i]!)
+                    segmentPath = getRectSegmentPath(rect: CalcDisplayView.rightSegmentsData[i]!)
                 }
                 if (segmentPath != nil && !isSegmentResolved[i]) {
                     path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
@@ -212,10 +212,10 @@ struct DisplayView: View {
             if displayCharacters[i] == "." { continue }
 
             // Right justify.
-            let position = index + (DisplayView.maxLedCount - ledCount)
+            let position = index + (CalcDisplayView.maxLedCount - ledCount)
             let hasDot = i < displayCharacters.count - 1 && displayCharacters[i + 1] == "."
             let ledPath = getLedPath(c: displayCharacters[i],
-                                     startX: DisplayView.interLedX * CGFloat(position),
+                                     startX: CalcDisplayView.interLedX * CGFloat(position),
                                      hasDot: hasDot,
                                      combineSegments: true)
             if ledPath != nil { path.addPath(ledPath!) }
@@ -225,13 +225,13 @@ struct DisplayView: View {
         // Slant display slightly
         let slantedPath = path.transform(CGAffineTransform.init(a: 1,
                                                                 b: 0,
-                                                                c: -DisplayView.slant,
+                                                                c: -CalcDisplayView.slant,
                                                                 d: 1,
                                                                 tx: 0,
                                                                 ty: 0))
 
         // Canter and scale path
-        let displayRect = DisplayView.getDisplayPathRect()
+        let displayRect = CalcDisplayView.getDisplayPathRect()
         return slantedPath
             .offset(x: (boundingRect.width - displayRect.width) / 2, y: (boundingRect.height - displayRect.height) / 2)
             .scale(boundingRect.width / displayRect.width)
@@ -243,13 +243,13 @@ struct DisplayView: View {
             let height = geometry.size.height
             let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
             getDisplayPath(displayString: displayString, boundingRect: boundingRect)
-                .fill(DisplayView.ledColor)
+                .fill(CalcDisplayView.ledColor)
         }
     }
 }
 
-struct DisplayView_Previews: PreviewProvider {
+struct CalcDisplayView_Previews: PreviewProvider {
     static var previews: some View {
-        DisplayView(displayString: "READY")
+        CalcDisplayView(displayString: "READY")
     }
 }

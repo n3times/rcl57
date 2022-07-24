@@ -16,7 +16,7 @@ struct TrigIndicator: View {
     }
 }
 
-struct KeyboardView: View {
+struct CalcKeyboardView: View {
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
@@ -90,7 +90,7 @@ struct KeyboardView: View {
                             let standardizedLocation =
                                 CGPoint(x: $0.location.x / CGFloat(scaleFactorH),
                                         y: $0.location.y / CGFloat(scaleFactorH))
-                            let c = KeyboardView.getCalculatorKey(
+                            let c = CalcKeyboardView.getCalculatorKey(
                                 standardizedLocation: standardizedLocation,
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
@@ -145,8 +145,8 @@ struct KeyboardView: View {
     }
 }
 
-struct KeyboardView_Previews: PreviewProvider {
+struct CalcKeyboardView_Previews: PreviewProvider {
     static var previews: some View {
-        KeyboardView()
+        CalcKeyboardView()
     }
 }

@@ -1,194 +1,131 @@
-/**
- * A mini view that shows the user program.
- */
-
 import SwiftUI
 
-/** Data for a ProgramLineView: a step index and an operation. */
-private struct ProgramLine: Identifiable {
-    static var lineId = 0
-    let index: Int
-    let op: String
-    let active: Bool
-    let isPc: Bool
-    let id: Int
-
-    init(index: Int, op: String, active: Bool, isPc: Bool) {
-        self.index = index
-        self.op = op
-        self.active = active
-        self.isPc = isPc
-        self.id = ProgramLine.lineId
-        ProgramLine.lineId += 1
-    }
-}
-
-/** A line view in a ProgramView: a number on the left and an operation on the right. */
-private struct ProgramLineView: View {
-    private let line: ProgramLine
-    private let activeBackgroundColor = Style.ivory
-    private let inactiveBackgroundColor = Style.ivory
-    private let foregroundColor = Style.blackish
-    private let inactiveForegroundColor = Style.blackish
-
-    init(line: ProgramLine) {
-        self.line = line
-    }
-
-    var body: some View {
-        return HStack {
-            Spacer(minLength: 10)
-            Text(line.index == 99 ? (line.isPc ? "> LRN" : "  LRN")
-                                  : String(format: "%@  %02d", line.isPc ? ">" : " ", line.index))
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
-            Text(line.op)
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-            Spacer(minLength: 20)
-        }
-        .font(Style.listLineFont)
-        .listRowBackground(line.active ? activeBackgroundColor
-                                       : inactiveBackgroundColor)
-        .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
-        .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
-    }
-}
-
-private struct RegisterLine: Identifiable {
-    static var lineId = 0
-    let index: Int
-    let reg: String
-    let id: Int
-
-    init(index: Int, reg: String) {
-        self.index = index
-        self.reg = reg
-        self.id = ProgramLine.lineId
-        RegisterLine.lineId += 1
-    }
-}
-
-private struct RegisterLineView: View {
-    private let line: RegisterLine
-    private let backgroundColor = Style.ivory
-    private let foregroundColor = Style.blackish
-
-    init(line: RegisterLine) {
-        self.line = line
-    }
-
-    var body: some View {
-        return HStack {
-            Spacer(minLength: 10)
-            Text(String(format: "   %d", line.index))
-                .frame(maxWidth: 100, idealHeight:10, alignment: .leading)
-            Text(line.reg)
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-            Spacer(minLength: 20)
-        }
-        .font(Style.listLineFont)
-        .listRowBackground(backgroundColor)
-        .background(backgroundColor)
-        .foregroundColor(foregroundColor)
-    }
-}
-
+/** A list of LineView's. */
 struct StateView: View {
-    @State private var lines : [ProgramLine] = []
-
-    private let isMiniView: Bool
-
-    @State private var middle: Int
-    @State private var pc: Int
-    @State private var isOpEditInLrn: Bool
-    @State private var isHpLrn: Bool
-
     @EnvironmentObject var change: Change
-
-    init(isMiniView: Bool) {
-        let pc = Rcl57.shared.getProgramPc()
-        self.isMiniView = isMiniView
-        self.pc = pc
-        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
-        self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        if pc == -1 { middle = 0 }
-        else if pc == 0 && !Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
-        else if pc == 49 { middle = 48 }
-        else { middle = pc}
-    }
-
-    private func updateMiddle() {
-        let pc = Rcl57.shared.getProgramPc()
-        middle = pc
-        self.pc = pc
-        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
-        self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        if pc == -1 { middle = 0 }
-        else if pc == 0 && !self.isHpLrn { middle = 1 }
-        else { middle = pc }
-    }
-
-    private func getRegisterLineView(_ index: Int) -> some View {
-        return RegisterLineView(line: RegisterLine(index: index,
-                                                   reg: Rcl57.shared.getRegister(index: index)))
-        .listRowSeparator(.hidden)
-    }
-
-    private func getProgramLineView(_ index: Int, active: Bool) -> some View {
-        let c = Rcl57.shared.getProgramPc()
-        let last = Rcl57.shared.getProgramLastIndex()
-
-        if index == -1 {
-            return ProgramLineView(line: ProgramLine(index: 99,
-                                       op: "",
-                                       active: isMiniView || index <= last,
-                                       isPc: isMiniView && c == -1))
-            .listRowSeparator(.hidden)
-        }
-        return ProgramLineView(line: ProgramLine(index: index,
-                                   op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
-                                   active: isMiniView || index <= last,
-                                   isPc: isMiniView && index == c))
-        .listRowSeparator(.hidden)
-    }
+    @State private var isPresentingConfirm: Bool = false
+    @State private var isPresentingSave: Bool = false
+    @State private var isPresentingClose: Bool = false
 
     var body: some View {
-        ScrollViewReader { proxy in
-            List {
-                if (isMiniView || change.showStepsInState) {
-                    ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
-                        getProgramLineView($0, active: $0 == pc)
+        let program = change.loadedProgram
+        let typeName = change.showStepsInState ? "Steps" : "Registers"
+        let programName = program?.getName()
+        let isNew = program == nil
+        let isReadOnly = !isNew && program!.readOnly
+        let isReadWrite = !isNew && !isReadOnly
+        let title = isNew ? "" : (program!.readOnly ? "" : "") + programName!
+
+        ZStack {
+            GeometryReader { geometry in
+                let width = geometry.size.width
+
+                VStack(spacing: 0) {
+                    MenuBarView(change: change,
+                                left: change.showStepsInState ? Style.yang : Style.ying,
+                                title: title + (!isNew && !program!.hasSameStepsAsState() ? "'" : ""),
+                                right: Style.rightArrow,
+                                width: width,
+                                leftAction: { change.showStepsInState.toggle() },
+                                rightAction: { withAnimation {change.currentView = .calc} })
+
+                    // Type (program or data)
+                    HStack(spacing: 0) {
+                        Button(typeName) {
+                            change.showStepsInState.toggle()
+                        }
+                        .offset(x: 15, y: -3)
+                        .frame(width: width / 6, height: 20, alignment: .leading)
+
+                        Text(isReadOnly ? "Examples" : isReadWrite ? "User" : "")
+                            .offset(y: -3)
+                            .frame(width: width * 2 / 3, height: 20)
+
+                        Spacer()
+                            .frame(width: width / 6, height: 20)
                     }
-                } else {
-                    ForEach(0...7, id: \.self) {
-                        getRegisterLineView($0)
+                    .background(Style.blackish)
+                    .foregroundColor(Style.ivory)
+                    .font(Style.programFont)
+
+                    // State
+                    StateInnerView(isMiniView: false)
+                        .background(Style.ivory)
+
+                    HStack(spacing: 0) {
+                        Button("CLOSE") {
+                            isPresentingClose = true
+                        }
+                        .font(Style.footerFont)
+                        .frame(width: width / 3, height: Style.footerHeight)
+                        .disabled(isNew)
+                        .buttonStyle(.plain)
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingClose) {
+                            if !isNew {
+                                Button("Close " + programName!, role: .destructive) {
+                                    change.setLoadedProgram(program: nil)
+                                    change.forceUpdate()
+                                }
+                            }
+                        }
+
+                        Button("CLEAR") {
+                            isPresentingConfirm = true
+                        }
+                        .font(Style.footerFont)
+                        .frame(width: width / 3, height: Style.footerHeight)
+                        .disabled(change.showStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
+                                  : Rcl57.shared.getRegistersLastIndex() == -1)
+                        .buttonStyle(.plain)
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                            if change.showStepsInState {
+                                Button("Clear Steps", role: .destructive) {
+                                    Rcl57.shared.clearProgram()
+                                    change.forceUpdate()
+                                }
+                            } else {
+                                Button("Clear Registers", role: .destructive) {
+                                    Rcl57.shared.clearRegisters()
+                                    change.forceUpdate()
+                                }
+                            }
+                        }
+
+                        Button(isReadWrite ? "SAVE" : "NEW") {
+                            if isReadWrite {
+                                isPresentingSave = true
+                            } else {
+                                change.showPreview = false
+                                withAnimation {
+                                    change.createProgram = true
+                                }
+                            }
+                        }
+                        .font(Style.footerFont)
+                        .frame(width: width / 3, height: Style.footerHeight)
+                        .buttonStyle(.plain)
+                        .disabled(isReadWrite && (change.showStepsInState ? program!.hasSameStepsAsState()
+                                                  : program!.hasSameRegistersAsState()))
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
+                            if isReadWrite {
+                                Button("Save " + (change.showStepsInState ? "Steps" : "Registers"), role: .destructive) {
+                                    program!.saveState()
+                                    _ = program!.save(filename: programName!)
+                                    change.forceUpdate()
+                                }
+                            }
+                        }
                     }
+                    .background(Style.blackish)
+                    .foregroundColor(Style.ivory)
                 }
             }
-            .background(Style.ivory)
-            .listStyle(PlainListStyle())
-            .environment(\.defaultMinListRowHeight, Style.listLineHeight)
-            .onAppear {
-                if isMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
-            }
-            .onChange(of: self.isOpEditInLrn) { _ in
-                if isMiniView {
-                    proxy.scrollTo(pc, anchor: .bottom)
-                }
-            }
-            .onReceive(change.$changeCount) { _ in
-                if isMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
-            }
-            .onReceive(change.$showMiniView) { _ in
-                if isMiniView && change.showMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
+            .transition(.move(edge: .top))
+            if change.createProgram {
+                ProgramEditorView()
+                    .environmentObject(change)
+                    .transition(.move(edge: .bottom))
+                    .zIndex(1)
             }
         }
     }
@@ -196,6 +133,6 @@ struct StateView: View {
 
 struct StateView_Previews: PreviewProvider {
     static var previews: some View {
-        StateView(isMiniView: false)
+        ProgramEditorView()
     }
 }

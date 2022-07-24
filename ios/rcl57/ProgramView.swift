@@ -131,7 +131,7 @@ struct ProgramView: View {
                     }
                 }
                 if (change.editProgram) {
-                    CreateProgramView(program: program)
+                    ProgramEditorView(program: program)
                         .transition(.move(edge: .bottom))
                         .zIndex(1)
                 }

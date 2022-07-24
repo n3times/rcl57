@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ConfirmProgramView: View {
+struct ProgramSaverView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
     let originalProgram: Prog57?
@@ -86,8 +86,8 @@ struct ConfirmProgramView: View {
     }
 }
 
-struct ConfirmProgramView_Previews: PreviewProvider {
+struct ProgramSaverView_Previews: PreviewProvider {
     static var previews: some View {
-        ConfirmProgramView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
+        ProgramSaverView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
     }
 }

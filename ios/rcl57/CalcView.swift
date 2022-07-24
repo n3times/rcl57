@@ -16,13 +16,13 @@ struct CalcView: View {
 
     private func getMiniView() -> some View {
         if Rcl57.shared.isLrnMode() {
-            return AnyView(StateView(isMiniView: true)) 
+            return AnyView(StateInnerView(isMiniView: true)) 
         } else if Rcl57.shared.getLoggedCount() == 0 {
             return AnyView(ZStack {
                 Text("Log is empty")
             })
         } else {
-            return AnyView(LogView())
+            return AnyView(LogInnerView())
         }
     }
 
@@ -86,7 +86,7 @@ struct CalcView: View {
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
 
-                    DisplayView(displayString: change.displayString)
+                    CalcDisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
@@ -96,7 +96,7 @@ struct CalcView: View {
                 .background(Style.ivory)
 
                 // Keyboard View.
-                KeyboardView()
+                CalcKeyboardView()
             }
         }
         .onAppear {

@@ -17,7 +17,7 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             if change.showHelpInSettings {
-                ManualView()
+                ManualMainView()
                     .transition(.move(edge: .trailing))
             }
 
