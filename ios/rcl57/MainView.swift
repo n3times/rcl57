@@ -1,5 +1,5 @@
 /**
- * The main view. It holds the calculator, full log, and full program views.
+ * The main view. It holds the calculator,  log, state, settings and library views.
  */
 
 import SwiftUI

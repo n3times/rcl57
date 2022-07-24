@@ -274,7 +274,7 @@ class Rcl57 {
         if d >= 0 {
             suffix = " " + String(d)
         }
-        if (ti57_is_op_edit_in_lrn(&rcl57.ti57) && index == ti57_get_program_pc(&rcl57.ti57)) {
+        if ti57_is_op_edit_in_lrn(&rcl57.ti57) && index == ti57_get_program_pc(&rcl57.ti57) {
             suffix = " _"
         }
 

@@ -39,15 +39,15 @@ private struct ProgramLineView: View {
         return HStack {
             Spacer(minLength: 10)
             Text(line.index == 99 ? (line.isPc ? "> LRN" : "  LRN")
-                                  : String(format: "%@  %02d", line.isPc ? ">" : " ", line.index))
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
+                 : String(format: "%@  %02d", line.isPc ? ">" : " ", line.index))
+            .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
             Text(line.op)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
             Spacer(minLength: 20)
         }
         .font(Style.listLineFont)
         .listRowBackground(line.active ? activeBackgroundColor
-                                       : inactiveBackgroundColor)
+                           : inactiveBackgroundColor)
         .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
     }
@@ -79,7 +79,7 @@ private struct RegisterLineView: View {
     var body: some View {
         return HStack {
             Spacer(minLength: 10)
-            Text(String(format: "   %d", line.index))
+            Text(String(format: "   R%d", line.index))
                 .frame(maxWidth: 100, idealHeight:10, alignment: .leading)
             Text(line.reg)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
@@ -139,22 +139,22 @@ struct StateInnerView: View {
 
         if index == -1 {
             return ProgramLineView(line: ProgramLine(index: 99,
-                                       op: "",
-                                       active: isMiniView || index <= last,
-                                       isPc: isMiniView && c == -1))
+                                                     op: "",
+                                                     active: isMiniView || index <= last,
+                                                     isPc: isMiniView && c == -1))
             .listRowSeparator(.hidden)
         }
         return ProgramLineView(line: ProgramLine(index: index,
-                                   op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
-                                   active: isMiniView || index <= last,
-                                   isPc: isMiniView && index == c))
+                                                 op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
+                                                 active: isMiniView || index <= last,
+                                                 isPc: isMiniView && index == c))
         .listRowSeparator(.hidden)
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if (isMiniView || change.showStepsInState) {
+                if isMiniView || change.showStepsInState {
                     ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
                         getProgramLineView($0, active: $0 == pc)
                     }

@@ -14,7 +14,7 @@ private struct LibraryNode: Identifiable {
     init(library: Lib57) {
         self.name = library.name
         let programs = library.programs
-        if (programs.count > 0) {
+        if programs.count > 0 {
             children = []
             for program in programs {
                 children.append(LibraryNode(program: program))
@@ -99,7 +99,7 @@ struct LibraryView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if (change.program != nil) {
+            if change.program != nil {
                 ProgramView(program: change.program!)
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))

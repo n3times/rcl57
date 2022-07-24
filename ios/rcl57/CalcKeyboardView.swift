@@ -47,11 +47,11 @@ struct CalcKeyboardView: View {
         var j = y / h
 
         // If the key press is a near miss, we choose the closest key.
-        if (i >= -0.2 && j >= -0.15 && i < 5.2 && j < 8.15) {
+        if i >= -0.2 && j >= -0.15 && i < 5.2 && j < 8.15 {
             if i < 0 { i = 0 }
             if j < 0 { j = 0 }
             if i >= 5 { i = 4 }
-            if (j >= 8) { j = 7 }
+            if j >= 8 { j = 7 }
             let col = Int(i)
             let row = Int(j)
             return CGPoint(x:row, y:col)

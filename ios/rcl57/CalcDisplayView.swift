@@ -174,14 +174,14 @@ struct CalcDisplayView: View {
                 } else {
                     segmentPath = getRectSegmentPath(rect: CalcDisplayView.rightSegmentsData[i]!)
                 }
-                if (segmentPath != nil && !isSegmentResolved[i]) {
+                if segmentPath != nil && !isSegmentResolved[i] {
                     path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
                 }
             }
         }
 
         // Draw the dot if present.
-        if (hasDot) {
+        if hasDot {
             path.addRect(dotData.offsetBy(dx: startX, dy: 0))
         }
 

@@ -5,18 +5,19 @@
 import SwiftUI
 
 struct CalcView: View {
-    private let fullDisplayHeight = (3 + Double(Style.miniViewLineCount)) * Style.listLineHeight
-    private let miniViewHeight = Double(Style.miniViewLineCount) * Style.listLineHeight
-
     @EnvironmentObject private var change: Change
 
+    private static let miniViewHeight = Double(Style.miniViewLineCount) * Style.listLineHeight
+    private static let minDisplayHeight = 3 * Style.listLineHeight
+    private static let maxDisplayHeight = minDisplayHeight + miniViewHeight
+
     private func getDisplayHeight() -> Double {
-        return fullDisplayHeight - (change.showMiniView ? miniViewHeight : 0)
+        return change.showMiniView ? CalcView.minDisplayHeight : CalcView.maxDisplayHeight
     }
 
     private func getMiniView() -> some View {
         if Rcl57.shared.isLrnMode() {
-            return AnyView(StateInnerView(isMiniView: true)) 
+            return AnyView(StateInnerView(isMiniView: true))
         } else if Rcl57.shared.getLoggedCount() == 0 {
             return AnyView(ZStack {
                 Text("Log is empty")
@@ -81,8 +82,8 @@ struct CalcView: View {
                 ZStack {
                     getMiniView()
                         .frame(width: CGFloat(width),
-                               height: miniViewHeight)
-                        .offset(x: 0, y: -(fullDisplayHeight - miniViewHeight) / 2)
+                               height: CalcView.miniViewHeight)
+                        .offset(x: 0, y: -CalcView.minDisplayHeight  / 2)
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
 
@@ -90,9 +91,9 @@ struct CalcView: View {
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
-                        .offset(x: 0, y: (fullDisplayHeight - displayHeight) / 2)
+                        .offset(x: 0, y: (CalcView.maxDisplayHeight - getDisplayHeight()) / 2)
                 }
-                .frame(width: width, height: fullDisplayHeight)
+                .frame(width: width, height: CalcView.maxDisplayHeight)
                 .background(Style.ivory)
 
                 // Keyboard View.

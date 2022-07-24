@@ -33,7 +33,7 @@ struct ProgramEditorView: View {
     func getProgram() -> Prog57 {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
-        if (context == .create) {
+        if context == .create {
             return Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
         } else {
             let program = Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)

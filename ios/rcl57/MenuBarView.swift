@@ -13,7 +13,7 @@ struct MenuBarView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            if (left != nil) {
+            if left != nil {
                 Button(action: {
                     leftAction()
                 }) {
@@ -29,7 +29,7 @@ struct MenuBarView: View {
             Text(title)
                 .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
                 .font(Style.titleFont)
-            if (right != nil) {
+            if right != nil {
                 Button(action: {
                     rightAction()
                 }) {
