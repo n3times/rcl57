@@ -58,9 +58,11 @@ struct ProgramView: View {
 
                     // Footer
                     HStack(spacing: 0) {
+                        Spacer(minLength: 15)
+
                         if program.readOnly {
                             Spacer()
-                                .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .trailing)
+                                .frame(width: width / 6, height: Style.footerHeight)
                         } else {
                             Menu {
                                 Button(action: {
@@ -75,7 +77,7 @@ struct ProgramView: View {
                                 }
                             } label: {
                                 Image(systemName: "ellipsis")
-                                    .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .leading)
+                                    .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
                                     .contentShape(Rectangle())
                             }
                             .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
@@ -92,12 +94,12 @@ struct ProgramView: View {
                                     }
                                 }
                             }
-                            .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .leading)
-                            .offset(x: 10)
+                            .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)
                         }
 
                         Button(loadButtonText) {
-                            program.loadState()
+                            program.loadStepsIntoMemory()
+                            program.loadRegistersIntoMemory()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 change.setLoadedProgram(program: program)
                             }
@@ -106,12 +108,12 @@ struct ProgramView: View {
                             }
                         }
                         .font(Style.footerFont)
-                        .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .center)
+                        .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight, alignment: .center)
                         .buttonStyle(.plain)
 
                         if program.readOnly {
                             Spacer()
-                                .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .trailing)
+                                .frame(width: width / 6, height: Style.footerHeight)
                         } else {
                             Button("EDIT") {
                                 change.showPreview = false
@@ -120,14 +122,15 @@ struct ProgramView: View {
                                 }
                             }
                             .font(Style.footerFont)
-                            .frame(width: (width - 4) / 3, height: Style.footerHeight, alignment: .trailing)
-                            .offset(x: -10)
+                            .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .trailing)
                             .buttonStyle(.plain)
                         }
+
+                        Spacer(minLength: 15)
                     }
-                    .background(Style.deepBlue)
-                    .foregroundColor(Style.ivory)
                 }
+                .background(Style.deepBlue)
+                .foregroundColor(Style.ivory)
 
                 if change.editProgram {
                     ProgramEditorView(program: program)

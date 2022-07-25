@@ -68,37 +68,82 @@ char *prog57_to_text(prog57_t *program) {
     append_line(&text_out, program->help);
     append_line(&text_out, STATE_HEADER);
     for (int i = 0; i < 16; i++) {
-        char *str = utils57_reg_to_str(program->state[i]);
+        static char digits[] = "0123456789ABCDEF";
+        char str[17];
+
+        for (int j = 0; j < 16; j++) {
+            str[j] = digits[program->state[i][j]];
+        }
+        str[16] = 0;
         append_line(&text_out, str);
     }
     return text;
 }
 
-void prog57_load_state(prog57_t *program_in, rcl57_t *rcl57) {
+void prog57_set_steps_from_memory(prog57_t *program, rcl57_t *rcl57) {
+    memcpy(program->state + 8, rcl57->ti57.Y, 6 * sizeof(ti57_reg_t));
+    program->state[14][14] = rcl57->ti57.Y[6][14];
+    program->state[14][15] = rcl57->ti57.Y[6][15];
+    program->state[15][14] = rcl57->ti57.Y[7][14];
+    program->state[15][15] = rcl57->ti57.Y[7][15];
+}
+
+void prog57_set_registers_from_memory(prog57_t *program, rcl57_t *rcl57) {
+    memcpy(program->state +  5, rcl57->ti57.X + 5, 14 * sizeof(unsigned char));
+    memcpy(program->state +  6, rcl57->ti57.X + 6, 14 * sizeof(unsigned char));
+    memcpy(program->state +  7, rcl57->ti57.X + 7, 14 * sizeof(unsigned char));
+    memcpy(program->state + 14, rcl57->ti57.Y + 6, 14 * sizeof(unsigned char));
+    memcpy(program->state + 15, rcl57->ti57.Y + 7, 14 * sizeof(unsigned char));
+    memcpy(program->state +  3, rcl57->ti57.X + 3, 14 * sizeof(unsigned char));
+    memcpy(program->state +  2, rcl57->ti57.X + 2, 14 * sizeof(unsigned char));
+    memcpy(program->state +  4, rcl57->ti57.X + 4, 14 * sizeof(unsigned char));
+}
+
+void prog57_load_steps_into_memory(prog57_t *program, rcl57_t *rcl57) {
     ti57_t *ti57 = &rcl57->ti57;
+
+    // Undo '2nd' if necessary.
+    if (ti57_is_2nd(ti57)) {
+        ti57_key_press(ti57, 1, 1);
+        utils57_burst_until_idle(ti57);
+        ti57_key_release(ti57);
+        utils57_burst_until_idle(ti57);
+    }
+
+    // Stop if running.
+    if (ti57_get_mode(ti57) == TI57_RUN) {
+        // Press R/S.
+        ti57_key_press(ti57, 8, 1);
+        utils57_burst_until_idle(ti57);
+        ti57_key_release(ti57);
+        utils57_burst_until_idle(ti57);
+    }
 
     // Get out of LRN mode.
     if (ti57_get_mode(ti57) == TI57_LRN) {
-        // Undo '2nd' if necessary.
-        if (ti57_is_2nd(ti57)) {
-            ti57_key_press(ti57, 1, 1);
-            utils57_burst_until_idle(ti57);
-            ti57_key_release(ti57);
-            utils57_burst_until_idle(ti57);
-        }
-
-        // Press R/S.
+        // Press LRN.
         ti57_key_press(ti57, 2, 1);
         utils57_burst_until_idle(ti57);
         ti57_key_release(ti57);
         utils57_burst_until_idle(ti57);
     }
 
-    memcpy(rcl57->ti57.X, program_in->state, 16 * sizeof(ti57_reg_t));
+    memcpy(rcl57->ti57.Y, program->state + 8, 6 * sizeof(ti57_reg_t));
+    rcl57->ti57.Y[6][14] = program->state[14][14];
+    rcl57->ti57.Y[6][15] = program->state[14][15];
+    rcl57->ti57.Y[7][14] = program->state[15][14];
+    rcl57->ti57.Y[7][15] = program->state[15][15];
 }
 
-void prog57_save_state(prog57_t *program_out, rcl57_t *rcl57) {
-    memcpy(program_out->state, rcl57->ti57.X, sizeof(program_out->state));
+void prog57_load_registers_into_memory(prog57_t *program, rcl57_t *rcl57) {
+    memcpy(rcl57->ti57.X + 5, program->state +  5, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.X + 6, program->state +  6, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.X + 7, program->state +  7, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.Y + 6, program->state + 14, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.Y + 7, program->state + 15, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.X + 3, program->state +  3, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.X + 2, program->state +  2, 14 * sizeof(unsigned char));
+    memcpy(rcl57->ti57.X + 4, program->state +  4, 14 * sizeof(unsigned char));
 }
 
 char *prog57_get_name(prog57_t *program) {

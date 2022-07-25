@@ -32,7 +32,8 @@ class Prog57 : Hashable, Equatable {
     init(name: String, help: String, readOnly: Bool) {
         prog57_set_name(&prog57, (name as NSString).utf8String)
         prog57_set_help(&prog57, (help as NSString).utf8String)
-        prog57_save_state(&prog57, &Rcl57.shared.rcl57)
+        prog57_set_steps_from_memory(&prog57, &Rcl57.shared.rcl57)
+        prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
         self.readOnly = readOnly
     }
 
@@ -65,12 +66,20 @@ class Prog57 : Hashable, Equatable {
         prog57.state = state
     }
 
-    func loadState() {
-        prog57_load_state(&prog57, &Rcl57.shared.rcl57)
+    func setStepsFromMemory() {
+        prog57_set_steps_from_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
-    func saveState() {
-        prog57_save_state(&prog57, &Rcl57.shared.rcl57)
+    func setRegistersFromMemory() {
+        prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
+    }
+
+    func loadStepsIntoMemory() {
+        prog57_load_steps_into_memory(&prog57, &Rcl57.shared.rcl57)
+    }
+
+    func loadRegistersIntoMemory() {
+        prog57_load_registers_into_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
     func hasSameStepsAsState() -> Bool {

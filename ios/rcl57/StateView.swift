@@ -109,7 +109,11 @@ struct StateView: View {
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
                             if isReadWrite {
                                 Button("Save " + (change.showStepsInState ? "Steps" : "Registers"), role: .destructive) {
-                                    program!.saveState()
+                                    if change.showStepsInState {
+                                        program!.setStepsFromMemory()
+                                    } else {
+                                        program!.setRegistersFromMemory()
+                                    }
                                     _ = program!.save(filename: programName!)
                                     change.forceUpdate()
                                 }

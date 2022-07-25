@@ -13,9 +13,13 @@ void prog57_from_text(prog57_t *program, const char *text_in);
 
 char *prog57_to_text(prog57_t *program);
 
-void prog57_load_state(prog57_t *program, rcl57_t *rcl57);
+void prog57_set_steps_from_memory(prog57_t *program, rcl57_t *rcl57);
 
-void prog57_save_state(prog57_t *program, rcl57_t *rcl57);
+void prog57_set_registers_from_memory(prog57_t *program, rcl57_t *rcl57);
+
+void prog57_load_steps_into_memory(prog57_t *program, rcl57_t *rcl57);
+
+void prog57_load_registers_into_memory(prog57_t *program, rcl57_t *rcl57);
 
 char *prog57_get_name(prog57_t *program);
 
