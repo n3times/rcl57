@@ -14,7 +14,7 @@ struct StateView: View {
         let isNew = program == nil
         let isReadOnly = !isNew && program!.readOnly
         let isReadWrite = !isNew && !isReadOnly
-        let title = isNew ? "" : (program!.readOnly ? "" : "") + programName!
+        let title = isNew ? typeName : (program!.readOnly ? "" : "") + programName!
 
         ZStack {
             GeometryReader { geometry in
@@ -29,20 +29,20 @@ struct StateView: View {
                                 leftAction: { change.showStepsInState.toggle() },
                                 rightAction: { withAnimation {change.currentView = .calc} })
 
-                    // Type (program or data)
+                    // Type (steps or registers)
                     HStack(spacing: 0) {
-                        Button(typeName) {
+                        Button(isNew ? "" : typeName.uppercased()) {
                             change.showStepsInState.toggle()
                         }
                         .offset(x: 15, y: -3)
-                        .frame(width: width / 6, height: 20, alignment: .leading)
+                        .frame(width: width / 3, height: 20, alignment: .leading)
 
                         Text(isReadOnly ? "Examples" : isReadWrite ? "User" : "")
                             .offset(y: -3)
-                            .frame(width: width * 2 / 3, height: 20)
+                            .frame(width: width / 3, height: 20)
 
                         Spacer()
-                            .frame(width: width / 6, height: 20)
+                            .frame(width: width / 3, height: 20)
                     }
                     .background(Style.blackish)
                     .foregroundColor(Style.ivory)

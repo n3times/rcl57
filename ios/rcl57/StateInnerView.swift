@@ -5,7 +5,7 @@
 import SwiftUI
 
 /** Data for a ProgramLineView: a step index and an operation. */
-private struct ProgramLine: Identifiable {
+private struct StepLine: Identifiable {
     static var lineId = 0
     let index: Int
     let op: String
@@ -18,20 +18,20 @@ private struct ProgramLine: Identifiable {
         self.op = op
         self.active = active
         self.isPc = isPc
-        self.id = ProgramLine.lineId
-        ProgramLine.lineId += 1
+        self.id = StepLine.lineId
+        StepLine.lineId += 1
     }
 }
 
 /** A line view in a ProgramView: a number on the left and an operation on the right. */
-private struct ProgramLineView: View {
-    private let line: ProgramLine
+private struct StepLineView: View {
+    private let line: StepLine
     private let activeBackgroundColor = Style.ivory
     private let inactiveBackgroundColor = Style.ivory
     private let foregroundColor = Style.blackish
     private let inactiveForegroundColor = Style.blackish
 
-    init(line: ProgramLine) {
+    init(line: StepLine) {
         self.line = line
     }
 
@@ -48,7 +48,6 @@ private struct ProgramLineView: View {
         .font(Style.listLineFont)
         .listRowBackground(line.active ? activeBackgroundColor
                            : inactiveBackgroundColor)
-        .background(line.active ? activeBackgroundColor : inactiveBackgroundColor)
         .foregroundColor(line.active ? foregroundColor: inactiveForegroundColor)
     }
 }
@@ -62,7 +61,7 @@ private struct RegisterLine: Identifiable {
     init(index: Int, reg: String) {
         self.index = index
         self.reg = reg
-        self.id = ProgramLine.lineId
+        self.id = StepLine.lineId
         RegisterLine.lineId += 1
     }
 }
@@ -87,13 +86,12 @@ private struct RegisterLineView: View {
         }
         .font(Style.listLineFont)
         .listRowBackground(backgroundColor)
-        .background(backgroundColor)
         .foregroundColor(foregroundColor)
     }
 }
 
 struct StateInnerView: View {
-    @State private var lines : [ProgramLine] = []
+    @State private var lines : [StepLine] = []
 
     private let isMiniView: Bool
 
@@ -138,16 +136,16 @@ struct StateInnerView: View {
         let last = Rcl57.shared.getProgramLastIndex()
 
         if index == -1 {
-            return ProgramLineView(line: ProgramLine(index: 99,
-                                                     op: "",
-                                                     active: isMiniView || index <= last,
-                                                     isPc: isMiniView && c == -1))
+            return StepLineView(line: StepLine(index: 99,
+                                               op: "",
+                                               active: isMiniView || index <= last,
+                                               isPc: isMiniView && c == -1))
             .listRowSeparator(.hidden)
         }
-        return ProgramLineView(line: ProgramLine(index: index,
-                                                 op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
-                                                 active: isMiniView || index <= last,
-                                                 isPc: isMiniView && index == c))
+        return StepLineView(line: StepLine(index: index,
+                                           op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
+                                           active: isMiniView || index <= last,
+                                           isPc: isMiniView && index == c))
         .listRowSeparator(.hidden)
     }
 
@@ -165,7 +163,7 @@ struct StateInnerView: View {
                 }
             }
             .background(Style.ivory)
-            .listStyle(PlainListStyle())
+            .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
                 if isMiniView {

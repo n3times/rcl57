@@ -98,6 +98,8 @@ struct CalcView: View {
 
                 // Keyboard View.
                 CalcKeyboardView()
+
+                Spacer(minLength: 20)
             }
         }
         .onAppear {

@@ -31,6 +31,8 @@ private struct LibraryNode: Identifiable {
 struct LibraryView: View {
     @EnvironmentObject var change: Change
 
+    @State private var isPresentingImport: Bool = false
+
     var body: some View {
         ZStack {
             if change.program == nil {
@@ -93,6 +95,28 @@ struct LibraryView: View {
                             }
                         }
                         .listStyle(PlainListStyle())
+
+                        // Footer
+                        HStack(spacing: 0) {
+                            Spacer()
+                                .frame(width: width / 6, height: Style.footerHeight)
+
+                            Button("IMPORT") {
+                                isPresentingImport = true
+                            }
+                            .font(Style.footerFont)
+                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight, alignment: .center)
+                            .buttonStyle(.plain)
+
+                            Spacer()
+                                .frame(width: width / 6, height: Style.footerHeight)
+                        }
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingImport) {
+                            Button("Import from Clipboad", role: .none) {
+                            }
+                        }
+                        .background(Style.deepBlue)
+                        .foregroundColor(Style.ivory)
                     }
                 }
                 .background(Color.white)

@@ -3,6 +3,7 @@ import SwiftUI
 struct ProgramView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
+    @State private var isPresentingCopy: Bool = false
     let program: Prog57
 
     var body: some View {
@@ -66,9 +67,9 @@ struct ProgramView: View {
                         } else {
                             Menu {
                                 Button(action: {
-                                    UIPasteboard.general.string = program.toText()
+                                    isPresentingCopy = true
                                 }) {
-                                    Text("Export")
+                                    Text("Copy to Clipboard")
                                 }
                                 Button(action: {
                                     isPresentingConfirm = true
@@ -92,6 +93,11 @@ struct ProgramView: View {
                                     withAnimation {
                                         change.currentView = .calc
                                     }
+                                }
+                            }
+                            .confirmationDialog("Are you sure?", isPresented: $isPresentingCopy) {
+                                Button("Copy " + program.getName(), role: .none) {
+                                    UIPasteboard.general.string = program.toText()
                                 }
                             }
                             .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)

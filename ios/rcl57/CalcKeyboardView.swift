@@ -101,8 +101,10 @@ struct CalcKeyboardView: View {
                                     let feedback = UIImpactFeedbackGenerator(style: .medium)
                                     feedback.impactOccurred()
                                 }
-                                isKeyPressed = true;
+                                isKeyPressed = true
                                 Rcl57.shared.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
+                            } else {
+                                isKeyPressed = true
                             }
                         }
                         .onEnded { _ in
