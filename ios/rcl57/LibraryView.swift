@@ -63,13 +63,14 @@ struct LibraryView: View {
                                 }
                             } label: {
                                 Label(items[0].name, systemImage: "folder")
+                                    .font(Style.listLineFontBold)
+                                    .foregroundColor(Style.blackish)
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         withAnimation {
                                             change.examplesLibExpanded.toggle()
                                         }
                                     }
-                                    .foregroundColor(Color.black)
                             }
 
                             DisclosureGroup(isExpanded: $change.userLibExpanded) {
@@ -86,6 +87,8 @@ struct LibraryView: View {
                                 }
                             } label: {
                                 Label(items[1].name, systemImage: "folder")
+                                    .font(Style.listLineFontBold)
+                                    .foregroundColor(Style.blackish)
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         withAnimation {

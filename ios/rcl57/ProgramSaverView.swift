@@ -14,73 +14,71 @@ struct ProgramSaverView: View {
     }
 
     var body: some View {
-        ZStack {
-            GeometryReader { geometry in
-                let width = geometry.size.width
-                VStack(spacing: 0) {
-                    HStack(spacing: 0) {
-                        Button(action: {
-                            withAnimation {
-                                change.showPreview = false
-                            }
-                        }) {
-                            Text(Style.leftArrow)
-                                .frame(width: width / 6, height: Style.headerHeight)
-                                .font(Style.smallFont)
-                                .contentShape(Rectangle())
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    Button(action: {
+                        withAnimation {
+                            change.showPreview = false
                         }
-
-                        Text(program.getName())
-                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
-                            .font(Style.titleFont)
-
-                        Spacer()
+                    }) {
+                        Text(Style.leftArrow)
                             .frame(width: width / 6, height: Style.headerHeight)
-                    }
-                    .background(Style.deepBlue)
-                    .foregroundColor(Style.ivory)
-
-                    if program.getHelp() == "" {
-                        Text("No description available")
-                            .frame(maxWidth: geometry.size.width,
-                                   maxHeight: geometry.size.height - Style.headerHeight - Style.footerHeight,
-                                   alignment: .center)
-                            .background(Style.ivory)
-                            .foregroundColor(Style.blackish)
-                    } else {
-                        HelpView(helpString: program.getHelp())
+                            .font(Style.smallFont)
+                            .contentShape(Rectangle())
                     }
 
-                    // Footer
-                    HStack(spacing: 0) {
-                        Spacer()
-                        Button(context == .edit ? "CONFIRM EDIT" : "CONFIRM CREATE") {
-                            withAnimation {
-                                if context == .edit {
-                                    Lib57.userLib.delete(program: originalProgram!)
-                                }
-                                Lib57.userLib.add(program: program)
-                                _ = program.save(filename: program.getName())
-                                if context == .create {
-                                    change.loadedProgram = program
-                                    change.createProgram = false
-                                } else {
-                                    change.editProgram = false
-                                    change.program = program
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                        change.showPreview = false
-                                    }
+                    Text(program.getName())
+                        .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
+                        .font(Style.titleFont)
+
+                    Spacer()
+                        .frame(width: width / 6, height: Style.headerHeight)
+                }
+                .background(Style.deepBlue)
+                .foregroundColor(Style.ivory)
+
+                if program.getHelp() == "" {
+                    Text("No description available")
+                        .frame(maxWidth: geometry.size.width,
+                               maxHeight: geometry.size.height - Style.headerHeight - Style.footerHeight,
+                               alignment: .center)
+                        .background(Style.ivory)
+                        .foregroundColor(Style.blackish)
+                } else {
+                    HelpView(helpString: program.getHelp())
+                }
+
+                // Footer
+                HStack(spacing: 0) {
+                    Spacer()
+                    Button(context == .edit ? "CONFIRM EDIT" : "CONFIRM CREATE") {
+                        withAnimation {
+                            if context == .edit {
+                                Lib57.userLib.delete(program: originalProgram!)
+                            }
+                            Lib57.userLib.add(program: program)
+                            _ = program.save(filename: program.getName())
+                            if context == .create {
+                                change.loadedProgram = program
+                                change.createProgram = false
+                            } else {
+                                change.editProgram = false
+                                change.program = program
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    change.showPreview = false
                                 }
                             }
                         }
-                        .font(Style.footerFont)
-                        .frame(width: 200, height: Style.footerHeight)
-                        .buttonStyle(.plain)
-                        Spacer()
                     }
-                    .background(Style.deepBlue)
-                    .foregroundColor(Style.ivory)
+                    .font(Style.footerFont)
+                    .frame(width: 200, height: Style.footerHeight)
+                    .buttonStyle(.plain)
+                    Spacer()
                 }
+                .background(Style.deepBlue)
+                .foregroundColor(Style.ivory)
             }
         }
     }

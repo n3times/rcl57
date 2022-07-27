@@ -117,7 +117,7 @@
 		15F948F5283E060C00706BE5 /* hlp2html.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hlp2html.c; sourceTree = "<group>"; };
 		15F948F6283E060C00706BE5 /* help.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = help.css; sourceTree = "<group>"; };
 		15F948F9283F26B200706BE5 /* Help57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help57.swift; sourceTree = "<group>"; };
-		15F948FC283FACE400706BE5 /* about.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = about.hlp; sourceTree = "<group>"; };
+		15F948FC283FACE400706BE5 /* about.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = about.hlp; sourceTree = "<group>"; };
 		15F948FF283FAD7B00706BE5 /* help.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = help.hlp; sourceTree = "<group>"; };
 		15F94904283FAD7B00706BE5 /* flow.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = flow.hlp; sourceTree = "<group>"; };
 		15F94906283FAD7B00706BE5 /* hello.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.hlp; sourceTree = "<group>"; };
@@ -162,10 +162,17 @@
 		150ED8A027B089EF00E01FC6 /* rcl57 */ = {
 			isa = PBXGroup;
 			children = (
-				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
-				151EBA6C28179F87005DD283 /* CalcView.swift */,
+				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
+				15F948F9283F26B200706BE5 /* Help57.swift */,
+				15B0861128680BB40018418A /* Lib57.swift */,
+				15B085E5286152C60018418A /* Prog57.swift */,
+				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
+				1567D59E28832CA000273C3C /* Change.swift */,
+				15124F7628314DAE00F0208F /* Settings.swift */,
+				151EBA6E28238D62005DD283 /* Style.swift */,
 				150ED8EB27B09E6400E01FC6 /* CalcDisplayView.swift */,
 				1533F65427F7DA0900DF3BAE /* CalcKeyboardView.swift */,
+				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
 				15071C342873811C0075D722 /* LibraryView.swift */,
 				158D172427E2A5E6003BC323 /* LogInnerView.swift */,
@@ -180,14 +187,7 @@
 				15124F74282F00E200F0208F /* SettingsView.swift */,
 				1533F6562801977F00DF3BAE /* StateInnerView.swift */,
 				159E94D72814BBD400859F10 /* StateView.swift */,
-				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
-				1567D59E28832CA000273C3C /* Change.swift */,
-				15124F7628314DAE00F0208F /* Settings.swift */,
-				151EBA6E28238D62005DD283 /* Style.swift */,
-				15F948F9283F26B200706BE5 /* Help57.swift */,
-				15B0861128680BB40018418A /* Lib57.swift */,
-				15B085E5286152C60018418A /* Prog57.swift */,
-				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
+				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				150ED8A527B089F000E01FC6 /* Assets.xcassets */,
 				150ED8A727B089F000E01FC6 /* Preview Content */,
 			);

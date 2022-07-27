@@ -125,6 +125,7 @@ struct StateView: View {
                 }
             }
             .transition(.move(edge: .top))
+
             if change.createProgram {
                 ProgramEditorView()
                     .environmentObject(change)

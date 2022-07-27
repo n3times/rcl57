@@ -3,12 +3,11 @@ import SwiftUI
 struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
-    let emulatorPages = [["About RCL-57", "about"],
-                         ["Emulator Options", "options"],
+    let emulatorPages = [["Options", "options"],
                          ["Help Files", "help"]]
 
     let calculatorPages = [["Basics", "basics"],
-                           ["Math", "math"],
+                           ["Math Functions", "math"],
                            ["Registers", "registers"],
                            ["Hello World", "hello"],
                            ["Flow Control", "flow"]]
@@ -34,6 +33,13 @@ struct ManualMainView: View {
                                     leftAction: { },
                                     rightAction: { withAnimation {change.currentView = .calc} })
                         List {
+                            Button("About") {
+                                change.pageTitle = "About"
+                                change.pageURL = "about"
+                                withAnimation {
+                                    change.showPageInManual = true
+                                }
+                            }
                             Section("The Emulator") {
                                 ForEach(emulatorPages, id: \.self) { page in
                                     Button(page[0]) {

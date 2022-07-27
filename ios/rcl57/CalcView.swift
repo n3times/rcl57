@@ -67,15 +67,11 @@ struct CalcView: View {
                     .offset(x: 15, y: -3)
                     .background(Style.blackish)
 
-                // Display + Mini View.
-                ZStack {
-                    CalcDisplayView(displayString: change.displayString)
-                        .frame(width: CGFloat(width * 0.85), height: displayHeight)
-                        .frame(width: width, height: displayHeight)
-                        .background(.black)
-                }
-                .frame(width: width, height: displayHeight)
-                .background(Style.ivory)
+                // Display.
+                CalcDisplayView(displayString: change.displayString)
+                    .frame(width: CGFloat(width * 0.85), height: displayHeight)
+                    .frame(width: width, height: displayHeight)
+                    .background(.black)
 
                 // Keyboard View.
                 CalcKeyboardView()

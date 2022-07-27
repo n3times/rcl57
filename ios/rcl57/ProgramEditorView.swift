@@ -50,6 +50,7 @@ struct ProgramEditorView: View {
                 ProgramSaverView(originalProgram: originalProgram, program: getProgram(), context: context)
                     .transition(.move(edge: .trailing))
             }
+
             if !change.showPreview {
                 GeometryReader { geometry in
                     let width = geometry.size.width

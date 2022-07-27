@@ -17,11 +17,13 @@ struct Style {
     static let directionsFontLarge = Font.system(size: 28, weight: .regular, design: .monospaced)
     static let headerHeight = 44.0
     static let programFont =
-        Font.system(size: isIpod ? 12 : 14, weight:.medium, design: .default)
+    Font.system(size: isIpod ? 12 : 14, weight:.medium, design: .default)
 
     // List.
     static let listLineFont =
         Font.system(size: isIpod ? 17 : 20, weight:.semibold, design: .monospaced)
+    static let listLineFontBold =
+        Font.system(size: isIpod ? 15 : 18, weight:.medium, design: .default)
     static let listLineHeight = isIpod ? 22.0 : 27.0
 
     // Footer.
