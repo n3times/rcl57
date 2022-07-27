@@ -23,7 +23,7 @@ struct MainView: View {
 
     private func getMainView(_ geometry: GeometryProxy) -> some View {
         ZStack {
-            if change.currentView == .calc || change.currentView == .settings || change.currentView == .library {
+            if change.currentView == .calc || change.currentView == .settings || change.currentView == .library || change.currentView == .manual {
                 CalcView()
                     .environmentObject(change)
                     .transition(.move(edge: change.transitionEdge))
@@ -35,6 +35,12 @@ struct MainView: View {
                 }
                 if change.currentView == .settings {
                     SettingsView()
+                        .environmentObject(change)
+                        .transition(.move(edge: .bottom))
+                        .zIndex(1)
+                }
+                if change.currentView == .manual {
+                    ManualMainView()
                         .environmentObject(change)
                         .transition(.move(edge: .bottom))
                         .zIndex(1)

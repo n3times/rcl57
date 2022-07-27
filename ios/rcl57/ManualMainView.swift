@@ -3,14 +3,15 @@ import SwiftUI
 struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
-    let manualPages = [["About RCL-57", "about"],
-                       ["Emulator Options", "options"],
-                       ["Calculator Basics", "basics"],
-                       ["Math Functions", "math"],
-                       ["Registers", "registers"],
-                       ["Hello World", "hello"],
-                       ["Flow Control", "flow"],
-                       ["Help Files", "help"]]
+    let emulatorPages = [["About RCL-57", "about"],
+                         ["Emulator Options", "options"],
+                         ["Help Files", "help"]]
+
+    let calculatorPages = [["Basics", "basics"],
+                           ["Math", "math"],
+                           ["Registers", "registers"],
+                           ["Hello World", "hello"],
+                           ["Flow Control", "flow"]]
 
     var body: some View {
         ZStack {
@@ -25,26 +26,39 @@ struct ManualMainView: View {
 
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
-                                    left: Style.leftArrow,
-                                    title: "RCL-57 Manual",
+                                    left: nil,
+                                    title: "Manual",
                                     right: Style.downArrow,
                                     width: width,
                                     background: Style.deepGreen,
-                                    leftAction: { withAnimation {change.showHelpInSettings = false} },
+                                    leftAction: { },
                                     rightAction: { withAnimation {change.currentView = .calc} })
                         List {
-                            ForEach(manualPages, id: \.self) { manualPage in
-                                Button(manualPage[0]) {
-                                    change.pageTitle = manualPage[0]
-                                    change.pageURL = manualPage[1]
-                                    withAnimation {
-                                        change.showPageInManual = true
+                            Section("The Emulator") {
+                                ForEach(emulatorPages, id: \.self) { page in
+                                    Button(page[0]) {
+                                        change.pageTitle = page[0]
+                                        change.pageURL = page[1]
+                                        withAnimation {
+                                            change.showPageInManual = true
+                                        }
+                                    }
+                                }
+                            }
+                            Section("The Calculator") {
+                                ForEach(calculatorPages, id: \.self) { page in
+                                    Button(page[0]) {
+                                        change.pageTitle = page[0]
+                                        change.pageURL = page[1]
+                                        withAnimation {
+                                            change.showPageInManual = true
+                                        }
                                     }
                                 }
                             }
                         }
-                        .listStyle(.plain)
                         .background(Color(UIColor.systemBackground))
+                        .foregroundColor(Color.black)
                     }
                 }
                 .transition(.move(edge: .leading))

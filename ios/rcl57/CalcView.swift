@@ -7,12 +7,10 @@ import SwiftUI
 struct CalcView: View {
     @EnvironmentObject private var change: Change
 
-    private static let miniViewHeight = Double(Style.miniViewLineCount) * Style.listLineHeight
-    private static let minDisplayHeight = 3 * Style.listLineHeight
-    private static let maxDisplayHeight = minDisplayHeight + miniViewHeight
+    private static let displayHeight = 4 * Style.listLineHeight
 
     private func getDisplayHeight() -> Double {
-        return change.showMiniView ? CalcView.minDisplayHeight : CalcView.maxDisplayHeight
+        return CalcView.displayHeight
     }
 
     private func getMiniView() -> some View {
@@ -42,7 +40,6 @@ struct CalcView: View {
 
     private func getView(_ geometry: GeometryProxy) -> some View {
         let width = geometry.size.width
-        let miniViewIcon = change.showMiniView ? Style.upArrow : Style.downArrow
         let displayHeight = getDisplayHeight()
 
         return ZStack {
@@ -53,17 +50,9 @@ struct CalcView: View {
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6,
                                   destination: .state, edge: .trailing)
-                    getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .trailing)
-                    Button(action: {
-                        withAnimation {
-                            change.showMiniView.toggle()
-                        }
-                    }) {
-                        Text(miniViewIcon)
-                            .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
-                            .contentShape(Rectangle())
-                    }
-                    getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
+                    getButtonView(text: Style.circle, width: width / 6, destination: .manual, edge: .top)
+                    getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .top)
+                    getButtonView(text: Style.circle, width: width / 6, destination: .library, edge: .top)
                     getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
                 }
                 .font(Style.directionsFont)
@@ -80,20 +69,12 @@ struct CalcView: View {
 
                 // Display + Mini View.
                 ZStack {
-                    getMiniView()
-                        .frame(width: CGFloat(width),
-                               height: CalcView.miniViewHeight)
-                        .offset(x: 0, y: -CalcView.minDisplayHeight  / 2)
-                        .background(Style.ivory)
-                        .foregroundColor(Style.blackish)
-
                     CalcDisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
-                        .offset(x: 0, y: (CalcView.maxDisplayHeight - getDisplayHeight()) / 2)
                 }
-                .frame(width: width, height: CalcView.maxDisplayHeight)
+                .frame(width: width, height: displayHeight)
                 .background(Style.ivory)
 
                 // Keyboard View.

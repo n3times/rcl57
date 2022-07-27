@@ -6,6 +6,7 @@ enum CurrentView {
     case state
     case settings
     case library
+    case manual
 }
 
 class Change: ObservableObject {

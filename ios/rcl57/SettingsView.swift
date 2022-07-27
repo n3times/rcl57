@@ -27,21 +27,34 @@ struct SettingsView: View {
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: nil,
-                                    title: "Settings and Manual",
+                                    title: "Settings",
                                     right: Style.downArrow,
                                     width: width,
-                                    background: Style.deepGreen,
+                                    background: Color.gray,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
                         .frame(width: width)
 
                         Form {
-                            Button("RCL-57 Manual") {
-                                withAnimation {
-                                    change.showHelpInSettings = true
+                            Section {
+                                Button("Contact") {
+                                    showingAlert = true
+                                }
+                                .foregroundColor(Color.black)
+                                .alert(isPresented: $showingAlert) {
+                                    Alert(title: Text("RCL-57 " + Rcl57.version), message: Text(aboutText))
+                                }
+                                Button("Reset") {
+                                    isPresentingConfirm = true
+                                }
+                                .foregroundColor(Color.black)
+                                .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                                    Button("Clear Steps, Registers and Log", role: .destructive) {
+                                        Rcl57.shared.clearAll()
+                                        change.setLoadedProgram(program: nil)
+                                    }
                                 }
                             }
-
                             Section("Emulator Options") {
                                 Toggle(isOn: $hasTurboSpeed) {
                                     Text("Turbo Speed")
@@ -59,23 +72,6 @@ struct SettingsView: View {
                                 }
                                 Toggle(isOn: $hasHaptic) {
                                     Text("Haptic Feedback")
-                                }
-                            }
-                            Section {
-                                Button("Contact") {
-                                    showingAlert = true
-                                }
-                                .alert(isPresented: $showingAlert) {
-                                    Alert(title: Text("RCL-57 " + Rcl57.version), message: Text(aboutText))
-                                }
-                                Button("Reset") {
-                                    isPresentingConfirm = true
-                                }
-                                .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                                    Button("Clear Steps, Registers and Log", role: .destructive) {
-                                        Rcl57.shared.clearAll()
-                                        change.setLoadedProgram(program: nil)
-                                    }
                                 }
                             }
                             .onChange(of: hasHaptic) { _ in
