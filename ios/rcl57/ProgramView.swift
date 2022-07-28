@@ -18,7 +18,7 @@ struct ProgramView: View {
                 HStack(spacing: 0) {
                     Button(action: {
                         withAnimation {
-                            change.program = nil
+                            change.programShownInLibrary = nil
                         }
                     }) {
                         Text(Style.leftArrow)
@@ -87,10 +87,10 @@ struct ProgramView: View {
                                     if program == change.loadedProgram {
                                         change.loadedProgram = nil
                                     }
-                                    change.program = nil
+                                    change.programShownInLibrary = nil
                                 }
                                 withAnimation {
-                                    change.currentView = .calc
+                                    ///change.currentView = .calc
                                 }
                             }
                         }
@@ -138,7 +138,7 @@ struct ProgramView: View {
             .foregroundColor(Style.ivory)
 
             if change.editProgram {
-                ProgramEditorView(program: program)
+                ProgramEditView(program: program)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)
             }

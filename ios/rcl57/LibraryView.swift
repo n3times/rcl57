@@ -35,7 +35,7 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            if change.program == nil {
+            if change.programShownInLibrary == nil {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
@@ -57,12 +57,13 @@ struct LibraryView: View {
                                 ForEach(items[0].children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.program = item.program
+                                            change.programShownInLibrary = item.program
                                         }
                                     }
+                                    .offset(x: 20)
                                 }
                             } label: {
-                                Label(items[0].name, systemImage: "folder")
+                                Text(items[0].name)
                                     .font(Style.listLineFontBold)
                                     .foregroundColor(Style.blackish)
                                     .contentShape(Rectangle())
@@ -80,13 +81,14 @@ struct LibraryView: View {
                                     ForEach(items[1].children) { item in
                                         Button(item.name) {
                                             withAnimation {
-                                                change.program = item.program
+                                                change.programShownInLibrary = item.program
                                             }
                                         }
+                                        .offset(x: 20)
                                     }
                                 }
                             } label: {
-                                Label(items[1].name, systemImage: "folder")
+                                Text(items[1].name)
                                     .font(Style.listLineFontBold)
                                     .foregroundColor(Style.blackish)
                                     .contentShape(Rectangle())
@@ -116,6 +118,9 @@ struct LibraryView: View {
                         }
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingImport) {
                             Button("Import from Clipboad", role: .none) {
+                                withAnimation {
+                                    change.importProgram = true
+                                }
                             }
                         }
                         .background(Style.deepBlue)
@@ -126,10 +131,15 @@ struct LibraryView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if change.program != nil {
-                ProgramView(program: change.program!)
+            if change.programShownInLibrary != nil {
+                ProgramView(program: change.programShownInLibrary!)
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))
+            }
+
+            if change.importProgram {
+                ProgramEditView(context: .imported)
+                    .transition(.move(edge: .bottom))
             }
         }
         .foregroundColor(Color.black)

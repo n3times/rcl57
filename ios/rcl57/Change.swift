@@ -27,9 +27,10 @@ class Change: ObservableObject {
     @Published var showStepsInState = true
     @Published var showHelpInSettings = false
     @Published var showPageInManual = false
+    @Published var importProgram = false
     @Published var transitionEdge: Edge = .trailing
 
-    @Published var program: Prog57? = nil
+    @Published var programShownInLibrary: Prog57? = nil
     @Published var createProgram = false
     @Published var editProgram = false
 

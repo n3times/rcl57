@@ -127,7 +127,7 @@ struct StateView: View {
             .transition(.move(edge: .top))
 
             if change.createProgram {
-                ProgramEditorView()
+                ProgramEditView()
                     .environmentObject(change)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)
@@ -138,6 +138,6 @@ struct StateView: View {
 
 struct StateView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramEditorView()
+        ProgramEditView()
     }
 }

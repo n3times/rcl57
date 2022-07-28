@@ -5,6 +5,7 @@ struct Style {
 
     // Colors.
     static let ivory = Color(red: 1.0, green: 1.0, blue: 0.93)
+    static let lightGray = Color(red: 0.65, green: 0.65, blue: 0.65)
     static let blackish = Color(red: 0.137, green: 0.149, blue: 0.153)
     static let deepBlue = Color(red: 0.18, green: 0.35, blue: 0.58)
     static let deepGreen = Color(red: 0.18, green: 0.58, blue: 0.35)
@@ -14,7 +15,7 @@ struct Style {
     static let titleFont = Font.system(size: 22, weight: .medium)
     static let smallFont = Font.system(size: isIpod ? 14 : 18, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
-    static let directionsFontLarge = Font.system(size: 28, weight: .regular, design: .monospaced)
+    static let directionsFontLarge = Font.system(size: 24, weight: .regular, design: .monospaced)
     static let headerHeight = 44.0
     static let programFont =
     Font.system(size: isIpod ? 12 : 14, weight:.medium, design: .default)
@@ -40,7 +41,7 @@ struct Style {
     static let downArrow = "\u{25bd}"
     static let upArrow = "\u{25b3}"
     static let circle = "\u{25ef}"
-    static let square = "\u{25fb}"
+    static let square = "\u{25a2}"
     static let ying = "\u{25d0}"
     static let yang = "\u{25d1}"
 }

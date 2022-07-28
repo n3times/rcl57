@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		15071C352873811C0075D722 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* LibraryView.swift */; };
 		15071C372874CEA90075D722 /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* ProgramView.swift */; };
-		15071C392879F1160075D722 /* ProgramEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* ProgramEditorView.swift */; };
+		15071C392879F1160075D722 /* ProgramEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* ProgramEditView.swift */; };
 		15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C3A287B7EF00075D722 /* MenuBarView.swift */; };
-		150DE99E28805BE6008E651B /* ProgramSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* ProgramSaverView.swift */; };
+		150DE99E28805BE6008E651B /* ProgramSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* ProgramSaveView.swift */; };
 		150ED8A227B089EF00E01FC6 /* rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* rcl57App.swift */; };
 		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
@@ -61,9 +61,9 @@
 /* Begin PBXFileReference section */
 		15071C342873811C0075D722 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		15071C362874CEA90075D722 /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
-		15071C382879F1160075D722 /* ProgramEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramEditorView.swift; sourceTree = "<group>"; };
+		15071C382879F1160075D722 /* ProgramEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramEditView.swift; sourceTree = "<group>"; };
 		15071C3A287B7EF00075D722 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
-		150DE99D28805BE6008E651B /* ProgramSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSaverView.swift; sourceTree = "<group>"; };
+		150DE99D28805BE6008E651B /* ProgramSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSaveView.swift; sourceTree = "<group>"; };
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rcl57App.swift; sourceTree = "<group>"; };
 		150ED8A327B089EF00E01FC6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -181,8 +181,8 @@
 				15B085AD284F149B0018418A /* ManualMainView.swift */,
 				1567D5A0288D9C7300273C3C /* ManualPageView.swift */,
 				15071C3A287B7EF00075D722 /* MenuBarView.swift */,
-				15071C382879F1160075D722 /* ProgramEditorView.swift */,
-				150DE99D28805BE6008E651B /* ProgramSaverView.swift */,
+				15071C382879F1160075D722 /* ProgramEditView.swift */,
+				150DE99D28805BE6008E651B /* ProgramSaveView.swift */,
 				15071C362874CEA90075D722 /* ProgramView.swift */,
 				15124F74282F00E200F0208F /* SettingsView.swift */,
 				1533F6562801977F00DF3BAE /* StateInnerView.swift */,
@@ -350,7 +350,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15071C392879F1160075D722 /* ProgramEditorView.swift in Sources */,
+				15071C392879F1160075D722 /* ProgramEditView.swift in Sources */,
 				158D172027E035E4003BC323 /* lrn57.c in Sources */,
 				15071C372874CEA90075D722 /* ProgramView.swift in Sources */,
 				15B085E4286152770018418A /* prog57.c in Sources */,
@@ -373,7 +373,7 @@
 				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
-				150DE99E28805BE6008E651B /* ProgramSaverView.swift in Sources */,
+				150DE99E28805BE6008E651B /* ProgramSaveView.swift in Sources */,
 				1533F65527F7DA0900DF3BAE /* CalcKeyboardView.swift in Sources */,
 				159E94D82814BBD400859F10 /* StateView.swift in Sources */,
 				159E94D62814AA2000859F10 /* LogView.swift in Sources */,

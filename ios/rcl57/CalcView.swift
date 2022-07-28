@@ -33,7 +33,9 @@ struct CalcView: View {
             }
         }) {
             Text(text)
+                .font(Style.directionsFontLarge)
                 .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
+                .offset(y: -5)
                 .contentShape(Rectangle())
         }
     }
@@ -48,12 +50,16 @@ struct CalcView: View {
             VStack(spacing: 0) {
                 // Menu bar.
                 HStack(spacing: 0) {
-                    getButtonView(text: Style.leftArrow, width: width / 6,
-                                  destination: .state, edge: .trailing)
-                    getButtonView(text: Style.circle, width: width / 6, destination: .manual, edge: .top)
+                    getButtonView(text: Style.leftArrow, width: width / 6, destination: .state, edge: .trailing)
+                        .foregroundColor(Style.ivory)
+                    getButtonView(text: Style.square, width: width / 6, destination: .manual, edge: .top)
+                        .foregroundColor(Style.ivory)
                     getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .top)
-                    getButtonView(text: Style.circle, width: width / 6, destination: .library, edge: .top)
+                        .foregroundColor(Style.ivory)
+                    getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
+                        .foregroundColor(Style.ivory)
                     getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
+                        .foregroundColor(Style.ivory)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)

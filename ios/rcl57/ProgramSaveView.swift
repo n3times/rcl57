@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProgramSaverView: View {
+struct ProgramSaveView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
     let originalProgram: Prog57?
@@ -53,7 +53,7 @@ struct ProgramSaverView: View {
                 // Footer
                 HStack(spacing: 0) {
                     Spacer()
-                    Button(context == .edit ? "CONFIRM EDIT" : "CONFIRM CREATE") {
+                    Button(context == .edit ? "CONFIRM EDIT" : context == .imported ? "CONFIRM IMPORT" : "CONFIRM CREATE") {
                         withAnimation {
                             if context == .edit {
                                 Lib57.userLib.delete(program: originalProgram!)
@@ -63,9 +63,12 @@ struct ProgramSaverView: View {
                             if context == .create {
                                 change.loadedProgram = program
                                 change.createProgram = false
+                                change.programShownInLibrary = program
+                            } else if context == .imported {
+                                change.importProgram = false
                             } else {
                                 change.editProgram = false
-                                change.program = program
+                                change.programShownInLibrary = program
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                     change.showPreview = false
                                 }
@@ -84,8 +87,8 @@ struct ProgramSaverView: View {
     }
 }
 
-struct ProgramSaverView_Previews: PreviewProvider {
+struct ProgramSaveView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramSaverView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
+        ProgramSaveView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
     }
 }

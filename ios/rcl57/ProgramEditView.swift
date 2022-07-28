@@ -6,7 +6,7 @@ enum CreateProgramContext {
     case imported
 }
 
-struct ProgramEditorView: View {
+struct ProgramEditView: View {
     @EnvironmentObject var change: Change
     @State private var isPresentingConfirm: Bool = false
     @State var name: String
@@ -30,6 +30,15 @@ struct ProgramEditorView: View {
         help = ""
     }
 
+    init(context: CreateProgramContext) {
+        let paste = UIPasteboard.general.string ?? ""
+        let program = Prog57(text: paste, readOnly: false)
+        self.context = .imported
+        self.name = program.getName()
+        self.help = program.getHelp()
+        self.originalProgram = program
+    }
+
     func getProgram() -> Prog57 {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -47,7 +56,7 @@ struct ProgramEditorView: View {
 
         return ZStack {
             if change.showPreview {
-                ProgramSaverView(originalProgram: originalProgram, program: getProgram(), context: context)
+                ProgramSaveView(originalProgram: originalProgram, program: getProgram(), context: context)
                     .transition(.move(edge: .trailing))
             }
 
@@ -76,7 +85,7 @@ struct ProgramEditorView: View {
                                     }
                                 }
                             }
-                            Text(context == .edit ? "Edit Program" : "Create Program")
+                            Text(context == .edit ? "Edit Program" : context == .imported ? "Import Program" : "Create Program")
                                 .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
                                 .font(Style.titleFont)
                             Button(action: {
@@ -121,8 +130,8 @@ struct ProgramEditorView: View {
     }
 }
 
-struct ProgramEditorView_Previews: PreviewProvider {
+struct ProgramEditView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramEditorView()
+        ProgramEditView()
     }
 }
