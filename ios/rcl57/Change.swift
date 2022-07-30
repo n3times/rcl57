@@ -23,7 +23,6 @@ class Change: ObservableObject {
 
     @Published var currentView = CurrentView.calc
 
-    @Published var showMiniView = false
     @Published var showStepsInState = true
     @Published var showHelpInSettings = false
     @Published var showPageInManual = false
@@ -40,7 +39,7 @@ class Change: ObservableObject {
     @Published var pageTitle = ""
     @Published var pageURL = ""
 
-    @Published var examplesLibExpanded = false
+    @Published var samplesLibExpanded = false
     @Published var userLibExpanded = false
 
     @Published var loadedProgram: Prog57?
@@ -55,7 +54,7 @@ class Change: ObservableObject {
         self.displayString = Rcl57.shared.display()
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
         let programName = UserDefaults.standard.string(forKey: PROGRAM_KEY)
-        if let program = Lib57.examplesLib.programs.first(where: {$0.getName() == programName}) {
+        if let program = Lib57.samplesLib.programs.first(where: {$0.getName() == programName}) {
             self.loadedProgram = program
         } else {
             self.loadedProgram = nil

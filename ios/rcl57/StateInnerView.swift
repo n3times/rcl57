@@ -10,14 +10,12 @@ private struct StepLine: Identifiable {
     let index: Int
     let op: String
     let active: Bool
-    let isPc: Bool
     let id: Int
 
-    init(index: Int, op: String, active: Bool, isPc: Bool) {
+    init(index: Int, op: String, active: Bool) {
         self.index = index
         self.op = op
         self.active = active
-        self.isPc = isPc
         self.id = StepLine.lineId
         StepLine.lineId += 1
     }
@@ -38,8 +36,7 @@ private struct StepLineView: View {
     var body: some View {
         return HStack {
             Spacer(minLength: 10)
-            Text(line.index == 99 ? (line.isPc ? "> LRN" : "  LRN")
-                 : String(format: "%@  %02d", line.isPc ? ">" : " ", line.index))
+            Text(line.index == 99 ? "  LRN" : String(format: "   %02d", line.index))
             .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
             Text(line.op)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
@@ -92,9 +89,6 @@ private struct RegisterLineView: View {
 
 struct StateInnerView: View {
     @State private var lines : [StepLine] = []
-
-    private let isMiniView: Bool
-
     @State private var middle: Int
     @State private var pc: Int
     @State private var isOpEditInLrn: Bool
@@ -102,9 +96,8 @@ struct StateInnerView: View {
 
     @EnvironmentObject var change: Change
 
-    init(isMiniView: Bool) {
+    init() {
         let pc = Rcl57.shared.getProgramPc()
-        self.isMiniView = isMiniView
         self.pc = pc
         self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
@@ -132,28 +125,25 @@ struct StateInnerView: View {
     }
 
     private func getProgramLineView(_ index: Int, active: Bool) -> some View {
-        let c = Rcl57.shared.getProgramPc()
         let last = Rcl57.shared.getProgramLastIndex()
 
         if index == -1 {
             return StepLineView(line: StepLine(index: 99,
                                                op: "",
-                                               active: isMiniView || index <= last,
-                                               isPc: isMiniView && c == -1))
+                                               active: index <= last))
             .listRowSeparator(.hidden)
         }
         return StepLineView(line: StepLine(index: index,
                                            op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
-                                           active: isMiniView || index <= last,
-                                           isPc: isMiniView && index == c))
+                                           active: index <= last))
         .listRowSeparator(.hidden)
     }
 
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if isMiniView || change.showStepsInState {
-                    ForEach(((self.isHpLrn && isMiniView) ? -1 : 0)...49, id: \.self) {
+                if change.showStepsInState {
+                    ForEach(0...49, id: \.self) {
                         getProgramLineView($0, active: $0 == pc)
                     }
                 } else {
@@ -165,35 +155,12 @@ struct StateInnerView: View {
             .background(Style.ivory)
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
-            .onAppear {
-                if isMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
-            }
-            .onChange(of: self.isOpEditInLrn) { _ in
-                if isMiniView {
-                    proxy.scrollTo(pc, anchor: .bottom)
-                }
-            }
-            .onReceive(change.$changeCount) { _ in
-                if isMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
-            }
-            .onReceive(change.$showMiniView) { _ in
-                if isMiniView && change.showMiniView {
-                    updateMiddle()
-                    proxy.scrollTo(middle, anchor: .bottom)
-                }
-            }
         }
     }
 }
 
 struct StateInnerView_Previews: PreviewProvider {
     static var previews: some View {
-        StateInnerView(isMiniView: false)
+        StateInnerView()
     }
 }

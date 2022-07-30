@@ -37,7 +37,7 @@ struct StateView: View {
                         .offset(x: 15, y: -3)
                         .frame(width: width / 3, height: 20, alignment: .leading)
 
-                        Text(isReadOnly ? "Examples" : isReadWrite ? "User" : "")
+                        Text(isReadOnly ? "Samples" : isReadWrite ? "User" : "")
                             .offset(y: -3)
                             .frame(width: width / 3, height: 20)
 
@@ -49,7 +49,7 @@ struct StateView: View {
                     .font(Style.programFont)
 
                     // State
-                    StateInnerView(isMiniView: false)
+                    StateInnerView()
                         .background(Style.ivory)
 
                     HStack(spacing: 0) {

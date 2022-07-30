@@ -22,9 +22,9 @@ private struct LibraryNode: Identifiable {
         }
     }
 
-    static let examplesLib = LibraryNode(library: Lib57.examplesLib)
+    static let samplesLib = LibraryNode(library: Lib57.samplesLib)
     var userLib: LibraryNode {
-        LibraryNode(library: Lib57.examplesLib)
+        LibraryNode(library: Lib57.samplesLib)
     }
 }
 
@@ -50,10 +50,10 @@ struct LibraryView: View {
                         .frame(width: width)
 
                         let userLib = LibraryNode(library: Lib57.userLib)
-                        let items: [LibraryNode] = [.examplesLib, userLib]
+                        let items: [LibraryNode] = [.samplesLib, userLib]
 
                         List {
-                            DisclosureGroup(isExpanded: $change.examplesLibExpanded) {
+                            DisclosureGroup(isExpanded: $change.samplesLibExpanded) {
                                 ForEach(items[0].children) { item in
                                     Button(item.name) {
                                         withAnimation {
@@ -69,7 +69,7 @@ struct LibraryView: View {
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         withAnimation {
-                                            change.examplesLibExpanded.toggle()
+                                            change.samplesLibExpanded.toggle()
                                         }
                                     }
                             }

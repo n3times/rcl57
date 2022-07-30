@@ -176,11 +176,7 @@ struct LogInnerView: View {
             .onReceive(change.$changeCount) { _ in
                 updateLog()
             }
-            .onReceive(change.$showMiniView) { _ in
-                if lines.count > 0 && change.showMiniView {
-                    proxy.scrollTo(lines.last!.id, anchor: .bottom)
-                }
-            }
+
         }
     }
 }

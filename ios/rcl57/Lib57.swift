@@ -7,9 +7,9 @@ class Lib57 {
     let name: String
     var programs: [Prog57]
 
-    private static let examplesLibURL =
-        Bundle.main.bundleURL.appendingPathComponent("examples_lib")
-    static let examplesLib = Lib57(url: examplesLibURL, name: "Example Programs", readonly: true)
+    private static let samplesLibURL =
+        Bundle.main.bundleURL.appendingPathComponent("samples_lib")
+    static let samplesLib = Lib57(url: samplesLibURL, name: "Sample Programs", readonly: true)
 
     private static let userLibURL =
         Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first

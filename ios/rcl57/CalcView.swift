@@ -13,18 +13,6 @@ struct CalcView: View {
         return CalcView.displayHeight
     }
 
-    private func getMiniView() -> some View {
-        if Rcl57.shared.isLrnMode() {
-            return AnyView(StateInnerView(isMiniView: true))
-        } else if Rcl57.shared.getLoggedCount() == 0 {
-            return AnyView(ZStack {
-                Text("Log is empty")
-            })
-        } else {
-            return AnyView(LogInnerView())
-        }
-    }
-
     private func getButtonView(text: String, width: Double, destination: CurrentView, edge: Edge) -> some View {
         Button(action: {
             change.transitionEdge = edge
@@ -51,15 +39,15 @@ struct CalcView: View {
                 // Menu bar.
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6, destination: .state, edge: .trailing)
-                        .foregroundColor(Style.lightGray2)
+                        .foregroundColor(Style.lightGray)
                     getButtonView(text: Style.square, width: width / 6, destination: .manual, edge: .top)
                         .foregroundColor(Style.deepishGreen)
                     getButtonView(text: Style.square, width: width / 6, destination: .settings, edge: .top)
-                        .foregroundColor(Style.lightGray2)
+                        .foregroundColor(Style.lightGray)
                     getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
                         .foregroundColor(Style.deepishBlue)
                     getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
-                        .foregroundColor(Style.lightGray2)
+                        .foregroundColor(Style.lightGray)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)
@@ -80,7 +68,7 @@ struct CalcView: View {
                         .offset(x: -25, y: -3)
                         .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
                 }
-                .foregroundColor(Style.lightGray2)
+                .foregroundColor(Style.lightGray)
                 .background(Style.blackish)
 
                 // Display.
