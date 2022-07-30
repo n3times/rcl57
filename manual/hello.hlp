@@ -13,7 +13,7 @@ that is we are adding 1 to whatever number is on the display. The $$$Pause$$$ in
 
 ==Program Editing==
 
-To enter the program, first clear the program or reset the emulator so we can start afresh. Then type the following:
+To enter the program, first clear the steps by going to the ''State View'' located to the left of the ''Calculator View''. Alternatively, you can reset the emulator from ''Settings''. Then type the following:
 
 :$$LRN$$
 :$$2nd Lbl 0$$
@@ -23,6 +23,8 @@ To enter the program, first clear the program or reset the emulator so we can st
 :$$LRN$$
 
 The first $$LRN$$ will place the calculator in ''learning mode''. You will see on the display @@00 00@@. The first 2 digits mean that we are at the beginning of the program, at step ''00'', and the ''00'' on the right means that this first step is blank. As you type, you will see the step number being incremented 1 by 1.
+
+''Note:'' if you are in alpha mode and/or HP LRN mode, the display will be slightly different. See the ''Options'' entry of this manual.
 
 In case of mistake, the program can be edited with $$BST$$ and $$SST$$, to go one step backward or forward, as well as with $$2nd Del$$ and $$2nd Ins$$, to delete or insert a step.
 

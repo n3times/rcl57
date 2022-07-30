@@ -10,11 +10,11 @@ This is the '''Hello World''' program from the tutorial:
 ==Instructions==
 To start, press:
 :$$CLR$$
-:$$RST R/S$$
+:$$SBR 0$$
 To stop, press:
 :$$R/S$$
 ==Example==
-$$CLR RST R/S$$
+$$CLR SBR 0$$
 @@[ 1@@ @@[ 2@@ @@[ 3@@ @@[ 4@@ ...
 @!# state
 0000000000000000

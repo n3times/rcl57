@@ -23,6 +23,7 @@ Otherwise, in case of equality, we skip this step. Since the following step is $
 
 Conditional branching is at the heart of programming because it makes arbitrary logic and therefore arbitrary computation possible. Besides $$2nd x=t$$, there is:
 :$$2nd x>=t$$
+and their inverses.
 
 ==Decrement and Skip if Zero (Dsz)==
 

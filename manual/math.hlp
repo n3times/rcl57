@@ -1,11 +1,9 @@
 ==Trigonometry==
 
 First, make sure to select the appropriate trigonometric unit
-:$$2nd Deg$$
-:$$2nd Rad$$
-:$$2nd Grad$$.
+$$2nd Deg$$, $$2nd Rad$$ or $$2nd Grad$$.
 
-To compute the standard trigonometric functions, press one of the following
+To compute the standard trigonometric functions, press one of the following sequences:
 :$$2nd sin$$
 :$$2nd cos$$
 :$$2nd tan$$.
@@ -24,10 +22,10 @@ $$INV 2nd Int$$ the fractional part.
 ==Polar/Rectangular Conversions==
 
 ''Polar to Rectangular:''
-:'''radius''' $$x:t$$ '''angle''' $$2nd P/R$$.
+:'''radius''' $$x:t$$ '''angle''' $$2nd P->R$$.
 The display will show '''y''' and $$x:t$$ '''x'''.
 ''Rectangular to Polar:''
-:'''x''' $$x:t$$ '''y''' $$INV 2nd P/R$$.
+:'''x''' $$x:t$$ '''y''' $$INV 2nd P->R$$.
 The display will show '''angle''' and $$x:t$$ '''radius'''.
 
 ==Degrees Conversions==
@@ -44,7 +42,7 @@ Before using the Statistics functions, press
 :$$Inv 2nd C.t$$.
 This will reset the registers used by these functions.
 
-Numbers are entered with $$2nd S+$$:
+Data is entered with $$2nd S+$$:
 : $$5 2nd S+$$: @@1@@
 : $$7 2nd S+$$: @@2@@
 : $$12 2nd S+$$: @@3@@

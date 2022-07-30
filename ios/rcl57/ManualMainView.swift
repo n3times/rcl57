@@ -4,7 +4,7 @@ struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
     let emulatorPages = [["Options", "options"],
-                         ["Using the library", "library"],
+                         ["Using the Library", "library"],
                          ["Writing Help Files", "help"]]
 
     let calculatorPages = [["Basics", "basics"],
