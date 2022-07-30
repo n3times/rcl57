@@ -9,7 +9,7 @@ For example, if we start with 17, we get the following sequence:
 :17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
 Once the sequence reaches 1, it repeats forever:
 :1, 4, 2, 1, 4, 2, 1, 4, 2, 1, ...
-If we start with an arbitrary integer, will we always reach 1? Nobody knows.
+If we start with an arbitrary positive integer, will we always reach 1? Nobody knows.
 
 ==Instructions==
 : Enter ''n'' and press $$RST R/S$$

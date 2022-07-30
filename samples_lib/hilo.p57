@@ -8,7 +8,7 @@ The goal of this game is to find a mistery number between ''100'' and ''999'' in
 # Enter guess: ''n'' $$R/S$$ where ''n'' is between ''100'' and ''999''.
 # @@-1@@ means that your guess is too small and @@1@@ that it is too big. In this case go back to step ''3.''
 # The game ends when the display blinks. If it shows @@0@@, you won. Otherwise you lost.
-# For a new game, press $$CLR R/S$$ and go back to step ''3.''
+# For a new game, press $$CLR R/S$$ and go back to step ''2.''
 
 ==Example==
 $$0.3227 RST R/S$$
