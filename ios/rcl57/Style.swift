@@ -6,13 +6,13 @@ struct Style {
     // Colors.
     static let ivory = Color(red: 1.0, green: 1.0, blue: 0.93)
     static let lightGray = Color(red: 0.75, green: 0.75, blue: 0.75)
-    static let lightGray2 = Color(red: 0.75, green: 0.75, blue: 0.75)
+    static let lightGray2 = Color(red: 0.85, green: 0.85, blue: 0.85)
     static let lightishGray = Color(red: 0.9, green: 0.9, blue: 0.9)
     static let blackish = Color(red: 0.137, green: 0.149, blue: 0.153)
     static let deepBlue = Color(red: 0.18, green: 0.35, blue: 0.58)
     static let deepGreen = Color(red: 0.18, green: 0.58, blue: 0.35)
-    static let deepishBlue = Color(red: 0.36, green: 0.7, blue: 1)
-    static let deepishGreen = Color(red: 0.2, green: 0.7, blue: 0.4)
+    static let deepishBlue = Color(red: 0.6, green: 0.8, blue: 1.0)
+    static let deepishGreen = Color(red: 0.7, green: 0.9, blue: 0.7)
     static let postIt = Color(red: 1.0, green: 1.0, blue: 0.85)
 
     // Header.

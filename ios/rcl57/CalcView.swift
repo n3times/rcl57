@@ -80,7 +80,7 @@ struct CalcView: View {
                         .offset(x: -25, y: -3)
                         .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
                 }
-                .foregroundColor(Style.lightGray)
+                .foregroundColor(Style.lightGray2)
                 .background(Style.blackish)
 
                 // Display.
