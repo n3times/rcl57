@@ -60,47 +60,45 @@ struct ProgramView: View {
                 HStack(spacing: 0) {
                     Spacer(minLength: 15)
 
-                    if program.readOnly {
-                        Spacer()
-                            .frame(width: width / 6, height: Style.footerHeight)
-                    } else {
-                        Menu {
-                            Button(action: {
-                                isPresentingCopy = true
-                            }) {
-                                Text("Copy to Clipboard")
-                            }
+                    Menu {
+                        Button(action: {
+                            isPresentingCopy = true
+                        }) {
+                            Text("Copy to Clipboard")
+                        }
+                        if !program.readOnly {
                             Button(action: {
                                 isPresentingConfirm = true
                             }) {
                                 Text("Delete")
                             }
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
-                                .contentShape(Rectangle())
                         }
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
-                            Button("Delete " + program.getName(), role: .destructive) {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    Lib57.userLib.delete(program: program)
-                                    if program == change.loadedProgram {
-                                        change.loadedProgram = nil
-                                    }
-                                    change.programShownInLibrary = nil
-                                }
-                                withAnimation {
-                                    ///change.currentView = .calc
-                                }
-                            }
-                        }
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingCopy) {
-                            Button("Copy " + program.getName(), role: .none) {
-                                UIPasteboard.general.string = program.toText()
-                            }
-                        }
-                        .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
+                            .contentShape(Rectangle())
                     }
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                        Button("Delete " + program.getName(), role: .destructive) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                Lib57.userLib.delete(program: program)
+                                if program == change.loadedProgram {
+                                    change.loadedProgram = nil
+                                }
+                                change.programShownInLibrary = nil
+                            }
+                            withAnimation {
+                                ///change.currentView = .calc
+                            }
+                        }
+                    }
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingCopy) {
+                        Button("Copy " + program.getName(), role: .none) {
+                            UIPasteboard.general.string = program.toText()
+                        }
+                    }
+                    .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)
+
 
                     Button(loadButtonText) {
                         program.loadStepsIntoMemory()

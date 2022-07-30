@@ -60,7 +60,7 @@ struct LibraryView: View {
                                             change.programShownInLibrary = item.program
                                         }
                                     }
-                                    .offset(x: 20)
+                                    .offset(x: 15)
                                 }
                             } label: {
                                 Text(items[0].name)
@@ -84,7 +84,7 @@ struct LibraryView: View {
                                                 change.programShownInLibrary = item.program
                                             }
                                         }
-                                        .offset(x: 20)
+                                        .offset(x: 15)
                                     }
                                 }
                             } label: {

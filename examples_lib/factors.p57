@@ -8,7 +8,7 @@ Decomposes an integer into the product of its prime factors.
 
 The display will flash the prime factors of ''n'' one after the other. The last factor will be preceded by the minus sign.
 
-==Example==
+==Examples==
 $$30 RST R/S$$ @@[ 2@@ @@[ 3@@ @@-5@@
 $$17 R/S$$ @@-17@@
 

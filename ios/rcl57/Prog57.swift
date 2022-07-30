@@ -23,8 +23,12 @@ class Prog57 : Hashable, Equatable {
     }
 
     /** Imported programs. */
-    init(text: String, readOnly: Bool) {
-        prog57_from_text(&prog57, text)
+    init?(text: String, readOnly: Bool) {
+        print(text)
+        let found_name = prog57_from_text(&prog57, text)
+        if !found_name {
+            return nil
+        }
         self.readOnly = readOnly
     }
 

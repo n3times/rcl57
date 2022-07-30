@@ -35,6 +35,7 @@
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
 		158D172327E244FA003BC323 /* logger57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D172227E24441003BC323 /* logger57.c */; };
 		158D172527E2A5E6003BC323 /* LogInnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D172427E2A5E6003BC323 /* LogInnerView.swift */; };
+		1594197C289487BA00E254DD /* library.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 1594197B289487BA00E254DD /* library.hlp */; };
 		159E94D62814AA2000859F10 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D52814AA2000859F10 /* LogView.swift */; };
 		159E94D82814BBD400859F10 /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* StateView.swift */; };
 		15B085AE284F149B0018418A /* ManualMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualMainView.swift */; };
@@ -98,6 +99,7 @@
 		158D172127E24441003BC323 /* logger57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logger57.h; sourceTree = "<group>"; };
 		158D172227E24441003BC323 /* logger57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = logger57.c; sourceTree = "<group>"; };
 		158D172427E2A5E6003BC323 /* LogInnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInnerView.swift; sourceTree = "<group>"; };
+		1594197B289487BA00E254DD /* library.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = library.hlp; sourceTree = "<group>"; };
 		159E94D52814AA2000859F10 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		159E94D72814BBD400859F10 /* StateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
 		15B085AD284F149B0018418A /* ManualMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualMainView.swift; sourceTree = "<group>"; };
@@ -259,11 +261,12 @@
 			children = (
 				15F948FC283FACE400706BE5 /* about.hlp */,
 				15F9490A283FAD7B00706BE5 /* basics.hlp */,
-				15F9491828407F2B00706BE5 /* options.hlp */,
 				15F94904283FAD7B00706BE5 /* flow.hlp */,
 				15F94906283FAD7B00706BE5 /* hello.hlp */,
 				15F948FF283FAD7B00706BE5 /* help.hlp */,
+				1594197B289487BA00E254DD /* library.hlp */,
 				15F9491A284129D400706BE5 /* math.hlp */,
+				15F9491828407F2B00706BE5 /* options.hlp */,
 				15F9491C284130A400706BE5 /* registers.hlp */,
 			);
 			name = manual;
@@ -337,6 +340,7 @@
 				15F9490C283FAD7B00706BE5 /* help.hlp in Resources */,
 				15F9491928407F2B00706BE5 /* options.hlp in Resources */,
 				15F9491B284129D400706BE5 /* math.hlp in Resources */,
+				1594197C289487BA00E254DD /* library.hlp in Resources */,
 				15F94913283FAD7B00706BE5 /* hello.hlp in Resources */,
 				15F948FD283FACE400706BE5 /* about.hlp in Resources */,
 				15F948F8283E060C00706BE5 /* help.css in Resources */,

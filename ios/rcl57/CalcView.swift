@@ -51,27 +51,37 @@ struct CalcView: View {
                 // Menu bar.
                 HStack(spacing: 0) {
                     getButtonView(text: Style.leftArrow, width: width / 6, destination: .state, edge: .trailing)
-                        .foregroundColor(Style.ivory)
+                        .foregroundColor(Style.lightGray2)
                     getButtonView(text: Style.square, width: width / 6, destination: .manual, edge: .top)
-                        .foregroundColor(Style.ivory)
-                    getButtonView(text: Style.circle, width: width / 6, destination: .settings, edge: .top)
-                        .foregroundColor(Style.ivory)
+                        .foregroundColor(Style.deepishGreen)
+                    getButtonView(text: Style.square, width: width / 6, destination: .settings, edge: .top)
+                        .foregroundColor(Style.lightGray2)
                     getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
-                        .foregroundColor(Style.ivory)
+                        .foregroundColor(Style.deepishBlue)
                     getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
-                        .foregroundColor(Style.ivory)
+                        .foregroundColor(Style.lightGray2)
                 }
                 .font(Style.directionsFont)
                 .background(Style.blackish)
                 .foregroundColor(Style.ivory)
 
                 // Program Name.
-                Text(change.loadedProgram != nil ? change.loadedProgram!.getName() : "")
-                    .foregroundColor(Style.ivory)
-                    .font(Style.programFont)
-                    .frame(width: width, height: 20, alignment: .leading)
-                    .offset(x: 15, y: -3)
-                    .background(Style.blackish)
+                HStack(spacing: 0) {
+                    Text(change.loadedProgram != nil ? change.loadedProgram!.getName() : "")
+                        .font(Style.programFont)
+                        .offset(x: 15, y: -3)
+                        .frame(maxWidth: width / 2, maxHeight: 20, alignment: .leading)
+
+                    Spacer()
+                        .frame(maxWidth: width / 6, maxHeight: 20, alignment: .leading)
+
+                    Text(Rcl57.shared.currentOp())
+                        .font(Style.operationFont)
+                        .offset(x: -25, y: -3)
+                        .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
+                }
+                .foregroundColor(Style.lightGray)
+                .background(Style.blackish)
 
                 // Display.
                 CalcDisplayView(displayString: change.displayString)

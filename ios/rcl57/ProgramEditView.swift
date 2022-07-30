@@ -32,10 +32,15 @@ struct ProgramEditView: View {
 
     init(context: CreateProgramContext) {
         let paste = UIPasteboard.general.string ?? ""
-        let program = Prog57(text: paste, readOnly: false)
+        var program = Prog57(text: paste, readOnly: false)
+        if program == nil {
+            program = Prog57(name: "",
+                             help: "Clipboard does not appear to contain a legal program.",
+                             readOnly: true)
+        }
         self.context = .imported
-        self.name = program.getName()
-        self.help = program.getHelp()
+        self.name = program!.getName()
+        self.help = program!.getHelp()
         self.originalProgram = program
     }
 
@@ -79,6 +84,8 @@ struct ProgramEditView: View {
                                     withAnimation {
                                         if context == .create {
                                             change.createProgram = false
+                                        } else if context == .imported {
+                                            change.importProgram = false
                                         } else {
                                             change.editProgram = false
                                         }

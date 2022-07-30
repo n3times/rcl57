@@ -11,13 +11,16 @@
 static bool find_next_section(const char *str, char *section_title_out, char *section_out) {
     char *start = strstr(str, "@!# ");
     if (start == NULL) return false;
-    char *end = strchr(str, '\n');
+    char *end = strchr(start, '\n');
+    if (end == NULL) {
+        end = strchr(start, '\0');
+    }
     memcpy(section_title_out, start, end - start);
     section_title_out[end - start] = '\0';
     start = end + 1;
     end = strstr(start, "@!# ");
     if (end == NULL) {
-        end = strchr(start, '\0');
+        end = strchr(start, '\0') + 1;
     }
     end -= 1;
     memcpy(section_out, start, end - start);
@@ -39,13 +42,18 @@ static int hex(char c) {
     else return 0;
 }
 
-void prog57_from_text(prog57_t *program, const char *text_in) {
+bool prog57_from_text(prog57_t *program, const char *text_in) {
     memset(program, '\0', sizeof(prog57_t));
     char title[100];
     char section[5000];
+    bool found_name = false;
     while (find_next_section(text_in, title, section)) {
+        utils57_trim(title);
+        utils57_trim(section);
+
         if (!strcmp(title, NAME_HEADER)) {
             strncpy(program->name, section, sizeof(program->name) - 1);
+            found_name = true;
         } else if (!strcmp(title, HELP_HEADER)) {
             strncpy(program->help, section, sizeof(program->help) - 1);
         } else if (!strcmp(title, STATE_HEADER)) {
@@ -57,6 +65,7 @@ void prog57_from_text(prog57_t *program, const char *text_in) {
         }
         text_in += strlen(title) + strlen(section) + 2;
     }
+    return found_name;
 }
 
 char *prog57_to_text(prog57_t *program) {

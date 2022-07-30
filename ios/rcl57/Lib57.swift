@@ -55,6 +55,15 @@ class Lib57 {
         }
     }
 
+    func findProgram(name: String) -> Prog57? {
+        for libProgram in programs {
+            if libProgram.getName() == name {
+                return libProgram
+            }
+        }
+        return nil
+    }
+
     func delete(program: Prog57) {
         do {
             try FileManager.default.removeItem(atPath: program.url!.path)

@@ -1,0 +1,67 @@
+==Browsing the Library==
+
+To browse the library:
+
+: From the main screen (the ''Calculator View''), tap the second button from the right, above the calculator. This will bring the ''Library View''.
+
+You will see 2 groups of programs:
+* ''Example Programs''
+* ''User Programs'' (initially empty)
+
+You may need to tap to expand the contents.
+
+==Loading a program==
+
+A program has a name, a description, steps and registers.
+
+To use a program, you will need to load the steps and registers of the program into memory:
+# From the ''Library View'', tap on the program name. This will bring the ''Program View''.
+# From the ''Program View'' press ''LOAD''.
+
+==Creating a new program==
+
+To create a program:
+# From the ''Calculator View'', press the left arrow, above the calculator. This will bring the ''State View''
+# If a program is already loaded, use the ''CLOSE'' button first
+# Tap ''NEW''. This will bring the ''Create Program View''
+# Fill the name and, below, write a description explaining what the program does
+# Tap the right arrow
+# Tap on ''CONFIRM CREATE''
+
+==Saving the steps and registers==
+
+To save the steps or registers of a program:
+# Go to the ''State View''
+# Tap on ''SAVE''.
+
+This will save either the steps or the registers, depending on what is shown on the screen.
+
+==Editing the name and description==
+
+To edit the name or the description of a program:
+# Go to the ''Program View''
+# Tap on ''EDIT''.
+
+==Deleting a program==
+
+To delete a user program (but not an example program):
+# Go to the ''Program View''
+# Tap on ''...''
+# Tap on ''Delete''
+
+==Exporting a program==
+
+To export a program:
+# Go to the ''Program View''
+# Tap on ''...''
+# Tap on ''Copy to Clipboad''
+The clipboad will have the program including name, description, steps and registers.
+From there, you can, for example, email this program to yourself, and save it.
+
+==Importing a program==
+
+To import a program:
+# Go to the ''Library View''
+# Tap on ''IMPORT''
+
+This assumes that the clipboad contains a valid program.

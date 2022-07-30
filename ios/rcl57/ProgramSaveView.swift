@@ -13,6 +13,16 @@ struct ProgramSaveView: View {
         self.context = context
     }
 
+    func overrides() -> Bool {
+        var existingProgram = Lib57.userLib.findProgram(name: program.getName())
+        if existingProgram != nil {
+            if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
+                existingProgram = nil
+            }
+        }
+        return existingProgram != nil
+    }
+
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
@@ -29,7 +39,7 @@ struct ProgramSaveView: View {
                             .contentShape(Rectangle())
                     }
 
-                    Text(program.getName())
+                    Text(program.getName() + (overrides() ? "'" : ""))
                         .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
                         .font(Style.titleFont)
 
@@ -54,18 +64,37 @@ struct ProgramSaveView: View {
                 HStack(spacing: 0) {
                     Spacer()
                     Button(context == .edit ? "CONFIRM EDIT" : context == .imported ? "CONFIRM IMPORT" : "CONFIRM CREATE") {
-                        withAnimation {
-                            if context == .edit {
-                                Lib57.userLib.delete(program: originalProgram!)
+                        var existingProgram = Lib57.userLib.findProgram(name: program.getName())
+                        if existingProgram != nil {
+                            if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
+                                existingProgram = nil
                             }
+                        }
+                        if existingProgram != nil {
+                            if existingProgram! == change.loadedProgram {
+                                change.loadedProgram = nil
+                            }
+                            if existingProgram! == change.programShownInLibrary {
+                                change.programShownInLibrary = nil
+                            }
+                            Lib57.userLib.delete(program: existingProgram!)
+                        }
+                        if context == .create || context == .imported {
                             Lib57.userLib.add(program: program)
-                            _ = program.save(filename: program.getName())
+                        } else {
+                            originalProgram!.setName(name: program.getName())
+                            originalProgram!.setHelp(help: program.getHelp())
+                        }
+                        _ = program.save(filename: program.getName())
+                        withAnimation {
                             if context == .create {
                                 change.loadedProgram = program
                                 change.createProgram = false
                                 change.programShownInLibrary = program
                             } else if context == .imported {
                                 change.importProgram = false
+                                change.showPreview = false
+                                change.userLibExpanded = true
                             } else {
                                 change.editProgram = false
                                 change.programShownInLibrary = program
