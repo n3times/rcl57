@@ -1,10 +1,10 @@
 ==Unconditional Branching==
 
-As we saw in the '''Hello World''' program, $$GTO$$ ''d'' branches directly to $$Lbl$$ ''d''.
+As we saw in the ''Hello World'' program, $$GTO$$ ''d'' branches directly to $$Lbl$$ ''d''.
 
 ==Conditional Branching==
 
-Quite often one would like to go to a given label, if and only if some condition holds. For example, if the display reaches @@10@@, we may want to stop our '''Hello World''' program. This can be implemented as follows:
+Quite often one would like to go to a given label, if and only if some condition holds. For example, if the display reaches @@10@@, we may want to stop our ''Hello World'' program. This can be implemented as follows:
 
 :$$2nd Lbl 0$$
 :$$x:t 10 x:t$$
@@ -64,4 +64,4 @@ and ends with:
 :$$INV SBR$$
 It is called with:
 :$$SBR 1$$
-which means: '''Go to label 1 and execute the next steps until reaching INV SBR. Then return.''' In the above example, which is functionally equivalent to our original '''Hello World''', a subroutine may be overkill. But, in more complex situations, subroutines allow the programmer to write code in a modular and cleaner way.
+which means: '''Go to label 1 and execute the next steps until reaching INV SBR. Then return.''' In the above example, which is functionally equivalent to our original ''Hello World'', a subroutine may be overkill. But, in more complex situations, subroutines allow the programmer to write code in a modular and cleaner way.

@@ -12,14 +12,14 @@ class Lib57 {
     private static let userLibURL =
         Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
 
+    static let samplesLib = Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
+    static let userLib = Lib57(folderURL: userLibURL!, name: "User Programs", readonly: false)
+
     let folderURL: URL
     let name: String
     let readonly: Bool
 
     var programs: [Prog57]
-
-    static let samplesLib = Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
-    static let userLib = Lib57(folderURL: userLibURL!, name: "User Programs", readonly: false)
 
     init(folderURL: URL, name: String, readonly: Bool) {
         self.folderURL = folderURL

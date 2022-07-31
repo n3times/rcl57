@@ -2,7 +2,7 @@
  * Interface to the emulator.
  */
 
-import SwiftUI
+import Foundation
 
 struct LogEntry {
     let entry: UnsafeMutablePointer<log57_entry_t>

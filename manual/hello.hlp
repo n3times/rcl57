@@ -9,11 +9,11 @@ This is a basic program that iterates through all the integers:
 
 The first line is just a label that marks a place in the program. Then comes the real computation:
 :$$$+ 1 =$$$
-that is we are adding 1 to whatever number is on the display. The $$$Pause$$$ instruction makes the display pause for 1 second or so, so the user can see it. Finally, the program loops back to the beginning by '''going to''' $$$Lbl 0$$$.
+that is, we are adding 1 to whatever number is on the display. The $$$Pause$$$ instruction makes the display pause for 1 second or so, so the user can see it. Finally, the program loops back to the beginning by '''going to''' $$$Lbl 0$$$.
 
 ==Program Editing==
 
-To enter the program, first clear the steps by going to the ''State View'' located to the left of the ''Calculator View''. Alternatively, you can reset the emulator from ''Settings''. Then type the following:
+To enter the program, first clear the steps by going to the ''State View'' located to the left of the ''Calculator View''. Alternatively, you can reset the emulator from ''Settings''. Then, from the ''Calculator View'', type the following:
 
 :$$LRN$$
 :$$2nd Lbl 0$$

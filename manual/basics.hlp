@@ -9,16 +9,16 @@ $$( 1 + 2 ) * 3 =$$ @@9@@
 To access secondary functions use the $$2nd$$ key.
 Some of the functions have inverses. They can be accessed using the $$INV$$ key.
 
-For example, to compute arcsin(0.5), press
-:$$0.5 INV 2nd sin$$.
+For example, to compute ''arcsin(0.5)'', press
+:$$0.5 INV 2nd sin$$
 
 ==Scientific Notation==
 
-Press $$EE$$ to enter numbers in scientific mode. For example 100 billion is entered as $$100 EE 09$$.
+Press $$EE$$ to enter numbers in scientific notation. For example 100 billion is entered as $$100 EE 09$$.
 Press $$INV EE$$ or $$CLR$$ to go back to regular mode.
 
 ==Fix Notation==
 
 Press $$2nd Fix$$ '''d''' to display d digits after the decimal point:
-:$$2nd pi 2nd fix 2$ @@3.14@@.
+:$$2nd pi 2nd fix 2$$ @@3.14@@
 Press $$INV 2nd Fix$$ to go back to regular mode.

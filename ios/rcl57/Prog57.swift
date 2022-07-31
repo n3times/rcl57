@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 /**
  * A program is characterized by its name, description, steps and registers.
@@ -89,13 +89,20 @@ class Prog57 : Hashable, Equatable {
         prog57.state = state
     }
 
-    func loadStateIntoMemory() {
+    /**
+     * Loading of steps and registers into memory.
+     */
+
+    func loadStepsIntoMemory() {
         prog57_load_steps_into_memory(&prog57, &Rcl57.shared.rcl57)
+    }
+
+    func loadRegistersIntoMemory() {
         prog57_load_registers_into_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
     /**
-     * Saving of steps and registers.
+     * Saving of steps and registers from memory.
      */
 
     func stepsNeedSaving() -> Bool {

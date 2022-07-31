@@ -6,10 +6,10 @@ and recalled with
 :$$RCL$$ ''d''
 
 ==Arithmetic on Registers==
-$$SUM$$ ''d'' adds the value on the display to register d.
-$$INV SUM$$ ''d'' substracts.
-$$2nd Prd$$ ''d'' multiplies.
-$$INV 2nd Prd$$ ''d'' divides.
+$$SUM$$ ''d'': adds the value on the display to register d.
+$$INV SUM$$ ''d'': substracts.
+$$2nd Prd$$ ''d'': multiplies.
+$$INV 2nd Prd$$ ''d'': divides.
 
 ==Exchange==
 $$2nd Exc$$ ''d'' exchanges the value on the display with register d.

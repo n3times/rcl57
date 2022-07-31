@@ -1,7 +1,7 @@
 @!# name
 Hello World
 @!# help
-This is the '''Hello World''' program from the tutorial:
+This is the ''Hello World'' program from the tutorial:
 :$$$lbl 0$$$
 :$$$+ 1 =$$$
 :$$$Pause$$$

@@ -10,8 +10,6 @@ enum CurrentView {
 }
 
 class Change: ObservableObject {
-    static let shared = Change()
-
     var pc: Int
     var isAlpha: Bool
     var isHpLrnMode: Bool

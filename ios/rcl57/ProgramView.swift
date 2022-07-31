@@ -101,7 +101,8 @@ struct ProgramView: View {
 
 
                     Button(loadButtonText) {
-                        program.loadStateIntoMemory()
+                        program.loadStepsIntoMemory()
+                        program.loadRegistersIntoMemory()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             change.setLoadedProgram(program: program)
                         }

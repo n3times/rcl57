@@ -1,31 +1,31 @@
 ==Trigonometry==
 
-First, make sure to select the appropriate trigonometric unit
+First, make sure to select the appropriate trigonometric unit:
 $$2nd Deg$$, $$2nd Rad$$ or $$2nd Grad$$.
 
 To compute the standard trigonometric functions, press one of the following sequences:
 :$$2nd sin$$
 :$$2nd cos$$
-:$$2nd tan$$.
+:$$2nd tan$$
 
 Use the $$INV$$ modifier to compute their inverses.
 
 ==Other Mathematical Functions==
 
-$$lnx$$ computes the natural logarithm.
-$$INV lnx$$ e<sup>x</sup>.
-$$2nd log$$ the decimal logarithm.
-$$INV 2nd log$$ 10<sup>x</sup>.
-$$2nd Int$$ the integer part.
-$$INV 2nd Int$$ the fractional part.
+:$$lnx$$ computes the natural logarithm
+:$$INV lnx$$ e<sup>x</sup>
+:$$2nd log$$ the decimal logarithm
+:$$INV 2nd log$$ 10<sup>x</sup>
+:$$2nd Int$$ the integer part
+:$$INV 2nd Int$$ the fractional part
 
 ==Polar/Rectangular Conversions==
 
 ''Polar to Rectangular:''
-:'''radius''' $$x:t$$ '''angle''' $$2nd P->R$$.
+:'''radius''' $$x:t$$ '''angle''' $$2nd P->R$$
 The display will show '''y''' and $$x:t$$ '''x'''.
 ''Rectangular to Polar:''
-:'''x''' $$x:t$$ '''y''' $$INV 2nd P->R$$.
+:'''x''' $$x:t$$ '''y''' $$INV 2nd P->R$$
 The display will show '''angle''' and $$x:t$$ '''radius'''.
 
 ==Degrees Conversions==
@@ -39,7 +39,7 @@ The display will show '''angle''' and $$x:t$$ '''radius'''.
 ==Statistics==
 
 Before using the Statistics functions, press
-:$$Inv 2nd C.t$$.
+:$$Inv 2nd C.t$$
 This will reset the registers used by these functions.
 
 Data is entered with $$2nd S+$$:
