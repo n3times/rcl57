@@ -24,7 +24,6 @@ class Change: ObservableObject {
     @Published var currentView = CurrentView.calc
 
     @Published var showStepsInState = true
-    @Published var showHelpInSettings = false
     @Published var showPageInManual = false
     @Published var importProgram = false
     @Published var transitionEdge: Edge = .trailing

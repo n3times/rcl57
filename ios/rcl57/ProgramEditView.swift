@@ -21,7 +21,7 @@ struct ProgramEditView: View {
     init(program: Prog57) {
         self.context = .edit
         self.name = program.getName()
-        self.help = program.getHelp()
+        self.help = program.getDescription()
         self.originalProgram = program
     }
 
@@ -32,15 +32,14 @@ struct ProgramEditView: View {
 
     init(context: CreateProgramContext) {
         let paste = UIPasteboard.general.string ?? ""
-        var program = Prog57(text: paste, readOnly: false)
+        var program = Prog57(text: paste)
         if program == nil {
             program = Prog57(name: "",
-                             help: "Clipboard does not appear to contain a legal program.",
-                             readOnly: true)
+                             description: "Clipboard does not appear to contain a legal program.")
         }
         self.context = .imported
         self.name = program!.getName()
-        self.help = program!.getHelp()
+        self.help = program!.getDescription()
         self.originalProgram = program
     }
 
@@ -48,9 +47,9 @@ struct ProgramEditView: View {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
         if context == .create {
-            return Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
+            return Prog57(name: trimmedName, description: trimmedHelp)
         } else {
-            let program = Prog57(name: trimmedName, help: trimmedHelp, readOnly: false)
+            let program = Prog57(name: trimmedName, description: trimmedHelp)
             program.setState(state: originalProgram!.getState())
             return program
         }

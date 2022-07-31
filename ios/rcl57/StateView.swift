@@ -23,7 +23,7 @@ struct StateView: View {
                 VStack(spacing: 0) {
                     MenuBarView(change: change,
                                 left: change.showStepsInState ? Style.yang : Style.ying,
-                                title: title + (!isNew && !program!.hasSameStepsAsState() ? "'" : ""),
+                                title: title + (!isNew && program!.stepsNeedSaving() ? "'" : ""),
                                 right: Style.rightArrow,
                                 width: width,
                                 leftAction: { change.showStepsInState.toggle() },
@@ -104,8 +104,8 @@ struct StateView: View {
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
                         .buttonStyle(.plain)
-                        .disabled(isReadWrite && (change.showStepsInState ? program!.hasSameStepsAsState()
-                                                  : program!.hasSameRegistersAsState()))
+                        .disabled(isReadWrite && (change.showStepsInState ? !program!.stepsNeedSaving()
+                                                  : !program!.registersNeedSaving()))
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
                             if isReadWrite {
                                 Button("Save " + (change.showStepsInState ? "Steps" : "Registers"), role: .destructive) {

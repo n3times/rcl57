@@ -14,7 +14,7 @@ struct ProgramSaveView: View {
     }
 
     func overrides() -> Bool {
-        var existingProgram = Lib57.userLib.findProgram(name: program.getName())
+        var existingProgram = Lib57.userLib.getProgramByName(program.getName())
         if existingProgram != nil {
             if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
                 existingProgram = nil
@@ -49,7 +49,7 @@ struct ProgramSaveView: View {
                 .background(Style.deepBlue)
                 .foregroundColor(Style.ivory)
 
-                if program.getHelp() == "" {
+                if program.getDescription() == "" {
                     Text("No description available")
                         .frame(maxWidth: geometry.size.width,
                                maxHeight: geometry.size.height - Style.headerHeight - Style.footerHeight,
@@ -57,14 +57,14 @@ struct ProgramSaveView: View {
                         .background(Style.ivory)
                         .foregroundColor(Style.blackish)
                 } else {
-                    HelpView(helpString: program.getHelp())
+                    HelpView(helpString: program.getDescription())
                 }
 
                 // Footer
                 HStack(spacing: 0) {
                     Spacer()
                     Button(context == .edit ? "CONFIRM EDIT" : context == .imported ? "CONFIRM IMPORT" : "CONFIRM CREATE") {
-                        var existingProgram = Lib57.userLib.findProgram(name: program.getName())
+                        var existingProgram = Lib57.userLib.getProgramByName(program.getName())
                         if existingProgram != nil {
                             if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
                                 existingProgram = nil
@@ -77,13 +77,13 @@ struct ProgramSaveView: View {
                             if existingProgram! == change.programShownInLibrary {
                                 change.programShownInLibrary = nil
                             }
-                            Lib57.userLib.delete(program: existingProgram!)
+                            _ = Lib57.userLib.deleteProgram(existingProgram!)
                         }
                         if context == .create || context == .imported {
-                            Lib57.userLib.add(program: program)
+                            _ = Lib57.userLib.addProgram(program)
                         } else {
                             originalProgram!.setName(name: program.getName())
-                            originalProgram!.setHelp(help: program.getHelp())
+                            originalProgram!.setDescription(description: program.getDescription())
                         }
                         _ = program.save(filename: program.getName())
                         withAnimation {
@@ -118,6 +118,6 @@ struct ProgramSaveView: View {
 
 struct ProgramSaveView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgramSaveView(originalProgram: nil, program: Prog57(name: "", help: "", readOnly: false), context: .create)
+        ProgramSaveView(originalProgram: nil, program: Prog57(name: "", description: ""), context: .create)
     }
 }

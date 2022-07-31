@@ -43,7 +43,7 @@ struct ProgramView: View {
                 .background(Style.deepBlue)
                 .foregroundColor(Style.ivory)
 
-                if program.getHelp() == "" {
+                if program.getDescription() == "" {
                     GeometryReader { geometry in
                         Text("No description available")
                             .frame(width: geometry.size.width,
@@ -53,7 +53,7 @@ struct ProgramView: View {
                             .foregroundColor(Style.blackish)
                     }
                 } else {
-                    HelpView(helpString: program.getHelp())
+                    HelpView(helpString: program.getDescription())
                 }
 
                 // Footer
@@ -81,7 +81,7 @@ struct ProgramView: View {
                     .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
                         Button("Delete " + program.getName(), role: .destructive) {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                Lib57.userLib.delete(program: program)
+                                _ = Lib57.userLib.deleteProgram(program)
                                 if program == change.loadedProgram {
                                     change.loadedProgram = nil
                                 }
@@ -101,8 +101,7 @@ struct ProgramView: View {
 
 
                     Button(loadButtonText) {
-                        program.loadStepsIntoMemory()
-                        program.loadRegistersIntoMemory()
+                        program.loadStateIntoMemory()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             change.setLoadedProgram(program: program)
                         }
@@ -148,6 +147,6 @@ struct ProgramView_Previews: PreviewProvider {
     @EnvironmentObject var change: Change
 
     static var previews: some View {
-        ProgramView(program: Prog57(name: "", help: "", readOnly: false))
+        ProgramView(program: Prog57(name: "", description: ""))
     }
 }
