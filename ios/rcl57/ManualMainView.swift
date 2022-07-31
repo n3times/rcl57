@@ -1,5 +1,6 @@
 import SwiftUI
 
+/** The list of topics of the User Manual. */
 struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
@@ -27,12 +28,13 @@ struct ManualMainView: View {
                     VStack(spacing: 0) {
                         MenuBarView(change: change,
                                     left: nil,
-                                    title: "Manual",
+                                    title: "User Manual",
                                     right: Style.downArrow,
                                     width: width,
-                                    background: Style.deepGreen,
                                     leftAction: { },
                                     rightAction: { withAnimation {change.currentView = .calc} })
+                        .background(Style.deepGreen)
+
                         List {
                             Button("About") {
                                 change.pageTitle = "About"

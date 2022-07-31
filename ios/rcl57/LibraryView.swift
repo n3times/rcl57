@@ -28,6 +28,9 @@ private struct LibraryNode: Identifiable {
     }
 }
 
+/**
+ * Shows a list of sample and user programs.
+ */
 struct LibraryView: View {
     @EnvironmentObject var change: Change
 
@@ -44,9 +47,9 @@ struct LibraryView: View {
                                     title: "Library",
                                     right: Style.downArrow,
                                     width: width,
-                                    background: Style.deepBlue,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
+                        .background(Style.deepBlue)
                         .frame(width: width)
 
                         let userLib = LibraryNode(library: Lib57.userLib)

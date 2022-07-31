@@ -1,20 +1,21 @@
 import SwiftUI
 
-/** A list of LineView's. */
+/** Shows the steps and registers of the calculator. */
 struct StateView: View {
     @EnvironmentObject var change: Change
-    @State private var isPresentingConfirm: Bool = false
-    @State private var isPresentingSave: Bool = false
+
     @State private var isPresentingClose: Bool = false
+    @State private var isPresentingClear: Bool = false
+    @State private var isPresentingSave: Bool = false
 
     var body: some View {
         let program = change.loadedProgram
-        let typeName = change.showStepsInState ? "Steps" : "Registers"
         let programName = program?.getName()
-        let isNew = program == nil
-        let isReadOnly = !isNew && program!.readOnly
-        let isReadWrite = !isNew && !isReadOnly
-        let title = isNew ? typeName : (program!.readOnly ? "" : "") + programName!
+        let isProgramNew = program == nil
+        let isProgramReadOnly = !isProgramNew && program!.readOnly
+        let isProgramReadWrite = !isProgramNew && !isProgramReadOnly
+        let stateTypeName = change.showStepsInState ? "Steps" : "Registers"
+        let viewTitle = isProgramNew ? stateTypeName : (program!.readOnly ? "" : "") + programName!
 
         ZStack {
             GeometryReader { geometry in
@@ -23,21 +24,22 @@ struct StateView: View {
                 VStack(spacing: 0) {
                     MenuBarView(change: change,
                                 left: change.showStepsInState ? Style.yang : Style.ying,
-                                title: title + (!isNew && program!.stepsNeedSaving() ? "'" : ""),
+                                title: viewTitle + (!isProgramNew && program!.stepsNeedSaving() ? "'" : ""),
                                 right: Style.rightArrow,
                                 width: width,
                                 leftAction: { change.showStepsInState.toggle() },
                                 rightAction: { withAnimation {change.currentView = .calc} })
+                    .background(Style.blackish)
 
                     // Type (steps or registers)
                     HStack(spacing: 0) {
-                        Button(isNew ? "" : typeName.uppercased()) {
+                        Button(isProgramNew ? "" : stateTypeName.uppercased()) {
                             change.showStepsInState.toggle()
                         }
                         .offset(x: 15, y: -3)
                         .frame(width: width / 3, height: 20, alignment: .leading)
 
-                        Text(isReadOnly ? "Samples" : isReadWrite ? "User" : "")
+                        Text(isProgramReadOnly ? "Samples" : isProgramReadWrite ? "User" : "")
                             .offset(y: -3)
                             .frame(width: width / 3, height: 20)
 
@@ -58,10 +60,10 @@ struct StateView: View {
                         }
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
-                        .disabled(isNew)
+                        .disabled(isProgramNew)
                         .buttonStyle(.plain)
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingClose) {
-                            if !isNew {
+                            if !isProgramNew {
                                 Button("Close " + programName!, role: .destructive) {
                                     change.setLoadedProgram(program: nil)
                                     change.forceUpdate()
@@ -70,14 +72,14 @@ struct StateView: View {
                         }
 
                         Button("CLEAR") {
-                            isPresentingConfirm = true
+                            isPresentingClear = true
                         }
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
                         .disabled(change.showStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
                                   : Rcl57.shared.getRegistersLastIndex() == -1)
                         .buttonStyle(.plain)
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                        .confirmationDialog("Are you sure?", isPresented: $isPresentingClear) {
                             if change.showStepsInState {
                                 Button("Clear Steps", role: .destructive) {
                                     Rcl57.shared.clearProgram()
@@ -91,8 +93,8 @@ struct StateView: View {
                             }
                         }
 
-                        Button(isReadWrite ? "SAVE" : "NEW") {
-                            if isReadWrite {
+                        Button(isProgramReadWrite ? "SAVE" : "NEW") {
+                            if isProgramReadWrite {
                                 isPresentingSave = true
                             } else {
                                 change.showPreview = false
@@ -104,10 +106,10 @@ struct StateView: View {
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
                         .buttonStyle(.plain)
-                        .disabled(isReadWrite && (change.showStepsInState ? !program!.stepsNeedSaving()
+                        .disabled(isProgramReadWrite && (change.showStepsInState ? !program!.stepsNeedSaving()
                                                   : !program!.registersNeedSaving()))
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
-                            if isReadWrite {
+                            if isProgramReadWrite {
                                 Button("Save " + (change.showStepsInState ? "Steps" : "Registers"), role: .destructive) {
                                     if change.showStepsInState {
                                         program!.setStepsFromMemory()
@@ -124,7 +126,6 @@ struct StateView: View {
                     .foregroundColor(Style.ivory)
                 }
             }
-            .transition(.move(edge: .top))
 
             if change.createProgram {
                 ProgramEditView()

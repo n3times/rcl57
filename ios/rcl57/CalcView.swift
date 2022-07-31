@@ -1,9 +1,8 @@
-/**
- * The calculator view with its keyboard and display.
- */
-
 import SwiftUI
 
+/**
+ * The calculator view with its keyboard, display, and a menu on top.
+ */
 struct CalcView: View {
     @EnvironmentObject private var change: Change
 

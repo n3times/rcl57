@@ -1,9 +1,8 @@
-/**
- * The main view. It holds the calculator,  log, state, settings and library views.
- */
-
 import SwiftUI
 
+/**
+ * The main view. It holds the calculator,  log, state, settings, library and manual views.
+ */
 struct MainView: View {
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()

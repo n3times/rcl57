@@ -4,9 +4,10 @@
 
 import SwiftUI
 
+/** Shows the instructions keyed in by the user, and the results. */
 struct LogView: View {
     @EnvironmentObject private var change: Change
-    @State private var isPresentingConfirm: Bool = false
+    @State private var isPresentingClear: Bool = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -19,6 +20,7 @@ struct LogView: View {
                             width: width,
                             leftAction: { withAnimation {change.currentView = .calc} },
                             rightAction: {})
+                .background(Style.blackish)
 
                 if Rcl57.shared.getLoggedCount() == 0 {
                     Text("Log is empty")
@@ -35,13 +37,13 @@ struct LogView: View {
                 HStack(spacing: 0) {
                     Spacer()
                     Button("CLEAR") {
-                        isPresentingConfirm = true
+                        isPresentingClear = true
                     }
                     .font(Style.footerFont)
                     .frame(width: width / 3, height: Style.footerHeight)
                     .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingClear) {
                         Button("Clear Log", role: .destructive) {
                             Rcl57.shared.clearLog()
                         }

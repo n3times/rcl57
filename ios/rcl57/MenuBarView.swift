@@ -1,5 +1,6 @@
 import SwiftUI
 
+/** A generic menu bar with 3 sections and 2 controls. */
 struct MenuBarView: View {
     let change: Change
 
@@ -7,7 +8,6 @@ struct MenuBarView: View {
     let title: String
     let right: String?
     let width: CGFloat
-    var background = Style.blackish
     let leftAction: () -> Void?
     let rightAction: () -> Void?
 
@@ -43,7 +43,6 @@ struct MenuBarView: View {
                     .frame(width: width / 6, height: Style.headerHeight)
             }
         }
-        .background(background)
         .foregroundColor(Style.ivory)
     }
 }

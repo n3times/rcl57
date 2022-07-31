@@ -24,9 +24,9 @@ struct SettingsView: View {
                             title: "Settings",
                             right: Style.downArrow,
                             width: width,
-                            background: Color.gray,
                             leftAction: {},
                             rightAction: { withAnimation {change.currentView = .calc} })
+                .background(Color.gray)
                 .frame(width: width)
 
                 Form {

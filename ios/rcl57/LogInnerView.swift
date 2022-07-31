@@ -5,7 +5,7 @@
 import SwiftUI
 
 /** Data for a LineView: a number and an operation. */
-private struct Line: Identifiable {
+private struct LogLine: Identifiable {
     static var lineId = 0
     let numberLogEntry: LogEntry
     let opLogEntry: LogEntry
@@ -14,18 +14,18 @@ private struct Line: Identifiable {
     init(numberEntry: LogEntry, opEntry: LogEntry) {
         self.numberLogEntry = numberEntry
         self.opLogEntry = opEntry
-        self.id = Line.lineId
-        Line.lineId += 1
+        self.id = LogLine.lineId
+        LogLine.lineId += 1
     }
 }
 
 /** A line view in a LogView: a number on the left and an operation on the right. */
-private struct LineView: View {
-    let line: Line
+private struct LogLineView: View {
+    let line: LogLine
     private let foregroundColor: Color
     private let foregroundColorError: Color
 
-    init(line: Line) {
+    init(line: LogLine) {
         self.line = line
         self.foregroundColor = Color.black
         self.foregroundColorError = Color(red: 0.5, green: 0.0, blue: 0.0)
@@ -55,7 +55,7 @@ private struct LineView: View {
 
 /** A list of LineView's. */
 struct LogInnerView: View {
-    @State private var lines : [Line] = []
+    @State private var lines : [LogLine] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
@@ -68,8 +68,8 @@ struct LogInnerView: View {
         updateLog()
     }
 
-    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> Line {
-        return Line(numberEntry: numberEntry, opEntry: opEntry)
+    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> LogLine {
+        return LogLine(numberEntry: numberEntry, opEntry: opEntry)
     }
 
     private func clear() {
@@ -141,10 +141,10 @@ struct LogInnerView: View {
         }
     }
 
-    private func getLineView(_ line: Line) -> some View {
+    private func getLineView(_ line: LogLine) -> some View {
         let backgroundColor = Style.ivory
 
-        return LineView(line: line)
+        return LogLineView(line: line)
             .listRowBackground(backgroundColor)
             .listRowSeparator(.hidden)
     }

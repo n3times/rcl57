@@ -1,9 +1,12 @@
 import SwiftUI
 
+/** Shows the name and description of a program and let's the user take different actions on the program. */
 struct ProgramView: View {
     @EnvironmentObject var change: Change
-    @State private var isPresentingConfirm: Bool = false
+
+    @State private var isPresentingDelete: Bool = false
     @State private var isPresentingCopy: Bool = false
+
     let program: Prog57
 
     var body: some View {
@@ -14,34 +17,14 @@ struct ProgramView: View {
             let width = geometry.size.width
 
             VStack(spacing: 0) {
-                // Menu.
-                HStack(spacing: 0) {
-                    Button(action: {
-                        withAnimation {
-                            change.programShownInLibrary = nil
-                        }
-                    }) {
-                        Text(Style.leftArrow)
-                            .frame(width: width / 6, height: Style.headerHeight)
-                            .font(Style.directionsFont)
-                            .contentShape(Rectangle())
-                    }
-                    Text(program.getName())
-                        .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
-                        .font(Style.titleFont)
-                    Button(action: {
-                        withAnimation {
-                            change.currentView = .calc
-                        }
-                    }) {
-                        Text(Style.downArrow)
-                            .frame(width: width / 6, height: Style.headerHeight)
-                            .font(Style.directionsFont)
-                            .contentShape(Rectangle())
-                    }
-                }
+                MenuBarView(change: change,
+                            left: Style.leftArrow,
+                            title: program.getName(),
+                            right: Style.downArrow,
+                            width: width,
+                            leftAction: { withAnimation {change.programShownInLibrary = nil} },
+                            rightAction: { withAnimation {change.currentView = .calc} })
                 .background(Style.deepBlue)
-                .foregroundColor(Style.ivory)
 
                 if program.getDescription() == "" {
                     GeometryReader { geometry in
@@ -68,7 +51,7 @@ struct ProgramView: View {
                         }
                         if !program.readOnly {
                             Button(action: {
-                                isPresentingConfirm = true
+                                isPresentingDelete = true
                             }) {
                                 Text("Delete")
                             }
@@ -78,7 +61,7 @@ struct ProgramView: View {
                             .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
                             .contentShape(Rectangle())
                     }
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                    .confirmationDialog("Are you sure?", isPresented: $isPresentingDelete) {
                         Button("Delete " + program.getName(), role: .destructive) {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 _ = Lib57.userLib.deleteProgram(program)

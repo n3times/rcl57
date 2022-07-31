@@ -16,6 +16,9 @@ struct TrigIndicator: View {
     }
 }
 
+/**
+ * The keyboard view. It also interacts with the engine when keys are pressed and released.
+ */
 struct CalcKeyboardView: View {
     private let imageName = "button_pad"
 
@@ -133,10 +136,6 @@ struct CalcKeyboardView: View {
                 .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                 .offset(x: 174 * scaleFactorH,
                         y: getTrigOffsetY(units: Rcl57.shared.getTrigUnits(), scaleFactor: scaleFactorV))
-        }
-        .onAppear() {
-            is2nd = Rcl57.shared.is2nd()
-            isInv = Rcl57.shared.isInv()
         }
     }
 

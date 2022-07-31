@@ -6,9 +6,10 @@ enum CreateProgramContext {
     case imported
 }
 
+/** Gives tto the user a chance to edit the name and description of a program. */
 struct ProgramEditView: View {
     @EnvironmentObject var change: Change
-    @State private var isPresentingConfirm: Bool = false
+    @State private var isPresentingExit: Bool = false
     @State var name: String
     @State var help: String
 
@@ -67,17 +68,18 @@ struct ProgramEditView: View {
             if !change.showPreview {
                 GeometryReader { geometry in
                     let width = geometry.size.width
+
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
                             Button(action: {
-                                isPresentingConfirm = true
+                                isPresentingExit = true
                             }) {
                                 Text(Style.downArrow)
                                     .frame(width: width / 5, height: Style.headerHeight)
                                     .font(Style.smallFont)
                                     .contentShape(Rectangle())
                             }
-                            .confirmationDialog("Are you sure?", isPresented: $isPresentingConfirm) {
+                            .confirmationDialog("Are you sure?", isPresented: $isPresentingExit) {
                                 Button("Exit", role: .destructive) {
                                     nameIsFocused = false
                                     withAnimation {

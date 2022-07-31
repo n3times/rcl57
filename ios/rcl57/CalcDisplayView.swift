@@ -1,10 +1,11 @@
+import SwiftUI
+
 /**
  * The display, composed of 12 14-segment LEDs. In addition, each LED has an optional dot
  * to the right (decimal point).
+ *
+ * Note that the TI-57 has 7-segment LEDs but in RCL-57 we support alpha mode.
  */
-
-import SwiftUI
-
 struct CalcDisplayView: View {
     // A string composed of up to 12 non-dot characters, each one optionally followed by a
     // a dot. The string will be right-justified within the display.

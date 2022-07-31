@@ -1,8 +1,9 @@
 import SwiftUI
 
+/** Shows the name and description of a program and saves it upon confirmation by the user. */
 struct ProgramSaveView: View {
     @EnvironmentObject var change: Change
-    @State private var isPresentingConfirm: Bool = false
+
     let originalProgram: Prog57?
     let program: Prog57
     let context: CreateProgramContext
@@ -27,27 +28,14 @@ struct ProgramSaveView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    Button(action: {
-                        withAnimation {
-                            change.showPreview = false
-                        }
-                    }) {
-                        Text(Style.leftArrow)
-                            .frame(width: width / 6, height: Style.headerHeight)
-                            .font(Style.smallFont)
-                            .contentShape(Rectangle())
-                    }
-
-                    Text(program.getName() + (overrides() ? "'" : ""))
-                        .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
-                        .font(Style.titleFont)
-
-                    Spacer()
-                        .frame(width: width / 6, height: Style.headerHeight)
-                }
+                MenuBarView(change: change,
+                            left: Style.leftArrow,
+                            title: program.getName() + (overrides() ? "'" : ""),
+                            right: nil,
+                            width: width,
+                            leftAction: { withAnimation {change.showPreview = false} },
+                            rightAction: { })
                 .background(Style.deepBlue)
-                .foregroundColor(Style.ivory)
 
                 if program.getDescription() == "" {
                     Text("No description available")

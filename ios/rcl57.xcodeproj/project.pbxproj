@@ -146,8 +146,8 @@
 				15B0860D286413260018418A /* samples_lib */,
 				154B7A7027BC65C900AE38F1 /* engine */,
 				15F948F0283E060C00706BE5 /* hlp2html */,
-				15F948FB283FACE400706BE5 /* manual */,
 				15B085E1286152770018418A /* program */,
+				15F948FB283FACE400706BE5 /* user manual */,
 				150ED8A027B089EF00E01FC6 /* rcl57 */,
 				150ED89F27B089EF00E01FC6 /* Products */,
 			);
@@ -256,7 +256,7 @@
 			path = ../hlp2html;
 			sourceTree = "<group>";
 		};
-		15F948FB283FACE400706BE5 /* manual */ = {
+		15F948FB283FACE400706BE5 /* user manual */ = {
 			isa = PBXGroup;
 			children = (
 				15F948FC283FACE400706BE5 /* about.hlp */,
@@ -269,8 +269,8 @@
 				15F9491828407F2B00706BE5 /* options.hlp */,
 				15F9491C284130A400706BE5 /* registers.hlp */,
 			);
-			name = manual;
-			path = ../manual;
+			name = "user manual";
+			path = "../user manual";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

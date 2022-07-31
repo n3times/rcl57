@@ -107,17 +107,6 @@ struct StateInnerView: View {
         else { middle = pc}
     }
 
-    private func updateMiddle() {
-        let pc = Rcl57.shared.getProgramPc()
-        middle = pc
-        self.pc = pc
-        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
-        self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        if pc == -1 { middle = 0 }
-        else if pc == 0 && !self.isHpLrn { middle = 1 }
-        else { middle = pc }
-    }
-
     private func getRegisterLineView(_ index: Int) -> some View {
         return RegisterLineView(line: RegisterLine(index: index,
                                                    reg: Rcl57.shared.getRegister(index: index)))
