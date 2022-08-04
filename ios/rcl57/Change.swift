@@ -42,7 +42,7 @@ class Change: ObservableObject {
     // Program Editing
     @Published var isPreviewInEditProgram = false
 
-    let PROGRAM_KEY = "program"
+    private let LOADED_PROGRAM_KEY = "LOADED_PROGRAM_KEY"
 
     init() {
         self.pc = Rcl57.shared.getProgramPc()
@@ -51,17 +51,15 @@ class Change: ObservableObject {
         self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         self.displayString = Rcl57.shared.display()
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
-        let programName = UserDefaults.standard.string(forKey: PROGRAM_KEY)
-        if let program = Lib57.samplesLib.programs.first(where: {$0.getName() == programName}) {
-            self.loadedProgram = program
-        } else {
-            self.loadedProgram = nil
-        }
+
+        let loadedProgramName = UserDefaults.standard.string(forKey: LOADED_PROGRAM_KEY)
+        self.loadedProgram =
+            Lib57.samplesLib.programs.first(where: {$0.getName() == loadedProgramName})
     }
 
     func setLoadedProgram(program: Prog57?) {
         loadedProgram = program
-        UserDefaults.standard.set(program?.getName(), forKey: PROGRAM_KEY)
+        UserDefaults.standard.set(program?.getName(), forKey: LOADED_PROGRAM_KEY)
     }
 
     func updateDisplayString() {
