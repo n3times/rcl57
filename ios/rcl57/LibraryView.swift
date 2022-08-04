@@ -36,7 +36,7 @@ struct ProgramGroupView: View {
             ForEach(node.children) { item in
                 Button(item.name) {
                     withAnimation {
-                        change.programShownInLibrary = item.program
+                        change.programView = ProgramView(program: item.program!)
                     }
                 }
                 .offset(x: 15)
@@ -65,7 +65,7 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            if change.programShownInLibrary == nil {
+            if change.programView == nil {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
@@ -115,8 +115,8 @@ struct LibraryView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if change.programShownInLibrary != nil {
-                ProgramView(program: change.programShownInLibrary!)
+            if change.programView != nil {
+                change.programView!
                     .environmentObject(change)
                     .transition(.move(edge: .trailing))
             }

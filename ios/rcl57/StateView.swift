@@ -97,7 +97,7 @@ struct StateView: View {
                             if isProgramReadWrite {
                                 isPresentingSave = true
                             } else {
-                                change.showPreview = false
+                                change.isPreviewInEditProgram = false
                                 withAnimation {
                                     change.isCreateProgramInState = true
                                 }

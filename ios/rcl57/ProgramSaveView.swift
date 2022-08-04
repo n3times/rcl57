@@ -33,7 +33,7 @@ struct ProgramSaveView: View {
                             title: program.getName() + (overrides() ? "'" : ""),
                             right: nil,
                             width: width,
-                            leftAction: { withAnimation {change.showPreview = false} },
+                            leftAction: { withAnimation {change.isPreviewInEditProgram = false} },
                             rightAction: { })
                 .background(Style.deepBlue)
 
@@ -62,8 +62,8 @@ struct ProgramSaveView: View {
                             if existingProgram! == change.loadedProgram {
                                 change.loadedProgram = nil
                             }
-                            if existingProgram! == change.programShownInLibrary {
-                                change.programShownInLibrary = nil
+                            if existingProgram! == change.programView?.program {
+                                change.programView = nil
                             }
                             _ = Lib57.userLib.deleteProgram(existingProgram!)
                         }
@@ -78,16 +78,16 @@ struct ProgramSaveView: View {
                             if context == .create {
                                 change.loadedProgram = program
                                 change.isCreateProgramInState = false
-                                change.programShownInLibrary = program
+                                change.programView = ProgramView(program: program)
                             } else if context == .imported {
                                 change.isImportProgramInLibrary = false
-                                change.showPreview = false
+                                change.isPreviewInEditProgram = false
                                 change.isUserLibExpanded = true
                             } else {
                                 change.isEditInProgramView = false
-                                change.programShownInLibrary = program
+                                change.programView = ProgramView(program: program)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    change.showPreview = false
+                                    change.isPreviewInEditProgram = false
                                 }
                             }
                         }

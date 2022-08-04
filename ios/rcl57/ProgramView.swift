@@ -22,7 +22,7 @@ struct ProgramView: View {
                             title: program.getName(),
                             right: Style.downArrow,
                             width: width,
-                            leftAction: { withAnimation {change.programShownInLibrary = nil} },
+                            leftAction: { withAnimation {change.programView = nil} },
                             rightAction: { withAnimation {change.currentView = .calc} })
                 .background(Style.deepBlue)
 
@@ -68,7 +68,7 @@ struct ProgramView: View {
                                 if program == change.loadedProgram {
                                     change.loadedProgram = nil
                                 }
-                                change.programShownInLibrary = nil
+                                change.programView = nil
                             }
                             withAnimation {
                                 ///change.currentView = .calc
@@ -102,7 +102,7 @@ struct ProgramView: View {
                             .frame(width: width / 6, height: Style.footerHeight)
                     } else {
                         Button("EDIT") {
-                            change.showPreview = false
+                            change.isPreviewInEditProgram = false
                             withAnimation {
                                 change.isEditInProgramView = true
                             }

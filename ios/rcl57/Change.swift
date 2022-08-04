@@ -35,11 +35,12 @@ class Change: ObservableObject {
     @Published var isUserLibExpanded = false
     @Published var isImportProgramInLibrary = false
 
-    // ProgramView
-    @Published var programShownInLibrary: Prog57? = nil
+    // Program View
+    @Published var programView: ProgramView? = nil
     @Published var isEditInProgramView = false
 
-    @Published var showPreview = false
+    // Program Editing
+    @Published var isPreviewInEditProgram = false
 
     let PROGRAM_KEY = "program"
 

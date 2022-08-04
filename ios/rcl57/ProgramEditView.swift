@@ -60,12 +60,12 @@ struct ProgramEditView: View {
         UITextView.appearance().backgroundColor = .clear
 
         return ZStack {
-            if change.showPreview {
+            if change.isPreviewInEditProgram {
                 ProgramSaveView(originalProgram: originalProgram, program: getProgram(), context: context)
                     .transition(.move(edge: .trailing))
             }
 
-            if !change.showPreview {
+            if !change.isPreviewInEditProgram {
                 GeometryReader { geometry in
                     let width = geometry.size.width
 
@@ -99,7 +99,7 @@ struct ProgramEditView: View {
                             Button(action: {
                                 nameIsFocused = false
                                 withAnimation {
-                                    change.showPreview = true
+                                    change.isPreviewInEditProgram = true
                                 }
                             }) {
                                 Text(name.trimmingCharacters(in: CharacterSet.whitespaces) == ""
