@@ -66,7 +66,6 @@ struct StateView: View {
                             if !isProgramNew {
                                 Button("Close " + programName!, role: .destructive) {
                                     change.setLoadedProgram(program: nil)
-                                    change.forceUpdate()
                                 }
                             }
                         }

@@ -10,15 +10,13 @@ enum CurrentView {
 }
 
 class Change: ObservableObject {
-    var pc: Int
-    var isAlpha: Bool
-    var isHpLrnMode: Bool
-    var isOpEditInLrn: Bool
+    private let LOADED_PROGRAM_KEY = "LOADED_PROGRAM_KEY"
 
     @Published var changeCount = 0
+    @Published var transitionEdge: Edge = .trailing
+
     @Published var displayString: String
     @Published var logTimestamp: Int
-    @Published var transitionEdge: Edge = .trailing
     @Published var loadedProgram: Prog57?
 
     @Published var currentView = CurrentView.calc
@@ -42,13 +40,7 @@ class Change: ObservableObject {
     // Program Editing
     @Published var isPreviewInEditProgram = false
 
-    private let LOADED_PROGRAM_KEY = "LOADED_PROGRAM_KEY"
-
     init() {
-        self.pc = Rcl57.shared.getProgramPc()
-        self.isAlpha = Rcl57.shared.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
-        self.isHpLrnMode = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
         self.displayString = Rcl57.shared.display()
         self.logTimestamp = Rcl57.shared.getLogTimestamp()
 
@@ -66,7 +58,6 @@ class Change: ObservableObject {
         let display = Rcl57.shared.display()
         if display != self.displayString {
             self.displayString = display
-            forceUpdate()
         }
     }
 
@@ -74,43 +65,10 @@ class Change: ObservableObject {
         let logTimestamp = Rcl57.shared.getLogTimestamp()
         if self.logTimestamp != logTimestamp {
             self.logTimestamp = logTimestamp
-            changeCount += 1
         }
     }
 
     func forceUpdate() {
         changeCount += 1
-    }
-
-    func update() {
-        let newPc = Rcl57.shared.getProgramPc()
-        if self.pc != newPc {
-            self.pc = newPc
-            changeCount += 1
-        }
-
-        let isAlpha = Rcl57.shared.getOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG)
-        if self.isAlpha != isAlpha {
-            self.isAlpha = isAlpha
-            changeCount += 1
-        }
-
-        let isHpLrnMode = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
-        if self.isHpLrnMode != isHpLrnMode {
-            self.isHpLrnMode = isHpLrnMode
-            changeCount += 1
-        }
-
-        let isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
-        if self.isOpEditInLrn != isOpEditInLrn {
-            self.isOpEditInLrn = isOpEditInLrn
-            changeCount += 1
-        }
-
-        let logTimestamp = Rcl57.shared.getLogTimestamp()
-        if self.logTimestamp != logTimestamp {
-            self.logTimestamp = logTimestamp
-            changeCount += 1
-        }
     }
 }

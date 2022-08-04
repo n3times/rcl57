@@ -116,7 +116,7 @@ struct CalcKeyboardView: View {
                                 is2nd = Rcl57.shared.is2nd()
                                 isInv = Rcl57.shared.isInv()
                                 Rcl57.shared.keyRelease()
-                                change.update()
+                                change.updateLogTimestamp()
                             }
                         }
                 )
