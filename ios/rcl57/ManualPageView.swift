@@ -1,7 +1,7 @@
 import SwiftUI
 
 /** A spectific page of the User Manual. */
-struct ManualPageView: View {
+struct ManualPageView: Hashable, Equatable, View {
     @EnvironmentObject private var change: Change
 
     let title: String
@@ -18,7 +18,7 @@ struct ManualPageView: View {
                             title: title,
                             right: Style.downArrow,
                             width: width,
-                            leftAction: { withAnimation {change.showPageInManual = false} },
+                            leftAction: { withAnimation {change.manualPageView = nil} },
                             rightAction: { withAnimation {change.currentView = .calc} })
                 .background(Style.deepGreen)
 
@@ -26,5 +26,15 @@ struct ManualPageView: View {
             }
         }
         .background(Color.white.edgesIgnoringSafeArea(.bottom))
+    }
+
+    /** Implements Hashable. */
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.helpResource)
+    }
+
+    /** Implements Equatable. */
+    static func ==(lhs: ManualPageView, rhs: ManualPageView) -> Bool {
+        return lhs.helpResource == rhs.helpResource
     }
 }

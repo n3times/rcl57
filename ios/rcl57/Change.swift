@@ -22,7 +22,6 @@ class Change: ObservableObject {
     @Published var currentView = CurrentView.calc
 
     @Published var showStepsInState = true
-    @Published var showPageInManual = false
     @Published var importProgram = false
     @Published var transitionEdge: Edge = .trailing
 
@@ -33,8 +32,7 @@ class Change: ObservableObject {
     @Published var showLibrary = false
     @Published var showPreview = false
 
-    @Published var pageTitle = ""
-    @Published var pageURL = ""
+    @Published var manualPageView: ManualPageView? = nil
 
     @Published var samplesLibExpanded = false
     @Published var userLibExpanded = false

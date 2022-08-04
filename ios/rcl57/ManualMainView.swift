@@ -4,24 +4,21 @@ import SwiftUI
 struct ManualMainView: View {
     @EnvironmentObject private var change: Change
 
-    let emulatorPages = [["Options", "options"],
-                         ["Using the Library", "library"],
-                         ["Writing Help Files", "help"]]
+    let aboutPage = ManualPageView(title: "About", helpResource: "about")
 
-    let calculatorPages = [["Basics", "basics"],
-                           ["Math Functions", "math"],
-                           ["Registers", "registers"],
-                           ["Hello World", "hello"],
-                           ["Flow Control", "flow"]]
+    let emulatorPages = [ManualPageView(title: "Options", helpResource: "options"),
+                         ManualPageView(title: "Using the Library", helpResource: "library"),
+                         ManualPageView(title: "Writing Help Files", helpResource: "help")]
+
+    let calculatorPages = [ManualPageView(title: "Basics", helpResource: "basics"),
+                           ManualPageView(title: "Math Functions", helpResource: "math"),
+                           ManualPageView(title: "Registers", helpResource: "registers"),
+                           ManualPageView(title: "Hello World", helpResource: "hello"),
+                           ManualPageView(title: "Flow Control", helpResource: "flow")]
 
     var body: some View {
         ZStack {
-            if change.showPageInManual {
-                ManualPageView(title: change.pageTitle, helpResource: change.pageURL)
-                    .transition(.move(edge: .trailing))
-            }
-
-            if !change.showPageInManual {
+            if change.manualPageView == nil {
                 GeometryReader { geometry in
                     let width = geometry.size.width
 
@@ -37,30 +34,24 @@ struct ManualMainView: View {
 
                         List {
                             Button("About") {
-                                change.pageTitle = "About"
-                                change.pageURL = "about"
                                 withAnimation {
-                                    change.showPageInManual = true
+                                    change.manualPageView = aboutPage
                                 }
                             }
                             Section("The Emulator") {
                                 ForEach(emulatorPages, id: \.self) { page in
-                                    Button(page[0]) {
-                                        change.pageTitle = page[0]
-                                        change.pageURL = page[1]
+                                    Button(page.title) {
                                         withAnimation {
-                                            change.showPageInManual = true
+                                            change.manualPageView = page
                                         }
                                     }
                                 }
                             }
                             Section("The Calculator") {
                                 ForEach(calculatorPages, id: \.self) { page in
-                                    Button(page[0]) {
-                                        change.pageTitle = page[0]
-                                        change.pageURL = page[1]
+                                    Button(page.title) {
                                         withAnimation {
-                                            change.showPageInManual = true
+                                            change.manualPageView = page
                                         }
                                     }
                                 }
@@ -71,6 +62,11 @@ struct ManualMainView: View {
                     }
                 }
                 .transition(.move(edge: .leading))
+            }
+
+            if change.manualPageView != nil {
+                change.manualPageView
+                    .transition(.move(edge: .trailing))
             }
         }
     }
