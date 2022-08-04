@@ -2,10 +2,10 @@ import SwiftUI
 
 /** Converts a string in 'hlp' format into 'html'. */
 struct Help57 {
-    static func hlpToHTML(helpString: String) -> String {
-        let BUFFER_SIZE: Int32 = 5000
-        let CSS_FILENAME = "help.css"
+    private static let BUFFER_SIZE: Int32 = 5000
+    private static let CSS_FILENAME = "help.css"
 
+    static func hlpToHTML(helpString: String) -> String {
         var hlp2html = hlp2html_t()
         var html = ""
         let outBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(BUFFER_SIZE))

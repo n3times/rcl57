@@ -1,10 +1,10 @@
 import Foundation
 
 /**
- * A library contains programs.
+ * A library contains RCL-57 programs.
  *
- * Programs in a given library must have unique names.
  * A library can be 'readOnly' meaning that no programs can be added to or deleted from the library.
+ * Programs in a given library must have unique names.
  */
 class Lib57 {
     private static let samplesLibURL =
