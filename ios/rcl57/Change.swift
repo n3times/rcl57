@@ -18,26 +18,28 @@ class Change: ObservableObject {
     @Published var changeCount = 0
     @Published var displayString: String
     @Published var logTimestamp: Int
+    @Published var transitionEdge: Edge = .trailing
+    @Published var loadedProgram: Prog57?
 
     @Published var currentView = CurrentView.calc
 
-    @Published var showStepsInState = true
-    @Published var importProgram = false
-    @Published var transitionEdge: Edge = .trailing
+    // State View
+    @Published var isStepsInState = true
+    @Published var isCreateProgramInState = false
 
-    @Published var programShownInLibrary: Prog57? = nil
-    @Published var createProgram = false
-    @Published var editProgram = false
-
-    @Published var showLibrary = false
-    @Published var showPreview = false
-
+    // Manual View
     @Published var manualPageView: ManualPageView? = nil
 
-    @Published var samplesLibExpanded = false
-    @Published var userLibExpanded = false
+    // Library View
+    @Published var isSamplesLibExpanded = false
+    @Published var isUserLibExpanded = false
+    @Published var isImportProgramInLibrary = false
 
-    @Published var loadedProgram: Prog57?
+    // ProgramView
+    @Published var programShownInLibrary: Prog57? = nil
+    @Published var isEditInProgramView = false
+
+    @Published var showPreview = false
 
     let PROGRAM_KEY = "program"
 

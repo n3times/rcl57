@@ -104,7 +104,7 @@ struct ProgramView: View {
                         Button("EDIT") {
                             change.showPreview = false
                             withAnimation {
-                                change.editProgram = true
+                                change.isEditInProgramView = true
                             }
                         }
                         .font(Style.footerFont)
@@ -118,7 +118,7 @@ struct ProgramView: View {
             .background(Style.deepBlue)
             .foregroundColor(Style.ivory)
 
-            if change.editProgram {
+            if change.isEditInProgramView {
                 ProgramEditView(program: program)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)

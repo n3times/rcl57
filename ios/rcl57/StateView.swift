@@ -14,7 +14,7 @@ struct StateView: View {
         let isProgramNew = program == nil
         let isProgramReadOnly = !isProgramNew && program!.readOnly
         let isProgramReadWrite = !isProgramNew && !isProgramReadOnly
-        let stateTypeName = change.showStepsInState ? "Steps" : "Registers"
+        let stateTypeName = change.isStepsInState ? "Steps" : "Registers"
         let viewTitle = isProgramNew ? stateTypeName : (program!.readOnly ? "" : "") + programName!
 
         ZStack {
@@ -23,18 +23,18 @@ struct StateView: View {
 
                 VStack(spacing: 0) {
                     MenuBarView(change: change,
-                                left: change.showStepsInState ? Style.yang : Style.ying,
+                                left: change.isStepsInState ? Style.yang : Style.ying,
                                 title: viewTitle + (!isProgramNew && program!.stepsNeedSaving() ? "'" : ""),
                                 right: Style.rightArrow,
                                 width: width,
-                                leftAction: { change.showStepsInState.toggle() },
+                                leftAction: { change.isStepsInState.toggle() },
                                 rightAction: { withAnimation {change.currentView = .calc} })
                     .background(Style.blackish)
 
                     // Type (steps or registers)
                     HStack(spacing: 0) {
                         Button(isProgramNew ? "" : stateTypeName.uppercased()) {
-                            change.showStepsInState.toggle()
+                            change.isStepsInState.toggle()
                         }
                         .offset(x: 15, y: -3)
                         .frame(width: width / 3, height: 20, alignment: .leading)
@@ -76,11 +76,11 @@ struct StateView: View {
                         }
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
-                        .disabled(change.showStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
+                        .disabled(change.isStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
                                   : Rcl57.shared.getRegistersLastIndex() == -1)
                         .buttonStyle(.plain)
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingClear) {
-                            if change.showStepsInState {
+                            if change.isStepsInState {
                                 Button("Clear Steps", role: .destructive) {
                                     Rcl57.shared.clearProgram()
                                     change.forceUpdate()
@@ -99,19 +99,19 @@ struct StateView: View {
                             } else {
                                 change.showPreview = false
                                 withAnimation {
-                                    change.createProgram = true
+                                    change.isCreateProgramInState = true
                                 }
                             }
                         }
                         .font(Style.footerFont)
                         .frame(width: width / 3, height: Style.footerHeight)
                         .buttonStyle(.plain)
-                        .disabled(isProgramReadWrite && (change.showStepsInState ? !program!.stepsNeedSaving()
+                        .disabled(isProgramReadWrite && (change.isStepsInState ? !program!.stepsNeedSaving()
                                                   : !program!.registersNeedSaving()))
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
                             if isProgramReadWrite {
-                                Button("Save " + (change.showStepsInState ? "Steps" : "Registers"), role: .destructive) {
-                                    if change.showStepsInState {
+                                Button("Save " + (change.isStepsInState ? "Steps" : "Registers"), role: .destructive) {
+                                    if change.isStepsInState {
                                         program!.setStepsFromMemory()
                                     } else {
                                         program!.setRegistersFromMemory()
@@ -127,7 +127,7 @@ struct StateView: View {
                 }
             }
 
-            if change.createProgram {
+            if change.isCreateProgramInState {
                 ProgramEditView()
                     .environmentObject(change)
                     .transition(.move(edge: .bottom))

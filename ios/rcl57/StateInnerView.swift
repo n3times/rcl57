@@ -126,7 +126,7 @@ struct StateInnerView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if change.showStepsInState {
+                if change.isStepsInState {
                     ForEach(0...49, id: \.self) {
                         getProgramLineView($0, active: $0 == pc)
                     }

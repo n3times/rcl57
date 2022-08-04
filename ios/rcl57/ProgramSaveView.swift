@@ -77,14 +77,14 @@ struct ProgramSaveView: View {
                         withAnimation {
                             if context == .create {
                                 change.loadedProgram = program
-                                change.createProgram = false
+                                change.isCreateProgramInState = false
                                 change.programShownInLibrary = program
                             } else if context == .imported {
-                                change.importProgram = false
+                                change.isImportProgramInLibrary = false
                                 change.showPreview = false
-                                change.userLibExpanded = true
+                                change.isUserLibExpanded = true
                             } else {
-                                change.editProgram = false
+                                change.isEditInProgramView = false
                                 change.programShownInLibrary = program
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                     change.showPreview = false

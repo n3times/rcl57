@@ -80,8 +80,8 @@ struct LibraryView: View {
                         .frame(width: width)
 
                         List {
-                            ProgramGroupView(change: _change, library: Lib57.samplesLib, isExpanded: $change.samplesLibExpanded)
-                            ProgramGroupView(change: _change, library: Lib57.userLib, isExpanded: $change.userLibExpanded)
+                            ProgramGroupView(change: _change, library: Lib57.samplesLib, isExpanded: $change.isSamplesLibExpanded)
+                            ProgramGroupView(change: _change, library: Lib57.userLib, isExpanded: $change.isUserLibExpanded)
                         }
                         .listStyle(PlainListStyle())
 
@@ -103,7 +103,7 @@ struct LibraryView: View {
                         .confirmationDialog("Are you sure?", isPresented: $isPresentingImport) {
                             Button("Import from Clipboad", role: .none) {
                                 withAnimation {
-                                    change.importProgram = true
+                                    change.isImportProgramInLibrary = true
                                 }
                             }
                         }
@@ -121,7 +121,7 @@ struct LibraryView: View {
                     .transition(.move(edge: .trailing))
             }
 
-            if change.importProgram {
+            if change.isImportProgramInLibrary {
                 ProgramEditView(context: .imported)
                     .transition(.move(edge: .bottom))
             }

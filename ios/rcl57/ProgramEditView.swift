@@ -84,11 +84,11 @@ struct ProgramEditView: View {
                                     nameIsFocused = false
                                     withAnimation {
                                         if context == .create {
-                                            change.createProgram = false
+                                            change.isCreateProgramInState = false
                                         } else if context == .imported {
-                                            change.importProgram = false
+                                            change.isImportProgramInLibrary = false
                                         } else {
-                                            change.editProgram = false
+                                            change.isEditInProgramView = false
                                         }
                                     }
                                 }
