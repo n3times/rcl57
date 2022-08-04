@@ -72,14 +72,22 @@ struct ProgramEditView: View {
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
                             Button(action: {
-                                isPresentingExit = true
+                                if context == .create &&
+                                    name.trimmingCharacters(in: CharacterSet.whitespaces) == "" &&
+                                    help.trimmingCharacters(in: CharacterSet.whitespaces) == "" {
+                                    withAnimation {
+                                        change.isCreateProgramInState = false
+                                    }
+                                } else {
+                                    isPresentingExit = true
+                                }
                             }) {
                                 Text(Style.downArrow)
                                     .frame(width: width / 5, height: Style.headerHeight)
                                     .font(Style.smallFont)
                                     .contentShape(Rectangle())
                             }
-                            .confirmationDialog("Are you sure?", isPresented: $isPresentingExit) {
+                            .confirmationDialog("Exit?", isPresented: $isPresentingExit) {
                                 Button("Exit", role: .destructive) {
                                     nameIsFocused = false
                                     withAnimation {

@@ -11,7 +11,6 @@ class Prog57 : Hashable, Equatable {
     /* Backing struct: name, description and state. */
     private var prog57 = prog57_t()
 
-    /* Non nil for programs that belong to a library. */
     var url: URL? = nil
 
     var readOnly: Bool
@@ -48,7 +47,7 @@ class Prog57 : Hashable, Equatable {
         self.readOnly = false
     }
 
-    func toText() -> String {
+    func toString() -> String {
         return String(cString: prog57_to_text(&prog57))
     }
 
@@ -121,21 +120,21 @@ class Prog57 : Hashable, Equatable {
         prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
+    /** Saving program into file system . */
     func save(filename: String) -> Bool {
-        let text = toText()
-
-        let userLibFolderURL = FileManager.default.urls(for: .documentDirectory,
-                                                        in: .userDomainMask)[0]
-        let fileURL = userLibFolderURL.appendingPathComponent(filename + Prog57.programFileExtension)
+        if readOnly { return false }
 
         do {
-            try text.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+            let asString = toString()
+            let userLibFolderURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = userLibFolderURL.appendingPathComponent(filename + Prog57.programFileExtension)
+
+            try asString.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+
+            self.url = fileURL
         } catch {
-            // failed to write file.
             return false
         }
-
-        self.url = fileURL
 
         return true
     }

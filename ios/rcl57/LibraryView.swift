@@ -100,7 +100,7 @@ struct LibraryView: View {
                             Spacer()
                                 .frame(width: width / 6, height: Style.footerHeight)
                         }
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingImport) {
+                        .confirmationDialog("Import?", isPresented: $isPresentingImport) {
                             Button("Import from Clipboad", role: .none) {
                                 withAnimation {
                                     change.isImportProgramInLibrary = true

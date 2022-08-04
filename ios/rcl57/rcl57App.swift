@@ -5,7 +5,7 @@ struct rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
     init() {
-        // Technically this is only necessary the state is not loaded from a file.
+        // Technically this is only necessary if the state is not loaded from a file.
         Settings.setTurboSpeed(Settings.getTurboSpeed())
         Settings.setAlphaDisplay(Settings.getAlphaDisplay())
         Settings.setHPLrnMode(Settings.getHPLrnMode())

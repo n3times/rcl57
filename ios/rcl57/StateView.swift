@@ -62,7 +62,7 @@ struct StateView: View {
                         .frame(width: width / 3, height: Style.footerHeight)
                         .disabled(isProgramNew)
                         .buttonStyle(.plain)
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingClose) {
+                        .confirmationDialog("Close?", isPresented: $isPresentingClose) {
                             if !isProgramNew {
                                 Button("Close " + programName!, role: .destructive) {
                                     change.setLoadedProgram(program: nil)
@@ -78,7 +78,7 @@ struct StateView: View {
                         .disabled(change.isStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
                                   : Rcl57.shared.getRegistersLastIndex() == -1)
                         .buttonStyle(.plain)
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingClear) {
+                        .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                             if change.isStepsInState {
                                 Button("Clear Steps", role: .destructive) {
                                     Rcl57.shared.clearProgram()
@@ -107,7 +107,7 @@ struct StateView: View {
                         .buttonStyle(.plain)
                         .disabled(isProgramReadWrite && (change.isStepsInState ? !program!.stepsNeedSaving()
                                                   : !program!.registersNeedSaving()))
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingSave) {
+                        .confirmationDialog("Save?", isPresented: $isPresentingSave) {
                             if isProgramReadWrite {
                                 Button("Save " + (change.isStepsInState ? "Steps" : "Registers"), role: .destructive) {
                                     if change.isStepsInState {

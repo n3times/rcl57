@@ -43,7 +43,7 @@ class Lib57 {
         if getProgramByName(program.getName()) != nil { return false }
 
         do {
-            let text = program.toText()
+            let text = program.toString()
             let programURL = folderURL.appendingPathComponent(program.getName())
             try text.write(to: programURL, atomically: true, encoding: String.Encoding.utf8)
         } catch {

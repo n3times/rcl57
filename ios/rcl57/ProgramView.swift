@@ -61,23 +61,20 @@ struct ProgramView: View {
                             .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
                             .contentShape(Rectangle())
                     }
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingDelete) {
+                    .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
                         Button("Delete " + program.getName(), role: .destructive) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                _ = Lib57.userLib.deleteProgram(program)
-                                if program == change.loadedProgram {
-                                    change.loadedProgram = nil
-                                }
-                                change.programView = nil
+                            _ = Lib57.userLib.deleteProgram(program)
+                            if program == change.loadedProgram {
+                                change.loadedProgram = nil
                             }
                             withAnimation {
-                                ///change.currentView = .calc
+                                change.programView = nil
                             }
                         }
                     }
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingCopy) {
+                    .confirmationDialog("Copy?", isPresented: $isPresentingCopy) {
                         Button("Copy " + program.getName(), role: .none) {
-                            UIPasteboard.general.string = program.toText()
+                            UIPasteboard.general.string = program.toString()
                         }
                     }
                     .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)

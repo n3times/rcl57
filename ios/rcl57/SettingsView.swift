@@ -42,7 +42,7 @@ struct SettingsView: View {
                             isPresentingReset = true
                         }
                         .foregroundColor(Color.black)
-                        .confirmationDialog("Are you sure?", isPresented: $isPresentingReset) {
+                        .confirmationDialog("Reset?", isPresented: $isPresentingReset) {
                             Button("Clear Steps, Registers and Log", role: .destructive) {
                                 Rcl57.shared.clearAll()
                                 change.setLoadedProgram(program: nil)

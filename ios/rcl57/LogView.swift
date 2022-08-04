@@ -43,7 +43,7 @@ struct LogView: View {
                     .frame(width: width / 3, height: Style.footerHeight)
                     .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)
-                    .confirmationDialog("Are you sure?", isPresented: $isPresentingClear) {
+                    .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                         Button("Clear Log", role: .destructive) {
                             Rcl57.shared.clearLog()
                         }
