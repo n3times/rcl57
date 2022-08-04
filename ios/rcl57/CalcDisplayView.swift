@@ -20,7 +20,7 @@ struct CalcDisplayView: View {
     private static let slant = 0.05
 
     private static func getDisplayPathRect() -> CGRect {
-        let width = (Double(maxLedCount - 1)) * interLedX + ledWidth
+        let width = Double(maxLedCount - 1) * interLedX + ledWidth
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
     }
 

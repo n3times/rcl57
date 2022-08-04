@@ -21,10 +21,37 @@ private struct LibraryNode: Identifiable {
             }
         }
     }
+}
 
-    static let samplesLib = LibraryNode(library: Lib57.samplesLib)
-    var userLib: LibraryNode {
-        LibraryNode(library: Lib57.samplesLib)
+struct ProgramGroupView: View {
+    @EnvironmentObject var change: Change
+
+    let library: Lib57
+    let isExpanded: Binding<Bool>
+
+    var body: some View {
+        let node = LibraryNode(library: library)
+
+        DisclosureGroup(isExpanded: isExpanded) {
+            ForEach(node.children) { item in
+                Button(item.name) {
+                    withAnimation {
+                        change.programShownInLibrary = item.program
+                    }
+                }
+                .offset(x: 15)
+            }
+        } label: {
+            Text(node.name)
+                .font(Style.listLineFontBold)
+                .foregroundColor(Style.blackish)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation {
+                        isExpanded.wrappedValue.toggle()
+                    }
+                }
+        }
     }
 }
 
@@ -52,55 +79,9 @@ struct LibraryView: View {
                         .background(Style.deepBlue)
                         .frame(width: width)
 
-                        let userLib = LibraryNode(library: Lib57.userLib)
-                        let items: [LibraryNode] = [.samplesLib, userLib]
-
                         List {
-                            DisclosureGroup(isExpanded: $change.samplesLibExpanded) {
-                                ForEach(items[0].children) { item in
-                                    Button(item.name) {
-                                        withAnimation {
-                                            change.programShownInLibrary = item.program
-                                        }
-                                    }
-                                    .offset(x: 15)
-                                }
-                            } label: {
-                                Text(items[0].name)
-                                    .font(Style.listLineFontBold)
-                                    .foregroundColor(Style.blackish)
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        withAnimation {
-                                            change.samplesLibExpanded.toggle()
-                                        }
-                                    }
-                            }
-
-                            DisclosureGroup(isExpanded: $change.userLibExpanded) {
-                                if items[1].children.count == 0 {
-
-                                } else {
-                                    ForEach(items[1].children) { item in
-                                        Button(item.name) {
-                                            withAnimation {
-                                                change.programShownInLibrary = item.program
-                                            }
-                                        }
-                                        .offset(x: 15)
-                                    }
-                                }
-                            } label: {
-                                Text(items[1].name)
-                                    .font(Style.listLineFontBold)
-                                    .foregroundColor(Style.blackish)
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        withAnimation {
-                                            change.userLibExpanded.toggle()
-                                        }
-                                    }
-                            }
+                            ProgramGroupView(change: _change, library: Lib57.samplesLib, isExpanded: $change.samplesLibExpanded)
+                            ProgramGroupView(change: _change, library: Lib57.userLib, isExpanded: $change.userLibExpanded)
                         }
                         .listStyle(PlainListStyle())
 

@@ -265,7 +265,7 @@ char *lrn57_get_display(rcl57_t *rcl57)
             }
         }
     } else {
-        str[i--] = '0' + op->key % 16;
+        str[i--] = '0' + op->key % 16 % 10;
         str[i--] = '0' + op->key / 16;
     }
     if (op->inv) {

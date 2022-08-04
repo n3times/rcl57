@@ -8,7 +8,7 @@ import Foundation
  */
 class Lib57 {
     private static let samplesLibURL =
-        Bundle.main.bundleURL.appendingPathComponent("samples_lib")
+        Bundle.main.bundleURL.appendingPathComponent("samplesLib")
     private static let userLibURL =
         Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
 
@@ -27,7 +27,8 @@ class Lib57 {
         self.readonly = readonly
 
         programs = []
-        let enumerator = Foundation.FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
+        let enumerator =
+            Foundation.FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
         while let programURLObject = enumerator!.nextObject() {
             let programURL = programURLObject as! URL
             if programURL.path.hasSuffix(Prog57.programFileExtension) {
@@ -46,7 +47,6 @@ class Lib57 {
             let programURL = folderURL.appendingPathComponent(program.getName())
             try text.write(to: programURL, atomically: true, encoding: String.Encoding.utf8)
         } catch {
-            // failed to write file.
             return false
         }
 
@@ -74,9 +74,9 @@ class Lib57 {
     }
 
     func getProgramByName(_ programName: String) -> Prog57? {
-        for libProgram in programs {
-            if libProgram.getName() == programName {
-                return libProgram
+        for program in programs {
+            if program.getName() == programName {
+                return program
             }
         }
         return nil

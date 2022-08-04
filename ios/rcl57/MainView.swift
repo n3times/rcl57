@@ -20,50 +20,46 @@ struct MainView: View {
         change.updateDisplayString()
     }
 
-    private func getMainView(_ geometry: GeometryProxy) -> some View {
-        ZStack {
-            if change.currentView == .calc || change.currentView == .settings || change.currentView == .library || change.currentView == .manual {
-                CalcView()
-                    .environmentObject(change)
-                    .transition(.move(edge: change.transitionEdge))
-                if change.currentView == .library {
-                    LibraryView()
-                        .environmentObject(change)
-                        .transition(.move(edge: .bottom))
-                        .zIndex(1)
-                }
-                if change.currentView == .settings {
-                    SettingsView()
-                        .environmentObject(change)
-                        .transition(.move(edge: .bottom))
-                        .zIndex(1)
-                }
-                if change.currentView == .manual {
-                    ManualMainView()
-                        .environmentObject(change)
-                        .transition(.move(edge: .bottom))
-                        .zIndex(1)
-                }
-            }
-
-            if change.currentView == .log {
-                LogView()
-                    .environmentObject(change)
-                    .transition(.move(edge: .trailing))
-            } else if change.currentView == .state {
-                StateView()
-                    .environmentObject(change)
-                    .transition(.move(edge: .leading))
-            }
-        }
-    }
-
     var body: some View {
         return GeometryReader { geometry in
-            self.getMainView(geometry)
-        }
-        .onReceive(timerPublisher) { _ in
-            burst(ms: 20)
+            ZStack {
+                if change.currentView != .state && change.currentView != .log {
+                    CalcView()
+                        .environmentObject(change)
+                        .transition(.move(edge: change.transitionEdge))
+                    if change.currentView == .library {
+                        LibraryView()
+                            .environmentObject(change)
+                            .transition(.move(edge: .bottom))
+                            .zIndex(1)
+                    }
+                    if change.currentView == .settings {
+                        SettingsView()
+                            .environmentObject(change)
+                            .transition(.move(edge: .bottom))
+                            .zIndex(1)
+                    }
+                    if change.currentView == .manual {
+                        ManualMainView()
+                            .environmentObject(change)
+                            .transition(.move(edge: .bottom))
+                            .zIndex(1)
+                    }
+                }
+
+                if change.currentView == .state {
+                    StateView()
+                        .environmentObject(change)
+                        .transition(.move(edge: .leading))
+                } else if change.currentView == .log {
+                    LogView()
+                        .environmentObject(change)
+                        .transition(.move(edge: .trailing))
+                }
+            }
+            .onReceive(timerPublisher) { _ in
+                burst(ms: 20)
+            }
         }
     }
 }

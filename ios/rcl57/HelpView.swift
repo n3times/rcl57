@@ -27,7 +27,7 @@ struct HelpView: UIViewRepresentable {
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        let htmlString = Help57.toHTML(helpString: helpString)
+        let htmlString = Help57.hlpToHTML(helpString: helpString)
         webView.loadHTMLString(headerString + htmlString, baseURL: Bundle.main.bundleURL)
     }
 }
