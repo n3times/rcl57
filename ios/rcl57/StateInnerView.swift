@@ -1,10 +1,6 @@
-/**
- * A mini view that shows the user program.
- */
-
 import SwiftUI
 
-/** Data for a ProgramLineView: a step index and an operation. */
+/** Data for a StepLineView: a step index and an operation. */
 private struct StepLine: Identifiable {
     static var lineId = 0
     let index: Int
@@ -21,7 +17,6 @@ private struct StepLine: Identifiable {
     }
 }
 
-/** A line view in a ProgramView: a number on the left and an operation on the right. */
 private struct StepLineView: View {
     private let line: StepLine
     private let activeBackgroundColor = Style.ivory
@@ -88,7 +83,7 @@ private struct RegisterLineView: View {
 }
 
 struct StateInnerView: View {
-    @State private var lines : [StepLine] = []
+    @State private var lines: [StepLine] = []
     @State private var middle: Int
     @State private var pc: Int
     @State private var isOpEditInLrn: Bool

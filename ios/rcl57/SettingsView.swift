@@ -69,19 +69,19 @@ struct SettingsView: View {
                         }
                     }
                     .onChange(of: hasHaptic) { _ in
-                        Settings.setHasHaptic(has_haptic: hasHaptic)
+                        Settings.setHasHaptic(hasHaptic)
                     }
                     .onChange(of: hasKeyClick) { _ in
-                        Settings.setHasKeyClick(has_key_click: hasKeyClick)
+                        Settings.setHasKeyClick(hasKeyClick)
                     }
                     .onChange(of: hasTurboSpeed) { _ in
-                        Settings.setTurboSpeed(turbo: hasTurboSpeed)
+                        Settings.setTurboSpeed(hasTurboSpeed)
                     }
                     .onChange(of: hasAlphaDisplay) { _ in
-                        Settings.setAlphaDisplay(alpha: hasAlphaDisplay)
+                        Settings.setAlphaDisplay(hasAlphaDisplay)
                     }
                     .onChange(of: hasHPLrnMode) { _ in
-                        Settings.setHPLrnMode(hpLrn: hasHPLrnMode)
+                        Settings.setHPLrnMode(hasHPLrnMode)
                     }
                 }
             }

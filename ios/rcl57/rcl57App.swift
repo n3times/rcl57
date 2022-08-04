@@ -6,9 +6,9 @@ struct rcl57App: App {
 
     init() {
         // Technically this is only necessary the state is not loaded from a file.
-        Settings.setTurboSpeed(turbo: Settings.getTurboSpeed())
-        Settings.setAlphaDisplay(alpha: Settings.getAlphaDisplay())
-        Settings.setHPLrnMode(hpLrn: Settings.getHPLrnMode())
+        Settings.setTurboSpeed(Settings.getTurboSpeed())
+        Settings.setAlphaDisplay(Settings.getAlphaDisplay())
+        Settings.setHPLrnMode(Settings.getHPLrnMode())
     }
 
     var body: some Scene {

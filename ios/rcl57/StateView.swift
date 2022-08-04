@@ -1,6 +1,6 @@
 import SwiftUI
 
-/** Shows the steps and registers of the calculator. */
+/** The steps and registers of the calculator. */
 struct StateView: View {
     @EnvironmentObject var change: Change
 

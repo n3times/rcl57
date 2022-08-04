@@ -34,7 +34,7 @@ private struct LogLineView: View {
     private func getColor(entry: LogEntry) -> Color {
         let isError = (entry.getFlags() & LOG57_ERROR_FLAG) != 0
 
-        return isError ? foregroundColorError : foregroundColor
+        return isError ? foregroundColorError: foregroundColor
     }
 
     var body: some View {
@@ -55,11 +55,11 @@ private struct LogLineView: View {
 
 /** A list of LineView's. */
 struct LogInnerView: View {
-    @State private var lines : [LogLine] = []
+    @State private var lines: [LogLine] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
-    private let maxLines : Int
+    private let maxLines: Int
 
     @EnvironmentObject var change: Change
 
