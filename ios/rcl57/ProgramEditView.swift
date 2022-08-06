@@ -31,9 +31,8 @@ struct ProgramEditView: View {
         help = ""
     }
 
-    init(context: CreateProgramContext) {
-        let paste = UIPasteboard.general.string ?? ""
-        var program = Prog57(text: paste)
+    init(text: String) {
+        var program = Prog57(text: text)
         if program == nil {
             program = Prog57(name: "",
                              description: "Clipboard does not appear to contain a legal program.")

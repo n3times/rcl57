@@ -54,9 +54,7 @@ To delete a user program (but not a sample program):
 To export a program:
 # Go to the ''Program View''
 # Tap on ''...''
-# Tap on ''Copy to Clipboad''
-The clipboad will contain the program including name, description, steps and registers.
-From there, you can, for example, email this program to yourself, and save it for backup purposes.
+# Tap on ''Export''
 
 ==Importing a program==
 
@@ -64,4 +62,4 @@ To import a program:
 # Go to the ''Library View''
 # Tap on ''IMPORT''
 
-This assumes that the clipboad contains a valid program.
+''Note:'' You will be able to select only files with a ".p57" extension.

@@ -36,7 +36,9 @@ struct LibraryView: View {
     fileprivate let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
     fileprivate let userLibNode = LibraryNode(library: Lib57.userLib)
 
-    let srtType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
+    let exportedType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
+
+    static var importText: String = ""
 
     var body: some View {
         ZStack {
@@ -111,7 +113,7 @@ struct LibraryView: View {
                             .buttonStyle(.plain)
                             .fileImporter(
                                 isPresented: $isPresentingImport,
-                                allowedContentTypes: [srtType],
+                                allowedContentTypes: [exportedType],
                                 allowsMultipleSelection: false,
                                 onCompletion: { result in
                                     withAnimation {
@@ -119,8 +121,7 @@ struct LibraryView: View {
                                             let url = try result.get().first!
 
                                             if url.startAccessingSecurityScopedResource() {
-                                                let text = try String(contentsOf: url)
-                                                UIPasteboard.general.string = text
+                                                LibraryView.importText = try String(contentsOf: url)
                                                 change.isImportProgramInLibrary = true
                                                 do { url.stopAccessingSecurityScopedResource() }
                                             } else {
@@ -150,7 +151,7 @@ struct LibraryView: View {
             }
 
             if change.isImportProgramInLibrary {
-                ProgramEditView(context: .imported)
+                ProgramEditView(text: LibraryView.importText)
                     .transition(.move(edge: .bottom))
             }
         }
