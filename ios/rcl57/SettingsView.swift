@@ -84,6 +84,7 @@ struct SettingsView: View {
                         Settings.setHPLrnMode(hasHPLrnMode)
                     }
                 }
+                .tint(Color.gray)
             }
         }
     }

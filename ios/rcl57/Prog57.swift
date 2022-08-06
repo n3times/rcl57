@@ -6,7 +6,7 @@ import Foundation
  * Registers and steps are combined into a 'state' structure.
  */
 class Prog57 : Hashable, Equatable {
-    static let programFileExtension = ".p57"
+    static let programFileExtension = ".r57"
 
     /* Backing struct: name, description and state. */
     private var prog57 = prog57_t()
