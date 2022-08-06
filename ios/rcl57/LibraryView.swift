@@ -117,9 +117,15 @@ struct LibraryView: View {
                                     withAnimation {
                                         do {
                                             let url = try result.get().first!
-                                            let text = try String(contentsOf: url)
-                                            UIPasteboard.general.string = text
-                                            change.isImportProgramInLibrary = true
+
+                                            if url.startAccessingSecurityScopedResource() {
+                                                let text = try String(contentsOf: url)
+                                                UIPasteboard.general.string = text
+                                                change.isImportProgramInLibrary = true
+                                                do { url.stopAccessingSecurityScopedResource() }
+                                            } else {
+                                                // Handle denied access
+                                            }
                                         } catch {
                                             print (error.localizedDescription)
                                         }

@@ -57,11 +57,6 @@ struct ProgramView: View {
                     Spacer(minLength: 15)
 
                     Menu {
-                        Button(action: {
-                            isPresentingCopy = true
-                        }) {
-                            Text("Copy to Clipboard")
-                        }
                         if !program.readOnly {
                             Button(action: {
                                 isPresentingDelete = true
@@ -89,11 +84,6 @@ struct ProgramView: View {
                             withAnimation {
                                 change.programView = nil
                             }
-                        }
-                    }
-                    .confirmationDialog("Copy?", isPresented: $isPresentingCopy) {
-                        Button("Copy " + program.getName(), role: .none) {
-                            UIPasteboard.general.string = program.toString()
                         }
                     }
                     .sheet(isPresented: $isPresentingShare) {
