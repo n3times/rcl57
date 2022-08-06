@@ -1,9 +1,22 @@
 import SwiftUI
 
+private struct ActivityViewController: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
+}
+
 /** Shows the name and description of a program and let's the user take different actions on the program. */
 struct ProgramView: View {
     @EnvironmentObject var change: Change
 
+    @State private var isPresentingShare: Bool = false
     @State private var isPresentingDelete: Bool = false
     @State private var isPresentingCopy: Bool = false
 
@@ -55,6 +68,11 @@ struct ProgramView: View {
                             }) {
                                 Text("Delete")
                             }
+                            Button(action: {
+                                isPresentingShare = true
+                            }) {
+                                Text("Export")
+                            }
                         }
                     } label: {
                         Image(systemName: "ellipsis")
@@ -77,6 +95,9 @@ struct ProgramView: View {
                         Button("Copy " + program.getName(), role: .none) {
                             UIPasteboard.general.string = program.toString()
                         }
+                    }
+                    .sheet(isPresented: $isPresentingShare) {
+                        ActivityViewController(activityItems: [program.url!])
                     }
                     .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)
 
