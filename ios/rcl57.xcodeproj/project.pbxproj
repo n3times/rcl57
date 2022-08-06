@@ -109,6 +109,7 @@
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
 		15B0860D286413260018418A /* samplesLib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = samplesLib; path = ../samplesLib; sourceTree = "<group>"; };
 		15B0861128680BB40018418A /* Lib57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lib57.swift; sourceTree = "<group>"; };
+		15BFD68F289EE3A700EA7AD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -164,6 +165,7 @@
 		150ED8A027B089EF00E01FC6 /* rcl57 */ = {
 			isa = PBXGroup;
 			children = (
+				15BFD68F289EE3A700EA7AD3 /* Info.plist */,
 				150ED8A127B089EF00E01FC6 /* rcl57App.swift */,
 				15F948F9283F26B200706BE5 /* Help57.swift */,
 				15B0861128680BB40018418A /* Lib57.swift */,
@@ -432,8 +434,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -494,8 +498,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -525,8 +531,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"rcl57/Preview Content\"";
 				DEVELOPMENT_TEAM = FVF2Q6V64F;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = rcl57/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -534,6 +543,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -559,8 +569,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"rcl57/Preview Content\"";
 				DEVELOPMENT_TEAM = FVF2Q6V64F;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = rcl57/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -568,6 +581,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

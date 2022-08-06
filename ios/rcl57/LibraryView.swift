@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 private struct LibraryNode: Identifiable {
     let id = UUID()
@@ -34,6 +35,8 @@ struct LibraryView: View {
 
     fileprivate let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
     fileprivate let userLibNode = LibraryNode(library: Lib57.userLib)
+
+    let srtType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
 
     var body: some View {
         ZStack {
@@ -106,16 +109,25 @@ struct LibraryView: View {
                             .font(Style.footerFont)
                             .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight, alignment: .center)
                             .buttonStyle(.plain)
+                            .fileImporter(
+                                isPresented: $isPresentingImport,
+                                allowedContentTypes: [srtType],
+                                allowsMultipleSelection: false,
+                                onCompletion: { result in
+                                    withAnimation {
+                                        do {
+                                            let url = try result.get().first!
+                                            let text = try String(contentsOf: url)
+                                            UIPasteboard.general.string = text
+                                            change.isImportProgramInLibrary = true
+                                        } catch {
+                                            print (error.localizedDescription)
+                                        }
+                                    }
+                                })
 
                             Spacer()
                                 .frame(width: width / 6, height: Style.footerHeight)
-                        }
-                        .confirmationDialog("Import?", isPresented: $isPresentingImport) {
-                            Button("Import from Clipboad", role: .none) {
-                                withAnimation {
-                                    change.isImportProgramInLibrary = true
-                                }
-                            }
                         }
                         .background(Style.deepBlue)
                         .foregroundColor(Style.ivory)
