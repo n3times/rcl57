@@ -67,6 +67,7 @@ struct ProgramView: View {
                             if program == change.loadedProgram {
                                 change.loadedProgram = nil
                             }
+                            change.isUserLibExpanded = true
                             withAnimation {
                                 change.programView = nil
                             }
