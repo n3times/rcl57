@@ -23,37 +23,6 @@ private struct LibraryNode: Identifiable {
     }
 }
 
-struct ProgramGroupView: View {
-    @EnvironmentObject var change: Change
-
-    let library: Lib57
-    let isExpanded: Binding<Bool>
-
-    var body: some View {
-        let node = LibraryNode(library: library)
-
-        DisclosureGroup(isExpanded: isExpanded) {
-            ForEach(node.children) { item in
-                Button(item.name) {
-                    withAnimation {
-                        change.programView = ProgramView(program: item.program!)
-                    }
-                }
-                .offset(x: 15)
-            }
-        } label: {
-            Text(node.name)
-                .font(Style.listLineFontBold)
-                .foregroundColor(Style.blackish)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    withAnimation {
-                        isExpanded.wrappedValue.toggle()
-                    }
-                }
-        }
-    }
-}
 
 /**
  * Shows a list of sample and user programs.
@@ -62,6 +31,9 @@ struct LibraryView: View {
     @EnvironmentObject var change: Change
 
     @State private var isPresentingImport: Bool = false
+
+    fileprivate let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
+    fileprivate let userLibNode = LibraryNode(library: Lib57.userLib)
 
     var body: some View {
         ZStack {
@@ -80,8 +52,46 @@ struct LibraryView: View {
                         .frame(width: width)
 
                         List {
-                            ProgramGroupView(change: _change, library: Lib57.samplesLib, isExpanded: $change.isSamplesLibExpanded)
-                            ProgramGroupView(change: _change, library: Lib57.userLib, isExpanded: $change.isUserLibExpanded)
+                            DisclosureGroup(isExpanded: $change.isSamplesLibExpanded) {
+                                ForEach(samplesLibNode.children) { item in
+                                    Button(item.name) {
+                                        withAnimation {
+                                            change.programView = ProgramView(program: item.program!)
+                                        }
+                                    }
+                                    .offset(x: 15)
+                                }
+                            } label: {
+                                Text(samplesLibNode.name)
+                                    .font(Style.listLineFontBold)
+                                    .foregroundColor(Style.blackish)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation {
+                                            change.isSamplesLibExpanded.toggle()
+                                        }
+                                    }
+                            }
+                            DisclosureGroup(isExpanded: $change.isUserLibExpanded) {
+                                ForEach(userLibNode.children) { item in
+                                    Button(item.name) {
+                                        withAnimation {
+                                            change.programView = ProgramView(program: item.program!)
+                                        }
+                                    }
+                                    .offset(x: 15)
+                                }
+                            } label: {
+                                Text(userLibNode.name)
+                                    .font(Style.listLineFontBold)
+                                    .foregroundColor(Style.blackish)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation {
+                                            change.isUserLibExpanded.toggle()
+                                        }
+                                    }
+                            }
                         }
                         .listStyle(PlainListStyle())
 
