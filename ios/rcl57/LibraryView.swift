@@ -103,14 +103,16 @@ struct LibraryView: View {
                         // Footer
                         HStack(spacing: 0) {
                             Spacer()
-                                .frame(width: width / 6, height: Style.footerHeight)
+                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight)
 
-                            Button("IMPORT") {
+                            Button(action: {
                                 isPresentingImport = true
+                            }) {
+                                Text("IMPORT")
+                                    .font(Style.footerFont)
+                                    .frame(maxWidth: width * 3 / 5, maxHeight: Style.footerHeight, alignment: .center)
+                                    .buttonStyle(.plain)
                             }
-                            .font(Style.footerFont)
-                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight, alignment: .center)
-                            .buttonStyle(.plain)
                             .fileImporter(
                                 isPresented: $isPresentingImport,
                                 allowedContentTypes: [exportedType],
@@ -134,7 +136,7 @@ struct LibraryView: View {
                                 })
 
                             Spacer()
-                                .frame(width: width / 6, height: Style.footerHeight)
+                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight)
                         }
                         .background(Style.deepBlue)
                         .foregroundColor(Style.ivory)

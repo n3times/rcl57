@@ -54,45 +54,20 @@ struct ProgramView: View {
 
                 // Footer
                 HStack(spacing: 0) {
-                    Spacer(minLength: 15)
-
-                    Menu {
-                        if !program.readOnly {
-                            Button(action: {
-                                isPresentingDelete = true
-                            }) {
-                                Text("Delete")
-                            }
-                            Button(action: {
-                                isPresentingShare = true
-                            }) {
-                                Text("Export")
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .leading)
+                    Button(action: {
+                        isPresentingShare = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(Style.directionsFont)
+                            .offset(x: 15)
+                            .frame(width: width / 5, height: Style.footerHeight, alignment: .leading)
                             .contentShape(Rectangle())
-                    }
-                    .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
-                        Button("Delete " + program.getName(), role: .destructive) {
-                            _ = Lib57.userLib.deleteProgram(program)
-                            if program == change.loadedProgram {
-                                change.loadedProgram = nil
-                            }
-                            change.isUserLibExpanded = true
-                            withAnimation {
-                                change.programView = nil
-                            }
-                        }
                     }
                     .sheet(isPresented: $isPresentingShare) {
                         ActivityViewController(activityItems: [program.url!])
                     }
-                    .frame(width: width / 6, height: Style.footerHeight, alignment: .leading)
 
-
-                    Button(loadButtonText) {
+                    Button(action: {
                         program.loadStepsIntoMemory()
                         program.loadRegistersIntoMemory()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -101,27 +76,55 @@ struct ProgramView: View {
                         withAnimation {
                             change.currentView = .calc
                         }
+                    }) {
+                        Text(loadButtonText)
+                            .font(Style.footerFont)
+                            .frame(maxWidth: width * 3 / 5, maxHeight: Style.footerHeight, alignment: .center)
+                            .buttonStyle(.plain)
+                            .contentShape(Rectangle())
                     }
-                    .font(Style.footerFont)
-                    .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight, alignment: .center)
-                    .buttonStyle(.plain)
 
                     if program.readOnly {
                         Spacer()
-                            .frame(width: width / 6, height: Style.footerHeight)
+                            .frame(width: width / 5, height: Style.footerHeight)
                     } else {
-                        Button("EDIT") {
-                            change.isPreviewInEditProgram = false
-                            withAnimation {
-                                change.isEditInProgramView = true
+                        Menu {
+                            Button(action: {
+                                isPresentingDelete = true
+                            }) {
+                                Text("Delete")
+                            }
+                            Button(action: {
+                                change.isPreviewInEditProgram = false
+                                withAnimation {
+                                    change.isEditInProgramView = true
+                                }
+                            }) {
+                                Text("Edit")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .font(Style.directionsFont)
+                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight, alignment: .trailing)
+                                .offset(x: -15)
+                                .contentShape(Rectangle())
+                        }
+                        .frame(maxWidth: width / 5, maxHeight: Style.footerHeight, alignment: .trailing)
+                        .offset(x: -15)
+                        .contentShape(Rectangle())
+                        .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
+                            Button("Delete " + program.getName(), role: .destructive) {
+                                _ = Lib57.userLib.deleteProgram(program)
+                                if program == change.loadedProgram {
+                                    change.loadedProgram = nil
+                                }
+                                change.isUserLibExpanded = true
+                                withAnimation {
+                                    change.programView = nil
+                                }
                             }
                         }
-                        .font(Style.footerFont)
-                        .frame(maxWidth: width / 6, maxHeight: Style.footerHeight, alignment: .trailing)
-                        .buttonStyle(.plain)
                     }
-
-                    Spacer(minLength: 15)
                 }
             }
             .background(Style.deepBlue)

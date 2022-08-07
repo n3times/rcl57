@@ -18,29 +18,31 @@ struct MenuBarView: View {
                     leftAction()
                 }) {
                     Text(left!)
-                        .frame(width: width / 6, height: Style.headerHeight)
+                        .frame(maxWidth: width / 5, maxHeight: Style.headerHeight, alignment: .leading)
+                        .offset(x: 15)
                         .font(Style.directionsFont)
                         .contentShape(Rectangle())
                 }
             } else {
                 Spacer()
-                    .frame(width: width / 6, height: Style.headerHeight)
+                    .frame(maxWidth: width / 5, maxHeight: Style.headerHeight)
             }
             Text(title)
-                .frame(maxWidth: width * 2 / 3, maxHeight: Style.headerHeight)
+                .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
                 .font(Style.titleFont)
             if right != nil {
                 Button(action: {
                     rightAction()
                 }) {
                     Text(right!)
-                        .frame(width: width / 6, height: Style.headerHeight)
+                        .frame(maxWidth: width / 5, maxHeight: Style.headerHeight, alignment: .trailing)
+                        .offset(x: -15)
                         .font(Style.directionsFont)
                         .contentShape(Rectangle())
                 }
             } else {
                 Spacer()
-                    .frame(width: width / 6, height: Style.headerHeight)
+                    .frame(maxWidth: width / 5, maxHeight: Style.headerHeight)
             }
         }
         .foregroundColor(Style.ivory)

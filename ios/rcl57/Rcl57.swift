@@ -28,7 +28,7 @@ struct LogEntry {
 class Rcl57 {
     private static let stateFilename = "rcl57.dat"
     private static let versionKey = "version"
-    static let version = "beta 3"
+    static let version = "beta 4"
 
     static let shared = Rcl57(filename: stateFilename)
 
@@ -130,29 +130,6 @@ class Rcl57 {
         if fileURL != nil {
             do {
                 try rawData.write(to: fileURL!, options: .atomic)
-                return true
-            } catch {
-                // Nothing
-            }
-        }
-        return false
-    }
-
-    func saveState() -> Bool {
-        let filename = "tmp.r57"
-        var X = rcl57.ti57.X
-        var Y = rcl57.ti57.Y
-        let sizeX = MemoryLayout.size(ofValue: X)
-        var rawDataX = Data(bytes: &X, count: sizeX)
-        let rawDataY = Data(bytes: &Y, count: sizeX)
-        rawDataX.append(contentsOf: rawDataY)
-        let dirURL: URL? =
-            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileURL: URL? = dirURL?.appendingPathComponent(filename)
-
-        if fileURL != nil {
-            do {
-                try rawDataX.write(to: fileURL!, options: .atomic)
                 return true
             } catch {
                 // Nothing

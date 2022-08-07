@@ -40,6 +40,7 @@ This will save either the steps or the registers, depending on what is shown on 
 
 To edit the name or the description of a program:
 # Go to the ''Program View''
+# Tap on ''...''
 # Tap on ''EDIT''.
 
 ==Deleting a program==
@@ -51,15 +52,24 @@ To delete a user program (but not a sample program):
 
 ==Exporting a program==
 
+By exporting a program, we mean making a program available outside the RCL-57 app. For example:
+* Emailing a program to ourselves or to a friend
+* Saving a program to iCloud
+* Saving a program to the file folder of your iOS device
+* Downloading a program to a MacBook using AirDrop
+
 To export a program:
 # Go to the ''Program View''
-# Tap on ''...''
-# Tap on ''Export''
+# Tap on the icon at the bottom left of the screen
+
+This will bring a menu that allows the user to export the program in many different ways.
 
 ==Importing a program==
+
+By importing a program, we mean bringing an outside program inside the RCL-57 app. Typically files will be imported from iCloud or the file folder of the iOS device.
 
 To import a program:
 # Go to the ''Library View''
 # Tap on ''IMPORT''
 
-''Note:'' You will be able to select only files with a ".r57" extension.
+''Note:'' You will be able to select only files with a ".r57" extension, the other ones being grayed out.

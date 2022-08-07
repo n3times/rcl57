@@ -36,11 +36,14 @@ struct LogView: View {
 
                 HStack(spacing: 0) {
                     Spacer()
-                    Button("CLEAR") {
+                    Button(action: {
                         isPresentingClear = true
+                    }) {
+                        Text("CLEAR")
+                            .font(Style.footerFont)
+                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight)
+                            .contentShape(Rectangle())
                     }
-                    .font(Style.footerFont)
-                    .frame(width: width / 3, height: Style.footerHeight)
                     .disabled(Rcl57.shared.getLoggedCount() == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Clear?", isPresented: $isPresentingClear) {

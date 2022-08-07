@@ -6,7 +6,7 @@ import SwiftUI
 struct CalcView: View {
     @EnvironmentObject private var change: Change
 
-    private func getButtonView(text: String, width: Double, destination: CurrentView, edge: Edge) -> some View {
+    private func getButtonView(text: String, destination: CurrentView, edge: Edge) -> some View {
         Button(action: {
             change.transitionEdge = edge
             withAnimation {
@@ -33,15 +33,15 @@ struct CalcView: View {
                 VStack(spacing: 0) {
                     // Menu bar.
                     HStack(spacing: 0) {
-                        getButtonView(text: Style.leftArrow, width: width / 6, destination: .state, edge: .trailing)
+                        getButtonView(text: Style.leftArrow, destination: .state, edge: .trailing)
                             .foregroundColor(Style.lightGray)
-                        getButtonView(text: Style.square, width: width / 6, destination: .manual, edge: .top)
+                        getButtonView(text: Style.square, destination: .manual, edge: .top)
                             .foregroundColor(Style.deepishGreen)
-                        getButtonView(text: Style.square, width: width / 6, destination: .settings, edge: .top)
+                        getButtonView(text: Style.square, destination: .settings, edge: .top)
                             .foregroundColor(Style.lightGray)
-                        getButtonView(text: Style.square, width: width / 6, destination: .library, edge: .top)
+                        getButtonView(text: Style.square, destination: .library, edge: .top)
                             .foregroundColor(Style.deepishBlue)
-                        getButtonView(text: Style.rightArrow, width: width / 6, destination: .log, edge: .leading)
+                        getButtonView(text: Style.rightArrow, destination: .log, edge: .leading)
                             .foregroundColor(Style.lightGray)
                     }
                     .font(Style.directionsFont)
