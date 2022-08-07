@@ -32,23 +32,22 @@ struct StateView: View {
                     .background(Style.blackish)
 
                     // Type (steps or registers)
-                    HStack(spacing: 0) {
-                        Button(isProgramNew ? "" : stateTypeName.uppercased()) {
-                            change.isStepsInState.toggle()
+                    if !isProgramNew {
+                        HStack(spacing: 0) {
+                            Spacer()
+                                .frame(width: width / 3, height: 20, alignment: .leading)
+
+                            Text(isProgramReadOnly ? "Samples" : isProgramReadWrite ? "User" : "")
+                                .offset(y: -3)
+                                .frame(width: width / 3, height: 20)
+
+                            Spacer()
+                                .frame(width: width / 3, height: 20)
                         }
-                        .offset(x: 15, y: -3)
-                        .frame(width: width / 3, height: 20, alignment: .leading)
-
-                        Text(isProgramReadOnly ? "Samples" : isProgramReadWrite ? "User" : "")
-                            .offset(y: -3)
-                            .frame(width: width / 3, height: 20)
-
-                        Spacer()
-                            .frame(width: width / 3, height: 20)
+                        .background(Style.blackish)
+                        .foregroundColor(Style.ivory)
+                        .font(Style.programFont)
                     }
-                    .background(Style.blackish)
-                    .foregroundColor(Style.ivory)
-                    .font(Style.programFont)
 
                     // State
                     StateInnerView()
@@ -106,7 +105,7 @@ struct StateView: View {
                         .frame(width: width / 3, height: Style.footerHeight)
                         .buttonStyle(.plain)
                         .disabled(isProgramReadWrite && (change.isStepsInState ? !program!.stepsNeedSaving()
-                                                  : !program!.registersNeedSaving()))
+                                                         : !program!.registersNeedSaving()))
                         .confirmationDialog("Save?", isPresented: $isPresentingSave) {
                             if isProgramReadWrite {
                                 Button("Save " + (change.isStepsInState ? "Steps" : "Registers"), role: .destructive) {
