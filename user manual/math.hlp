@@ -48,7 +48,7 @@ Data is entered with $$2nd S+$$:
 : $$12 2nd S+$$: @@3@@
 
 Note that the display shows how many numbers have been entered so far. To compute the average of these numbers:
-: $$2nd xbar$$: @@8@@
+: $$2nd x$$: @@8@@
 And to compute the variance:
 : $$2nd s2$$: @@8.6666667@@
 

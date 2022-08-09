@@ -22,13 +22,11 @@ To enter the program, first clear the steps by going to the ''State View'' locat
 :$$GTO 0$$
 :$$LRN$$
 
-The first $$LRN$$ will place the calculator in ''learning mode''. You will see on the display @@00 00@@. The first 2 digits mean that we are at the beginning of the program, at step ''00'', and the ''00'' on the right means that this first step is blank. As you type, you will see the step number being incremented 1 by 1.
+The first $$LRN$$ will place the calculator in ''learning mode'' and the second $$LRN$$ will place the calculator out of learning mode, back to ''normal mode''.
 
-''Note:'' if you are in alpha mode and/or HP LRN mode, the display will be slightly different. See the ''Options'' entry of this manual.
+To browse the program, press $$BST$$ and $$SST$$, to go one step backward or forward. In case of mistake, pressing $$2nd Del$$ to delete the step on the display. In addition, in non-HP LRN mode, press $$2nd Ins$$ to insert an instruction after the current step.
 
-In case of mistake, the program can be edited with $$BST$$ and $$SST$$, to go one step backward or forward, as well as with $$2nd Del$$ and $$2nd Ins$$, to delete or insert a step.
-
-The second $$LRN$$ will place the calculator out of learning mode, back to ''normal mode''.
+''Note:'' $$2nd Ins$$ is a no-op in HP LRN mode.
 
 ==Running==
 

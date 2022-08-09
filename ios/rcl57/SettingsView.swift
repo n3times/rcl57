@@ -36,7 +36,7 @@ struct SettingsView: View {
                         }
                         .foregroundColor(Color.black)
                         .alert(isPresented: $isPresentingContact) {
-                            Alert(title: Text("RCL-57 " + Rcl57.version), message: Text(aboutText))
+                            Alert(title: Text("RCL-57\n" + "v" + Rcl57.version), message: Text(aboutText))
                         }
                         Button("Reset") {
                             isPresentingReset = true

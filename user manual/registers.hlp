@@ -5,6 +5,8 @@ The number in the display can be stored in register d with
 and recalled with
 :$$RCL$$ ''d''
 
+Register 7 is also called ''register t''.
+
 ==Arithmetic on Registers==
 $$SUM$$ ''d'': adds the value on the display to register d.
 $$INV SUM$$ ''d'': substracts.
@@ -19,7 +21,6 @@ $$x:t$$ exchanges the value on the display with register t.
 $$INV 2nd C.t$$ resets all the registers.
 $$2nd C.t$$ resets register t.
 
-==Notes==
-Some of these registers are used in other contexts:
-* Registers 5 and 6 are shared with the arithmetic stack
-* Register 7 is the same as register t
+==Note==
+
+Registers 5 and 6 are shared with the arithmetic stack, therefore they may be overriden by long arithmetic expressions.

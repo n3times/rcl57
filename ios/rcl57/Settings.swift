@@ -9,7 +9,6 @@ struct Settings {
 
     private static func setBoolValue(key: String, value: Bool) {
         UserDefaults.standard.set(value ? "Y" : "N", forKey: key)
-        Rcl57.shared.setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: value)
     }
 
     private static func getBoolValue(key: String, defaultValue: Bool) -> Bool {

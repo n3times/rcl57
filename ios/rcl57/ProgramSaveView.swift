@@ -35,7 +35,7 @@ struct ProgramSaveView: View {
                             width: width,
                             leftAction: { withAnimation {change.isPreviewInEditProgram = false} },
                             rightAction: { })
-                .background(Style.deepBlue)
+                .background(Style.deeperBlue)
 
                 if program.getDescription() == "" {
                     Text("No description available")
@@ -97,7 +97,7 @@ struct ProgramSaveView: View {
                     .buttonStyle(.plain)
                     Spacer()
                 }
-                .background(Style.deepBlue)
+                .background(Style.deeperBlue)
                 .foregroundColor(Style.ivory)
             }
         }

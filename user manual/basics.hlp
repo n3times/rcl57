@@ -19,6 +19,6 @@ Press $$INV EE$$ or $$CLR$$ to go back to regular mode.
 
 ==Fix Notation==
 
-Press $$2nd Fix$$ '''d''' to display d digits after the decimal point:
+Press $$2nd Fix$$ ''d'' to display d digits after the decimal point:
 :$$2nd pi 2nd fix 2$$ @@3.14@@
 Press $$INV 2nd Fix$$ to go back to regular mode.

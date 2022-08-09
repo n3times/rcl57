@@ -1,4 +1,5 @@
 import SwiftUI
+import AudioToolbox
 
 enum CreateProgramContext {
     case create
@@ -118,7 +119,7 @@ struct ProgramEditView: View {
                             .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces) == "")
                             .buttonStyle(.plain)
                         }
-                        .background(Style.deepBlue)
+                        .background(Style.deeperBlue)
                         .foregroundColor(Style.ivory)
 
                         TextField("Name", text: $name)

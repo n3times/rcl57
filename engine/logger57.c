@@ -155,8 +155,8 @@ void logger57_update_after_next(ti57_t *ti57,
             if (ti57->log.logged_count &&
                 ti57->log.entries[ti57->log.logged_count].type != LOG57_NUMBER_IN) {
                 log_op(ti57, false, KEY57_CLR, -1, false);
-                log57_clear_current_op(&ti57->log);
             }
+            log57_clear_current_op(&ti57->log);
         }
 
         // Log display.

@@ -11,6 +11,7 @@ struct Style {
     static let deepGreen = Color(red: 0.18, green: 0.58, blue: 0.35)
     static let deepishBlue = Color(red: 0.6, green: 0.8, blue: 1.0)
     static let deepishGreen = Color(red: 0.7, green: 0.9, blue: 0.7)
+    static let deeperBlue = Color(red: 0.13, green: 0.24, blue: 0.40)
 
     // Header.
     static let titleFont = Font.system(size: 22, weight: .medium)
@@ -39,6 +40,7 @@ struct Style {
     static let rightArrow = "\u{25b7}"
     static let rightArrowFull = "\u{25b6}"
     static let downArrow = "\u{25bd}"
+    static let upArrow = "\u{25b3}"
     static let square = "\u{25a2}"
     static let ying = "\u{25d0}"
     static let yang = "\u{25d1}"

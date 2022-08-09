@@ -83,7 +83,7 @@ const op_t ops[] = {
     {"lbl",   BUTTON_SECONDARY, "Lbl"},
     {"x>=t",  BUTTON_SECONDARY, "x&#8805;t"},
     {"s+",    BUTTON_SECONDARY, "&#8721;+"},
-    {"xbar",  BUTTON_SECONDARY, "x&#772;"},
+    {"x",     BUTTON_SECONDARY, "x&#772;"},
     {"grad",  BUTTON_SECONDARY, "Grad"},
     {"rst",   BUTTON_DEFAULT,   "RST"},
     {"+",     BUTTON_YELLOW,    "+"},

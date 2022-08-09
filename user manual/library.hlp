@@ -20,7 +20,7 @@ To use a program, you will need to load the steps and registers of the program i
 
 ==Creating a new program==
 
-To create a program:
+To create a user program:
 # From the ''Calculator View'', press the left arrow, above the calculator. This will bring the ''State View''
 # If a program is already loaded, use the ''CLOSE'' button first
 # Tap ''NEW''. This will bring the ''Create Program View''
@@ -30,43 +30,44 @@ To create a program:
 
 ==Saving the steps and registers==
 
-To save the steps or registers of a program:
+To save the steps or registers of a user program:
 # Go to the ''State View''
 # Tap on ''SAVE''.
 
 This will save either the steps or the registers, depending on what is shown on the screen.
 
+''Note:'' sample programs are read-only.
+
 ==Editing the name and description==
 
-To edit the name or the description of a program:
+To edit the name or the description of a user program:
 # Go to the ''Program View''
 # Tap on ''...''
 # Tap on ''EDIT''.
 
 ==Deleting a program==
 
-To delete a user program (but not a sample program):
+To delete a user program:
 # Go to the ''Program View''
 # Tap on ''...''
 # Tap on ''Delete''
 
-==Exporting a program==
+==Sharing a program==
 
-By exporting a program, we mean making a program available outside the RCL-57 app. For example:
-* Emailing a program to ourselves or to a friend
-* Saving a program to iCloud
-* Saving a program to the file folder of your iOS device
-* Downloading a program to a MacBook using AirDrop
+You can share a user or sample program. For example:
+* Email a program to yourself or to a friend
+* Save a program to iCloud
+* Upload a program to a MacBook using AirDrop
 
-To export a program:
+To share a program:
 # Go to the ''Program View''
 # Tap on the icon at the bottom left of the screen
 
-This will bring a menu that allows the user to export the program in many different ways.
+This will bring a menu that allows the user to share the program in different ways.
 
 ==Importing a program==
 
-By importing a program, we mean bringing an outside program inside the RCL-57 app. Typically files will be imported from iCloud or the file folder of the iOS device.
+By importing a program, we mean bringing an outside program inside the RCL-57 app. For example, you can import programs that you have previously stored in iCloud.
 
 To import a program:
 # Go to the ''Library View''
