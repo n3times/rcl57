@@ -26,6 +26,8 @@ struct CalcKeyboardView: View {
     @State private var is2nd: Bool
     @State private var isInv: Bool
 
+    @GestureState private var dragGestureActive: Bool = false
+
     @EnvironmentObject var change: Change
 
     init() {
@@ -89,14 +91,21 @@ struct CalcKeyboardView: View {
                     // Handle key presses as soon as the user touches the screen.
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged {
-                            if isKeyPressed { return }
+                            if dragGestureActive { return }
                             let standardizedLocation =
                                 CGPoint(x: $0.location.x / CGFloat(scaleFactorH),
                                         y: $0.location.y / CGFloat(scaleFactorH))
+                            // Return if the user taps close to the bottom edge of the screen since
+                            // this probably means they are closing the app (by swiping) and not
+                            // tapping on a button.
+                            if standardizedLocation.y / CGFloat(scaleFactorV / scaleFactorH) > 490 {
+                                return
+                            }
                             let c = CalcKeyboardView.getCalculatorKey(
                                 standardizedLocation: standardizedLocation,
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
+                                isKeyPressed = true
                                 if Settings.hasKeyClick() {
                                     AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 }
@@ -104,22 +113,29 @@ struct CalcKeyboardView: View {
                                     let feedback = UIImpactFeedbackGenerator(style: .medium)
                                     feedback.impactOccurred()
                                 }
-                                isKeyPressed = true
                                 Rcl57.shared.keyPress(row:Int(c!.x) + 1, col:Int(c!.y) + 1)
-                            } else {
-                                isKeyPressed = true
+                                // Make sure the key press is registered with the engine.
+                                _ = Rcl57.shared.advance(ms: 50)
                             }
+
                         }
-                        .onEnded { _ in
-                            if isKeyPressed {
-                                isKeyPressed = false
-                                is2nd = Rcl57.shared.is2nd()
-                                isInv = Rcl57.shared.isInv()
-                                Rcl57.shared.keyRelease()
-                                change.updateLogTimestamp()
-                            }
+                        .updating($dragGestureActive) { value, state, transaction in
+                            state = true
                         }
                 )
+                .onChange(of: dragGestureActive) { isActive in
+                    // Handle key release here instead of "onEnded" to make sure we always release
+                    // the key even when closing the app.
+                    if isActive == false {
+                        if isKeyPressed {
+                            isKeyPressed = false
+                            is2nd = Rcl57.shared.is2nd()
+                            isInv = Rcl57.shared.isInv()
+                            Rcl57.shared.keyRelease()
+                            change.updateLogTimestamp()
+                        }
+                    }
+                }
             if is2nd {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .strokeBorder(Color.brown,lineWidth: 4 * CGFloat(scaleFactorV))

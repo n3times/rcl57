@@ -28,7 +28,12 @@ struct LogEntry {
 class Rcl57 {
     private static let stateFilename = "rcl57.dat"
     private static let versionKey = "version"
-    static let version = "1.0"
+
+    // For minor changes, increment by 1 minorVersion. For non backward compatible changes,
+    // increment by 1 majorVersion and reset to 0 minorVersion.
+    static let majorVersion: Int = 1
+    static let minorVersion: Int = 1
+    static let version = String(majorVersion) + "." + String(minorVersion)
 
     static let shared = Rcl57(filename: stateFilename)
 
@@ -46,14 +51,21 @@ class Rcl57 {
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         var fileURL: URL? = dirURL?.appendingPathComponent(filename)
 
-        let version = UserDefaults.standard.string(forKey: Rcl57.versionKey)
-        if version != Rcl57.version {
-            do {
-                try FileManager.default.removeItem(at: fileURL!)
-            } catch {
-                // Nothing.
+        // Update version if it has changed.
+        let previousVersion = UserDefaults.standard.string(forKey: Rcl57.versionKey)
+        if previousVersion != Rcl57.version {
+            if previousVersion != nil {
+                let previousMajorVersion = Int(Float(previousVersion!)!)
+                if previousMajorVersion != Rcl57.majorVersion {
+                    // Reset state since this is a non backward compatible change.
+                    do {
+                        try FileManager.default.removeItem(at: fileURL!)
+                    } catch {
+                        // Nothing.
+                    }
+                    fileURL = nil
+                }
             }
-            fileURL = nil
             UserDefaults.standard.set(Rcl57.version, forKey: Rcl57.versionKey)
         }
 
