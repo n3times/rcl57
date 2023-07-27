@@ -10,12 +10,12 @@ class Lib57 {
     private static let samplesLibURL =
         Bundle.main.bundleURL.appendingPathComponent("samplesLib")
     private static let userLibURL =
-        Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
 
     static let samplesLib = Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
     static let userLib = Lib57(folderURL: userLibURL!, name: "User Programs", readonly: false)
 
-    let folderURL: URL
+    private let folderURL: URL
     let name: String
     let readonly: Bool
 
@@ -28,30 +28,30 @@ class Lib57 {
 
         programs = []
         let enumerator =
-            Foundation.FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
+            FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
         while let programURLObject = enumerator!.nextObject() {
             let programURL = programURLObject as! URL
             if programURL.path.hasSuffix(Prog57.programFileExtension) {
                 programs.append(Prog57(url: programURL, readOnly: readonly)!)
             }
         }
-        programs = programs.sorted { $0.getName() < $1.getName() }
+        programs = programs.sorted { $0.name < $1.name }
     }
 
     func addProgram(_ program: Prog57) -> Bool {
         if readonly { return false }
-        if getProgramByName(program.getName()) != nil { return false }
+        if programByName(program.name) != nil { return false }
 
         do {
             let text = program.toString()
-            let programURL = folderURL.appendingPathComponent(program.getName())
+            let programURL = folderURL.appendingPathComponent(program.name)
             try text.write(to: programURL, atomically: true, encoding: String.Encoding.utf8)
         } catch {
             return false
         }
 
         programs.append(program)
-        programs.sort { $0.getName() < $1.getName() }
+        programs.sort { $0.name < $1.name }
 
         return true
     }
@@ -73,9 +73,9 @@ class Lib57 {
         return true
     }
 
-    func getProgramByName(_ programName: String) -> Prog57? {
+    func programByName(_ programName: String) -> Prog57? {
         for program in programs {
-            if program.getName() == programName {
+            if program.name == programName {
                 return program
             }
         }

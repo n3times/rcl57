@@ -10,7 +10,7 @@ struct StateView: View {
 
     var body: some View {
         let program = change.loadedProgram
-        let programName = program?.getName()
+        let programName = program?.name
         let isProgramNew = program == nil
         let isProgramReadOnly = !isProgramNew && program!.readOnly
         let isProgramReadWrite = !isProgramNew && !isProgramReadOnly
@@ -22,14 +22,13 @@ struct StateView: View {
                 let width = geometry.size.width
 
                 VStack(spacing: 0) {
-                    MenuBarView(change: change,
-                                left: change.isStepsInState ? Style.yang : Style.ying,
+                    MenuBarView(left: change.isStepsInState ? Style.yang : Style.ying,
                                 title: viewTitle + (!isProgramNew && program!.stepsNeedSaving() ? "'" : ""),
                                 right: Style.rightArrow,
                                 width: width,
                                 leftAction: { change.isStepsInState.toggle() },
                                 rightAction: { withAnimation {change.currentView = .calc} })
-                    .background(Style.blackish)
+                    .background(Color.blackish)
 
                     // Type (steps or registers)
                     if !isProgramNew {
@@ -44,14 +43,14 @@ struct StateView: View {
                             Spacer()
                                 .frame(width: width / 3, height: 20)
                         }
-                        .background(Style.blackish)
-                        .foregroundColor(Style.ivory)
+                        .background(Color.blackish)
+                        .foregroundColor(.ivory)
                         .font(Style.programFont)
                     }
 
                     // State
                     StateInnerView()
-                        .background(Style.ivory)
+                        .background(Color.ivory)
 
                     HStack(spacing: 0) {
                         Button("CLOSE") {
@@ -120,14 +119,13 @@ struct StateView: View {
                             }
                         }
                     }
-                    .background(Style.blackish)
-                    .foregroundColor(Style.ivory)
+                    .background(Color.blackish)
+                    .foregroundColor(.ivory)
                 }
             }
 
             if change.isCreateProgramInState {
                 ProgramEditView()
-                    .environmentObject(change)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)
             }

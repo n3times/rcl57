@@ -5,7 +5,7 @@ import Foundation
  *
  * Registers and steps are combined into a 'state' structure.
  */
-class Prog57 : Hashable, Equatable {
+class Prog57 : Hashable {
     static let programFileExtension = ".r57"
 
     /* Backing struct: name, description and state. */
@@ -30,7 +30,6 @@ class Prog57 : Hashable, Equatable {
 
     /** For imported programs. */
     init?(text: String) {
-        print(text)
         let found_name = prog57_from_text(&prog57, text)
         if !found_name {
             return nil
@@ -51,41 +50,36 @@ class Prog57 : Hashable, Equatable {
         return String(cString: prog57_to_text(&prog57))
     }
 
-    /**
-     * Name.
-     */
-
-    func getName() -> String {
-        return String(cString: prog57_get_name(&prog57))
+    var name: String {
+        get {
+            String(cString: prog57_get_name(&prog57))
+        }
+        set {
+            prog57_set_name(&prog57, (newValue as NSString).utf8String)
+        }
     }
 
-    func setName(name: String) {
-        prog57_set_name(&prog57, (name as NSString).utf8String)
+    var description: String {
+        get {
+            let help = prog57_get_help(&prog57)
+            return String(cString: help!)
+        }
+        set {
+            prog57_set_help(&prog57, (newValue as NSString).utf8String)
+        }
     }
 
-    /**
-     * Description.
-     */
+    typealias State = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                       ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                       ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)
 
-    func getDescription() -> String {
-        let help = prog57_get_help(&prog57)
-        return String(cString: help!)
-    }
-
-    func setDescription(description: String) {
-        prog57_set_help(&prog57, (description as NSString).utf8String)
-    }
-
-    /**
-     * State.
-     */
-
-    func getState() -> (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t) {
-        return prog57.state
-    }
-
-    func setState(state: (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)) {
-        prog57.state = state
+    var state: State {
+        get {
+            prog57.state
+        }
+        set {
+            prog57.state = newValue
+        }
     }
 
     /**
@@ -139,13 +133,13 @@ class Prog57 : Hashable, Equatable {
         return true
     }
 
-    /** Implements Hashable. */
+    // MARK: Hashable Conformance
+
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self.getName())
+        hasher.combine(self.name)
     }
 
-    /** Implements Equatable. */
     static func ==(lhs: Prog57, rhs: Prog57) -> Bool {
-        return lhs.getName() == rhs.getName()
+        return lhs.name == rhs.name
     }
 }

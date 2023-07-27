@@ -32,19 +32,19 @@ private struct LogLineView: View {
     }
 
     private func getColor(entry: LogEntry) -> Color {
-        let isError = (entry.getFlags() & LOG57_ERROR_FLAG) != 0
+        let isError = (entry.flags & LOG57_ERROR_FLAG) != 0
 
         return isError ? foregroundColorError: foregroundColor
     }
 
     var body: some View {
         HStack {
-            Text(line.numberLogEntry.getMessage())
+            Text(line.numberLogEntry.message)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
                 .foregroundColor(getColor(entry: line.numberLogEntry))
             HStack {
                 Spacer(minLength: 25)
-                Text(line.opLogEntry.getMessage())
+                Text(line.opLogEntry.message)
                     .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
                     .foregroundColor(foregroundColor)
             }
@@ -55,13 +55,13 @@ private struct LogLineView: View {
 
 /** A list of LineView's. */
 struct LogInnerView: View {
+    @EnvironmentObject private var change: Change
+
     @State private var lines: [LogLine] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
     private let maxLines: Int
-
-    @EnvironmentObject var change: Change
 
     init() {
         self.maxLines = 500
@@ -81,14 +81,14 @@ struct LogInnerView: View {
 
     private func updateLog() {
         // Return right away if there are no changes.
-        let newTimestamp = Rcl57.shared.getLogTimestamp()
+        let newTimestamp = Rcl57.shared.logTimestamp
         if newTimestamp == lastTimestamp {
             return
         }
         lastTimestamp = newTimestamp
 
         // Clear log and return if necessary.
-        let newLoggedCount = Rcl57.shared.getLoggedCount()
+        let newLoggedCount = Rcl57.shared.loggedCount
         if newLoggedCount == 0 {
             clear();
             return
@@ -98,11 +98,11 @@ struct LogInnerView: View {
         if lastLoggedCount > 0 {
             var numberEntry = lines.last?.numberLogEntry
             var opEntry = lines.last?.opLogEntry
-            let type = Rcl57.shared.getLogEntry(index: lastLoggedCount).getType()
+            let type = Rcl57.shared.logEntry(index: lastLoggedCount).type
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = Rcl57.shared.getLogEntry(index: lastLoggedCount)
+                opEntry = Rcl57.shared.logEntry(index: lastLoggedCount)
             } else {
-                numberEntry = Rcl57.shared.getLogEntry(index: lastLoggedCount)
+                numberEntry = Rcl57.shared.logEntry(index: lastLoggedCount)
             }
             lines.removeLast()
             lines.append(makeLine(numberEntry: numberEntry!, opEntry: opEntry!))
@@ -112,12 +112,12 @@ struct LogInnerView: View {
         if newLoggedCount > lastLoggedCount {
             let start = max(lastLoggedCount+1, newLoggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
             for i in start...newLoggedCount {
-                let entry = Rcl57.shared.getLogEntry(index: i)
-                let type = entry.getType()
+                let entry = Rcl57.shared.logEntry(index: i)
+                let type = entry.type
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
                     let numberEntry = lines.last?.numberLogEntry
                     let opEntry = lines.last?.opLogEntry
-                    if opEntry?.getMessage() == "" {
+                    if opEntry?.message == "" {
                         lines.removeLast()
                         lines.append(makeLine(numberEntry: numberEntry!, opEntry: entry))
                     } else {
@@ -141,18 +141,12 @@ struct LogInnerView: View {
         }
     }
 
-    private func getLineView(_ line: LogLine) -> some View {
-        let backgroundColor = Style.ivory
-
-        return LogLineView(line: line)
-            .listRowBackground(backgroundColor)
-            .listRowSeparator(.hidden)
-    }
-
     var body: some View {
         return ScrollViewReader { proxy in
             List(lines) {
-                getLineView($0)
+                LogLineView(line: $0)
+                    .listRowBackground(Color.ivory)
+                    .listRowSeparator(.hidden)
             }
             .listStyle(PlainListStyle())
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)

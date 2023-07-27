@@ -30,26 +30,25 @@ struct ProgramView: View {
             let width = geometry.size.width
 
             VStack(spacing: 0) {
-                MenuBarView(change: change,
-                            left: Style.leftArrow,
-                            title: program.getName(),
+                MenuBarView(left: Style.leftArrow,
+                            title: program.name,
                             right: Style.downArrow,
                             width: width,
                             leftAction: { withAnimation {change.programView = nil} },
                             rightAction: { withAnimation {change.currentView = .calc} })
-                .background(Style.deepBlue)
+                .background(Color.deepBlue)
 
-                if program.getDescription() == "" {
+                if program.description == "" {
                     GeometryReader { geometry in
                         Text("No description available")
                             .frame(width: geometry.size.width,
                                    height: geometry.size.height,
                                    alignment: .center)
-                            .background(Style.ivory)
-                            .foregroundColor(Style.blackish)
+                            .background(Color.ivory)
+                            .foregroundColor(.blackish)
                     }
                 } else {
-                    HelpView(helpString: program.getDescription())
+                    HelpView(helpString: program.description)
                 }
 
                 // Footer
@@ -113,7 +112,7 @@ struct ProgramView: View {
                         .offset(x: -15)
                         .contentShape(Rectangle())
                         .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
-                            Button("Delete " + program.getName(), role: .destructive) {
+                            Button("Delete " + program.name, role: .destructive) {
                                 _ = Lib57.userLib.deleteProgram(program)
                                 if program == change.loadedProgram {
                                     change.loadedProgram = nil
@@ -127,8 +126,8 @@ struct ProgramView: View {
                     }
                 }
             }
-            .background(Style.deepBlue)
-            .foregroundColor(Style.ivory)
+            .background(Color.deepBlue)
+            .foregroundColor(.ivory)
 
             if change.isEditInProgramView {
                 ProgramEditView(program: program)

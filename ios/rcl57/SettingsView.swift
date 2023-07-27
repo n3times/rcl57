@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct SettingsView: View {
-    let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
-
     @EnvironmentObject private var change: Change
 
-    @State private var hasTurboSpeed = Settings.getTurboSpeed()
-    @State private var hasAlphaDisplay = Settings.getAlphaDisplay()
-    @State private var hasHPLrnMode = Settings.getHPLrnMode()
+    let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
-    @State private var hasKeyClick = Settings.hasKeyClick()
-    @State private var hasHaptic = Settings.hasHaptic()
+    @State private var hasTurboSpeed = Settings.hasTurboSpeed
+    @State private var hasAlphaDisplay = Settings.hasAlphaDisplay
+    @State private var hasHPLrnMode = Settings.hasHpLrnMode
+
+    @State private var hasKeyClick = Settings.hasKeyClick
+    @State private var hasHaptic = Settings.hasHaptic
 
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
@@ -19,8 +19,7 @@ struct SettingsView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(change: change,
-                            left: nil,
+                MenuBarView(left: nil,
                             title: "Settings",
                             right: Style.downArrow,
                             width: width,
@@ -69,19 +68,19 @@ struct SettingsView: View {
                         }
                     }
                     .onChange(of: hasHaptic) { _ in
-                        Settings.setHasHaptic(hasHaptic)
+                        Settings.hasHaptic = hasHaptic
                     }
                     .onChange(of: hasKeyClick) { _ in
-                        Settings.setHasKeyClick(hasKeyClick)
+                        Settings.hasKeyClick = hasKeyClick
                     }
                     .onChange(of: hasTurboSpeed) { _ in
-                        Settings.setTurboSpeed(hasTurboSpeed)
+                        Settings.hasTurboSpeed = hasTurboSpeed
                     }
                     .onChange(of: hasAlphaDisplay) { _ in
-                        Settings.setAlphaDisplay(hasAlphaDisplay)
+                        Settings.hasAlphaDisplay = hasAlphaDisplay
                     }
                     .onChange(of: hasHPLrnMode) { _ in
-                        Settings.setHPLrnMode(hasHPLrnMode)
+                        Settings.hasHpLrnMode = hasHPLrnMode
                     }
                 }
             }

@@ -1,14 +1,14 @@
 import SwiftUI
 
 @main
-struct rcl57App: App {
+struct Rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
     init() {
         // Technically this is only necessary if the state is not loaded from a file.
-        Settings.setTurboSpeed(Settings.getTurboSpeed())
-        Settings.setAlphaDisplay(Settings.getAlphaDisplay())
-        Settings.setHPLrnMode(Settings.getHPLrnMode())
+        Settings.hasTurboSpeed = Settings.hasTurboSpeed
+        Settings.hasAlphaDisplay = Settings.hasAlphaDisplay
+        Settings.hasHpLrnMode = Settings.hasHpLrnMode
     }
 
     var body: some Scene {
@@ -16,7 +16,7 @@ struct rcl57App: App {
             MainView()
         }
         .onChange(of: scenePhase) { newScenePhase in
-            if newScenePhase == .inactive {
+            if newScenePhase == .background {
                 _ = Rcl57.shared.save()
             }
         }

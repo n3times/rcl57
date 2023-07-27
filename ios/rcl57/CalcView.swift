@@ -1,12 +1,13 @@
 import SwiftUI
 
-/**
- * The calculator view with its keyboard, display, and a menu on top.
- */
-struct CalcView: View {
+private struct CalcMenuButton: View {
     @EnvironmentObject private var change: Change
 
-    private func getButtonView(text: String, destination: CurrentView, edge: Edge) -> some View {
+    let text: String
+    let destination: CurrentView
+    let edge: Edge
+
+    var body: some View {
         Button(action: {
             change.transitionEdge = edge
             withAnimation {
@@ -20,6 +21,59 @@ struct CalcView: View {
                 .contentShape(Rectangle())
         }
     }
+}
+
+private struct CalcMenuBar: View {
+    var body: some View {
+        HStack(spacing: 0) {
+            CalcMenuButton(text: Style.leftArrow, destination: .state, edge: .trailing)
+                .foregroundColor(.lightGray)
+            CalcMenuButton(text: Style.square, destination: .manual, edge: .top)
+                .foregroundColor(.deepishGreen)
+            CalcMenuButton(text: Style.square, destination: .settings, edge: .top)
+                .foregroundColor(.lightGray)
+            CalcMenuButton(text: Style.square, destination: .library, edge: .top)
+                .foregroundColor(.deepishBlue)
+            CalcMenuButton(text: Style.rightArrow, destination: .log, edge: .leading)
+                .foregroundColor(.lightGray)
+        }
+        .font(Style.directionsFont)
+        .background(Color.blackish)
+        .foregroundColor(.ivory)
+    }
+}
+
+private struct CalcInfoView: View {
+    @EnvironmentObject private var change: Change
+
+    let width: Double
+
+    var body: some View {
+        // Program Name and Current Operation.
+        HStack(spacing: 0) {
+            Text(change.loadedProgram != nil ? change.loadedProgram!.name : "")
+                .font(Style.programFont)
+                .offset(x: 15, y: -3)
+                .frame(maxWidth: width / 2, maxHeight: 20, alignment: .leading)
+
+            Spacer()
+                .frame(maxWidth: width / 6, maxHeight: 20, alignment: .leading)
+
+            Text(Rcl57.shared.currentOp)
+                .font(Style.operationFont)
+                .offset(x: -25, y: -3)
+                .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
+        }
+        .foregroundColor(.lightGray)
+        .background(Color.blackish)
+    }
+}
+
+/**
+ * The calculator view with its keyboard, display, and a menu on top.
+ */
+struct CalcView: View {
+    @EnvironmentObject private var change: Change
 
     var body: some View {
         let displayHeight = 4 * Style.listLineHeight
@@ -28,53 +82,16 @@ struct CalcView: View {
             let width = geometry.size.width
 
             ZStack {
-                Style.blackish.edgesIgnoringSafeArea(.top)
+                Color.blackish.edgesIgnoringSafeArea(.top)
                 Color.black.edgesIgnoringSafeArea(.bottom)
                 VStack(spacing: 0) {
-                    // Menu bar.
-                    HStack(spacing: 0) {
-                        getButtonView(text: Style.leftArrow, destination: .state, edge: .trailing)
-                            .foregroundColor(Style.lightGray)
-                        getButtonView(text: Style.square, destination: .manual, edge: .top)
-                            .foregroundColor(Style.deepishGreen)
-                        getButtonView(text: Style.square, destination: .settings, edge: .top)
-                            .foregroundColor(Style.lightGray)
-                        getButtonView(text: Style.square, destination: .library, edge: .top)
-                            .foregroundColor(Style.deepishBlue)
-                        getButtonView(text: Style.rightArrow, destination: .log, edge: .leading)
-                            .foregroundColor(Style.lightGray)
-                    }
-                    .font(Style.directionsFont)
-                    .background(Style.blackish)
-                    .foregroundColor(Style.ivory)
-
-                    // Program Name and Current Operation.
-                    HStack(spacing: 0) {
-                        Text(change.loadedProgram != nil ? change.loadedProgram!.getName() : "")
-                            .font(Style.programFont)
-                            .offset(x: 15, y: -3)
-                            .frame(maxWidth: width / 2, maxHeight: 20, alignment: .leading)
-
-                        Spacer()
-                            .frame(maxWidth: width / 6, maxHeight: 20, alignment: .leading)
-
-                        Text(Rcl57.shared.currentOp())
-                            .font(Style.operationFont)
-                            .offset(x: -25, y: -3)
-                            .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
-                    }
-                    .foregroundColor(Style.lightGray)
-                    .background(Style.blackish)
-
-                    // Display.
+                    CalcMenuBar()
+                    CalcInfoView(width: width)
                     CalcDisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
-
-                    // Keyboard View.
                     CalcKeyboardView()
-
                     Spacer(minLength: 20)
                 }
             }

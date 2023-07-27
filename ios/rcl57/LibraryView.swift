@@ -8,7 +8,7 @@ private struct LibraryNode: Identifiable {
     var program: Prog57?
 
     init(program: Prog57) {
-        self.name = program.getName()
+        self.name = program.name
         self.program = program
     }
 
@@ -23,7 +23,6 @@ private struct LibraryNode: Identifiable {
         }
     }
 }
-
 
 /**
  * Shows a list of sample and user programs.
@@ -46,14 +45,13 @@ struct LibraryView: View {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
-                        MenuBarView(change: change,
-                                    left: nil,
+                        MenuBarView(left: nil,
                                     title: "Library",
                                     right: Style.downArrow,
                                     width: width,
                                     leftAction: {},
                                     rightAction: { withAnimation {change.currentView = .calc} })
-                        .background(Style.deepBlue)
+                        .background(Color.deepBlue)
                         .frame(width: width)
 
                         List {
@@ -69,7 +67,7 @@ struct LibraryView: View {
                             } label: {
                                 Text(samplesLibNode.name)
                                     .font(Style.listLineFontBold)
-                                    .foregroundColor(Style.blackish)
+                                    .foregroundColor(.blackish)
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         withAnimation {
@@ -89,7 +87,7 @@ struct LibraryView: View {
                             } label: {
                                 Text(userLibNode.name)
                                     .font(Style.listLineFontBold)
-                                    .foregroundColor(Style.blackish)
+                                    .foregroundColor(.blackish)
                                     .contentShape(Rectangle())
                                     .onTapGesture {
                                         withAnimation {
@@ -138,8 +136,8 @@ struct LibraryView: View {
                             Spacer()
                                 .frame(maxWidth: width / 5, maxHeight: Style.footerHeight)
                         }
-                        .background(Style.deepBlue)
-                        .foregroundColor(Style.ivory)
+                        .background(Color.deepBlue)
+                        .foregroundColor(.ivory)
                     }
                 }
                 .background(Color.white)
@@ -147,8 +145,7 @@ struct LibraryView: View {
             }
 
             if change.programView != nil {
-                change.programView!
-                    .environmentObject(change)
+                change.programView
                     .transition(.move(edge: .trailing))
             }
 

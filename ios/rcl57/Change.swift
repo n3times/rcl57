@@ -41,28 +41,28 @@ class Change: ObservableObject {
     @Published var isPreviewInEditProgram = false
 
     init() {
-        self.displayString = Rcl57.shared.display()
-        self.logTimestamp = Rcl57.shared.getLogTimestamp()
+        self.displayString = Rcl57.shared.display
+        self.logTimestamp = Rcl57.shared.logTimestamp
 
         let loadedProgramName = UserDefaults.standard.string(forKey: LOADED_PROGRAM_KEY)
         self.loadedProgram =
-            Lib57.samplesLib.programs.first(where: {$0.getName() == loadedProgramName})
+            Lib57.samplesLib.programs.first(where: {$0.name == loadedProgramName})
     }
 
     func setLoadedProgram(program: Prog57?) {
         loadedProgram = program
-        UserDefaults.standard.set(program?.getName(), forKey: LOADED_PROGRAM_KEY)
+        UserDefaults.standard.set(program?.name, forKey: LOADED_PROGRAM_KEY)
     }
 
     func updateDisplayString() {
-        let display = Rcl57.shared.display()
+        let display = Rcl57.shared.display
         if display != self.displayString {
             self.displayString = display
         }
     }
 
     func updateLogTimestamp() {
-        let logTimestamp = Rcl57.shared.getLogTimestamp()
+        let logTimestamp = Rcl57.shared.logTimestamp
         if self.logTimestamp != logTimestamp {
             self.logTimestamp = logTimestamp
         }

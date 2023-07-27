@@ -1,28 +1,28 @@
 import SwiftUI
 
-/** Data for a StepLineView: a step index and an operation. */
-private struct StepLine: Identifiable {
-    static var lineId = 0
-    let index: Int
-    let op: String
-    let active: Bool
-    let id: Int
-
-    init(index: Int, op: String, active: Bool) {
-        self.index = index
-        self.op = op
-        self.active = active
-        self.id = StepLine.lineId
-        StepLine.lineId += 1
-    }
-}
-
 private struct StepLineView: View {
+    /** Data for a StepLineView: a step index and an operation. */
+    struct StepLine: Identifiable {
+        static var lineId = 0
+        let index: Int
+        let op: String
+        let active: Bool
+        let id: Int
+
+        init(index: Int, op: String, active: Bool) {
+            self.index = index
+            self.op = op
+            self.active = active
+            self.id = StepLine.lineId
+            StepLine.lineId += 1
+        }
+    }
+
     private let line: StepLine
-    private let activeBackgroundColor = Style.ivory
-    private let inactiveBackgroundColor = Style.ivory
-    private let foregroundColor = Style.blackish
-    private let inactiveForegroundColor = Style.blackish
+    private let activeBackgroundColor = Color.ivory
+    private let inactiveBackgroundColor = Color.ivory
+    private let foregroundColor = Color.blackish
+    private let inactiveForegroundColor = Color.blackish
 
     init(line: StepLine) {
         self.line = line
@@ -44,24 +44,24 @@ private struct StepLineView: View {
     }
 }
 
-private struct RegisterLine: Identifiable {
-    static var lineId = 0
-    let index: Int
-    let reg: String
-    let id: Int
-
-    init(index: Int, reg: String) {
-        self.index = index
-        self.reg = reg
-        self.id = StepLine.lineId
-        RegisterLine.lineId += 1
-    }
-}
-
 private struct RegisterLineView: View {
+    struct RegisterLine: Identifiable {
+        static var lineId = 0
+        let index: Int
+        let reg: String
+        let id: Int
+
+        init(index: Int, reg: String) {
+            self.index = index
+            self.reg = reg
+            self.id = RegisterLine.lineId
+            RegisterLine.lineId += 1
+        }
+    }
+
     private let line: RegisterLine
-    private let backgroundColor = Style.ivory
-    private let foregroundColor = Style.blackish
+    private let backgroundColor = Color.ivory
+    private let foregroundColor = Color.blackish
 
     init(line: RegisterLine) {
         self.line = line
@@ -82,19 +82,38 @@ private struct RegisterLineView: View {
     }
 }
 
+private struct ProgramLineView: View {
+    let last = Rcl57.shared.getProgramLastIndex()
+    let index: Int
+    let active: Bool
+
+    var body: some View {
+        if index == -1 {
+            return StepLineView(line: StepLineView.StepLine(index: 99,
+                                                            op: "",
+                                                            active: index <= last))
+            .listRowSeparator(.hidden)
+        }
+        return StepLineView(line: StepLineView.StepLine(index: index,
+                                                        op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
+                                                        active: index <= last))
+        .listRowSeparator(.hidden)
+    }
+}
+
 struct StateInnerView: View {
-    @State private var lines: [StepLine] = []
+    @EnvironmentObject private var change: Change
+
+    @State private var lines: [StepLineView.StepLine] = []
     @State private var middle: Int
     @State private var pc: Int
     @State private var isOpEditInLrn: Bool
     @State private var isHpLrn: Bool
 
-    @EnvironmentObject var change: Change
-
     init() {
-        let pc = Rcl57.shared.getProgramPc()
+        let pc = Rcl57.shared.programPc
         self.pc = pc
-        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn()
+        self.isOpEditInLrn = Rcl57.shared.isOpEditInLrn
         self.isHpLrn = Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG)
         if pc == -1 { middle = 0 }
         else if pc == 0 && !Rcl57.shared.getOptionFlag(option: RCL57_HP_LRN_MODE_FLAG) { middle = 1 }
@@ -102,41 +121,22 @@ struct StateInnerView: View {
         else { middle = pc}
     }
 
-    private func getRegisterLineView(_ index: Int) -> some View {
-        return RegisterLineView(line: RegisterLine(index: index,
-                                                   reg: Rcl57.shared.getRegister(index: index)))
-        .listRowSeparator(.hidden)
-    }
-
-    private func getProgramLineView(_ index: Int, active: Bool) -> some View {
-        let last = Rcl57.shared.getProgramLastIndex()
-
-        if index == -1 {
-            return StepLineView(line: StepLine(index: 99,
-                                               op: "",
-                                               active: index <= last))
-            .listRowSeparator(.hidden)
-        }
-        return StepLineView(line: StepLine(index: index,
-                                           op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
-                                           active: index <= last))
-        .listRowSeparator(.hidden)
-    }
-
     var body: some View {
         ScrollViewReader { proxy in
             List {
                 if change.isStepsInState {
                     ForEach(0...49, id: \.self) {
-                        getProgramLineView($0, active: $0 == pc)
+                        ProgramLineView(index: $0, active: $0 == pc)
                     }
                 } else {
                     ForEach(0...7, id: \.self) {
-                        getRegisterLineView($0)
+                        RegisterLineView(line: RegisterLineView.RegisterLine(index: $0,
+                                                                             reg: Rcl57.shared.getRegister(index: $0)))
+                        .listRowSeparator(.hidden)
                     }
                 }
             }
-            .background(Style.ivory)
+            .background(Color.ivory)
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }

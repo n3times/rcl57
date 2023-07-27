@@ -10,6 +10,7 @@ enum CreateProgramContext {
 /** Gives tto the user a chance to edit the name and description of a program. */
 struct ProgramEditView: View {
     @EnvironmentObject var change: Change
+
     @State private var isPresentingExit: Bool = false
     @State var name: String
     @State var help: String
@@ -22,8 +23,8 @@ struct ProgramEditView: View {
 
     init(program: Prog57) {
         self.context = .edit
-        self.name = program.getName()
-        self.help = program.getDescription()
+        self.name = program.name
+        self.help = program.description
         self.originalProgram = program
     }
 
@@ -39,8 +40,8 @@ struct ProgramEditView: View {
                              description: "Clipboard does not appear to contain a legal program.")
         }
         self.context = .imported
-        self.name = program!.getName()
-        self.help = program!.getDescription()
+        self.name = program!.name
+        self.help = program!.description
         self.originalProgram = program
     }
 
@@ -51,7 +52,7 @@ struct ProgramEditView: View {
             return Prog57(name: trimmedName, description: trimmedHelp)
         } else {
             let program = Prog57(name: trimmedName, description: trimmedHelp)
-            program.setState(state: originalProgram!.getState())
+            program.state = originalProgram!.state
             return program
         }
     }
@@ -119,8 +120,8 @@ struct ProgramEditView: View {
                             .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces) == "")
                             .buttonStyle(.plain)
                         }
-                        .background(Style.deeperBlue)
-                        .foregroundColor(Style.ivory)
+                        .background(Color.deeperBlue)
+                        .foregroundColor(.ivory)
 
                         TextField("Name", text: $name)
                             .textFieldStyle(PlainTextFieldStyle())
@@ -128,7 +129,7 @@ struct ProgramEditView: View {
                             .offset(x: 10)
                             .focused($nameIsFocused)
 
-                        Style.blackish
+                        Color.blackish
                             .frame(height: 2)
 
                         TextEditor(text: $help)

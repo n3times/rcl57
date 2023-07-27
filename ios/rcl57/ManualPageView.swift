@@ -1,7 +1,7 @@
 import SwiftUI
 
 /** A spectific page of the User Manual. */
-struct ManualPageView: Hashable, Equatable, View {
+struct ManualPageView: View, Hashable {
     @EnvironmentObject private var change: Change
 
     let title: String
@@ -13,14 +13,13 @@ struct ManualPageView: Hashable, Equatable, View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(change: change,
-                            left: Style.leftArrow,
+                MenuBarView(left: Style.leftArrow,
                             title: title,
                             right: Style.downArrow,
                             width: width,
                             leftAction: { withAnimation {change.manualPageView = nil} },
                             rightAction: { withAnimation {change.currentView = .calc} })
-                .background(Style.deepGreen)
+                .background(Color.deepGreen)
 
                 HelpView(helpURL: helpURL)
             }
@@ -28,12 +27,12 @@ struct ManualPageView: Hashable, Equatable, View {
         .background(Color.white.edgesIgnoringSafeArea(.bottom))
     }
 
-    /** Implements Hashable. */
+    // MARK: Hashable Conformance
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.helpResource)
     }
 
-    /** Implements Equatable. */
     static func ==(lhs: ManualPageView, rhs: ManualPageView) -> Bool {
         return lhs.helpResource == rhs.helpResource
     }

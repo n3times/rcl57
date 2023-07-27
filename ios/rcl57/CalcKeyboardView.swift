@@ -1,7 +1,7 @@
 import SwiftUI
 import AudioToolbox
 
-struct TrigIndicator: View {
+private struct TrigIndicator: View {
     var body: some View {
         GeometryReader { geometry in
             Path { path in
@@ -20,6 +20,8 @@ struct TrigIndicator: View {
  * The keyboard view. It also interacts with the engine when keys are pressed and released.
  */
 struct CalcKeyboardView: View {
+    @EnvironmentObject private var change: Change
+
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
@@ -28,11 +30,9 @@ struct CalcKeyboardView: View {
 
     @GestureState private var dragGestureActive: Bool = false
 
-    @EnvironmentObject var change: Change
-
     init() {
-        self.is2nd = Rcl57.shared.is2nd()
-        self.isInv = Rcl57.shared.isInv()
+        self.is2nd = Rcl57.shared.is2nd
+        self.isInv = Rcl57.shared.isInv
     }
 
     private static func getCalculatorKey(standardizedLocation: CGPoint,
@@ -106,10 +106,10 @@ struct CalcKeyboardView: View {
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
                                 isKeyPressed = true
-                                if Settings.hasKeyClick() {
+                                if Settings.hasKeyClick {
                                     AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 }
-                                if Settings.hasHaptic() {
+                                if Settings.hasHaptic {
                                     let feedback = UIImpactFeedbackGenerator(style: .medium)
                                     feedback.impactOccurred()
                                 }
@@ -129,8 +129,8 @@ struct CalcKeyboardView: View {
                     if isActive == false {
                         if isKeyPressed {
                             isKeyPressed = false
-                            is2nd = Rcl57.shared.is2nd()
-                            isInv = Rcl57.shared.isInv()
+                            is2nd = Rcl57.shared.is2nd
+                            isInv = Rcl57.shared.isInv
                             Rcl57.shared.keyRelease()
                             change.updateLogTimestamp()
                         }
@@ -151,7 +151,7 @@ struct CalcKeyboardView: View {
             TrigIndicator()
                 .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                 .offset(x: 174 * scaleFactorH,
-                        y: getTrigOffsetY(units: Rcl57.shared.getTrigUnits(), scaleFactor: scaleFactorV))
+                        y: getTrigOffsetY(units: Rcl57.shared.trigUnits, scaleFactor: scaleFactorV))
         }
     }
 

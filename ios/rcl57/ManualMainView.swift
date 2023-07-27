@@ -23,14 +23,13 @@ struct ManualMainView: View {
                     let width = geometry.size.width
 
                     VStack(spacing: 0) {
-                        MenuBarView(change: change,
-                                    left: nil,
+                        MenuBarView(left: nil,
                                     title: "User Manual",
                                     right: Style.downArrow,
                                     width: width,
                                     leftAction: { },
                                     rightAction: { withAnimation {change.currentView = .calc} })
-                        .background(Style.deepGreen)
+                        .background(Color.deepGreen)
 
                         List {
                             Button("About") {

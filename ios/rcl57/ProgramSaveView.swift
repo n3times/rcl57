@@ -15,9 +15,9 @@ struct ProgramSaveView: View {
     }
 
     func overrides() -> Bool {
-        var existingProgram = Lib57.userLib.getProgramByName(program.getName())
+        var existingProgram = Lib57.userLib.programByName(program.name)
         if existingProgram != nil {
-            if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
+            if context == .edit && originalProgram?.name == existingProgram?.name {
                 existingProgram = nil
             }
         }
@@ -28,33 +28,32 @@ struct ProgramSaveView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(change: change,
-                            left: Style.leftArrow,
-                            title: program.getName() + (overrides() ? "'" : ""),
+                MenuBarView(left: Style.leftArrow,
+                            title: program.name + (overrides() ? "'" : ""),
                             right: nil,
                             width: width,
                             leftAction: { withAnimation {change.isPreviewInEditProgram = false} },
                             rightAction: { })
-                .background(Style.deeperBlue)
+                .background(Color.deeperBlue)
 
-                if program.getDescription() == "" {
+                if program.description == "" {
                     Text("No description available")
                         .frame(maxWidth: geometry.size.width,
                                maxHeight: geometry.size.height - Style.headerHeight - Style.footerHeight,
                                alignment: .center)
-                        .background(Style.ivory)
-                        .foregroundColor(Style.blackish)
+                        .background(Color.ivory)
+                        .foregroundColor(.blackish)
                 } else {
-                    HelpView(helpString: program.getDescription())
+                    HelpView(helpString: program.description)
                 }
 
                 // Footer
                 HStack(spacing: 0) {
                     Spacer()
                     Button(context == .edit ? "CONFIRM EDIT" : context == .imported ? "CONFIRM IMPORT" : "CONFIRM CREATE") {
-                        var existingProgram = Lib57.userLib.getProgramByName(program.getName())
+                        var existingProgram = Lib57.userLib.programByName(program.name)
                         if existingProgram != nil {
-                            if context == .edit && originalProgram?.getName() == existingProgram?.getName() {
+                            if context == .edit && originalProgram?.name == existingProgram?.name {
                                 existingProgram = nil
                             }
                         }
@@ -70,10 +69,10 @@ struct ProgramSaveView: View {
                         if context == .create || context == .imported {
                             _ = Lib57.userLib.addProgram(program)
                         } else {
-                            originalProgram!.setName(name: program.getName())
-                            originalProgram!.setDescription(description: program.getDescription())
+                            originalProgram!.name = program.name
+                            originalProgram!.description = program.description
                         }
-                        _ = program.save(filename: program.getName())
+                        _ = program.save(filename: program.name)
                         withAnimation {
                             if context == .create {
                                 change.loadedProgram = program
@@ -97,8 +96,8 @@ struct ProgramSaveView: View {
                     .buttonStyle(.plain)
                     Spacer()
                 }
-                .background(Style.deeperBlue)
-                .foregroundColor(Style.ivory)
+                .background(Color.deeperBlue)
+                .foregroundColor(.ivory)
             }
         }
     }

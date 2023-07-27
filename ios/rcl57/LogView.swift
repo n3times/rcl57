@@ -7,31 +7,31 @@ import SwiftUI
 /** Shows the instructions keyed in by the user, and the results. */
 struct LogView: View {
     @EnvironmentObject private var change: Change
+
     @State private var isPresentingClear: Bool = false
 
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(change: change,
-                            left: Style.leftArrow,
+                MenuBarView(left: Style.leftArrow,
                             title: "Log",
                             right: nil,
                             width: width,
                             leftAction: { withAnimation {change.currentView = .calc} },
                             rightAction: {})
-                .background(Style.blackish)
+                .background(Color.blackish)
 
-                if Rcl57.shared.getLoggedCount() == 0 {
+                if Rcl57.shared.loggedCount == 0 {
                     Text("Log is empty")
                         .frame(width: geometry.size.width,
                                height: geometry.size.height - Style.headerHeight - Style.footerHeight,
                                alignment: .center)
-                        .background(Style.ivory)
-                        .foregroundColor(Style.blackish)
+                        .background(Color.ivory)
+                        .foregroundColor(.blackish)
                 } else {
                     LogInnerView()
-                        .background(Style.ivory)
+                        .background(Color.ivory)
                 }
 
                 HStack(spacing: 0) {
@@ -44,7 +44,7 @@ struct LogView: View {
                             .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight)
                             .contentShape(Rectangle())
                     }
-                    .disabled(Rcl57.shared.getLoggedCount() == 0)
+                    .disabled(Rcl57.shared.loggedCount == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                         Button("Clear Log", role: .destructive) {
@@ -53,8 +53,8 @@ struct LogView: View {
                     }
                     Spacer()
                 }
-                .background(Style.blackish)
-                .foregroundColor(Style.ivory)
+                .background(Color.blackish)
+                .foregroundColor(.ivory)
             }
         }
     }

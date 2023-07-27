@@ -1,18 +1,17 @@
 import SwiftUI
 
 /**
- * The main view. It holds the calculator,  log, state, settings, library and manual views.
+ * The main view. It holds the calculator, log, state, settings, library and manual views.
+ *
+ * This view is the root view of the view hierarchy of the app.
  */
 struct MainView: View {
+    @StateObject private var change = Change()
+
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
 
-    @StateObject private var change: Change
     @State var showBack = false
-
-    init() {
-        _change = StateObject(wrappedValue: Change())
-    }
 
     private func burst(ms: Int32) {
         _ = Rcl57.shared.advance(ms: ms)
@@ -21,27 +20,23 @@ struct MainView: View {
     }
 
     var body: some View {
-        return GeometryReader { geometry in
-            ZStack {
+        GeometryReader { geometry in
+            Group {
                 if change.currentView != .state && change.currentView != .log {
                     CalcView()
-                        .environmentObject(change)
                         .transition(.move(edge: change.transitionEdge))
                     if change.currentView == .library {
                         LibraryView()
-                            .environmentObject(change)
                             .transition(.move(edge: .bottom))
                             .zIndex(1)
                     }
                     if change.currentView == .settings {
                         SettingsView()
-                            .environmentObject(change)
                             .transition(.move(edge: .bottom))
                             .zIndex(1)
                     }
                     if change.currentView == .manual {
                         ManualMainView()
-                            .environmentObject(change)
                             .transition(.move(edge: .bottom))
                             .zIndex(1)
                     }
@@ -49,11 +44,9 @@ struct MainView: View {
 
                 if change.currentView == .state {
                     StateView()
-                        .environmentObject(change)
                         .transition(.move(edge: .leading))
                 } else if change.currentView == .log {
                     LogView()
-                        .environmentObject(change)
                         .transition(.move(edge: .trailing))
                 }
             }
@@ -61,6 +54,7 @@ struct MainView: View {
                 burst(ms: 20)
             }
         }
+        .environmentObject(change)
     }
 }
 

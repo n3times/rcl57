@@ -5,23 +5,27 @@
 import Foundation
 
 struct LogEntry {
-    let entry: UnsafeMutablePointer<log57_entry_t>
+    let message: String
+    let type: log57_type_t
+    let flags: Int32
 
-    func getMessage() -> String {
-        let message = withUnsafePointer(to: entry.pointee.message) {
-            $0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout.size(ofValue: $0)) {
-                String(cString: $0)
+    init(entry: UnsafeMutablePointer<log57_entry_t>) {
+        // Convert entry.pointee.message into a Swift String:
+        // - entry.pointee.message is a C array of 16 C chars, treated as a tuple by Swift
+        // - messagePointer is a pointer to the tuple of 16 CChar's
+        // - reboundedPointer is a pointer to a the first element of an array of UInt8
+        // - finally we use String(cString:) on the reboundedPointer
+        message = withUnsafePointer(to: entry.pointee.message) { messagePointer in
+            messagePointer.withMemoryRebound(
+                to: UInt8.self,
+                capacity: MemoryLayout.size(ofValue: messagePointer)
+            ) { reboundedPointer in
+                String(cString: reboundedPointer)
             }
         }
-        return message
-    }
 
-    func getType() -> log57_type_t {
-        return entry.pointee.type
-    }
-
-    func getFlags() -> Int32 {
-        return entry.pointee.flags
+        type = entry.pointee.type
+        flags = entry.pointee.flags
     }
 }
 
@@ -33,18 +37,18 @@ class Rcl57 {
     // increment by 1 majorVersion and reset to 0 minorVersion.
     static let majorVersion: Int = 1
     static let minorVersion: Int = 1
-    static let version = String(majorVersion) + "." + String(minorVersion)
+    static let version = "\(majorVersion).\(minorVersion)"
 
     static let shared = Rcl57(filename: stateFilename)
 
     var rcl57 = rcl57_t()
 
-    init() {
+    private init() {
         rcl57_init(&rcl57)
     }
 
     // Initializes a RCL57 object from the state stored in a given file.
-    init(filename: String) {
+    private init(filename: String) {
         var fileRawData: Data?
         var fileRawBuffer: UnsafePointer<Int8>?
         let dirURL: URL? =
@@ -95,8 +99,8 @@ class Rcl57 {
     }
 
     /** Returns the calculator display as a string. */
-    func display() -> String {
-        return String(cString: rcl57_get_display(&rcl57))
+    var display: String {
+        String(cString: rcl57_get_display(&rcl57))
     }
 
     /** Should be called whenever the user presses a calculator key (row in 1..8 and col in 1..5). */
@@ -115,20 +119,20 @@ class Rcl57 {
     }
 
     /** Whether the 2nd key is engaged. */
-    func is2nd() -> Bool {
-        return ti57_is_2nd(&rcl57.ti57)
+    var is2nd: Bool {
+        ti57_is_2nd(&rcl57.ti57)
     }
 
     /** Whether the INV key is engaged. */
-    func isInv() -> Bool {
-        return ti57_is_inv(&rcl57.ti57)
+    var isInv: Bool {
+        ti57_is_inv(&rcl57.ti57)
     }
 
     /**
      * The current units in trigonometric mode.
      */
-    func getTrigUnits() -> ti57_trig_t {
-        return ti57_get_trig(&rcl57.ti57)
+    var trigUnits: ti57_trig_t {
+        ti57_get_trig(&rcl57.ti57)
     }
 
     /** Saves the RCL57 object. Returns 'true' if the object was saved successfully. */
@@ -165,13 +169,13 @@ class Rcl57 {
     }
 
     /**  */
-    func getSpeedup() -> UInt32 {
-        return rcl57.speedup
-    }
-
-    /** */
-    func setSpeedup(speedup: UInt32) {
-        rcl57.speedup = speedup
+    var speedupFactor: UInt32 {
+        get {
+            rcl57.speedup
+        }
+        set {
+            rcl57.speedup = newValue
+        }
     }
 
     /** Clears the state, only preserving the options. */
@@ -222,8 +226,8 @@ class Rcl57 {
     }
 
     /** Returns the number of logged items since reset. */
-    func getLoggedCount() -> Int {
-        return log57_get_logged_count(&rcl57.ti57.log)
+    var loggedCount: Int {
+        log57_get_logged_count(&rcl57.ti57.log)
     }
 
     /**
@@ -231,18 +235,18 @@ class Rcl57 {
      *
      * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
      */
-    func getLogEntry(index: Int) -> LogEntry {
-        return LogEntry(entry: log57_get_entry(&rcl57.ti57.log, index))
+    func logEntry(index: Int) -> LogEntry {
+        LogEntry(entry: log57_get_entry(&rcl57.ti57.log, index))
     }
 
     /** The current operation in EVAL mode. */
-    func currentOp() -> String {
-        return String(cString: log57_get_current_op(&rcl57.ti57.log))
+    var currentOp: String {
+        String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
     /** Returns a timestamp that can be used to find out whether the log has been updated. */
-    func getLogTimestamp() -> Int {
-        return rcl57.ti57.log.timestamp;
+    var logTimestamp: Int {
+        rcl57.ti57.log.timestamp;
     }
 
     func getRegister(index: Int) -> String {
@@ -284,15 +288,15 @@ class Rcl57 {
      * Returns the program counter (-1..49 ), taking into account whether the mode is "HP lrn" or not.
      * -1 if pc is at the beginning of the program in HP lrn mode.
      */
-    func getProgramPc() -> Int {
+    var programPc: Int {
         return Int(rcl57_get_program_pc(&rcl57))
     }
 
-    func isLrnMode() -> Bool {
+    var isLrnMode: Bool {
         return ti57_get_mode(&rcl57.ti57) == TI57_LRN
     }
 
-    func isOpEditInLrn() -> Bool {
+    var isOpEditInLrn: Bool {
         ti57_is_op_edit_in_lrn(&rcl57.ti57)
     }
 }

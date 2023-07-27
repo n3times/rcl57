@@ -2,7 +2,7 @@ import SwiftUI
 
 /** A generic menu bar with 3 sections and 2 controls. */
 struct MenuBarView: View {
-    let change: Change
+    @EnvironmentObject var change: Change
 
     let left: String?
     let title: String
@@ -13,11 +13,11 @@ struct MenuBarView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            if left != nil {
+            if let left {
                 Button(action: {
                     leftAction()
                 }) {
-                    Text(left!)
+                    Text(left)
                         .frame(maxWidth: width / 5, maxHeight: Style.headerHeight, alignment: .leading)
                         .offset(x: 15)
                         .font(Style.directionsFont)
@@ -30,11 +30,11 @@ struct MenuBarView: View {
             Text(title)
                 .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
                 .font(Style.titleFont)
-            if right != nil {
+            if let right {
                 Button(action: {
                     rightAction()
                 }) {
-                    Text(right!)
+                    Text(right)
                         .frame(maxWidth: width / 5, maxHeight: Style.headerHeight, alignment: .trailing)
                         .offset(x: -15)
                         .font(Style.directionsFont)
@@ -45,6 +45,6 @@ struct MenuBarView: View {
                     .frame(maxWidth: width / 5, maxHeight: Style.headerHeight)
             }
         }
-        .foregroundColor(Style.ivory)
+        .foregroundColor(.ivory)
     }
 }
