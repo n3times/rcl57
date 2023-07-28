@@ -1,7 +1,9 @@
 import Foundation
 
 /**
- * A program is characterized by its name, description, steps and registers.
+ * An RCL-57 program.
+ *
+ * It is characterized by its name, description, steps and registers.
  *
  * Registers and steps are combined into a 'state' structure.
  */

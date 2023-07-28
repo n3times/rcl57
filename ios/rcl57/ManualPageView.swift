@@ -1,39 +1,34 @@
 import SwiftUI
 
-/** A spectific page of the User Manual. */
-struct ManualPageView: View, Hashable {
+/**
+ * A page of the User Manual.
+ */
+struct ManualPageView: View {
     @EnvironmentObject private var change: Change
 
     let title: String
-    let helpResource: String
+    let resource: String
 
     var body: some View {
-        let helpURL = Bundle.main.url(forResource: helpResource, withExtension: "hlp")!
+        let helpURL = Bundle.main.url(forResource: resource, withExtension: "hlp")
 
         GeometryReader { geometry in
-            let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(left: Style.leftArrow,
-                            title: title,
-                            right: Style.downArrow,
-                            width: width,
-                            leftAction: { withAnimation {change.manualPageView = nil} },
-                            rightAction: { withAnimation {change.currentView = .calc} })
+                NavigationBar(left: Style.leftArrow,
+                              title: title,
+                              right: Style.downArrow,
+                              leftAction: { withAnimation { change.manualPageView = nil } },
+                              rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.deepGreen)
 
-                HelpView(helpURL: helpURL)
+                if let helpURL {
+                    HelpView(helpURL: helpURL)
+                } else {
+                    Text("No help page")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
             }
         }
         .background(Color.white.edgesIgnoringSafeArea(.bottom))
-    }
-
-    // MARK: Hashable Conformance
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.helpResource)
-    }
-
-    static func ==(lhs: ManualPageView, rhs: ManualPageView) -> Bool {
-        return lhs.helpResource == rhs.helpResource
     }
 }

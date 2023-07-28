@@ -1,11 +1,16 @@
 import UIKit
 
-struct Settings {
-    private static let IS_HAPTIC_KEY = "IS_HAPTIC_KEY"
-    private static let IS_CLICK_KEY = "IS_CLICK_KEY"
-    private static let IS_TURBO_KEY = "IS_TURBO_KEY"
-    private static let IS_ALPHA_KEY = "IS_ALPHA_KEY"
-    private static let IS_HP_KEY = "IS_HP_KEY"
+class Settings: ObservableObject {
+    // UI Settings.
+    // The app uses @AppStorage directly for these.
+    static let isHapticKey = "IS_HAPTIC_KEY"
+    static let isClickKey = "IS_CLICK_KEY"
+
+    // Emulator Settings.
+    // They require additional logic on set, so we use UserDefaults directly.
+    private static let isTurboKey = "IS_TURBO_KEY"
+    private static let isAlphaKey = "IS_ALPHA_KEY"
+    private static let isHpKey = "IS_HP_KEY"
 
     private static func setBoolValue(key: String, value: Bool) {
         UserDefaults.standard.set(value ? "Y" : "N", forKey: key)
@@ -18,58 +23,44 @@ struct Settings {
         return defaultValue
     }
 
-    static var hasTurboSpeed: Bool {
-        get {
-            getBoolValue(key: IS_TURBO_KEY, defaultValue: true)
-        }
-        set {
-            setBoolValue(key: IS_TURBO_KEY, value: newValue)
+    @Published var hasTurboSpeed: Bool {
+        didSet {
+            Settings.setBoolValue(key: Settings.isTurboKey, value: hasTurboSpeed)
 
-            Rcl57.shared.speedupFactor = newValue ? 1000 : 2
-            Rcl57.shared.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: newValue)
-
-            // We set these values to always true since the original behavior can be very frustrating.
-            Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: true)
-            Rcl57.shared.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: true)
-            Rcl57.shared.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: true)
+            Rcl57.shared.speedupFactor = hasTurboSpeed ? 1000 : 2
+            Rcl57.shared.setOptionFlag(option: RCL57_SHOW_RUN_INDICATOR_FLAG, value: hasTurboSpeed)
         }
     }
 
-    static var hasAlphaDisplay: Bool {
-        get {
-            getBoolValue(key: IS_ALPHA_KEY, defaultValue: true)
-        }
-        set {
-            setBoolValue(key: IS_ALPHA_KEY, value: newValue)
-            Rcl57.shared.setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: newValue)
+    @Published var hasAlphaDisplay: Bool {
+        didSet {
+            Settings.setBoolValue(key: Settings.isAlphaKey, value: hasAlphaDisplay)
+            Rcl57.shared.setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: hasAlphaDisplay)
         }
     }
 
-    static var hasHpLrnMode: Bool {
-        get {
-            return getBoolValue(key: IS_HP_KEY, defaultValue: true)
-        }
-        set {
-            setBoolValue(key: IS_HP_KEY, value: newValue)
-            Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: newValue)
+    @Published var hasHpLrnMode: Bool {
+        didSet {
+            Settings.setBoolValue(key: Settings.isHpKey, value: hasHpLrnMode)
+            Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: hasHpLrnMode)
         }
     }
 
-    static var hasHaptic: Bool {
-        get {
-            getBoolValue(key: IS_HAPTIC_KEY, defaultValue: false)
-        }
-        set {
-            setBoolValue(key: IS_HAPTIC_KEY, value: newValue)
-        }
-    }
+    init() {
+        // Get the emulator option values from UserDefaults.
+        hasTurboSpeed = Settings.getBoolValue(key: Settings.isTurboKey, defaultValue: true)
+        hasAlphaDisplay = Settings.getBoolValue(key: Settings.isAlphaKey, defaultValue: true)
+        hasHpLrnMode = Settings.getBoolValue(key: Settings.isHpKey, defaultValue: true)
 
-    static var hasKeyClick: Bool {
-        get {
-            getBoolValue(key: IS_CLICK_KEY, defaultValue: false)
-        }
-        set {
-            setBoolValue(key: IS_CLICK_KEY, value: newValue)
-        }
+        // Inform the emulator.
+        Rcl57.shared.speedupFactor = hasTurboSpeed ? 1000 : 2
+        Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: hasTurboSpeed)
+        Rcl57.shared.setOptionFlag(option: RCL57_ALPHA_LRN_MODE_FLAG, value: hasAlphaDisplay)
+        Rcl57.shared.setOptionFlag(option: RCL57_HP_LRN_MODE_FLAG, value: hasHpLrnMode)
+
+        // The other emulator options cannot be set by the user.
+        Rcl57.shared.setOptionFlag(option: RCL57_QUICK_STOP_FLAG, value: true)
+        Rcl57.shared.setOptionFlag(option: RCL57_SHORT_PAUSE_FLAG, value: true)
+        Rcl57.shared.setOptionFlag(option: RCL57_FASTER_TRACE_FLAG, value: true)
     }
 }

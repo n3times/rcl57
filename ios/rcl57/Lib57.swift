@@ -1,10 +1,10 @@
 import Foundation
 
 /**
- * A library contains RCL-57 programs.
+ * A library of RCL-57 programs.
  *
- * A library can be 'readOnly' meaning that no programs can be added to or deleted from the library.
- * Programs in a given library must have unique names.
+ * A library is 'readOnly' if no programs can be added to or deleted from the library. Programs in a
+ * given library must have unique names.
  */
 class Lib57 {
     private static let samplesLibURL =
@@ -16,6 +16,7 @@ class Lib57 {
     static let userLib = Lib57(folderURL: userLibURL!, name: "User Programs", readonly: false)
 
     private let folderURL: URL
+
     let name: String
     let readonly: Bool
 
@@ -29,10 +30,16 @@ class Lib57 {
         programs = []
         let enumerator =
             FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
-        while let programURLObject = enumerator!.nextObject() {
-            let programURL = programURLObject as! URL
-            if programURL.path.hasSuffix(Prog57.programFileExtension) {
-                programs.append(Prog57(url: programURL, readOnly: readonly)!)
+        if let enumerator {
+            while let programURLObject = enumerator.nextObject() {
+                guard let programURL = programURLObject as? URL else {
+                    continue
+                }
+                if programURL.path.hasSuffix(Prog57.programFileExtension) {
+                    if let program = Prog57(url: programURL, readOnly: readonly) {
+                        programs.append(program)
+                    }
+                }
             }
         }
         programs = programs.sorted { $0.name < $1.name }
@@ -66,7 +73,9 @@ class Lib57 {
                     break
                 }
             }
-            try FileManager.default.removeItem(atPath: program.url!.path)
+            if let programURL = program.url {
+                try FileManager.default.removeItem(atPath: programURL.path)
+            }
         } catch {
             return false
         }

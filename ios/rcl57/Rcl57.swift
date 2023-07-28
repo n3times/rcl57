@@ -4,6 +4,9 @@
 
 import Foundation
 
+/**
+ * LogEntry.
+ */
 struct LogEntry {
     let message: String
     let type: log57_type_t
@@ -29,14 +32,20 @@ struct LogEntry {
     }
 }
 
+/**
+ * A singleton class to access the state of the emulator.
+ *
+ * This includes the display, the registers, and the program steps. One can interact with the
+ * calculator, notably by pressing and releasing keyboard keys.
+ */
 class Rcl57 {
     private static let stateFilename = "rcl57.dat"
     private static let versionKey = "version"
 
     // For minor changes, increment by 1 minorVersion. For non backward compatible changes,
     // increment by 1 majorVersion and reset to 0 minorVersion.
-    static let majorVersion: Int = 1
-    static let minorVersion: Int = 1
+    static let majorVersion = 1
+    static let minorVersion = 1
     static let version = "\(majorVersion).\(minorVersion)"
 
     static let shared = Rcl57(filename: stateFilename)
@@ -56,10 +65,9 @@ class Rcl57 {
         var fileURL: URL? = dirURL?.appendingPathComponent(filename)
 
         // Update version if it has changed.
-        let previousVersion = UserDefaults.standard.string(forKey: Rcl57.versionKey)
-        if previousVersion != Rcl57.version {
-            if previousVersion != nil {
-                let previousMajorVersion = Int(Float(previousVersion!)!)
+        if let previousVersion = UserDefaults.standard.string(forKey: Rcl57.versionKey) {
+            if previousVersion != Rcl57.version {
+                let previousMajorVersion = Int(Float(previousVersion)!)
                 if previousMajorVersion != Rcl57.majorVersion {
                     // Reset state since this is a non backward compatible change.
                     do {

@@ -4,16 +4,14 @@ import SwiftUI
 struct Rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
-    init() {
-        // Technically this is only necessary if the state is not loaded from a file.
-        Settings.hasTurboSpeed = Settings.hasTurboSpeed
-        Settings.hasAlphaDisplay = Settings.hasAlphaDisplay
-        Settings.hasHpLrnMode = Settings.hasHpLrnMode
-    }
+    @StateObject var change = Change()
+    @StateObject var settings = Settings()
 
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(change)
+                .environmentObject(settings)
         }
         .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .background {

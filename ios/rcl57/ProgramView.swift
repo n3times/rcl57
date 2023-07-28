@@ -5,126 +5,140 @@ private struct ActivityViewController: UIViewControllerRepresentable {
     var applicationActivities: [UIActivity]? = nil
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
-        return controller
+        UIActivityViewController(activityItems: activityItems,
+                                 applicationActivities: applicationActivities)
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
+    func updateUIViewController(_ uiViewController: UIActivityViewController,
+                                context: UIViewControllerRepresentableContext<ActivityViewController>) {
+        // Nothing to update.
+    }
 }
 
-/** Shows the name and description of a program and let's the user take different actions on the program. */
-struct ProgramView: View {
+/**
+ * Let's the user delete, edit and share the program.
+ */
+private struct Footer: View {
     @EnvironmentObject var change: Change
 
-    @State private var isPresentingShare: Bool = false
-    @State private var isPresentingDelete: Bool = false
-    @State private var isPresentingCopy: Bool = false
+    @State var isPresentingDelete = false
+    @State var isPresentingShare = false
+
+    let program: Prog57
+    let width: Double
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Button(action: {
+                isPresentingShare = true
+            }) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(Style.directionsFont)
+                    .offset(x: 15)
+                    .frame(width: width / 5, height: Style.footerHeight, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .sheet(isPresented: $isPresentingShare) {
+                ActivityViewController(activityItems: [program.url!])
+            }
+
+            Button(action: {
+                program.loadStepsIntoMemory()
+                program.loadRegistersIntoMemory()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    change.setLoadedProgram(program: program)
+                }
+                withAnimation {
+                    change.currentViewType = .calc
+                }
+            }) {
+                let loadButtonText = program == change.loadedProgram ? "RELOAD" : "LOAD"
+                Text(loadButtonText)
+                    .font(Style.footerFont)
+                    .frame(width: width * 3 / 5, height: Style.footerHeight, alignment: .center)
+                    .buttonStyle(.plain)
+                    .contentShape(Rectangle())
+            }
+
+            if program.readOnly {
+                Spacer()
+                    .frame(width: width / 5, height: Style.footerHeight)
+            } else {
+                Menu {
+                    Button(action: {
+                        isPresentingDelete = true
+                    }) {
+                        Text("Delete")
+                    }
+                    Button(action: {
+                        change.isPreviewInEditProgram = false
+                        withAnimation {
+                            change.isEditInProgramView = true
+                        }
+                    }) {
+                        Text("Edit")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(Style.directionsFont)
+                        .frame(width: width / 5, height: Style.footerHeight, alignment: .trailing)
+                        .offset(x: -15)
+                        .contentShape(Rectangle())
+                }
+                .frame(width: width / 5, height: Style.footerHeight, alignment: .trailing)
+                .offset(x: -15)
+                .contentShape(Rectangle())
+                .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
+                    Button("Delete " + program.name, role: .destructive) {
+                        _ = Lib57.userLib.deleteProgram(program)
+                        if program == change.loadedProgram {
+                            change.loadedProgram = nil
+                        }
+                        change.isUserLibExpanded = true
+                        withAnimation {
+                            change.programView = nil
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Displays the name and description of a program. Lets the user take different actions on the
+ * program.
+ */
+struct ProgramView: View {
+    @EnvironmentObject var change: Change
 
     let program: Prog57
 
     var body: some View {
-        let loaded = program == change.loadedProgram
-        let loadButtonText = loaded ? "RELOAD" : "LOAD"
-
         GeometryReader { geometry in
             let width = geometry.size.width
 
             VStack(spacing: 0) {
-                MenuBarView(left: Style.leftArrow,
-                            title: program.name,
-                            right: Style.downArrow,
-                            width: width,
-                            leftAction: { withAnimation {change.programView = nil} },
-                            rightAction: { withAnimation {change.currentView = .calc} })
+                NavigationBar(left: Style.leftArrow,
+                              title: program.name,
+                              right: Style.downArrow,
+                              leftAction: { withAnimation { change.programView = nil } },
+                              rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.deepBlue)
 
                 if program.description == "" {
-                    GeometryReader { geometry in
-                        Text("No description available")
-                            .frame(width: geometry.size.width,
-                                   height: geometry.size.height,
-                                   alignment: .center)
-                            .background(Color.ivory)
-                            .foregroundColor(.blackish)
-                    }
+                    Text("No description available")
+                        .frame(maxWidth: .infinity,
+                               maxHeight: .infinity,
+                               alignment: .center)
+                        .background(Color.ivory)
+                        .foregroundColor(.blackish)
                 } else {
                     HelpView(helpString: program.description)
                 }
 
-                // Footer
-                HStack(spacing: 0) {
-                    Button(action: {
-                        isPresentingShare = true
-                    }) {
-                        Image(systemName: "square.and.arrow.up")
-                            .font(Style.directionsFont)
-                            .offset(x: 15)
-                            .frame(width: width / 5, height: Style.footerHeight, alignment: .leading)
-                            .contentShape(Rectangle())
-                    }
-                    .sheet(isPresented: $isPresentingShare) {
-                        ActivityViewController(activityItems: [program.url!])
-                    }
-
-                    Button(action: {
-                        program.loadStepsIntoMemory()
-                        program.loadRegistersIntoMemory()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            change.setLoadedProgram(program: program)
-                        }
-                        withAnimation {
-                            change.currentView = .calc
-                        }
-                    }) {
-                        Text(loadButtonText)
-                            .font(Style.footerFont)
-                            .frame(maxWidth: width * 3 / 5, maxHeight: Style.footerHeight, alignment: .center)
-                            .buttonStyle(.plain)
-                            .contentShape(Rectangle())
-                    }
-
-                    if program.readOnly {
-                        Spacer()
-                            .frame(width: width / 5, height: Style.footerHeight)
-                    } else {
-                        Menu {
-                            Button(action: {
-                                isPresentingDelete = true
-                            }) {
-                                Text("Delete")
-                            }
-                            Button(action: {
-                                change.isPreviewInEditProgram = false
-                                withAnimation {
-                                    change.isEditInProgramView = true
-                                }
-                            }) {
-                                Text("Edit")
-                            }
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .font(Style.directionsFont)
-                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight, alignment: .trailing)
-                                .offset(x: -15)
-                                .contentShape(Rectangle())
-                        }
-                        .frame(maxWidth: width / 5, maxHeight: Style.footerHeight, alignment: .trailing)
-                        .offset(x: -15)
-                        .contentShape(Rectangle())
-                        .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
-                            Button("Delete " + program.name, role: .destructive) {
-                                _ = Lib57.userLib.deleteProgram(program)
-                                if program == change.loadedProgram {
-                                    change.loadedProgram = nil
-                                }
-                                change.isUserLibExpanded = true
-                                withAnimation {
-                                    change.programView = nil
-                                }
-                            }
-                        }
-                    }
-                }
+                Footer(program: program, width: width)
+                    .frame(maxHeight: Style.footerHeight)
             }
             .background(Color.deepBlue)
             .foregroundColor(.ivory)

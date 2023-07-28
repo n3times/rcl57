@@ -1,23 +1,24 @@
 import SwiftUI
 import AudioToolbox
 
-enum CreateProgramContext {
+enum ProgramEditContext {
     case create
     case edit
     case imported
 }
 
-/** Gives tto the user a chance to edit the name and description of a program. */
+/** Gives the user a chance to edit the name and description of a program. */
 struct ProgramEditView: View {
     @EnvironmentObject var change: Change
 
     @State private var isPresentingExit: Bool = false
+
     @State var name: String
     @State var help: String
 
     var originalProgram: Prog57? = nil
 
-    var context: CreateProgramContext = .create
+    var context: ProgramEditContext = .create
 
     @FocusState private var nameIsFocused: Bool
 
@@ -103,7 +104,7 @@ struct ProgramEditView: View {
                                 }
                             }
                             Text(context == .edit ? "Edit Program" : context == .imported ? "Import Program" : "Create Program")
-                                .frame(maxWidth: width * 3 / 5, maxHeight: Style.headerHeight)
+                                .frame(width: width * 3 / 5, height: Style.headerHeight)
                                 .font(Style.titleFont)
                             Button(action: {
                                 nameIsFocused = false

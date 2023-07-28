@@ -21,6 +21,10 @@ private struct TrigIndicator: View {
  */
 struct CalcKeyboardView: View {
     @EnvironmentObject private var change: Change
+    @EnvironmentObject private var settings: Settings
+
+    @AppStorage(Settings.isHapticKey) private var hasHaptic: Bool = false
+    @AppStorage(Settings.isClickKey) private var hasKeyClick: Bool = false
 
     private let imageName = "button_pad"
 
@@ -106,10 +110,10 @@ struct CalcKeyboardView: View {
                                 factor: scaleFactorV / scaleFactorH)
                             if c != nil {
                                 isKeyPressed = true
-                                if Settings.hasKeyClick {
+                                if hasKeyClick {
                                     AudioServicesPlaySystemSound(SystemSoundID(0x450))
                                 }
-                                if Settings.hasHaptic {
+                                if hasHaptic {
                                     let feedback = UIImpactFeedbackGenerator(style: .medium)
                                     feedback.impactOccurred()
                                 }

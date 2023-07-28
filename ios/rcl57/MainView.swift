@@ -1,60 +1,47 @@
 import SwiftUI
 
 /**
- * The main view. It holds the calculator, log, state, settings, library and manual views.
+ * The root view: a navigation-like view from where to access the different views.
  *
- * This view is the root view of the view hierarchy of the app.
+ * The CalcView is at the center:
+ * - StateView <-> CalcView <-> LogView
+ * - Above the CalcView: ManualView, SettingsView, and LibraryView
  */
 struct MainView: View {
-    @StateObject private var change = Change()
-
-    private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
-        .autoconnect()
-
-    @State var showBack = false
-
-    private func burst(ms: Int32) {
-        _ = Rcl57.shared.advance(ms: ms)
-        change.updateLogTimestamp()
-        change.updateDisplayString()
-    }
+    @EnvironmentObject private var change: Change
 
     var body: some View {
-        GeometryReader { geometry in
-            Group {
-                if change.currentView != .state && change.currentView != .log {
-                    CalcView()
-                        .transition(.move(edge: change.transitionEdge))
-                    if change.currentView == .library {
-                        LibraryView()
-                            .transition(.move(edge: .bottom))
-                            .zIndex(1)
-                    }
-                    if change.currentView == .settings {
-                        SettingsView()
-                            .transition(.move(edge: .bottom))
-                            .zIndex(1)
-                    }
-                    if change.currentView == .manual {
-                        ManualMainView()
-                            .transition(.move(edge: .bottom))
-                            .zIndex(1)
-                    }
-                }
-
-                if change.currentView == .state {
-                    StateView()
-                        .transition(.move(edge: .leading))
-                } else if change.currentView == .log {
-                    LogView()
-                        .transition(.move(edge: .trailing))
-                }
+        ZStack {
+            let viewType = change.currentViewType
+            let isUpView = viewType == .library || viewType == .manual || viewType == .settings
+            if viewType == .calc || isUpView {
+                CalcView()
+                    .transition(.move(edge: change.transitionEdge))
+                    .zIndex(0)
             }
-            .onReceive(timerPublisher) { _ in
-                burst(ms: 20)
+            switch(viewType) {
+            case .calc:
+                EmptyView()
+            case .state:
+                StateView()
+                    .transition(.move(edge: .leading))
+            case .log:
+                LogView()
+                    .transition(.move(edge: .trailing))
+            case .library:
+                LibraryView()
+                    .transition(.move(edge: .bottom))
+                    .zIndex(1)
+            case .manual:
+                ManualView()
+                    .transition(.move(edge: .bottom))
+                    .zIndex(1)
+            case .settings:
+                SettingsView()
+                    .transition(.move(edge: .bottom))
+                    .zIndex(1)
             }
         }
-        .environmentObject(change)
     }
 }
 

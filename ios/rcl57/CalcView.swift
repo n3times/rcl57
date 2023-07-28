@@ -1,17 +1,20 @@
 import SwiftUI
 
-private struct CalcMenuButton: View {
+/**
+ * A button of the calc navigation bar.
+ */
+private struct CalcNavigationButton: View {
     @EnvironmentObject private var change: Change
 
     let text: String
-    let destination: CurrentView
+    let destination: ViewType
     let edge: Edge
 
     var body: some View {
         Button(action: {
             change.transitionEdge = edge
             withAnimation {
-                change.currentView = destination
+                change.currentViewType = destination
             }
         }) {
             Text(text)
@@ -23,18 +26,21 @@ private struct CalcMenuButton: View {
     }
 }
 
-private struct CalcMenuBar: View {
+/**
+ * A specialized bar to navigate to the different views of the app.
+ */
+private struct CalcNavigationBar: View {
     var body: some View {
         HStack(spacing: 0) {
-            CalcMenuButton(text: Style.leftArrow, destination: .state, edge: .trailing)
+            CalcNavigationButton(text: Style.leftArrow, destination: .state, edge: .trailing)
                 .foregroundColor(.lightGray)
-            CalcMenuButton(text: Style.square, destination: .manual, edge: .top)
+            CalcNavigationButton(text: Style.square, destination: .manual, edge: .top)
                 .foregroundColor(.deepishGreen)
-            CalcMenuButton(text: Style.square, destination: .settings, edge: .top)
+            CalcNavigationButton(text: Style.square, destination: .settings, edge: .top)
                 .foregroundColor(.lightGray)
-            CalcMenuButton(text: Style.square, destination: .library, edge: .top)
+            CalcNavigationButton(text: Style.square, destination: .library, edge: .top)
                 .foregroundColor(.deepishBlue)
-            CalcMenuButton(text: Style.rightArrow, destination: .log, edge: .leading)
+            CalcNavigationButton(text: Style.rightArrow, destination: .log, edge: .leading)
                 .foregroundColor(.lightGray)
         }
         .font(Style.directionsFont)
@@ -43,34 +49,38 @@ private struct CalcMenuBar: View {
     }
 }
 
+/**
+ * Displays the program name and the current operation.
+ */
 private struct CalcInfoView: View {
     @EnvironmentObject private var change: Change
 
-    let width: Double
-
     var body: some View {
-        // Program Name and Current Operation.
-        HStack(spacing: 0) {
-            Text(change.loadedProgram != nil ? change.loadedProgram!.name : "")
-                .font(Style.programFont)
-                .offset(x: 15, y: -3)
-                .frame(maxWidth: width / 2, maxHeight: 20, alignment: .leading)
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            HStack(spacing: 0) {
+                Text(change.loadedProgram?.name ?? "")
+                    .font(Style.programFont)
+                    .offset(x: 15, y: -3)
+                    .frame(width: width / 2, height: 20, alignment: .leading)
 
-            Spacer()
-                .frame(maxWidth: width / 6, maxHeight: 20, alignment: .leading)
+                Spacer()
+                    .frame(width: width / 6, height: 20, alignment: .leading)
 
-            Text(Rcl57.shared.currentOp)
-                .font(Style.operationFont)
-                .offset(x: -25, y: -3)
-                .frame(maxWidth: width / 3, maxHeight: 20, alignment: .trailing)
+                Text(Rcl57.shared.currentOp)
+                    .font(Style.operationFont)
+                    .offset(x: -25, y: -3)
+                    .frame(width: width / 3, height: 20, alignment: .trailing)
+            }
+            .foregroundColor(.lightGray)
+            .background(Color.blackish)
         }
-        .foregroundColor(.lightGray)
-        .background(Color.blackish)
+        .frame(height: 20)
     }
 }
 
 /**
- * The calculator view with its keyboard, display, and a menu on top.
+ * The calculator view with the navigation bar, info, display, and keyboard.
  */
 struct CalcView: View {
     @EnvironmentObject private var change: Change
@@ -85,8 +95,8 @@ struct CalcView: View {
                 Color.blackish.edgesIgnoringSafeArea(.top)
                 Color.black.edgesIgnoringSafeArea(.bottom)
                 VStack(spacing: 0) {
-                    CalcMenuBar()
-                    CalcInfoView(width: width)
+                    CalcNavigationBar()
+                    CalcInfoView()
                     CalcDisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)

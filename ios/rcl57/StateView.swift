@@ -1,6 +1,8 @@
 import SwiftUI
 
-/** The steps and registers of the calculator. */
+/**
+ * The steps and registers of the calculator.
+ */
 struct StateView: View {
     @EnvironmentObject var change: Change
 
@@ -22,12 +24,11 @@ struct StateView: View {
                 let width = geometry.size.width
 
                 VStack(spacing: 0) {
-                    MenuBarView(left: change.isStepsInState ? Style.yang : Style.ying,
-                                title: viewTitle + (!isProgramNew && program!.stepsNeedSaving() ? "'" : ""),
-                                right: Style.rightArrow,
-                                width: width,
-                                leftAction: { change.isStepsInState.toggle() },
-                                rightAction: { withAnimation {change.currentView = .calc} })
+                    NavigationBar(left: change.isStepsInState ? Style.yang : Style.ying,
+                                  title: viewTitle + (!isProgramNew && program!.stepsNeedSaving() ? "'" : ""),
+                                  right: Style.rightArrow,
+                                  leftAction: { change.isStepsInState.toggle() },
+                                  rightAction: { withAnimation { change.currentViewType = .calc } })
                     .background(Color.blackish)
 
                     // Type (steps or registers)

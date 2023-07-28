@@ -2,29 +2,25 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject private var change: Change
+    @EnvironmentObject private var settings: Settings
 
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
-    @State private var hasTurboSpeed = Settings.hasTurboSpeed
-    @State private var hasAlphaDisplay = Settings.hasAlphaDisplay
-    @State private var hasHPLrnMode = Settings.hasHpLrnMode
-
-    @State private var hasKeyClick = Settings.hasKeyClick
-    @State private var hasHaptic = Settings.hasHaptic
-
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
+
+    @AppStorage(Settings.isHapticKey) var hasHaptic: Bool = false
+    @AppStorage(Settings.isClickKey) var hasKeyClick: Bool = false
 
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
             VStack(spacing: 0) {
-                MenuBarView(left: nil,
-                            title: "Settings",
-                            right: Style.downArrow,
-                            width: width,
-                            leftAction: {},
-                            rightAction: { withAnimation {change.currentView = .calc} })
+                NavigationBar(left: nil,
+                              title: "Settings",
+                              right: Style.downArrow,
+                              leftAction: nil,
+                              rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.gray)
                 .frame(width: width)
 
@@ -49,13 +45,13 @@ struct SettingsView: View {
                         }
                     }
                     Section("Emulator Options") {
-                        Toggle(isOn: $hasTurboSpeed) {
+                        Toggle(isOn: $settings.hasTurboSpeed) {
                             Text("Turbo Speed")
                         }
-                        Toggle(isOn: $hasAlphaDisplay) {
+                        Toggle(isOn: $settings.hasAlphaDisplay) {
                             Text("Alpha Display")
                         }
-                        Toggle(isOn: $hasHPLrnMode) {
+                        Toggle(isOn: $settings.hasHpLrnMode) {
                             Text("HP LRN Mode")
                         }
                     }
@@ -66,21 +62,6 @@ struct SettingsView: View {
                         Toggle(isOn: $hasHaptic) {
                             Text("Haptic Feedback")
                         }
-                    }
-                    .onChange(of: hasHaptic) { _ in
-                        Settings.hasHaptic = hasHaptic
-                    }
-                    .onChange(of: hasKeyClick) { _ in
-                        Settings.hasKeyClick = hasKeyClick
-                    }
-                    .onChange(of: hasTurboSpeed) { _ in
-                        Settings.hasTurboSpeed = hasTurboSpeed
-                    }
-                    .onChange(of: hasAlphaDisplay) { _ in
-                        Settings.hasAlphaDisplay = hasAlphaDisplay
-                    }
-                    .onChange(of: hasHPLrnMode) { _ in
-                        Settings.hasHpLrnMode = hasHPLrnMode
                     }
                 }
             }

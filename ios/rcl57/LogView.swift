@@ -1,36 +1,32 @@
-/**
- * The view that shows operations and results.
- */
-
 import SwiftUI
 
-/** Shows the instructions keyed in by the user, and the results. */
+/**
+ * Displays the instructions keyed in by the user, and the results.
+ */
 struct LogView: View {
     @EnvironmentObject private var change: Change
 
     @State private var isPresentingClear: Bool = false
 
     var body: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
+        GeometryReader { proxy in
             VStack(spacing: 0) {
-                MenuBarView(left: Style.leftArrow,
-                            title: "Log",
-                            right: nil,
-                            width: width,
-                            leftAction: { withAnimation {change.currentView = .calc} },
-                            rightAction: {})
+                NavigationBar(left: Style.leftArrow,
+                              title: "Log",
+                              right: nil,
+                              leftAction: { withAnimation { change.currentViewType = .calc } },
+                              rightAction: nil)
                 .background(Color.blackish)
 
                 if Rcl57.shared.loggedCount == 0 {
                     Text("Log is empty")
-                        .frame(width: geometry.size.width,
-                               height: geometry.size.height - Style.headerHeight - Style.footerHeight,
+                        .frame(maxWidth: .infinity,
+                               maxHeight: .infinity,
                                alignment: .center)
                         .background(Color.ivory)
                         .foregroundColor(.blackish)
                 } else {
-                    LogInnerView()
+                    LogContentView()
                         .background(Color.ivory)
                 }
 
@@ -41,7 +37,7 @@ struct LogView: View {
                     }) {
                         Text("CLEAR")
                             .font(Style.footerFont)
-                            .frame(maxWidth: width * 2 / 3, maxHeight: Style.footerHeight)
+                            .frame(width: proxy.size.width * 2 / 3, height: Style.footerHeight)
                             .contentShape(Rectangle())
                     }
                     .disabled(Rcl57.shared.loggedCount == 0)

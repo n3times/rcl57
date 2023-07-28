@@ -45,12 +45,11 @@ struct LibraryView: View {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     VStack(spacing: 0) {
-                        MenuBarView(left: nil,
-                                    title: "Library",
-                                    right: Style.downArrow,
-                                    width: width,
-                                    leftAction: {},
-                                    rightAction: { withAnimation {change.currentView = .calc} })
+                        NavigationBar(left: nil,
+                                      title: "Library",
+                                      right: Style.downArrow,
+                                      leftAction: nil,
+                                      rightAction: { withAnimation {change.currentViewType = .calc} })
                         .background(Color.deepBlue)
                         .frame(width: width)
 
@@ -101,14 +100,14 @@ struct LibraryView: View {
                         // Footer
                         HStack(spacing: 0) {
                             Spacer()
-                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight)
+                                .frame(width: width / 5, height: Style.footerHeight)
 
                             Button(action: {
                                 isPresentingImport = true
                             }) {
                                 Text("IMPORT")
                                     .font(Style.footerFont)
-                                    .frame(maxWidth: width * 3 / 5, maxHeight: Style.footerHeight, alignment: .center)
+                                    .frame(width: width * 3 / 5, height: Style.footerHeight, alignment: .center)
                                     .buttonStyle(.plain)
                             }
                             .fileImporter(
@@ -134,7 +133,7 @@ struct LibraryView: View {
                                 })
 
                             Spacer()
-                                .frame(maxWidth: width / 5, maxHeight: Style.footerHeight)
+                                .frame(width: width / 5, height: Style.footerHeight)
                         }
                         .background(Color.deepBlue)
                         .foregroundColor(.ivory)

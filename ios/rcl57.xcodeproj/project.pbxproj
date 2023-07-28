@@ -10,7 +10,7 @@
 		15071C352873811C0075D722 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* LibraryView.swift */; };
 		15071C372874CEA90075D722 /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* ProgramView.swift */; };
 		15071C392879F1160075D722 /* ProgramEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* ProgramEditView.swift */; };
-		15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C3A287B7EF00075D722 /* MenuBarView.swift */; };
+		15071C3B287B7EF10075D722 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C3A287B7EF00075D722 /* NavigationBar.swift */; };
 		150DE99E28805BE6008E651B /* ProgramSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DE99D28805BE6008E651B /* ProgramSaveView.swift */; };
 		150ED8A227B089EF00E01FC6 /* Rcl57App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A127B089EF00E01FC6 /* Rcl57App.swift */; };
 		150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8A327B089EF00E01FC6 /* MainView.swift */; };
@@ -34,11 +34,11 @@
 		1567D5A1288D9C7300273C3C /* ManualPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D5A0288D9C7300273C3C /* ManualPageView.swift */; };
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
 		158D172327E244FA003BC323 /* logger57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D172227E24441003BC323 /* logger57.c */; };
-		158D172527E2A5E6003BC323 /* LogInnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D172427E2A5E6003BC323 /* LogInnerView.swift */; };
+		158D172527E2A5E6003BC323 /* LogContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D172427E2A5E6003BC323 /* LogContentView.swift */; };
 		1594197C289487BA00E254DD /* library.hlp in Resources */ = {isa = PBXBuildFile; fileRef = 1594197B289487BA00E254DD /* library.hlp */; };
 		159E94D62814AA2000859F10 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D52814AA2000859F10 /* LogView.swift */; };
 		159E94D82814BBD400859F10 /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159E94D72814BBD400859F10 /* StateView.swift */; };
-		15B085AE284F149B0018418A /* ManualMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualMainView.swift */; };
+		15B085AE284F149B0018418A /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085AD284F149B0018418A /* ManualView.swift */; };
 		15B085B52852C6060018418A /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085B42852C6060018418A /* HelpView.swift */; };
 		15B085E4286152770018418A /* prog57.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E2286152770018418A /* prog57.c */; };
 		15B085E6286152C60018418A /* Prog57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B085E5286152C60018418A /* Prog57.swift */; };
@@ -63,7 +63,7 @@
 		15071C342873811C0075D722 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		15071C362874CEA90075D722 /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15071C382879F1160075D722 /* ProgramEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramEditView.swift; sourceTree = "<group>"; };
-		15071C3A287B7EF00075D722 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		15071C3A287B7EF00075D722 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		150DE99D28805BE6008E651B /* ProgramSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSaveView.swift; sourceTree = "<group>"; };
 		150ED89E27B089EF00E01FC6 /* rcl57.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rcl57.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		150ED8A127B089EF00E01FC6 /* Rcl57App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rcl57App.swift; sourceTree = "<group>"; };
@@ -98,11 +98,11 @@
 		158D171E27E032EC003BC323 /* lrn57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lrn57.c; sourceTree = "<group>"; };
 		158D172127E24441003BC323 /* logger57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logger57.h; sourceTree = "<group>"; };
 		158D172227E24441003BC323 /* logger57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = logger57.c; sourceTree = "<group>"; };
-		158D172427E2A5E6003BC323 /* LogInnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInnerView.swift; sourceTree = "<group>"; };
+		158D172427E2A5E6003BC323 /* LogContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogContentView.swift; sourceTree = "<group>"; };
 		1594197B289487BA00E254DD /* library.hlp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = library.hlp; sourceTree = "<group>"; };
 		159E94D52814AA2000859F10 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		159E94D72814BBD400859F10 /* StateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
-		15B085AD284F149B0018418A /* ManualMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualMainView.swift; sourceTree = "<group>"; };
+		15B085AD284F149B0018418A /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
 		15B085B42852C6060018418A /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		15B085E2286152770018418A /* prog57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = prog57.c; sourceTree = "<group>"; };
 		15B085E3286152770018418A /* prog57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prog57.h; sourceTree = "<group>"; };
@@ -179,12 +179,12 @@
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
 				15071C342873811C0075D722 /* LibraryView.swift */,
-				158D172427E2A5E6003BC323 /* LogInnerView.swift */,
+				158D172427E2A5E6003BC323 /* LogContentView.swift */,
 				159E94D52814AA2000859F10 /* LogView.swift */,
 				150ED8A327B089EF00E01FC6 /* MainView.swift */,
-				15B085AD284F149B0018418A /* ManualMainView.swift */,
+				15B085AD284F149B0018418A /* ManualView.swift */,
 				1567D5A0288D9C7300273C3C /* ManualPageView.swift */,
-				15071C3A287B7EF00075D722 /* MenuBarView.swift */,
+				15071C3A287B7EF00075D722 /* NavigationBar.swift */,
 				15071C382879F1160075D722 /* ProgramEditView.swift */,
 				150DE99D28805BE6008E651B /* ProgramSaveView.swift */,
 				15071C362874CEA90075D722 /* ProgramView.swift */,
@@ -364,11 +364,11 @@
 				158D172327E244FA003BC323 /* logger57.c in Sources */,
 				15DBBC4C27D6FEB300CD4131 /* key57.c in Sources */,
 				151EBA6D28179F87005DD283 /* CalcView.swift in Sources */,
-				15071C3B287B7EF10075D722 /* MenuBarView.swift in Sources */,
+				15071C3B287B7EF10075D722 /* NavigationBar.swift in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
 				1567D5A1288D9C7300273C3C /* ManualPageView.swift in Sources */,
 				1567D59F28832CA000273C3C /* Change.swift in Sources */,
-				15B085AE284F149B0018418A /* ManualMainView.swift in Sources */,
+				15B085AE284F149B0018418A /* ManualView.swift in Sources */,
 				15B0861228680BB40018418A /* Lib57.swift in Sources */,
 				15F948FA283F26B200706BE5 /* Help57.swift in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
@@ -389,7 +389,7 @@
 				1533F6572801977F00DF3BAE /* StateInnerView.swift in Sources */,
 				154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */,
 				15B085E6286152C60018418A /* Prog57.swift in Sources */,
-				158D172527E2A5E6003BC323 /* LogInnerView.swift in Sources */,
+				158D172527E2A5E6003BC323 /* LogContentView.swift in Sources */,
 				15124F75282F00E200F0208F /* SettingsView.swift in Sources */,
 				151EBA6F28238D62005DD283 /* Style.swift in Sources */,
 				154B7A7C27BC65C900AE38F1 /* state57.c in Sources */,

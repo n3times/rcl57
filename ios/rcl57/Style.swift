@@ -12,7 +12,6 @@ extension Color {
 }
 
 struct Style {
-    // iPod screen is special-cased.
     private static let isSmallScreen = UIScreen.main.bounds.width <= 320
 
     // Header.

@@ -1,7 +1,3 @@
-/**
- * The view that shows operations and results.
- */
-
 import SwiftUI
 
 /** Data for a LineView: a number and an operation. */
@@ -53,8 +49,10 @@ private struct LogLineView: View {
     }
 }
 
-/** A list of LineView's. */
-struct LogInnerView: View {
+/**
+ * Displays operations and results.
+ */
+struct LogContentView: View {
     @EnvironmentObject private var change: Change
 
     @State private var lines: [LogLine] = []
@@ -142,7 +140,7 @@ struct LogInnerView: View {
     }
 
     var body: some View {
-        return ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
             List(lines) {
                 LogLineView(line: $0)
                     .listRowBackground(Color.ivory)
@@ -177,6 +175,6 @@ struct LogInnerView: View {
 
 struct LogInnerView_Previews: PreviewProvider {
     static var previews: some View {
-        LogInnerView()
+        LogContentView()
     }
 }
