@@ -1,33 +1,42 @@
 import Foundation
 
 /**
- * A library of RCL-57 programs.
- *
- * A library is 'readOnly' if no programs can be added to or deleted from the library. Programs in a
- * given library must have unique names.
+ * Represents the 2 libraries of RCL-57 programs:
+ * - "samplesLib" contains a fixed set of sample programs
+ * - "userLib" is where users can add, remove and edit their own programs
  */
 class Lib57 {
-    private static let samplesLibURL =
-        Bundle.main.bundleURL.appendingPathComponent("samplesLib")
-    private static let userLibURL =
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    static let userLib: Lib57 = {
+        let userLibURL =
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        return Lib57(folderURL: userLibURL, name: "User Programs", readonly: false)
+    }()
 
-    static let samplesLib = Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
-    static let userLib = Lib57(folderURL: userLibURL!, name: "User Programs", readonly: false)
+    static let samplesLib: Lib57 = {
+        let samplesLibURL =
+            Bundle.main.bundleURL.appendingPathComponent("samplesLib")
+        return Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
+    }()
 
-    private let folderURL: URL
+    private let folderURL: URL?
 
     let name: String
     let readonly: Bool
 
-    var programs: [Prog57]
+    var programs: [Prog57] = []
 
-    init(folderURL: URL, name: String, readonly: Bool) {
+    private init(folderURL: URL?, name: String, readonly: Bool) {
         self.folderURL = folderURL
         self.name = name
+
+        guard let folderURL else {
+            // Being cautious but this should never happen with userLib or samplesLib.
+            self.readonly = true
+            return
+        }
+
         self.readonly = readonly
 
-        programs = []
         let enumerator =
             FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
         if let enumerator {
@@ -48,6 +57,7 @@ class Lib57 {
     func addProgram(_ program: Prog57) -> Bool {
         if readonly { return false }
         if programByName(program.name) != nil { return false }
+        guard let folderURL else { return false }
 
         do {
             let text = program.toString()

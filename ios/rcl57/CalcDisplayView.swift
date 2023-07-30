@@ -94,7 +94,7 @@ struct CalcDisplayView: View {
      */
 
     // Returns a rectangle path with the corners slightly clipped.
-    private func getRectSegmentPath(rect: CGRect) -> Path? {
+    private func getRectSegmentPath(rect: CGRect) -> Path {
         var path = Path()
         let d = 1.5
         path.move(to: CGPoint(x: rect.minX, y: rect.minY + d))
@@ -108,7 +108,7 @@ struct CalcDisplayView: View {
         return path
     }
 
-    private func getAngledSegmentPath(points: [CGPoint]) -> Path? {
+    private func getAngledSegmentPath(points: [CGPoint]) -> Path {
         var path = Path()
         path.move(to: points[0])
         for i in 1...5 {
@@ -145,7 +145,7 @@ struct CalcDisplayView: View {
                     let rect = useShortSegments ? CalcDisplayView.combinedShorterRightSegmentsData[pair]
                                                 : CalcDisplayView.combinedRightSegmentsData[pair]
                     let segmentPath = getRectSegmentPath(rect: rect!)
-                    path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
+                    path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
                     isSegmentResolved[pair[0]] = true
                     isSegmentResolved[pair[1]] = true
                 }
@@ -157,7 +157,7 @@ struct CalcDisplayView: View {
                         useShortSegments ? CalcDisplayView.combinedShorterAngledSegmentsData[pair]
                                          : CalcDisplayView.combinedAngledSegmentsData[pair]
                     let segmentPath = getAngledSegmentPath(points: points!)
-                    path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
+                    path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
                     isSegmentResolved[pair[0]] = true
                     isSegmentResolved[pair[1]] = true
                 }
@@ -175,8 +175,8 @@ struct CalcDisplayView: View {
                 } else {
                     segmentPath = getRectSegmentPath(rect: CalcDisplayView.rightSegmentsData[i]!)
                 }
-                if segmentPath != nil && !isSegmentResolved[i] {
-                    path.addPath(segmentPath!.offsetBy(dx: startX, dy: 0))
+                if let segmentPath, !isSegmentResolved[i] {
+                    path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
                 }
             }
         }

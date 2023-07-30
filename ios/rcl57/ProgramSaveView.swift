@@ -1,6 +1,8 @@
 import SwiftUI
 
-/** Shows the name and description of a program and saves it upon confirmation by the user. */
+/**
+ * Displays the name and description of a program and saves it upon confirmation by the user.
+ */
 struct ProgramSaveView: View {
     @EnvironmentObject var change: Change
 
@@ -33,7 +35,7 @@ struct ProgramSaveView: View {
                           rightAction: nil)
             .background(Color.deeperBlue)
 
-            if program.description == "" {
+            if program.help.isEmpty {
                 Text("No description available")
                     .frame(maxWidth: .infinity,
                            maxHeight: .infinity,
@@ -41,7 +43,7 @@ struct ProgramSaveView: View {
                     .background(Color.ivory)
                     .foregroundColor(.blackish)
             } else {
-                HelpView(helpString: program.description)
+                HelpView(helpString: program.help)
             }
 
             // Footer
@@ -66,8 +68,10 @@ struct ProgramSaveView: View {
                     if context == .create || context == .imported {
                         _ = Lib57.userLib.addProgram(program)
                     } else {
-                        originalProgram!.name = program.name
-                        originalProgram!.description = program.description
+                        if let originalProgram {
+                            originalProgram.name = program.name
+                            originalProgram.help = program.help
+                        }
                     }
                     _ = program.save(filename: program.name)
                     withAnimation {

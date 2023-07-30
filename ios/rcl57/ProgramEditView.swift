@@ -7,11 +7,13 @@ enum ProgramEditContext {
     case imported
 }
 
-/** Gives the user a chance to edit the name and description of a program. */
+/**
+ * Allows the user to edit the name and description of a program.
+ */
 struct ProgramEditView: View {
     @EnvironmentObject var change: Change
 
-    @State private var isPresentingExit: Bool = false
+    @State private var isPresentingExit = false
 
     @State var name: String
     @State var help: String
@@ -25,7 +27,7 @@ struct ProgramEditView: View {
     init(program: Prog57) {
         self.context = .edit
         self.name = program.name
-        self.help = program.description
+        self.help = program.help
         self.originalProgram = program
     }
 
@@ -34,16 +36,19 @@ struct ProgramEditView: View {
         help = ""
     }
 
-    init(text: String) {
-        var program = Prog57(text: text)
-        if program == nil {
-            program = Prog57(name: "",
-                             description: "Clipboard does not appear to contain a legal program.")
-        }
+    init(rawText: String) {
         self.context = .imported
-        self.name = program!.name
-        self.help = program!.description
-        self.originalProgram = program
+        if let program = Prog57(text: rawText) {
+            self.name = program.name
+            self.help = program.help
+            self.originalProgram = program
+        } else {
+            let program = Prog57(name: "",
+                             description: "Clipboard does not appear to contain a legal program.")
+            self.name = program.name
+            self.help = program.help
+            self.originalProgram = program
+        }
     }
 
     func getProgram() -> Prog57 {
@@ -75,8 +80,8 @@ struct ProgramEditView: View {
                         HStack(spacing: 0) {
                             Button(action: {
                                 if context == .create &&
-                                    name.trimmingCharacters(in: CharacterSet.whitespaces) == "" &&
-                                    help.trimmingCharacters(in: CharacterSet.whitespaces) == "" {
+                                    name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty &&
+                                    help.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty {
                                     withAnimation {
                                         change.isCreateProgramInState = false
                                     }
@@ -112,13 +117,13 @@ struct ProgramEditView: View {
                                     change.isPreviewInEditProgram = true
                                 }
                             }) {
-                                Text(name.trimmingCharacters(in: CharacterSet.whitespaces) == ""
+                                Text(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty
                                      ? Style.rightArrow : Style.rightArrowFull)
                                 .frame(width: width / 5, height: Style.headerHeight)
                                 .font(Style.smallFont)
                                 .contentShape(Rectangle())
                             }
-                            .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces) == "")
+                            .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty)
                             .buttonStyle(.plain)
                         }
                         .background(Color.deeperBlue)

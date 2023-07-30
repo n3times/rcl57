@@ -1,12 +1,12 @@
 import SwiftUI
 
 /**
- * Displays the instructions keyed in by the user, and the results.
+ * Displays the operations keyed in by the user, and the results.
  */
 struct LogView: View {
     @EnvironmentObject private var change: Change
 
-    @State private var isPresentingClear: Bool = false
+    @State private var isPresentingClear = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -20,9 +20,7 @@ struct LogView: View {
 
                 if Rcl57.shared.loggedCount == 0 {
                     Text("Log is empty")
-                        .frame(maxWidth: .infinity,
-                               maxHeight: .infinity,
-                               alignment: .center)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         .background(Color.ivory)
                         .foregroundColor(.blackish)
                 } else {

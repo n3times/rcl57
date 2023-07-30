@@ -2,7 +2,7 @@ import SwiftUI
 import WebKit
 
 /**
- * A Web View capable of showing a page in '.hlp' format.
+ * A Web View capable of displaying a page in '.hlp' format.
  */
 struct HelpView: UIViewRepresentable {
     private static let headerString = """

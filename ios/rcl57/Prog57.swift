@@ -3,54 +3,17 @@ import Foundation
 /**
  * An RCL-57 program.
  *
- * It is characterized by its name, description, steps and registers.
- *
- * Registers and steps are combined into a 'state' structure.
+ * Besides the program steps, it includes the registers, the name, and the help for the program.
  */
-class Prog57 : Hashable {
+class Prog57 : Hashable, CustomStringConvertible {
     static let programFileExtension = ".r57"
 
-    /* Backing struct: name, description and state. */
+    /* The backing C struct for the program. */
     private var prog57 = prog57_t()
 
     var url: URL? = nil
 
-    var readOnly: Bool
-
-    /** For existing Library programs. */
-    init?(url: URL, readOnly: Bool) {
-        var text: String
-        do {
-            text = try String(contentsOf: url)
-        } catch {
-            return nil
-        }
-        prog57_from_text(&prog57, text)
-        self.readOnly = readOnly
-        self.url = url
-    }
-
-    /** For imported programs. */
-    init?(text: String) {
-        let found_name = prog57_from_text(&prog57, text)
-        if !found_name {
-            return nil
-        }
-        self.readOnly = false
-    }
-
-    /** For new programs ("create"). */
-    init(name: String, description: String) {
-        prog57_set_name(&prog57, (name as NSString).utf8String)
-        prog57_set_help(&prog57, (description as NSString).utf8String)
-        prog57_set_steps_from_memory(&prog57, &Rcl57.shared.rcl57)
-        prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
-        self.readOnly = false
-    }
-
-    func toString() -> String {
-        return String(cString: prog57_to_text(&prog57))
-    }
+    var isReadOnly: Bool
 
     var name: String {
         get {
@@ -61,27 +24,67 @@ class Prog57 : Hashable {
         }
     }
 
-    var description: String {
+    var help: String {
         get {
             let help = prog57_get_help(&prog57)
-            return String(cString: help!)
+            if let help {
+                return String(cString: help)
+            } else {
+                return "No description available"
+            }
         }
         set {
             prog57_set_help(&prog57, (newValue as NSString).utf8String)
         }
     }
 
-    typealias State = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
-                       ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
-                       ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)
+    typealias RCL57State = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)
 
-    var state: State {
+    var state: RCL57State {
         get {
             prog57.state
         }
         set {
             prog57.state = newValue
         }
+    }
+
+    /** For existing Library programs. */
+    init?(url: URL, readOnly: Bool) {
+        var text: String
+        do {
+            text = try String(contentsOf: url)
+        } catch {
+            return nil
+        }
+        prog57_from_text(&prog57, text)
+        self.isReadOnly = readOnly
+        self.url = url
+    }
+
+    /** For imported programs. */
+    init?(text: String) {
+        let found_name = prog57_from_text(&prog57, text)
+        if !found_name {
+            return nil
+        }
+        self.isReadOnly = false
+    }
+
+    /** For new programs ("create"). */
+    init(name: String, description: String) {
+        prog57_set_name(&prog57, (name as NSString).utf8String)
+        prog57_set_help(&prog57, (description as NSString).utf8String)
+        prog57_set_steps_from_memory(&prog57, &Rcl57.shared.rcl57)
+        prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
+        self.isReadOnly = false
+    }
+
+    func toString() -> String {
+        String(cString: prog57_to_text(&prog57))
     }
 
     /**
@@ -101,6 +104,7 @@ class Prog57 : Hashable {
      */
 
     func stepsNeedSaving() -> Bool {
+        if isReadOnly { return false }
         return !prog57_has_same_steps_as_state(&prog57, &Rcl57.shared.rcl57)
     }
 
@@ -116,9 +120,11 @@ class Prog57 : Hashable {
         prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
-    /** Saving program into file system . */
+    /**
+     * Saves a new or modified program into the filesystem.
+     */
     func save(filename: String) -> Bool {
-        if readOnly { return false }
+        if isReadOnly { return false }
 
         do {
             let asString = toString()
@@ -133,6 +139,12 @@ class Prog57 : Hashable {
         }
 
         return true
+    }
+
+    // MARK: CustomStringConvertible Conformance
+
+    var description: String {
+        return "Program \(name)"
     }
 
     // MARK: Hashable Conformance

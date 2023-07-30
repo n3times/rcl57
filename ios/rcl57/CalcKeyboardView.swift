@@ -23,8 +23,8 @@ struct CalcKeyboardView: View {
     @EnvironmentObject private var change: Change
     @EnvironmentObject private var settings: Settings
 
-    @AppStorage(Settings.isHapticKey) private var hasHaptic: Bool = false
-    @AppStorage(Settings.isClickKey) private var hasKeyClick: Bool = false
+    @AppStorage(Settings.isHapticKey) private var hasHaptic = false
+    @AppStorage(Settings.isClickKey) private var hasKeyClick = false
 
     private let imageName = "button_pad"
 
@@ -32,7 +32,7 @@ struct CalcKeyboardView: View {
     @State private var is2nd: Bool
     @State private var isInv: Bool
 
-    @GestureState private var dragGestureActive: Bool = false
+    @GestureState private var dragGestureActive = false
 
     init() {
         self.is2nd = Rcl57.shared.is2nd

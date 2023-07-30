@@ -14,30 +14,26 @@ private struct LibraryNode: Identifiable {
 
     init(library: Lib57) {
         self.name = library.name
-        let programs = library.programs
-        if programs.count > 0 {
-            children = []
-            for program in programs {
-                children.append(LibraryNode(program: program))
-            }
+        for program in library.programs {
+            children.append(LibraryNode(program: program))
         }
     }
 }
 
 /**
- * Shows a list of sample and user programs.
+ * Displays a list of sample and user programs.
  */
 struct LibraryView: View {
     @EnvironmentObject var change: Change
 
-    @State private var isPresentingImport: Bool = false
+    @State private var isPresentingImport = false
 
     fileprivate let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
     fileprivate let userLibNode = LibraryNode(library: Lib57.userLib)
 
     let exportedType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
 
-    static var importText: String = ""
+    static var importText = ""
 
     var body: some View {
         ZStack {
@@ -149,7 +145,7 @@ struct LibraryView: View {
             }
 
             if change.isImportProgramInLibrary {
-                ProgramEditView(text: LibraryView.importText)
+                ProgramEditView(rawText: LibraryView.importText)
                     .transition(.move(edge: .bottom))
             }
         }

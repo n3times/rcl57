@@ -13,8 +13,7 @@ struct MainView: View {
     var body: some View {
         ZStack {
             let viewType = change.currentViewType
-            let isUpView = viewType == .library || viewType == .manual || viewType == .settings
-            if viewType == .calc || isUpView {
+            if viewType == .calc || viewType == .library || viewType == .manual || viewType == .settings {
                 CalcView()
                     .transition(.move(edge: change.transitionEdge))
                     .zIndex(0)

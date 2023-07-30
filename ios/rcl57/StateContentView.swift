@@ -1,8 +1,9 @@
 import SwiftUI
 
 private struct StepLineView: View {
+
     /** Data for a StepLineView: a step index and an operation. */
-    struct StepLine: Identifiable {
+    struct StepLineData: Identifiable {
         static var lineId = 0
         let index: Int
         let op: String
@@ -13,18 +14,18 @@ private struct StepLineView: View {
             self.index = index
             self.op = op
             self.active = active
-            self.id = StepLine.lineId
-            StepLine.lineId += 1
+            self.id = StepLineData.lineId
+            StepLineData.lineId += 1
         }
     }
 
-    private let line: StepLine
+    private let line: StepLineData
     private let activeBackgroundColor = Color.ivory
     private let inactiveBackgroundColor = Color.ivory
     private let foregroundColor = Color.blackish
     private let inactiveForegroundColor = Color.blackish
 
-    init(line: StepLine) {
+    init(line: StepLineData) {
         self.line = line
     }
 
@@ -89,22 +90,22 @@ private struct ProgramLineView: View {
 
     var body: some View {
         if index == -1 {
-            return StepLineView(line: StepLineView.StepLine(index: 99,
+            return StepLineView(line: StepLineView.StepLineData(index: 99,
                                                             op: "",
                                                             active: index <= last))
             .listRowSeparator(.hidden)
         }
-        return StepLineView(line: StepLineView.StepLine(index: index,
+        return StepLineView(line: StepLineView.StepLineData(index: index,
                                                         op: Rcl57.shared.getProgramOp(index: index, isAlpha: true),
                                                         active: index <= last))
         .listRowSeparator(.hidden)
     }
 }
 
-struct StateInnerView: View {
+struct StateContentView: View {
     @EnvironmentObject private var change: Change
 
-    @State private var lines: [StepLineView.StepLine] = []
+    @State private var lines: [StepLineView.StepLineData] = []
     @State private var middle: Int
     @State private var pc: Int
     @State private var isOpEditInLrn: Bool
@@ -143,8 +144,8 @@ struct StateInnerView: View {
     }
 }
 
-struct StateInnerView_Previews: PreviewProvider {
+struct StateContentView_Previews: PreviewProvider {
     static var previews: some View {
-        StateInnerView()
+        StateContentView()
     }
 }

@@ -13,11 +13,13 @@ struct LogEntry {
     let flags: Int32
 
     init(entry: UnsafeMutablePointer<log57_entry_t>) {
-        // Convert entry.pointee.message into a Swift String:
-        // - entry.pointee.message is a C array of 16 C chars, treated as a tuple by Swift
-        // - messagePointer is a pointer to the tuple of 16 CChar's
-        // - reboundedPointer is a pointer to a the first element of an array of UInt8
-        // - finally we use String(cString:) on the reboundedPointer
+        // Convert a C char[] into a Swift String:
+        // 1. Swift treats the C char[] as Swift tuple of CChar: entry.pointee.message
+        // 2. From entry.pointee.message, get a pointer to the tuple: messagePointer
+        // 3. Convert messagePointer into a pointer to the first element of an array of UInt8:
+        //    reboundedPointer (this is a C String)
+        // 4. Finally use String(cString:) on reboundedPointer
+        // Note: it would easier if we had a char * as opposed to a char[]
         message = withUnsafePointer(to: entry.pointee.message) { messagePointer in
             messagePointer.withMemoryRebound(
                 to: UInt8.self,
@@ -33,7 +35,7 @@ struct LogEntry {
 }
 
 /**
- * A singleton class to access the state of the emulator.
+ * A singleton to access the state of the emulator.
  *
  * This includes the display, the registers, and the program steps. One can interact with the
  * calculator, notably by pressing and releasing keyboard keys.
@@ -56,7 +58,9 @@ class Rcl57 {
         rcl57_init(&rcl57)
     }
 
-    // Initializes a RCL57 object from the state stored in a given file.
+    /**
+     * Initializes a RCL57 object from the state stored in a given file.
+     */
     private init(filename: String) {
         var fileRawData: Data?
         var fileRawBuffer: UnsafePointer<Int8>?
@@ -81,32 +85,32 @@ class Rcl57 {
             UserDefaults.standard.set(Rcl57.version, forKey: Rcl57.versionKey)
         }
 
-        if fileURL == nil {
+        guard let fileURL else {
             rcl57_init(&rcl57)
             return
         }
         do {
-            try fileRawData = Data(contentsOf: fileURL!)
+            try fileRawData = Data(contentsOf: fileURL)
         } catch {
             rcl57_init(&rcl57)
             return
         }
-        if fileRawData == nil {
+        guard let fileRawData else {
             rcl57_init(&rcl57)
             return
         }
-        fileRawBuffer = fileRawData!.withUnsafeBytes({
+        fileRawBuffer = fileRawData.withUnsafeBytes({
             (ptr) -> UnsafePointer<Int8> in
             return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
         })
-        if fileRawBuffer == nil {
+        guard let fileRawBuffer else {
             rcl57_init(&rcl57)
             return
         }
         memcpy(&rcl57, fileRawBuffer, MemoryLayout.size(ofValue: rcl57))
     }
 
-    /** Returns the calculator display as a string. */
+    /** The calculator display as a string. */
     var display: String {
         String(cString: rcl57_get_display(&rcl57))
     }
@@ -121,7 +125,7 @@ class Rcl57 {
         rcl57_key_release(&rcl57)
     }
 
-    /** Runs the emulator for 'ms' ms. */
+    /** Runs the emulator for 'ms' milliseconds. */
     func advance(ms: Int32) -> Bool {
         return rcl57_advance(&rcl57, ms)
     }
@@ -136,9 +140,7 @@ class Rcl57 {
         ti57_is_inv(&rcl57.ti57)
     }
 
-    /**
-     * The current units in trigonometric mode.
-     */
+    /** The current units in trigonometric mode. */
     var trigUnits: ti57_trig_t {
         ti57_get_trig(&rcl57.ti57)
     }
@@ -186,7 +188,7 @@ class Rcl57 {
         }
     }
 
-    /** Clears the state, only preserving the options. */
+    /** Clears the state, only preserving the emulator options. */
     func clearAll() {
         rcl57_clear(&rcl57)
     }
@@ -219,10 +221,10 @@ class Rcl57 {
         } catch {
             return
         }
-        if programRawData == nil {
+        guard let programRawData else {
             return
         }
-        programRawBuffer = programRawData!.withUnsafeBytes({
+        programRawBuffer = programRawData.withUnsafeBytes({
             (ptr) -> UnsafePointer<Int8> in
             return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
         })
@@ -273,7 +275,7 @@ class Rcl57 {
         let d = op.pointee.d
         var suffix = ""
         if d >= 0 {
-            suffix = " " + String(d)
+            suffix = " \(d)"
         }
         if ti57_is_op_edit_in_lrn(&rcl57.ti57) && index == ti57_get_program_pc(&rcl57.ti57) {
             suffix = " _"

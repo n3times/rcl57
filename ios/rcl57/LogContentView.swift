@@ -1,33 +1,41 @@
 import SwiftUI
 
-/** Data for a LineView: a number and an operation. */
-private struct LogLine: Identifiable {
-    static var lineId = 0
+/**
+ * Data for a LogLineView: a number and an operation.
+ */
+private struct LogLineData: Identifiable {
     let numberLogEntry: LogEntry
     let opLogEntry: LogEntry
+
+    static var lineId = 0
     let id: Int
 
     init(numberEntry: LogEntry, opEntry: LogEntry) {
         self.numberLogEntry = numberEntry
         self.opLogEntry = opEntry
-        self.id = LogLine.lineId
-        LogLine.lineId += 1
+
+        self.id = LogLineData.lineId
+        LogLineData.lineId += 1
     }
 }
 
-/** A line view in a LogView: a number on the left and an operation on the right. */
+/**
+ * A line in a LogView: a number on the left and an operation on the right.
+ */
 private struct LogLineView: View {
-    let line: LogLine
+    let line: LogLineData
+
     private let foregroundColor: Color
     private let foregroundColorError: Color
 
-    init(line: LogLine) {
+    init(line: LogLineData) {
         self.line = line
+
         self.foregroundColor = Color.black
         self.foregroundColorError = Color(red: 0.5, green: 0.0, blue: 0.0)
     }
 
-    private func getColor(entry: LogEntry) -> Color {
+    private func color(entry: LogEntry) -> Color {
         let isError = (entry.flags & LOG57_ERROR_FLAG) != 0
 
         return isError ? foregroundColorError: foregroundColor
@@ -37,7 +45,7 @@ private struct LogLineView: View {
         HStack {
             Text(line.numberLogEntry.message)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-                .foregroundColor(getColor(entry: line.numberLogEntry))
+                .foregroundColor(color(entry: line.numberLogEntry))
             HStack {
                 Spacer(minLength: 25)
                 Text(line.opLogEntry.message)
@@ -55,7 +63,7 @@ private struct LogLineView: View {
 struct LogContentView: View {
     @EnvironmentObject private var change: Change
 
-    @State private var lines: [LogLine] = []
+    @State private var lines: [LogLineData] = []
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
@@ -66,8 +74,8 @@ struct LogContentView: View {
         updateLog()
     }
 
-    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> LogLine {
-        return LogLine(numberEntry: numberEntry, opEntry: opEntry)
+    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> LogLineData {
+        return LogLineData(numberEntry: numberEntry, opEntry: opEntry)
     }
 
     private func clear() {
@@ -150,13 +158,13 @@ struct LogContentView: View {
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
                 updateLog()
-                if lines.count > 0 {
-                    proxy.scrollTo(lines.last!.id, anchor: .bottom)
+                if let lastLine = lines.last {
+                    proxy.scrollTo(lastLine.id, anchor: .bottom)
                 }
             }
             .onChange(of: lastTimestamp) { _ in
-                if lines.count > 0 {
-                    proxy.scrollTo(lines.last!.id, anchor: .bottom)
+                if let lastLine = lines.last {
+                    proxy.scrollTo(lastLine.id, anchor: .bottom)
                 }
             }
             .onReceive(change.$logTimestamp) { _ in
@@ -173,7 +181,7 @@ struct LogContentView: View {
     }
 }
 
-struct LogInnerView_Previews: PreviewProvider {
+struct LogContentView_Previews: PreviewProvider {
     static var previews: some View {
         LogContentView()
     }

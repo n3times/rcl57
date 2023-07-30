@@ -9,8 +9,8 @@ struct SettingsView: View {
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
 
-    @AppStorage(Settings.isHapticKey) var hasHaptic: Bool = false
-    @AppStorage(Settings.isClickKey) var hasKeyClick: Bool = false
+    @AppStorage(Settings.isHapticKey) var hasHaptic = false
+    @AppStorage(Settings.isClickKey) var hasKeyClick = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -31,7 +31,7 @@ struct SettingsView: View {
                         }
                         .foregroundColor(Color.black)
                         .alert(isPresented: $isPresentingContact) {
-                            Alert(title: Text("RCL-57\n" + "v" + Rcl57.version), message: Text(aboutText))
+                            Alert(title: Text("RCL-57\nv\(Rcl57.version)"), message: Text(aboutText))
                         }
                         Button("Reset") {
                             isPresentingReset = true

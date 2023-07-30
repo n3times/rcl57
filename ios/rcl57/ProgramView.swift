@@ -60,7 +60,7 @@ private struct Footer: View {
                     .contentShape(Rectangle())
             }
 
-            if program.readOnly {
+            if program.isReadOnly {
                 Spacer()
                     .frame(width: width / 5, height: Style.footerHeight)
             } else {
@@ -89,7 +89,7 @@ private struct Footer: View {
                 .offset(x: -15)
                 .contentShape(Rectangle())
                 .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
-                    Button("Delete " + program.name, role: .destructive) {
+                    Button("Delete \(program.name)", role: .destructive) {
                         _ = Lib57.userLib.deleteProgram(program)
                         if program == change.loadedProgram {
                             change.loadedProgram = nil
@@ -126,7 +126,7 @@ struct ProgramView: View {
                               rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.deepBlue)
 
-                if program.description == "" {
+                if program.help.isEmpty {
                     Text("No description available")
                         .frame(maxWidth: .infinity,
                                maxHeight: .infinity,
@@ -134,7 +134,7 @@ struct ProgramView: View {
                         .background(Color.ivory)
                         .foregroundColor(.blackish)
                 } else {
-                    HelpView(helpString: program.description)
+                    HelpView(helpString: program.help)
                 }
 
                 Footer(program: program, width: width)

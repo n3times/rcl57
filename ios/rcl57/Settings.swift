@@ -7,7 +7,7 @@ class Settings: ObservableObject {
     static let isClickKey = "IS_CLICK_KEY"
 
     // Emulator Settings.
-    // They require additional logic on set, so we use UserDefaults directly.
+    // They require additional logic when set, so we use UserDefaults directly.
     private static let isTurboKey = "IS_TURBO_KEY"
     private static let isAlphaKey = "IS_ALPHA_KEY"
     private static let isHpKey = "IS_HP_KEY"
