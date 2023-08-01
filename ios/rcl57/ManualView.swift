@@ -1,12 +1,10 @@
 import SwiftUI
 
-/**
- * The list of topics in the User Manual.
- */
-private struct ManualContentView: View {
+/// The list of topics in the User Manual.
+struct ManualContentView: View {
     @EnvironmentObject private var change: Change
 
-    private struct PageData: Hashable {
+    struct PageData: Hashable {
         let title: String
         let resource: String
     }
@@ -27,16 +25,14 @@ private struct ManualContentView: View {
         List {
             Button("About") {
                 withAnimation {
-                    change.manualPageView = ManualPageView(title: aboutPageData.title,
-                                                           resource: aboutPageData.resource)
+                    change.manualPageData = aboutPageData
                 }
             }
             Section("The Emulator") {
                 ForEach(emulatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.manualPageView = ManualPageView(title: pageData.title,
-                                                                   resource: pageData.resource)
+                            change.manualPageData = pageData
                         }
                     }
                 }
@@ -45,8 +41,7 @@ private struct ManualContentView: View {
                 ForEach(calculatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.manualPageView = ManualPageView(title: pageData.title,
-                                                                   resource: pageData.resource)
+                            change.manualPageData = pageData
                         }
                     }
                 }
@@ -57,15 +52,13 @@ private struct ManualContentView: View {
     }
 }
 
-/**
- * The list of manual pages and a navigation bar.
- */
+/// The list of manual pages and a navigation bar.
 struct ManualView: View {
     @EnvironmentObject private var change: Change
 
     var body: some View {
         ZStack {
-            if change.manualPageView == nil {
+            if change.manualPageData == nil {
                 VStack(spacing: 0) {
                     NavigationBar(left: nil,
                                   title: "User Manual",
@@ -78,8 +71,8 @@ struct ManualView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if change.manualPageView != nil {
-                change.manualPageView
+            if let pageData = change.manualPageData {
+                ManualPageView(title: pageData.title, resource: pageData.resource)
                     .transition(.move(edge: .trailing))
             }
         }

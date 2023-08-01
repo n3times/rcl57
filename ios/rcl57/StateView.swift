@@ -15,7 +15,7 @@ private func getProgramType(program: Prog57?) -> ProgramType {
 }
 
 private struct LibInfoView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     var body: some View {
         let program = change.loadedProgram
@@ -43,7 +43,7 @@ private struct LibInfoView: View {
 }
 
 private struct FooterView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     @State private var isPresentingClose = false
     @State private var isPresentingClear = false
@@ -92,12 +92,10 @@ private struct FooterView: View {
                     if change.isStepsInState {
                         Button("Clear Steps", role: .destructive) {
                             Rcl57.shared.clearProgram()
-                            change.forceUpdate()
                         }
                     } else {
                         Button("Clear Registers", role: .destructive) {
                             Rcl57.shared.clearRegisters()
-                            change.forceUpdate()
                         }
                     }
                 }
@@ -139,11 +137,9 @@ private struct FooterView: View {
     }
 }
 
-/**
- * The steps and registers of the calculator.
- */
+/// The steps and registers of the calculator.
 struct StateView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     var body: some View {
         let program = change.loadedProgram

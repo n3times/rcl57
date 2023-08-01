@@ -7,16 +7,14 @@ enum ProgramEditContext {
     case imported
 }
 
-/**
- * Allows the user to edit the name and description of a program.
- */
+/// Allows the user to edit the name and description of a program.
 struct ProgramEditView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     @State private var isPresentingExit = false
 
-    @State var name: String
-    @State var help: String
+    @State private var name: String
+    @State private var help: String
 
     var originalProgram: Prog57? = nil
 
@@ -144,7 +142,7 @@ struct ProgramEditView: View {
                             .textFieldStyle(PlainTextFieldStyle())
                             .lineLimit(4)
                             .multilineTextAlignment(.leading)
-                            .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: .infinity, alignment: .topLeading)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             .offset(x: 5, y: 5)
                     }
                 }

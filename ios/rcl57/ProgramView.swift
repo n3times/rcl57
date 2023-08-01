@@ -4,7 +4,9 @@ private struct ActivityViewController: UIViewControllerRepresentable {
     var activityItems: [Any]
     var applicationActivities: [UIActivity]? = nil
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+    func makeUIViewController(
+        context: UIViewControllerRepresentableContext<ActivityViewController>
+    ) -> UIActivityViewController {
         UIActivityViewController(activityItems: activityItems,
                                  applicationActivities: applicationActivities)
     }
@@ -15,14 +17,12 @@ private struct ActivityViewController: UIViewControllerRepresentable {
     }
 }
 
-/**
- * Lets the user delete, edit and share the program.
- */
+/// Lets the user delete, edit and share the program.
 private struct Footer: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
-    @State var isPresentingDelete = false
-    @State var isPresentingShare = false
+    @State private var isPresentingDelete = false
+    @State private var isPresentingShare = false
 
     let program: Prog57
     let width: Double
@@ -98,7 +98,7 @@ private struct Footer: View {
                         }
                         change.isUserLibExpanded = true
                         withAnimation {
-                            change.programView = nil
+                            change.programViewed = nil
                         }
                     }
                 }
@@ -112,7 +112,7 @@ private struct Footer: View {
  * program.
  */
 struct ProgramView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     let program: Prog57
 
@@ -124,7 +124,7 @@ struct ProgramView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: program.name,
                               right: Style.downArrow,
-                              leftAction: { withAnimation { change.programView = nil } },
+                              leftAction: { withAnimation { change.programViewed = nil } },
                               rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.deepBlue)
 
@@ -155,7 +155,7 @@ struct ProgramView: View {
 }
 
 struct ProgramView_Previews: PreviewProvider {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     static var previews: some View {
         ProgramView(program: Prog57(name: "", description: ""))

@@ -4,8 +4,8 @@ import SwiftUI
 struct Rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
-    @StateObject var change = Change()
-    @StateObject var settings = UserSettings()
+    @StateObject private var change = Change()
+    @StateObject private var settings = UserSettings()
 
     var body: some Scene {
         WindowGroup {

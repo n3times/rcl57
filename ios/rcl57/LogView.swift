@@ -1,8 +1,6 @@
 import SwiftUI
 
-/**
- * Displays the operations keyed in by the user, and the results.
- */
+/// Displays the operations keyed in by the user, and the results.
 struct LogView: View {
     @EnvironmentObject private var change: Change
 

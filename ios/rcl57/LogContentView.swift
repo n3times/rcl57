@@ -1,8 +1,6 @@
 import SwiftUI
 
-/**
- * Data for a LogLineView: a number and an operation.
- */
+/// Data for a LogLineView: a number and an operation.
 private struct LogLineData: Identifiable {
     let numberLogEntry: LogEntry
     let opLogEntry: LogEntry
@@ -19,9 +17,7 @@ private struct LogLineData: Identifiable {
     }
 }
 
-/**
- * A line in a LogView: a number on the left and an operation on the right.
- */
+/// A line in a LogView: a number on the left and an operation on the right.
 private struct LogLineView: View {
     let line: LogLineData
 
@@ -57,9 +53,7 @@ private struct LogLineView: View {
     }
 }
 
-/**
- * Displays operations and results.
- */
+/// Displays operations and results.
 struct LogContentView: View {
     @EnvironmentObject private var change: Change
 
@@ -174,13 +168,6 @@ struct LogContentView: View {
             .onReceive(change.$logTimestamp) { _ in
                 updateLog()
             }
-            .onReceive(change.$displayString) { _ in
-                updateLog()
-            }
-            .onReceive(change.$changeCount) { _ in
-                updateLog()
-            }
-
         }
     }
 }

@@ -4,9 +4,6 @@
 
 import Foundation
 
-/**
- * LogEntry.
- */
 struct LogEntry {
     let message: String
     let type: log57_type_t
@@ -58,9 +55,7 @@ class Rcl57 {
         rcl57_init(&rcl57)
     }
 
-    /**
-     * Initializes a RCL57 object from the state stored in a given file.
-     */
+    /// Initializes a RCL57 object from the state stored in a given file.
     private init(filename: String) {
         var fileRawData: Data?
         var fileRawBuffer: UnsafePointer<Int8>?
@@ -113,42 +108,42 @@ class Rcl57 {
         memcpy(&rcl57, fileRawBuffer, MemoryLayout.size(ofValue: rcl57))
     }
 
-    /** The calculator display as a string. */
+    /// The calculator display as a string.
     var display: String {
         String(cString: rcl57_get_display(&rcl57))
     }
 
-    /** Should be called whenever the user presses a calculator key (row in 1..8 and col in 1..5). */
+    /// Should be called whenever the user presses a calculator key (row in 1..8 and col in 1..5).
     func keyPress(row: Int, col: Int) {
         rcl57_key_press(&rcl57, Int32(row), Int32(col))
     }
 
-    /** Should be called whenever the user releases a calculator key. */
+    /// Should be called whenever the user releases a calculator key.
     func keyRelease() {
         rcl57_key_release(&rcl57)
     }
 
-    /** Runs the emulator for 'ms' milliseconds. */
+    /// Runs the emulator for 'ms' milliseconds.
     func advance(ms: Int32) -> Bool {
         return rcl57_advance(&rcl57, ms)
     }
 
-    /** Whether the 2nd key is engaged. */
+    /// Whether the 2nd key is engaged.
     var is2nd: Bool {
         ti57_is_2nd(&rcl57.ti57)
     }
 
-    /** Whether the INV key is engaged. */
+    /// Whether the INV key is engaged.
     var isInv: Bool {
         ti57_is_inv(&rcl57.ti57)
     }
 
-    /** The current units in trigonometric mode. */
+    /// The current units in trigonometric mode.
     var trigUnits: ti57_trig_t {
         ti57_get_trig(&rcl57.ti57)
     }
 
-    /** Saves the RCL57 object. Returns 'true' if the object was saved successfully. */
+    /// Saves the RCL57 object. Returns 'true' if the object was saved successfully.
     func save() -> Bool {
         let size = MemoryLayout.size(ofValue: rcl57)
         let rawData = Data(bytes: &rcl57, count: size)
@@ -167,12 +162,12 @@ class Rcl57 {
         return false
     }
 
-    /* Returns true if a given option flag is set. */
+    /// Returns true if a given option flag is set.
     func getOptionFlag(option: Int32) -> Bool {
         return rcl57.options & option != 0
     }
 
-    /* Sets or clears a given option flag. */
+    /// Sets or clears a given option flag.
     func setOptionFlag(option: Int32, value: Bool) {
         if value {
             rcl57.options |= option
@@ -181,7 +176,7 @@ class Rcl57 {
         }
     }
 
-    /**  */
+    /// Controls the speed of the emulator.
     var speedupFactor: UInt32 {
         get {
             rcl57.speedup
@@ -191,26 +186,24 @@ class Rcl57 {
         }
     }
 
-    /** Clears the state, only preserving the emulator options. */
+    /// Clears the state, only preserving the emulator options.
     func clearAll() {
         rcl57_clear(&rcl57)
     }
 
-    /**
-     * LOGGING.
-     */
+    // MARK: Logging
 
-    /** Clears the log. */
+    /// Clears the log.
     func clearLog() {
         log57_reset(&rcl57.ti57.log)
     }
 
-    /** Clears the user program. */
+    /// Clears the user program.
     func clearProgram() {
         ti57_clear_program(&rcl57.ti57)
     }
 
-    /** Clears the 8 user registers. */
+    /// Clears the 8 user registers.
     func clearRegisters() {
         ti57_clear_registers(&rcl57.ti57)
     }
@@ -239,7 +232,7 @@ class Rcl57 {
         memcpy(&rcl57.ti57.X, programRawBuffer, sizeX * 2)
     }
 
-    /** Returns the number of logged items since reset. */
+    /// Returns the number of logged items since reset.
     var loggedCount: Int {
         log57_get_logged_count(&rcl57.ti57.log)
     }
@@ -253,12 +246,12 @@ class Rcl57 {
         LogEntry(entry: log57_get_entry(&rcl57.ti57.log, index))
     }
 
-    /** The current operation in EVAL mode. */
+    /// The current operation in EVAL mode.
     var currentOp: String {
         String(cString: log57_get_current_op(&rcl57.ti57.log))
     }
 
-    /** Returns a timestamp that can be used to find out whether the log has been updated. */
+    /// Returns a timestamp that can be used to find out whether the log has been updated.
     var logTimestamp: Int {
         rcl57.ti57.log.timestamp;
     }
@@ -274,7 +267,7 @@ class Rcl57 {
     }
 
     func getProgramOp(index: Int, isAlpha: Bool) -> String {
-        let op = ti57_get_program_op(&rcl57.ti57, Int32(index))!;
+        guard let op = ti57_get_program_op(&rcl57.ti57, Int32(index)) else { return "ERR" }
 
         let isInv = op.pointee.inv
         let key = op.pointee.key
@@ -292,12 +285,12 @@ class Rcl57 {
         return (isInv ? (isAlpha ? "INV " : "-") : "") + keyName + suffix
     }
 
-    /** Returns the index of the last non-zero step, or -1 if none,*/
+    /// Returns the index of the last non-zero step, or -1 if none.
     func getProgramLastIndex() -> Int {
         return Int(ti57_get_program_last_index(&rcl57.ti57))
     }
 
-    /** Returns the index of the last non-zero user register, or -1 if none,*/
+    /// Returns the index of the last non-zero user register, or -1 if none.
     func getRegistersLastIndex() -> Int {
         return Int(ti57_get_registers_last_index(&rcl57.ti57))
     }

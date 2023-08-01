@@ -82,20 +82,20 @@ private struct LedSegmentData {
  * The display, composed of 12 LEDs. In addition, each LED has an optional dot to the right (decimal
  * point).
  *
- * Note that the TI-57 has 7-segment LEDs but in RCL-57 we support alpha mode.
+ * Note that the TI-57 has 7-segment LEDs but RCL-57 supports alpha mode.
  */
 struct DisplayView: View {
     private static let ledColor = Color.red
     private static let maxLedCount = 12
+    private static let segmentCount = 14
     private static let ledWidth = 19.0
     private static let ledHeight = 26.0
     private static let interLedX = 32.0
-    private static let segmentCount = 14
     private static let slant = 0.05
 
     /// A string composed of up to 12 non-dot characters, each one optionally followed by a
     /// a dot. The string will be right-justified within the display.
-    var displayString: String
+    let displayString: String
 
     private static func getDisplayPathRect() -> CGRect {
         let width = Double(maxLedCount - 1) * interLedX + ledWidth
@@ -144,7 +144,7 @@ struct DisplayView: View {
         let ampersandAsciiValue: UInt8 = 64
         let c = c.asciiValue != nil ? c : "@"
         let segments = leds57_get_segments(c.asciiValue ?? ampersandAsciiValue)
-        var isSegmentResolved = [Bool](repeating: false, count: 14)
+        var isSegmentResolved = [Bool](repeating: false, count: DisplayView.segmentCount)
 
         var path = Path()
 

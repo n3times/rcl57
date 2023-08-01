@@ -9,8 +9,8 @@ struct SettingsView: View {
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
 
-    @AppStorage(UserSettings.isHapticKey) var hasHaptic = false
-    @AppStorage(UserSettings.isClickKey) var hasKeyClick = false
+    @AppStorage(UserSettings.isHapticKey) private var hasHaptic = false
+    @AppStorage(UserSettings.isClickKey) private var hasKeyClick = false
 
     var body: some View {
         GeometryReader { proxy in

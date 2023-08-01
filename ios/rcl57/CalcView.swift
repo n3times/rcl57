@@ -2,6 +2,7 @@ import SwiftUI
 
 /// A specialized bar to navigate to the different views of the app.
 private struct CalcNavigationBar: View {
+
     /// A button of the calc navigation bar.
     struct CalcNavigationButton: View {
         @EnvironmentObject private var change: Change
@@ -45,9 +46,7 @@ private struct CalcNavigationBar: View {
     }
 }
 
-/**
- * Displays the program name and the current operation.
- */
+/// Displays the program name and the current operation.
 private struct CalcInfoView: View {
     @EnvironmentObject private var change: Change
 
@@ -75,9 +74,7 @@ private struct CalcInfoView: View {
     }
 }
 
-/**
- * The calculator view with the navigation bar, info, display, and keyboard.
- */
+/// The calculator view with the navigation bar, info, display, and keyboard.
 struct CalcView: View {
     @EnvironmentObject private var change: Change
 

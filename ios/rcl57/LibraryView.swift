@@ -26,7 +26,7 @@ private struct LibraryNode: Identifiable {
 }
 
 private struct FooterView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     @State private var isPresentingImport = false
 
@@ -60,7 +60,7 @@ private struct FooterView: View {
                                         change.isImportProgramInLibrary = true
                                         do { url.stopAccessingSecurityScopedResource() }
                                     } else {
-                                        // Handle denied access
+                                        // TODO: Handle denied access
                                     }
                                 }
                             } catch {
@@ -78,11 +78,9 @@ private struct FooterView: View {
     }
 }
 
-/**
- * Displays a list of sample and user programs.
- */
+/// Displays a list of sample and user programs.
 struct LibraryView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     private let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
     private let userLibNode = LibraryNode(library: Lib57.userLib)
@@ -91,7 +89,7 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            if change.programView == nil {
+            if change.programViewed == nil {
                 GeometryReader { proxy in
                     let width = proxy.size.width
                     VStack(spacing: 0) {
@@ -108,7 +106,7 @@ struct LibraryView: View {
                                 ForEach(samplesLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programView = ProgramView(program: item.program)
+                                            change.programViewed = item.program
                                         }
                                     }
                                     .offset(x: 15)
@@ -128,7 +126,7 @@ struct LibraryView: View {
                                 ForEach(userLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programView = ProgramView(program: item.program)
+                                            change.programViewed = item.program
                                         }
                                     }
                                     .offset(x: 15)
@@ -155,8 +153,8 @@ struct LibraryView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if change.programView != nil {
-                change.programView
+            if let programViewed = change.programViewed {
+                ProgramView(program: programViewed)
                     .transition(.move(edge: .trailing))
             }
 

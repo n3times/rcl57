@@ -1,9 +1,9 @@
 import SwiftUI
 
 /**
- * The root view: a navigation-like view from where to access the different views.
+ * The root view: a navigation-like view from where the user can access the different views.
  *
- * The CalcView is at the center:
+ * The CalcView, at the center, is the initial view:
  * - StateView <-> CalcView <-> LogView
  * - Above the CalcView: ManualView, SettingsView, and LibraryView
  */

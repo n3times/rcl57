@@ -10,6 +10,8 @@ enum ViewType {
     case manual
 }
 
+/// Properties that determine the state of the different Views. They are monitored by SwiftUI and
+/// result in the Views being updated as needed.
 class Change: ObservableObject {
     private let timerPublisher = Timer.TimerPublisher(interval: 0.02, runLoop: .main, mode: .default)
         .autoconnect()
@@ -26,23 +28,27 @@ class Change: ObservableObject {
 
     @Published var currentViewType = ViewType.calc
 
-    // State View
+    // MARK: State View
+
     @Published var isStepsInState = true
     @Published var isCreateProgramInState = false
 
-    // Manual View
-    @Published var manualPageView: ManualPageView? = nil
+    // MARK: Manual View
 
-    // Library View
+    @Published var manualPageData: ManualContentView.PageData? = nil
+
+    // MARK: Library View
+
     @Published var isSamplesLibExpanded = false
     @Published var isUserLibExpanded = false
+
+    // MARK: Program View
+
+    @Published var programViewed: Prog57? = nil
+    @Published var isEditInProgramView = false
     @Published var isImportProgramInLibrary = false
 
-    // Program View
-    @Published var programView: ProgramView? = nil
-    @Published var isEditInProgramView = false
-
-    // Program Editing
+    // MARK: Program Editing
     @Published var isPreviewInEditProgram = false
 
     init() {

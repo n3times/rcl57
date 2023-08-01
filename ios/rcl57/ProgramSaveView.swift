@@ -1,7 +1,7 @@
 import SwiftUI
 
 private struct FooterView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     let originalProgram: Prog57?
     let program: Prog57
@@ -21,8 +21,8 @@ private struct FooterView: View {
                     if existingProgram == change.loadedProgram {
                         change.loadedProgram = nil
                     }
-                    if existingProgram == change.programView?.program {
-                        change.programView = nil
+                    if existingProgram == change.programViewed {
+                        change.programViewed = nil
                     }
                     _ = Lib57.userLib.deleteProgram(existingProgram)
                 }
@@ -39,14 +39,14 @@ private struct FooterView: View {
                     if context == .create {
                         change.loadedProgram = program
                         change.isCreateProgramInState = false
-                        change.programView = ProgramView(program: program)
+                        change.programViewed = program
                     } else if context == .imported {
                         change.isImportProgramInLibrary = false
                         change.isPreviewInEditProgram = false
                         change.isUserLibExpanded = true
                     } else {
                         change.isEditInProgramView = false
-                        change.programView = ProgramView(program: program)
+                        change.programViewed = program
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             change.isPreviewInEditProgram = false
                         }
@@ -63,11 +63,9 @@ private struct FooterView: View {
     }
 }
 
-/**
- * Displays the name and description of a program and saves it upon confirmation by the user.
- */
+/// Displays the name and description of a program and saves it upon confirmation by the user.
 struct ProgramSaveView: View {
-    @EnvironmentObject var change: Change
+    @EnvironmentObject private var change: Change
 
     let originalProgram: Prog57?
     let program: Prog57

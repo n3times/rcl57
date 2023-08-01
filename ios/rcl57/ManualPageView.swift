@@ -1,8 +1,6 @@
 import SwiftUI
 
-/**
- * A page of the User Manual.
- */
+/// A page of the User Manual.
 struct ManualPageView: View {
     @EnvironmentObject private var change: Change
 
@@ -15,7 +13,7 @@ struct ManualPageView: View {
             NavigationBar(left: Style.leftArrow,
                           title: title,
                           right: Style.downArrow,
-                          leftAction: { withAnimation { change.manualPageView = nil } },
+                          leftAction: { withAnimation { change.manualPageData = nil } },
                           rightAction: { withAnimation { change.currentViewType = .calc } })
             .background(Color.deepGreen)
 

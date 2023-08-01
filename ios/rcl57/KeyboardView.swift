@@ -19,19 +19,16 @@ struct KeyboardView: View {
     @EnvironmentObject private var change: Change
     @EnvironmentObject private var settings: UserSettings
 
+    @Environment(\.scenePhase) var scenePhase
+
     @AppStorage(UserSettings.isHapticKey) private var hasHaptic = false
     @AppStorage(UserSettings.isClickKey) private var hasKeyClick = false
 
     private let imageName = "button_pad"
 
     @State private var isKeyPressed = false
-    @State private var is2nd: Bool
-    @State private var isInv: Bool
-
-    init() {
-        self.is2nd = Rcl57.shared.is2nd
-        self.isInv = Rcl57.shared.isInv
-    }
+    @State private var is2nd = Rcl57.shared.is2nd
+    @State private var isInv = Rcl57.shared.isInv
 
     private static func keyPosition(standardizedLocation: CGPoint,
                                     factor: Double) -> (row: Int, col: Int)? {
@@ -124,14 +121,13 @@ struct KeyboardView: View {
                                 }
                             }
                     )
-                    .onReceive(
-                        NotificationCenter.default
-                            .publisher(for: UIApplication.willResignActiveNotification)
-                    ) { _ in
+                    .onChange(of: scenePhase) { newScenePhase in
                         // Handle the situation where DragGesture.onEnded(:) is not called because
                         // the user is closing the app.
-                        if isKeyPressed {
-                            isKeyPressed = false
+                        if newScenePhase == .inactive {
+                            if isKeyPressed {
+                                isKeyPressed = false
+                            }
                         }
                     }
                     .onChange(of: isKeyPressed) { _ in

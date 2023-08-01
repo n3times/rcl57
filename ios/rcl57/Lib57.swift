@@ -30,7 +30,7 @@ class Lib57 {
         self.name = name
 
         guard let folderURL else {
-            // Being cautious but this should never happen with userLib or samplesLib.
+            // Being extra cautious but this should never happen with `userLib` or `samplesLib`.
             self.readonly = true
             return
         }
@@ -62,7 +62,7 @@ class Lib57 {
         guard let folderURL else { return false }
 
         do {
-            let text = program.toString()
+            let text = program.asString()
             let programURL = folderURL.appendingPathComponent(program.name)
             try text.write(to: programURL, atomically: true, encoding: .utf8)
         } catch {

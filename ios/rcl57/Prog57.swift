@@ -3,7 +3,7 @@ import Foundation
 /**
  * An RCL-57 program.
  *
- * Besides the program steps, it includes the registers, the name, and the help for the program.
+ * A program has steps, registers, a name, and help.
  */
 class Prog57 : Hashable, CustomStringConvertible {
     static let programFileExtension = ".r57"
@@ -11,6 +11,7 @@ class Prog57 : Hashable, CustomStringConvertible {
     /// The backing C struct for the program.
     private var prog57 = prog57_t()
 
+    /// The location where the program is stored.
     var url: URL? = nil
 
     var isReadOnly: Bool
@@ -38,7 +39,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         }
     }
 
-    /// All the steps and user registers are held in 16 special registers.
+    /// The set of steps and user registers are held in 16 special registers.
     typealias RCL57RawState = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
                                ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
                                ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
@@ -84,7 +85,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         self.isReadOnly = false
     }
 
-    func toString() -> String {
+    func asString() -> String {
         String(cString: prog57_to_text(&prog57))
     }
 
@@ -122,7 +123,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         if isReadOnly { return false }
 
         do {
-            let asString = toString()
+            let asString = asString()
             let userLibFolderURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = userLibFolderURL.appendingPathComponent(filename + Prog57.programFileExtension)
 
