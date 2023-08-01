@@ -52,7 +52,7 @@ private struct ManualContentView: View {
                 }
             }
         }
-        .background(Color(UIColor.systemBackground))
+        .background(Color(.systemBackground))
         .foregroundColor(Color.black)
     }
 }

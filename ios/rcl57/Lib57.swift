@@ -2,8 +2,8 @@ import Foundation
 
 /**
  * Represents the 2 libraries of RCL-57 programs:
- * - "samplesLib" contains a fixed set of sample programs
- * - "userLib" is where users can add, remove and edit their own programs
+ * - `samplesLib` contains a fixed set of sample programs
+ * - `userLib` is for User programs
  */
 class Lib57 {
     static let userLib: Lib57 = {
@@ -51,9 +51,11 @@ class Lib57 {
                 }
             }
         }
-        programs = programs.sorted { $0.name < $1.name }
+        programs.sort { $0.name < $1.name }
     }
 
+    /// Returns `true` if the program was successfully added.
+    /// Note that program names within the library must be unique.
     func addProgram(_ program: Prog57) -> Bool {
         if readonly { return false }
         if programByName(program.name) != nil { return false }
@@ -62,7 +64,7 @@ class Lib57 {
         do {
             let text = program.toString()
             let programURL = folderURL.appendingPathComponent(program.name)
-            try text.write(to: programURL, atomically: true, encoding: String.Encoding.utf8)
+            try text.write(to: programURL, atomically: true, encoding: .utf8)
         } catch {
             return false
         }
@@ -73,18 +75,26 @@ class Lib57 {
         return true
     }
 
+    /// Returns `true` if the program was successfully deleted.
     func deleteProgram(_ program: Prog57) -> Bool {
         if readonly { return false }
 
         do {
+            var isProgramRemoved = false
             for i in 0..<programs.count {
                 if programs[i] == program {
                     programs.remove(at: i)
+                    isProgramRemoved = true
                     break
                 }
             }
+            if !isProgramRemoved {
+                return false
+            }
             if let programURL = program.url {
                 try FileManager.default.removeItem(atPath: programURL.path)
+            } else {
+                return false
             }
         } catch {
             return false
@@ -93,11 +103,23 @@ class Lib57 {
     }
 
     func programByName(_ programName: String) -> Prog57? {
-        for program in programs {
-            if program.name == programName {
-                return program
+        var lo = 0
+        var hi = programs.count
+
+        // Do binary search on sorted `programs`.
+        var res: Prog57? = nil
+        while lo <= hi {
+            let mid = lo + (hi-lo)/2
+            if programs[mid].name == programName {
+                res = programs[mid]
+                break
+            }
+            if programs[mid].name < programName {
+                lo = mid + 1
+            } else {
+                hi = mid - 1
             }
         }
-        return nil
+        return res
     }
 }

@@ -111,7 +111,9 @@ struct LogContentView: View {
                 numberEntry = Rcl57.shared.logEntry(index: lastLoggedCount)
             }
             lines.removeLast()
-            lines.append(makeLine(numberEntry: numberEntry!, opEntry: opEntry!))
+            if let numberEntry, let opEntry {
+                lines.append(makeLine(numberEntry: numberEntry, opEntry: opEntry))
+            }
         }
 
         // Handle new log entries.
@@ -125,7 +127,9 @@ struct LogContentView: View {
                     let opEntry = lines.last?.opLogEntry
                     if opEntry?.message == "" {
                         lines.removeLast()
-                        lines.append(makeLine(numberEntry: numberEntry!, opEntry: entry))
+                        if let numberEntry {
+                            lines.append(makeLine(numberEntry: numberEntry, opEntry: entry))
+                        }
                     } else {
                         currentLineIndex += 1
                         if lines.count == maxLines {

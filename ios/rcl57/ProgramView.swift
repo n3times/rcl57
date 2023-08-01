@@ -16,7 +16,7 @@ private struct ActivityViewController: UIViewControllerRepresentable {
 }
 
 /**
- * Let's the user delete, edit and share the program.
+ * Lets the user delete, edit and share the program.
  */
 private struct Footer: View {
     @EnvironmentObject var change: Change
@@ -39,7 +39,9 @@ private struct Footer: View {
                     .contentShape(Rectangle())
             }
             .sheet(isPresented: $isPresentingShare) {
-                ActivityViewController(activityItems: [program.url!])
+                if let programUrl = program.url {
+                    ActivityViewController(activityItems: [programUrl])
+                }
             }
 
             Button(action: {
@@ -115,8 +117,8 @@ struct ProgramView: View {
     let program: Prog57
 
     var body: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
+        GeometryReader { proxy in
+            let width = proxy.size.width
 
             VStack(spacing: 0) {
                 NavigationBar(left: Style.leftArrow,

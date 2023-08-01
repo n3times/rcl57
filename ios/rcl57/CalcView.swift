@@ -1,35 +1,31 @@
 import SwiftUI
 
-/**
- * A button of the calc navigation bar.
- */
-private struct CalcNavigationButton: View {
-    @EnvironmentObject private var change: Change
+/// A specialized bar to navigate to the different views of the app.
+private struct CalcNavigationBar: View {
+    /// A button of the calc navigation bar.
+    struct CalcNavigationButton: View {
+        @EnvironmentObject private var change: Change
 
-    let text: String
-    let destination: ViewType
-    let edge: Edge
+        let text: String
+        let destination: ViewType
+        let edge: Edge
 
-    var body: some View {
-        Button(action: {
-            change.transitionEdge = edge
-            withAnimation {
-                change.currentViewType = destination
+        var body: some View {
+            Button(action: {
+                change.transitionEdge = edge
+                withAnimation {
+                    change.currentViewType = destination
+                }
+            }) {
+                Text(text)
+                    .font(Style.directionsFontLarge)
+                    .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
+                    .offset(y: -5)
+                    .contentShape(Rectangle())
             }
-        }) {
-            Text(text)
-                .font(Style.directionsFontLarge)
-                .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
-                .offset(y: -5)
-                .contentShape(Rectangle())
         }
     }
-}
 
-/**
- * A specialized bar to navigate to the different views of the app.
- */
-private struct CalcNavigationBar: View {
     var body: some View {
         HStack(spacing: 0) {
             CalcNavigationButton(text: Style.leftArrow, destination: .state, edge: .trailing)
@@ -88,8 +84,8 @@ struct CalcView: View {
     var body: some View {
         let displayHeight = 4 * Style.listLineHeight
 
-        return GeometryReader { geometry in
-            let width = geometry.size.width
+        return GeometryReader { proxy in
+            let width = proxy.size.width
 
             ZStack {
                 Color.blackish.edgesIgnoringSafeArea(.top)
@@ -97,11 +93,11 @@ struct CalcView: View {
                 VStack(spacing: 0) {
                     CalcNavigationBar()
                     CalcInfoView()
-                    CalcDisplayView(displayString: change.displayString)
+                    DisplayView(displayString: change.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)
-                    CalcKeyboardView()
+                    KeyboardView()
                     Spacer(minLength: 20)
                 }
             }

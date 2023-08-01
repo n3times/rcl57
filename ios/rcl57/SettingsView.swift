@@ -2,19 +2,19 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject private var change: Change
-    @EnvironmentObject private var settings: Settings
+    @EnvironmentObject private var settings: UserSettings
 
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
 
-    @AppStorage(Settings.isHapticKey) var hasHaptic = false
-    @AppStorage(Settings.isClickKey) var hasKeyClick = false
+    @AppStorage(UserSettings.isHapticKey) var hasHaptic = false
+    @AppStorage(UserSettings.isClickKey) var hasKeyClick = false
 
     var body: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
+        GeometryReader { proxy in
+            let width = proxy.size.width
             VStack(spacing: 0) {
                 NavigationBar(left: nil,
                               title: "Settings",

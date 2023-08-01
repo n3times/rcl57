@@ -52,7 +52,7 @@ private struct FooterView: View {
     var body: some View {
         let program = change.loadedProgram
         let programType = getProgramType(program: program)
-        let programNeedsSaving: Bool = {
+        let stateNeedsSaving: Bool = {
             guard let program else { return false }
             if programType != .readWrite { return false }
             if change.isStepsInState {
@@ -115,7 +115,7 @@ private struct FooterView: View {
                 .font(Style.footerFont)
                 .frame(width: width / 3, height: Style.footerHeight)
                 .buttonStyle(.plain)
-                .disabled(!programNeedsSaving)
+                .disabled(programType == .readWrite && !stateNeedsSaving)
                 .confirmationDialog("Save?", isPresented: $isPresentingSave) {
                     if programType == .readWrite {
                         Button("Save " + (change.isStepsInState ? "Steps" : "Registers"), role: .destructive) {

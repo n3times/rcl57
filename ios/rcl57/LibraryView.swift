@@ -1,21 +1,79 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-private struct LibraryNode: Identifiable {
+private struct ProgramNode: Identifiable {
     let id = UUID()
     let name: String
-    var children: [LibraryNode] = []
-    var program: Prog57?
+    var program: Prog57
 
     init(program: Prog57) {
         self.name = program.name
         self.program = program
     }
+}
+
+private struct LibraryNode: Identifiable {
+    let id = UUID()
+    let name: String
+    var children: [ProgramNode] = []
 
     init(library: Lib57) {
         self.name = library.name
         for program in library.programs {
-            children.append(LibraryNode(program: program))
+            children.append(ProgramNode(program: program))
+        }
+    }
+}
+
+private struct FooterView: View {
+    @EnvironmentObject var change: Change
+
+    @State private var isPresentingImport = false
+
+    private let exportedType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
+
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            HStack(spacing: 0) {
+                Spacer()
+                    .frame(width: width / 5, height: Style.footerHeight)
+
+                Button(action: {
+                    isPresentingImport = true
+                }) {
+                    Text("IMPORT")
+                        .font(Style.footerFont)
+                        .frame(width: width * 3 / 5, height: Style.footerHeight, alignment: .center)
+                        .buttonStyle(.plain)
+                }
+                .fileImporter(
+                    isPresented: $isPresentingImport,
+                    allowedContentTypes: [exportedType],
+                    allowsMultipleSelection: false,
+                    onCompletion: { result in
+                        withAnimation {
+                            do {
+                                if let url = try? result.get().first {
+                                    if url.startAccessingSecurityScopedResource() {
+                                        LibraryView.importText = try String(contentsOf: url)
+                                        change.isImportProgramInLibrary = true
+                                        do { url.stopAccessingSecurityScopedResource() }
+                                    } else {
+                                        // Handle denied access
+                                    }
+                                }
+                            } catch {
+                                print (error.localizedDescription)
+                            }
+                        }
+                    })
+
+                Spacer()
+                    .frame(width: width / 5, height: Style.footerHeight)
+            }
+            .background(Color.deepBlue)
+            .foregroundColor(.ivory)
         }
     }
 }
@@ -26,20 +84,16 @@ private struct LibraryNode: Identifiable {
 struct LibraryView: View {
     @EnvironmentObject var change: Change
 
-    @State private var isPresentingImport = false
-
-    fileprivate let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
-    fileprivate let userLibNode = LibraryNode(library: Lib57.userLib)
-
-    let exportedType = UTType(exportedAs: "com.n3times.rcl57", conformingTo: .text)
+    private let samplesLibNode = LibraryNode(library: Lib57.samplesLib)
+    private let userLibNode = LibraryNode(library: Lib57.userLib)
 
     static var importText = ""
 
     var body: some View {
         ZStack {
             if change.programView == nil {
-                GeometryReader { geometry in
-                    let width = geometry.size.width
+                GeometryReader { proxy in
+                    let width = proxy.size.width
                     VStack(spacing: 0) {
                         NavigationBar(left: nil,
                                       title: "Library",
@@ -54,7 +108,7 @@ struct LibraryView: View {
                                 ForEach(samplesLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programView = ProgramView(program: item.program!)
+                                            change.programView = ProgramView(program: item.program)
                                         }
                                     }
                                     .offset(x: 15)
@@ -74,7 +128,7 @@ struct LibraryView: View {
                                 ForEach(userLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programView = ProgramView(program: item.program!)
+                                            change.programView = ProgramView(program: item.program)
                                         }
                                     }
                                     .offset(x: 15)
@@ -93,46 +147,8 @@ struct LibraryView: View {
                         }
                         .listStyle(PlainListStyle())
 
-                        // Footer
-                        HStack(spacing: 0) {
-                            Spacer()
-                                .frame(width: width / 5, height: Style.footerHeight)
-
-                            Button(action: {
-                                isPresentingImport = true
-                            }) {
-                                Text("IMPORT")
-                                    .font(Style.footerFont)
-                                    .frame(width: width * 3 / 5, height: Style.footerHeight, alignment: .center)
-                                    .buttonStyle(.plain)
-                            }
-                            .fileImporter(
-                                isPresented: $isPresentingImport,
-                                allowedContentTypes: [exportedType],
-                                allowsMultipleSelection: false,
-                                onCompletion: { result in
-                                    withAnimation {
-                                        do {
-                                            let url = try result.get().first!
-
-                                            if url.startAccessingSecurityScopedResource() {
-                                                LibraryView.importText = try String(contentsOf: url)
-                                                change.isImportProgramInLibrary = true
-                                                do { url.stopAccessingSecurityScopedResource() }
-                                            } else {
-                                                // Handle denied access
-                                            }
-                                        } catch {
-                                            print (error.localizedDescription)
-                                        }
-                                    }
-                                })
-
-                            Spacer()
-                                .frame(width: width / 5, height: Style.footerHeight)
-                        }
-                        .background(Color.deepBlue)
-                        .foregroundColor(.ivory)
+                        FooterView()
+                            .frame(height: Style.footerHeight)
                     }
                 }
                 .background(Color.white)

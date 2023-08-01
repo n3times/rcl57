@@ -17,12 +17,12 @@
 		150ED8A627B089F000E01FC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A527B089F000E01FC6 /* Assets.xcassets */; };
 		150ED8A927B089F000E01FC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */; };
 		150ED8E927B08CC900E01FC6 /* Rcl57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* Rcl57.swift */; };
-		150ED8EC27B09E6400E01FC6 /* CalcDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* CalcDisplayView.swift */; };
+		150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* DisplayView.swift */; };
 		15124F75282F00E200F0208F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F74282F00E200F0208F /* SettingsView.swift */; };
-		15124F7728314DAE00F0208F /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F7628314DAE00F0208F /* Settings.swift */; };
+		15124F7728314DAE00F0208F /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F7628314DAE00F0208F /* UserSettings.swift */; };
 		151EBA6D28179F87005DD283 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6C28179F87005DD283 /* CalcView.swift */; };
 		151EBA6F28238D62005DD283 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6E28238D62005DD283 /* Style.swift */; };
-		1533F65527F7DA0900DF3BAE /* CalcKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F65427F7DA0900DF3BAE /* CalcKeyboardView.swift */; };
+		1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F65427F7DA0900DF3BAE /* KeyboardView.swift */; };
 		1533F6572801977F00DF3BAE /* StateContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F6562801977F00DF3BAE /* StateContentView.swift */; };
 		154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7127BC65C900AE38F1 /* rcl57.c */; };
 		154B7A7C27BC65C900AE38F1 /* state57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7327BC65C900AE38F1 /* state57.c */; };
@@ -72,12 +72,12 @@
 		150ED8A827B089F000E01FC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		150ED8E827B08CC900E01FC6 /* Rcl57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rcl57.swift; sourceTree = "<group>"; };
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
-		150ED8EB27B09E6400E01FC6 /* CalcDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcDisplayView.swift; sourceTree = "<group>"; };
+		150ED8EB27B09E6400E01FC6 /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
 		15124F74282F00E200F0208F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		15124F7628314DAE00F0208F /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		15124F7628314DAE00F0208F /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		151EBA6C28179F87005DD283 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		151EBA6E28238D62005DD283 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
-		1533F65427F7DA0900DF3BAE /* CalcKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcKeyboardView.swift; sourceTree = "<group>"; };
+		1533F65427F7DA0900DF3BAE /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		1533F6562801977F00DF3BAE /* StateContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateContentView.swift; sourceTree = "<group>"; };
 		154B7A7127BC65C900AE38F1 /* rcl57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rcl57.c; sourceTree = "<group>"; };
 		154B7A7227BC65C900AE38F1 /* utils57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils57.h; sourceTree = "<group>"; };
@@ -172,10 +172,10 @@
 				15B085E5286152C60018418A /* Prog57.swift */,
 				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
 				1567D59E28832CA000273C3C /* Change.swift */,
-				15124F7628314DAE00F0208F /* Settings.swift */,
+				15124F7628314DAE00F0208F /* UserSettings.swift */,
 				151EBA6E28238D62005DD283 /* Style.swift */,
-				150ED8EB27B09E6400E01FC6 /* CalcDisplayView.swift */,
-				1533F65427F7DA0900DF3BAE /* CalcKeyboardView.swift */,
+				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
+				1533F65427F7DA0900DF3BAE /* KeyboardView.swift */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
 				15071C342873811C0075D722 /* LibraryView.swift */,
@@ -375,12 +375,12 @@
 				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				15071C352873811C0075D722 /* LibraryView.swift in Sources */,
-				150ED8EC27B09E6400E01FC6 /* CalcDisplayView.swift in Sources */,
-				15124F7728314DAE00F0208F /* Settings.swift in Sources */,
+				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
+				15124F7728314DAE00F0208F /* UserSettings.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
 				150DE99E28805BE6008E651B /* ProgramSaveView.swift in Sources */,
-				1533F65527F7DA0900DF3BAE /* CalcKeyboardView.swift in Sources */,
+				1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */,
 				159E94D82814BBD400859F10 /* StateView.swift in Sources */,
 				159E94D62814AA2000859F10 /* LogView.swift in Sources */,
 				154B7A8427BF667700AE38F1 /* leds57.c in Sources */,

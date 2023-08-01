@@ -18,7 +18,7 @@ struct MainView: View {
                     .transition(.move(edge: change.transitionEdge))
                     .zIndex(0)
             }
-            switch(viewType) {
+            switch viewType {
             case .calc:
                 EmptyView()
             case .state:

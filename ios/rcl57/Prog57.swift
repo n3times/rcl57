@@ -8,7 +8,7 @@ import Foundation
 class Prog57 : Hashable, CustomStringConvertible {
     static let programFileExtension = ".r57"
 
-    /* The backing C struct for the program. */
+    /// The backing C struct for the program.
     private var prog57 = prog57_t()
 
     var url: URL? = nil
@@ -38,12 +38,13 @@ class Prog57 : Hashable, CustomStringConvertible {
         }
     }
 
-    typealias RCL57State = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
-                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
-                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
-                            ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)
+    /// All the steps and user registers are held in 16 special registers.
+    typealias RCL57RawState = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                               ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                               ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
+                               ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t)
 
-    var state: RCL57State {
+    var rawState: RCL57RawState {
         get {
             prog57.state
         }
@@ -52,7 +53,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         }
     }
 
-    /** For existing Library programs. */
+    /// For existing Library programs.
     init?(url: URL, readOnly: Bool) {
         var text: String
         do {
@@ -65,7 +66,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         self.url = url
     }
 
-    /** For imported programs. */
+    /// For imported programs.
     init?(text: String) {
         let found_name = prog57_from_text(&prog57, text)
         if !found_name {
@@ -74,7 +75,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         self.isReadOnly = false
     }
 
-    /** For new programs ("create"). */
+    /// For new programs ("create").
     init(name: String, description: String) {
         prog57_set_name(&prog57, (name as NSString).utf8String)
         prog57_set_help(&prog57, (description as NSString).utf8String)
@@ -87,9 +88,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         String(cString: prog57_to_text(&prog57))
     }
 
-    /**
-     * Loading of steps and registers into memory.
-     */
+    // MARK: Loading of steps and registers into memory.
 
     func loadStepsIntoMemory() {
         prog57_load_steps_into_memory(&prog57, &Rcl57.shared.rcl57)
@@ -99,9 +98,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         prog57_load_registers_into_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
-    /**
-     * Saving of steps and registers from memory.
-     */
+    // MARK: Saving of steps and registers from memory.
 
     func stepsNeedSaving() -> Bool {
         if isReadOnly { return false }
@@ -120,9 +117,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         prog57_set_registers_from_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
-    /**
-     * Saves a new or modified program into the filesystem.
-     */
+    /// Saves a new or modified program into the filesystem.
     func save(filename: String) -> Bool {
         if isReadOnly { return false }
 
@@ -131,7 +126,7 @@ class Prog57 : Hashable, CustomStringConvertible {
             let userLibFolderURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = userLibFolderURL.appendingPathComponent(filename + Prog57.programFileExtension)
 
-            try asString.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+            try asString.write(to: fileURL, atomically: true, encoding: .utf8)
 
             self.url = fileURL
         } catch {

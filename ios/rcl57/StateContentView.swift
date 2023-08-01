@@ -1,7 +1,6 @@
 import SwiftUI
 
 private struct StepLineView: View {
-
     /** Data for a StepLineView: a step index and an operation. */
     struct StepLineData: Identifiable {
         static var lineId = 0
@@ -21,7 +20,7 @@ private struct StepLineView: View {
 
     private let line: StepLineData
     private let activeBackgroundColor = Color.ivory
-    private let inactiveBackgroundColor = Color.ivory
+    private let inactiveBackgroundColor = Color.lightGray
     private let foregroundColor = Color.blackish
     private let inactiveForegroundColor = Color.blackish
 

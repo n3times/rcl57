@@ -5,7 +5,7 @@ struct Rcl57App: App {
     @Environment(\.scenePhase) var scenePhase
 
     @StateObject var change = Change()
-    @StateObject var settings = Settings()
+    @StateObject var settings = UserSettings()
 
     var body: some Scene {
         WindowGroup {

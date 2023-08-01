@@ -3,7 +3,7 @@
 
 static int LEDS_MAP[256];
 
-static void init() {
+static void init(void) {
     memset(LEDS_MAP, 0, 256 * sizeof(int));
 
     LEDS_MAP[' '] = 0b00000000000000;

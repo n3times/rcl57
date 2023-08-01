@@ -44,7 +44,7 @@ struct ProgramEditView: View {
             self.originalProgram = program
         } else {
             let program = Prog57(name: "",
-                             description: "Clipboard does not appear to contain a legal program.")
+                                 description: "Clipboard does not contain a legal program.")
             self.name = program.name
             self.help = program.help
             self.originalProgram = program
@@ -58,7 +58,9 @@ struct ProgramEditView: View {
             return Prog57(name: trimmedName, description: trimmedHelp)
         } else {
             let program = Prog57(name: trimmedName, description: trimmedHelp)
-            program.state = originalProgram!.state
+            if let rawState = originalProgram?.rawState {
+                program.rawState = rawState
+            }
             return program
         }
     }
@@ -73,8 +75,8 @@ struct ProgramEditView: View {
             }
 
             if !change.isPreviewInEditProgram {
-                GeometryReader { geometry in
-                    let width = geometry.size.width
+                GeometryReader { proxy in
+                    let width = proxy.size.width
 
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
@@ -91,7 +93,7 @@ struct ProgramEditView: View {
                             }) {
                                 Text(Style.downArrow)
                                     .frame(width: width / 5, height: Style.headerHeight)
-                                    .font(Style.smallFont)
+                                    .font(Style.directionsFont)
                                     .contentShape(Rectangle())
                             }
                             .confirmationDialog("Exit?", isPresented: $isPresentingExit) {
@@ -120,7 +122,7 @@ struct ProgramEditView: View {
                                 Text(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty
                                      ? Style.rightArrow : Style.rightArrowFull)
                                 .frame(width: width / 5, height: Style.headerHeight)
-                                .font(Style.smallFont)
+                                .font(Style.directionsFont)
                                 .contentShape(Rectangle())
                             }
                             .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty)
@@ -149,7 +151,7 @@ struct ProgramEditView: View {
                 .transition(.move(edge: .leading))
             }
         }
-        .background(Color(UIColor.systemBackground))
+        .background(Color(.systemBackground))
     }
 }
 

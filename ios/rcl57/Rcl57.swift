@@ -19,7 +19,7 @@ struct LogEntry {
         // 3. Convert messagePointer into a pointer to the first element of an array of UInt8:
         //    reboundedPointer (this is a C String)
         // 4. Finally use String(cString:) on reboundedPointer
-        // Note: it would easier if we had a char * as opposed to a char[]
+        // Note: it would be easier if we had a char * as opposed to a char[]
         message = withUnsafePointer(to: entry.pointee.message) { messagePointer in
             messagePointer.withMemoryRebound(
                 to: UInt8.self,
@@ -71,15 +71,17 @@ class Rcl57 {
         // Update version if it has changed.
         if let previousVersion = UserDefaults.standard.string(forKey: Rcl57.versionKey) {
             if previousVersion != Rcl57.version {
-                let previousMajorVersion = Int(Float(previousVersion)!)
+                let previousMajorVersion = Int(Float(previousVersion) ?? 0)
                 if previousMajorVersion != Rcl57.majorVersion {
                     // Reset state since this is a non backward compatible change.
-                    do {
-                        try FileManager.default.removeItem(at: fileURL!)
-                    } catch {
-                        // Nothing.
+                    if let nonOptionalFileURL = fileURL {
+                        do {
+                            try FileManager.default.removeItem(at: nonOptionalFileURL)
+                        } catch {
+                            // Nothing.
+                        }
+                        fileURL = nil
                     }
-                    fileURL = nil
                 }
             }
             UserDefaults.standard.set(Rcl57.version, forKey: Rcl57.versionKey)
@@ -99,10 +101,11 @@ class Rcl57 {
             rcl57_init(&rcl57)
             return
         }
-        fileRawBuffer = fileRawData.withUnsafeBytes({
-            (ptr) -> UnsafePointer<Int8> in
-            return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
-        })
+        fileRawData.withUnsafeBytes { ptr in
+            if let baseAddress = ptr.baseAddress {
+                fileRawBuffer = baseAddress.assumingMemoryBound(to: Int8.self)
+            }
+        }
         guard let fileRawBuffer else {
             rcl57_init(&rcl57)
             return
@@ -153,9 +156,9 @@ class Rcl57 {
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileURL: URL? = dirURL?.appendingPathComponent(Rcl57.stateFilename)
 
-        if fileURL != nil {
+        if let fileURL {
             do {
-                try rawData.write(to: fileURL!, options: .atomic)
+                try rawData.write(to: fileURL, options: .atomic)
                 return true
             } catch {
                 // Nothing
@@ -224,10 +227,11 @@ class Rcl57 {
         guard let programRawData else {
             return
         }
-        programRawBuffer = programRawData.withUnsafeBytes({
-            (ptr) -> UnsafePointer<Int8> in
-            return ptr.baseAddress!.assumingMemoryBound(to: Int8.self)
-        })
+        programRawData.withUnsafeBytes { ptr in
+            if let baseAddress = ptr.baseAddress {
+                programRawBuffer = baseAddress.assumingMemoryBound(to: Int8.self)
+            }
+        }
         if programRawBuffer == nil {
             return
         }
@@ -262,7 +266,11 @@ class Rcl57 {
     func getRegister(index: Int) -> String {
         let reg = ti57_get_user_reg(&rcl57.ti57, Int32(index))
         let str = utils57_user_reg_to_str(reg, false, 9)
-        return String(cString: str!)
+        if let str {
+            return String(cString: str)
+        } else {
+            return String("Unreadable")
+        }
     }
 
     func getProgramOp(index: Int, isAlpha: Bool) -> String {
