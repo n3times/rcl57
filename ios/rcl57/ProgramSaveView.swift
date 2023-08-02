@@ -21,8 +21,8 @@ private struct FooterView: View {
                     if existingProgram == change.loadedProgram {
                         change.loadedProgram = nil
                     }
-                    if existingProgram == change.programViewed {
-                        change.programViewed = nil
+                    if existingProgram == change.lastProgramViewed {
+                        change.lastProgramViewed = nil
                     }
                     _ = Lib57.userLib.deleteProgram(existingProgram)
                 }
@@ -39,14 +39,14 @@ private struct FooterView: View {
                     if context == .create {
                         change.loadedProgram = program
                         change.isCreateProgramInState = false
-                        change.programViewed = program
+                        change.lastProgramViewed = program
                     } else if context == .imported {
                         change.isImportProgramInLibrary = false
                         change.isPreviewInEditProgram = false
                         change.isUserLibExpanded = true
                     } else {
                         change.isEditInProgramView = false
-                        change.programViewed = program
+                        change.lastProgramViewed = program
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             change.isPreviewInEditProgram = false
                         }

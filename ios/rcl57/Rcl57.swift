@@ -124,8 +124,8 @@ class Rcl57 {
     }
 
     /// Runs the emulator for 'ms' milliseconds.
-    func advance(ms: Int32) -> Bool {
-        return rcl57_advance(&rcl57, ms)
+    func advance(milliseconds: Int32) -> Bool {
+        return rcl57_advance(&rcl57, milliseconds)
     }
 
     /// Whether the 2nd key is engaged.

@@ -48,7 +48,7 @@ private struct Footer: View {
                 program.loadStepsIntoMemory()
                 program.loadRegistersIntoMemory()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    change.setLoadedProgram(program: program)
+                    change.loadedProgram = program
                 }
                 withAnimation {
                     change.currentViewType = .calc
@@ -98,7 +98,7 @@ private struct Footer: View {
                         }
                         change.isUserLibExpanded = true
                         withAnimation {
-                            change.programViewed = nil
+                            change.lastProgramViewed = nil
                         }
                     }
                 }
@@ -124,7 +124,7 @@ struct ProgramView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: program.name,
                               right: Style.downArrow,
-                              leftAction: { withAnimation { change.programViewed = nil } },
+                              leftAction: { withAnimation { change.lastProgramViewed = nil } },
                               rightAction: { withAnimation { change.currentViewType = .calc } })
                 .background(Color.deepBlue)
 

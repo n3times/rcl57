@@ -75,7 +75,7 @@ private struct FooterView: View {
                 .confirmationDialog("Close?", isPresented: $isPresentingClose) {
                     if let program {
                         Button("Close \(program.name)", role: .destructive) {
-                            change.setLoadedProgram(program: nil)
+                            change.loadedProgram = nil
                         }
                     }
                 }

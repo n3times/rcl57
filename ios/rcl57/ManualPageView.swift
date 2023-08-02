@@ -13,7 +13,7 @@ struct ManualPageView: View {
             NavigationBar(left: Style.leftArrow,
                           title: title,
                           right: Style.downArrow,
-                          leftAction: { withAnimation { change.manualPageData = nil } },
+                          leftAction: { withAnimation { change.lastManualPageViewedData = nil } },
                           rightAction: { withAnimation { change.currentViewType = .calc } })
             .background(Color.deepGreen)
 

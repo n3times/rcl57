@@ -16,7 +16,9 @@ extension Color {
 struct Style {
     private static let isSmallScreen = UIScreen.main.bounds.width <= 320
 
+
     // MARK: Header
+
 
     static let titleFont = Font.system(size: 22, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
@@ -27,7 +29,9 @@ struct Style {
     static let operationFont =
         Font.system(size: isSmallScreen ? 14 : 16, weight:.medium, design: .default)
 
+
     // MARK: List
+
 
     static let listLineFont =
         Font.system(size: isSmallScreen ? 17 : 20, weight:.semibold, design: .monospaced)
@@ -35,12 +39,16 @@ struct Style {
         Font.system(size: isSmallScreen ? 15 : 18, weight:.medium, design: .default)
     static let listLineHeight = isSmallScreen ? 22.0 : 27.0
 
+
     // MARK: Footer
+
 
     static let footerFont = Font.system(size: 18, weight: .medium)
     static let footerHeight = 44.0
 
+
     // MARK: Directions
+
 
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"

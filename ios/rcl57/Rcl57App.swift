@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 struct Rcl57App: App {
-    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.scenePhase) private var scenePhase
 
     @StateObject private var change = Change()
     @StateObject private var settings = UserSettings()

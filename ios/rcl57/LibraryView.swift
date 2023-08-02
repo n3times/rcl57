@@ -89,7 +89,7 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            if change.programViewed == nil {
+            if change.lastProgramViewed == nil {
                 GeometryReader { proxy in
                     let width = proxy.size.width
                     VStack(spacing: 0) {
@@ -106,7 +106,7 @@ struct LibraryView: View {
                                 ForEach(samplesLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programViewed = item.program
+                                            change.lastProgramViewed = item.program
                                         }
                                     }
                                     .offset(x: 15)
@@ -126,7 +126,7 @@ struct LibraryView: View {
                                 ForEach(userLibNode.children) { item in
                                     Button(item.name) {
                                         withAnimation {
-                                            change.programViewed = item.program
+                                            change.lastProgramViewed = item.program
                                         }
                                     }
                                     .offset(x: 15)
@@ -153,7 +153,7 @@ struct LibraryView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if let programViewed = change.programViewed {
+            if let programViewed = change.lastProgramViewed {
                 ProgramView(program: programViewed)
                     .transition(.move(edge: .trailing))
             }

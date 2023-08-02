@@ -25,14 +25,14 @@ struct ManualContentView: View {
         List {
             Button("About") {
                 withAnimation {
-                    change.manualPageData = aboutPageData
+                    change.lastManualPageViewedData = aboutPageData
                 }
             }
             Section("The Emulator") {
                 ForEach(emulatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.manualPageData = pageData
+                            change.lastManualPageViewedData = pageData
                         }
                     }
                 }
@@ -41,7 +41,7 @@ struct ManualContentView: View {
                 ForEach(calculatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.manualPageData = pageData
+                            change.lastManualPageViewedData = pageData
                         }
                     }
                 }
@@ -58,7 +58,7 @@ struct ManualView: View {
 
     var body: some View {
         ZStack {
-            if change.manualPageData == nil {
+            if change.lastManualPageViewedData == nil {
                 VStack(spacing: 0) {
                     NavigationBar(left: nil,
                                   title: "User Manual",
@@ -71,7 +71,7 @@ struct ManualView: View {
                 .transition(.move(edge: .leading))
             }
 
-            if let pageData = change.manualPageData {
+            if let pageData = change.lastManualPageViewedData {
                 ManualPageView(title: pageData.title, resource: pageData.resource)
                     .transition(.move(edge: .trailing))
             }

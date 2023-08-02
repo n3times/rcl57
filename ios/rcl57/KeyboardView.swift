@@ -19,7 +19,7 @@ struct KeyboardView: View {
     @EnvironmentObject private var change: Change
     @EnvironmentObject private var settings: UserSettings
 
-    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage(UserSettings.isHapticKey) private var hasHaptic = false
     @AppStorage(UserSettings.isClickKey) private var hasKeyClick = false
@@ -112,7 +112,7 @@ struct KeyboardView: View {
                                     }
                                     Rcl57.shared.keyPress(row:Int(c.row) + 1, col:Int(c.col) + 1)
                                     // Make sure the key press is registered with the engine.
-                                    _ = Rcl57.shared.advance(ms: 50)
+                                    _ = Rcl57.shared.advance(milliseconds: 50)
                                 }
                             }
                             .onEnded { _ in
@@ -136,7 +136,6 @@ struct KeyboardView: View {
                             isInv = Rcl57.shared.isInv
                         } else {
                             Rcl57.shared.keyRelease()
-                            change.updateLogTimestamp()
                         }
                     }
                 // Draw a border around the `2nd` key if it is engaged.

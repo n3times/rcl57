@@ -40,7 +40,7 @@ struct SettingsView: View {
                         .confirmationDialog("Reset?", isPresented: $isPresentingReset) {
                             Button("Clear Steps, Registers and Log", role: .destructive) {
                                 Rcl57.shared.clearAll()
-                                change.setLoadedProgram(program: nil)
+                                change.loadedProgram = nil
                             }
                         }
                     }

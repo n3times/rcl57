@@ -89,7 +89,9 @@ class Prog57 : Hashable, CustomStringConvertible {
         String(cString: prog57_to_text(&prog57))
     }
 
+
     // MARK: Loading of steps and registers into memory.
+
 
     func loadStepsIntoMemory() {
         prog57_load_steps_into_memory(&prog57, &Rcl57.shared.rcl57)
@@ -99,7 +101,9 @@ class Prog57 : Hashable, CustomStringConvertible {
         prog57_load_registers_into_memory(&prog57, &Rcl57.shared.rcl57)
     }
 
+
     // MARK: Saving of steps and registers from memory.
+
 
     func stepsNeedSaving() -> Bool {
         if isReadOnly { return false }
@@ -137,13 +141,17 @@ class Prog57 : Hashable, CustomStringConvertible {
         return true
     }
 
+
     // MARK: CustomStringConvertible Conformance
+
 
     var description: String {
         return "Program \(name)"
     }
 
+
     // MARK: Hashable Conformance
+
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.name)

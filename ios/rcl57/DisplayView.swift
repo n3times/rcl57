@@ -102,7 +102,9 @@ struct DisplayView: View {
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
     }
 
+
     // MARK: Single-Segment Path
+
 
     // Returns a rectangle path with the corners slightly clipped.
     private func ledStraightSegmentPath(rect: CGRect) -> Path {
@@ -135,7 +137,9 @@ struct DisplayView: View {
         return segments & (1 << (DisplayView.segmentCount - 1 - i)) != 0
     }
 
-    // MARK: Single-Led Path
+
+    // MARK: Single-LED Path
+
 
     private func getLedPath(c: Character,
                             startX: CGFloat,
@@ -202,7 +206,9 @@ struct DisplayView: View {
         return path
     }
 
-    // MARK: All-Leds Path
+
+    // MARK: All-LEDs Path
+
 
     private func getDisplayPath(displayString: String, boundingRect: CGRect) -> some Shape {
         var path = Path()

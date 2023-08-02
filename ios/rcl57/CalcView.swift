@@ -98,9 +98,6 @@ struct CalcView: View {
                     Spacer(minLength: 20)
                 }
             }
-            .onAppear {
-                change.updateDisplayString()
-            }
         }
     }
 }
