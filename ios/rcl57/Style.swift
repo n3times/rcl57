@@ -19,7 +19,6 @@ struct Style {
 
     // MARK: Header
 
-
     static let titleFont = Font.system(size: 22, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
     static let directionsFontLarge = Font.system(size: 26, weight: .regular, design: .monospaced)
@@ -32,7 +31,6 @@ struct Style {
 
     // MARK: List
 
-
     static let listLineFont =
         Font.system(size: isSmallScreen ? 17 : 20, weight:.semibold, design: .monospaced)
     static let listLineFontBold =
@@ -42,13 +40,11 @@ struct Style {
 
     // MARK: Footer
 
-
     static let footerFont = Font.system(size: 18, weight: .medium)
     static let footerHeight = 44.0
 
 
     // MARK: Directions
-
 
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"

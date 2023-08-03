@@ -8,14 +8,14 @@ private struct CalcNavigationBar: View {
         @EnvironmentObject private var change: Change
 
         let text: String
-        let destination: ViewType
+        let destination: AppLocation
         let edge: Edge
 
         var body: some View {
             Button(action: {
-                change.transitionEdge = edge
+                change.previousAppLocation = destination
                 withAnimation {
-                    change.currentViewType = destination
+                    change.appLocation = destination
                 }
             }) {
                 Text(text)

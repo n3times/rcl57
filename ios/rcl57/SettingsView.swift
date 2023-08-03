@@ -20,7 +20,7 @@ struct SettingsView: View {
                               title: "Settings",
                               right: Style.downArrow,
                               leftAction: nil,
-                              rightAction: { withAnimation { change.currentViewType = .calc } })
+                              rightAction: { withAnimation { change.appLocation = .calc } })
                 .background(Color.gray)
                 .frame(width: width)
 

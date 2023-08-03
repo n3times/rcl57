@@ -191,6 +191,7 @@ class Rcl57 {
         rcl57_clear(&rcl57)
     }
 
+
     // MARK: Logging
 
     /// Clears the log.

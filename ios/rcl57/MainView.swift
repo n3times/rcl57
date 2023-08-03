@@ -12,10 +12,12 @@ struct MainView: View {
 
     var body: some View {
         ZStack {
-            let viewType = change.currentViewType
+            let viewType = change.appLocation
             if viewType == .calc || viewType == .library || viewType == .manual || viewType == .settings {
                 CalcView()
-                    .transition(.move(edge: change.transitionEdge))
+                    .transition(.move(
+                        edge: change.previousAppLocation == .state ? .trailing : .leading
+                    ))
                     .zIndex(0)
             }
             switch viewType {

@@ -110,6 +110,12 @@ struct StateContentView: View {
     @State private var isOpEditInLrn: Bool
     @State private var isHpLrn: Bool
 
+    // Use a timer to refresh the registers in case they have change. This is necessary because
+    // those belong to the emulator and are not directly observed by SwifUI.
+    private let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
+
+    @State private var refreshCounter: Int64 = 0
+
     init() {
         let pc = Rcl57.shared.programPc
         self.pc = pc
@@ -124,21 +130,27 @@ struct StateContentView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                if change.isStepsInState {
+                if change.stateViewMode == .steps {
                     ForEach(0...49, id: \.self) {
                         ProgramLineView(index: $0, active: $0 == pc)
                     }
                 } else {
                     ForEach(0...7, id: \.self) {
-                        RegisterLineView(line: RegisterLineView.RegisterLine(index: $0,
-                                                                             reg: Rcl57.shared.getRegister(index: $0)))
+                        RegisterLineView(line: RegisterLineView.RegisterLine(
+                            index: $0,
+                            reg: Rcl57.shared.getRegister(index: $0)
+                        ))
                         .listRowSeparator(.hidden)
                     }
+                    .id(refreshCounter)
                 }
             }
             .background(Color.ivory)
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
+        }
+        .onReceive(timer) { _ in
+            refreshCounter += 1
         }
     }
 }

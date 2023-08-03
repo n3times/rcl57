@@ -11,6 +11,8 @@ class Prog57 : Hashable, CustomStringConvertible {
     /// The backing C struct for the program.
     private var prog57 = prog57_t()
 
+    lazy var library = Lib57.userLib
+
     /// The location where the program is stored.
     var url: URL? = nil
 
@@ -55,7 +57,7 @@ class Prog57 : Hashable, CustomStringConvertible {
     }
 
     /// For existing Library programs.
-    init?(url: URL, readOnly: Bool) {
+    init?(url: URL, readOnly: Bool, library: Lib57) {
         var text: String
         do {
             text = try String(contentsOf: url)
@@ -65,6 +67,7 @@ class Prog57 : Hashable, CustomStringConvertible {
         prog57_from_text(&prog57, text)
         self.isReadOnly = readOnly
         self.url = url
+        self.library = library
     }
 
     /// For imported programs.
@@ -92,7 +95,6 @@ class Prog57 : Hashable, CustomStringConvertible {
 
     // MARK: Loading of steps and registers into memory.
 
-
     func loadStepsIntoMemory() {
         prog57_load_steps_into_memory(&prog57, &Rcl57.shared.rcl57)
     }
@@ -103,7 +105,6 @@ class Prog57 : Hashable, CustomStringConvertible {
 
 
     // MARK: Saving of steps and registers from memory.
-
 
     func stepsNeedSaving() -> Bool {
         if isReadOnly { return false }
@@ -144,14 +145,12 @@ class Prog57 : Hashable, CustomStringConvertible {
 
     // MARK: CustomStringConvertible Conformance
 
-
     var description: String {
         return "Program \(name)"
     }
 
 
     // MARK: Hashable Conformance
-
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.name)

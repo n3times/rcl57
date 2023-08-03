@@ -13,8 +13,8 @@ struct ManualPageView: View {
             NavigationBar(left: Style.leftArrow,
                           title: title,
                           right: Style.downArrow,
-                          leftAction: { withAnimation { change.lastManualPageViewedData = nil } },
-                          rightAction: { withAnimation { change.currentViewType = .calc } })
+                          leftAction: { withAnimation { change.manualBookmark = nil } },
+                          rightAction: { withAnimation { change.appLocation = .calc } })
             .background(Color.deepGreen)
 
             if let helpURL {

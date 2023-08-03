@@ -51,7 +51,7 @@ private struct Footer: View {
                     change.loadedProgram = program
                 }
                 withAnimation {
-                    change.currentViewType = .calc
+                    change.appLocation = .calc
                 }
             }) {
                 let loadButtonText = program == change.loadedProgram ? "RELOAD" : "LOAD"
@@ -98,7 +98,7 @@ private struct Footer: View {
                         }
                         change.isUserLibExpanded = true
                         withAnimation {
-                            change.lastProgramViewed = nil
+                            change.libraryBookmark = nil
                         }
                     }
                 }
@@ -124,8 +124,8 @@ struct ProgramView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: program.name,
                               right: Style.downArrow,
-                              leftAction: { withAnimation { change.lastProgramViewed = nil } },
-                              rightAction: { withAnimation { change.currentViewType = .calc } })
+                              leftAction: { withAnimation { change.libraryBookmark = nil } },
+                              rightAction: { withAnimation { change.appLocation = .calc } })
                 .background(Color.deepBlue)
 
                 if program.help.isEmpty {

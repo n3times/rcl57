@@ -83,7 +83,7 @@ struct ProgramEditView: View {
                                     name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty &&
                                     help.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty {
                                     withAnimation {
-                                        change.isCreateProgramInState = false
+                                        change.stateLocation = .view
                                     }
                                 } else {
                                     isPresentingExit = true
@@ -99,7 +99,7 @@ struct ProgramEditView: View {
                                     nameIsFocused = false
                                     withAnimation {
                                         if context == .create {
-                                            change.isCreateProgramInState = false
+                                            change.stateLocation = .view
                                         } else if context == .imported {
                                             change.isImportProgramInLibrary = false
                                         } else {

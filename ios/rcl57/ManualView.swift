@@ -25,14 +25,14 @@ struct ManualContentView: View {
         List {
             Button("About") {
                 withAnimation {
-                    change.lastManualPageViewedData = aboutPageData
+                    change.manualBookmark = aboutPageData
                 }
             }
             Section("The Emulator") {
                 ForEach(emulatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.lastManualPageViewedData = pageData
+                            change.manualBookmark = pageData
                         }
                     }
                 }
@@ -41,7 +41,7 @@ struct ManualContentView: View {
                 ForEach(calculatorPagesData, id: \.self) { pageData in
                     Button(pageData.title) {
                         withAnimation {
-                            change.lastManualPageViewedData = pageData
+                            change.manualBookmark = pageData
                         }
                     }
                 }
@@ -58,20 +58,20 @@ struct ManualView: View {
 
     var body: some View {
         ZStack {
-            if change.lastManualPageViewedData == nil {
+            if change.manualBookmark == nil {
                 VStack(spacing: 0) {
                     NavigationBar(left: nil,
                                   title: "User Manual",
                                   right: Style.downArrow,
                                   leftAction: nil,
-                                  rightAction: { withAnimation { change.currentViewType = .calc } })
+                                  rightAction: { withAnimation { change.appLocation = .calc } })
                     .background(Color.deepGreen)
                     ManualContentView()
                 }
                 .transition(.move(edge: .leading))
             }
 
-            if let pageData = change.lastManualPageViewedData {
+            if let pageData = change.manualBookmark {
                 ManualPageView(title: pageData.title, resource: pageData.resource)
                     .transition(.move(edge: .trailing))
             }

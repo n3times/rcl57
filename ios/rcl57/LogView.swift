@@ -12,7 +12,7 @@ struct LogView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: "Log",
                               right: nil,
-                              leftAction: { withAnimation { change.currentViewType = .calc } },
+                              leftAction: { withAnimation { change.appLocation = .calc } },
                               rightAction: nil)
                 .background(Color.blackish)
 

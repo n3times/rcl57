@@ -49,13 +49,15 @@ private struct FooterView: View {
     @State private var isPresentingClear = false
     @State private var isPresentingSave = false
 
+    @Binding var refreshCounter: Int64
+
     var body: some View {
         let program = change.loadedProgram
         let programType = getProgramType(program: program)
         let stateNeedsSaving: Bool = {
             guard let program else { return false }
             if programType != .readWrite { return false }
-            if change.isStepsInState {
+            if change.stateViewMode == .steps {
                 return program.stepsNeedSaving()
             } else {
                 return program.registersNeedSaving()
@@ -85,17 +87,19 @@ private struct FooterView: View {
                 }
                 .font(Style.footerFont)
                 .frame(width: width / 3, height: Style.footerHeight)
-                .disabled(change.isStepsInState ? Rcl57.shared.getProgramLastIndex() == -1
+                .disabled(change.stateViewMode == .steps ? Rcl57.shared.getProgramLastIndex() == -1
                           : Rcl57.shared.getRegistersLastIndex() == -1)
                 .buttonStyle(.plain)
                 .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
-                    if change.isStepsInState {
+                    if change.stateViewMode == .steps {
                         Button("Clear Steps", role: .destructive) {
                             Rcl57.shared.clearProgram()
+                            refreshCounter += 1
                         }
                     } else {
                         Button("Clear Registers", role: .destructive) {
                             Rcl57.shared.clearRegisters()
+                            refreshCounter += 1
                         }
                     }
                 }
@@ -106,7 +110,7 @@ private struct FooterView: View {
                     } else {
                         change.isPreviewInEditProgram = false
                         withAnimation {
-                            change.isCreateProgramInState = true
+                            change.stateLocation = .create
                         }
                     }
                 }
@@ -116,15 +120,15 @@ private struct FooterView: View {
                 .disabled(programType == .readWrite && !stateNeedsSaving)
                 .confirmationDialog("Save?", isPresented: $isPresentingSave) {
                     if programType == .readWrite {
-                        Button("Save " + (change.isStepsInState ? "Steps" : "Registers"), role: .destructive) {
+                        Button("Save " + (change.stateViewMode == .steps ? "Steps" : "Registers"), role: .destructive) {
                             if let program {
-                                if change.isStepsInState {
+                                if change.stateViewMode == .steps {
                                     program.setStepsFromMemory()
                                 } else {
                                     program.setRegistersFromMemory()
                                 }
                                 _ = program.save(filename: program.name)
-                                change.forceUpdate()
+                                refreshCounter += 1
                             }
                         }
                     }
@@ -141,11 +145,15 @@ private struct FooterView: View {
 struct StateView: View {
     @EnvironmentObject private var change: Change
 
+    /// Used to refresh the view when the steps/registers are saved or cleared. This is necessary
+    /// because those belong to the emulator and are not directly observed by SwifUI.
+    @State private var refreshCounter: Int64 = 0
+
     var body: some View {
         let program = change.loadedProgram
         let viewTitle: String = {
             guard let program else {
-                return change.isStepsInState ? "Steps" : "Registers"
+                return change.stateViewMode == .steps ? "Steps" : "Registers"
             }
             if program.stepsNeedSaving() {
                 return "\(program.name)'"
@@ -156,11 +164,13 @@ struct StateView: View {
 
         ZStack {
             VStack(spacing: 0) {
-                NavigationBar(left: change.isStepsInState ? Style.yang : Style.ying,
+                NavigationBar(left: change.stateViewMode == .steps ? Style.yang : Style.ying,
                               title: viewTitle,
                               right: Style.rightArrow,
-                              leftAction: { change.isStepsInState.toggle() },
-                              rightAction: { withAnimation { change.currentViewType = .calc } })
+                              leftAction: {
+                                  change.stateViewMode = change.stateViewMode == .registers ? .steps : .registers
+                              },
+                              rightAction: { withAnimation { change.appLocation = .calc } })
                 .background(Color.blackish)
 
                 if program != nil {
@@ -168,10 +178,11 @@ struct StateView: View {
                 }
 
                 StateContentView()
-                FooterView()
+                FooterView(refreshCounter: $refreshCounter)
             }
+            .id(refreshCounter)
 
-            if change.isCreateProgramInState {
+            if change.stateLocation == .create {
                 ProgramEditView()
                     .transition(.move(edge: .bottom))
                     .zIndex(1)

@@ -45,7 +45,7 @@ class Lib57 {
                     continue
                 }
                 if programURL.path.hasSuffix(Prog57.programFileExtension) {
-                    if let program = Prog57(url: programURL, readOnly: readonly) {
+                    if let program = Prog57(url: programURL, readOnly: readonly, library: self) {
                         programs.append(program)
                     }
                 }
