@@ -57,7 +57,7 @@ private struct FooterView: View {
                                 if let url = try? result.get().first {
                                     if url.startAccessingSecurityScopedResource() {
                                         LibraryView.importText = try String(contentsOf: url)
-                                        change.isImportProgramInLibrary = true
+                                        change.isImportingProgram = true
                                         do { url.stopAccessingSecurityScopedResource() }
                                     } else {
                                         // TODO: Handle denied access
@@ -89,78 +89,74 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            if change.libraryBookmark == nil {
-                GeometryReader { proxy in
-                    let width = proxy.size.width
-                    VStack(spacing: 0) {
-                        NavigationBar(left: nil,
-                                      title: "Library",
-                                      right: Style.downArrow,
-                                      leftAction: nil,
-                                      rightAction: { withAnimation {change.appLocation = .calc} })
-                        .background(Color.deepBlue)
-                        .frame(width: width)
+            if let program = change.libraryBookmark {
+                // Go directly to the Program View, if that was the last page visited.
+                ProgramView(program: program)
+                    .transition(.move(edge: .trailing))
+            } else {
+                VStack(spacing: 0) {
+                    NavigationBar(left: nil,
+                                  title: "Library",
+                                  right: Style.downArrow,
+                                  leftAction: nil,
+                                  rightAction: { withAnimation {change.appLocation = .calc} })
+                    .background(Color.deepBlue)
 
-                        List {
-                            DisclosureGroup(isExpanded: $change.isSamplesLibExpanded) {
-                                ForEach(samplesLibNode.children) { item in
-                                    Button(item.name) {
-                                        withAnimation {
-                                            change.libraryBookmark = item.program
-                                        }
+                    List {
+                        DisclosureGroup(isExpanded: $change.isSamplesLibExpanded) {
+                            ForEach(samplesLibNode.children) { item in
+                                Button(item.name) {
+                                    withAnimation {
+                                        change.libraryBookmark = item.program
                                     }
-                                    .offset(x: 15)
                                 }
-                            } label: {
-                                Text(samplesLibNode.name)
-                                    .font(Style.listLineFontBold)
-                                    .foregroundColor(.blackish)
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        withAnimation {
-                                            change.isSamplesLibExpanded.toggle()
-                                        }
-                                    }
+                                .offset(x: 15)
                             }
-                            DisclosureGroup(isExpanded: $change.isUserLibExpanded) {
-                                ForEach(userLibNode.children) { item in
-                                    Button(item.name) {
-                                        withAnimation {
-                                            change.libraryBookmark = item.program
-                                        }
+                        } label: {
+                            Text(samplesLibNode.name)
+                                .font(Style.listLineFontBold)
+                                .foregroundColor(.blackish)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    withAnimation {
+                                        change.isSamplesLibExpanded.toggle()
                                     }
-                                    .offset(x: 15)
                                 }
-                            } label: {
-                                Text(userLibNode.name)
-                                    .font(Style.listLineFontBold)
-                                    .foregroundColor(.blackish)
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        withAnimation {
-                                            change.isUserLibExpanded.toggle()
-                                        }
-                                    }
-                            }
                         }
-                        .listStyle(PlainListStyle())
-
-                        FooterView()
-                            .frame(height: Style.footerHeight)
+                        DisclosureGroup(isExpanded: $change.isUserLibExpanded) {
+                            ForEach(userLibNode.children) { item in
+                                Button(item.name) {
+                                    withAnimation {
+                                        change.libraryBookmark = item.program
+                                    }
+                                }
+                                .offset(x: 15)
+                            }
+                        } label: {
+                            Text(userLibNode.name)
+                                .font(Style.listLineFontBold)
+                                .foregroundColor(.blackish)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    withAnimation {
+                                        change.isUserLibExpanded.toggle()
+                                    }
+                                }
+                        }
                     }
+                    .listStyle(PlainListStyle())
+
+                    FooterView()
+                        .frame(height: Style.footerHeight)
                 }
                 .background(Color.white)
                 .transition(.move(edge: .leading))
-            }
 
-            if let program = change.libraryBookmark {
-                ProgramView(program: program)
-                    .transition(.move(edge: .trailing))
-            }
-
-            if change.isImportProgramInLibrary {
-                ProgramEditView(rawText: LibraryView.importText)
-                    .transition(.move(edge: .bottom))
+                if change.isImportingProgram {
+                    ProgramEditView(rawText: LibraryView.importText)
+                        .transition(.move(edge: .bottom))
+                        .zIndex(1)
+                }
             }
         }
         .foregroundColor(Color.black)

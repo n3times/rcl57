@@ -31,7 +31,7 @@ private struct LogLineView: View {
         self.foregroundColorError = Color(red: 0.5, green: 0.0, blue: 0.0)
     }
 
-    private func color(entry: LogEntry) -> Color {
+    private func color(forEntry entry: LogEntry) -> Color {
         let isError = (entry.flags & LOG57_ERROR_FLAG) != 0
 
         return isError ? foregroundColorError: foregroundColor
@@ -41,7 +41,7 @@ private struct LogLineView: View {
         HStack {
             Text(line.numberLogEntry.message)
                 .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-                .foregroundColor(color(entry: line.numberLogEntry))
+                .foregroundColor(color(forEntry: line.numberLogEntry))
             HStack {
                 Spacer(minLength: 25)
                 Text(line.opLogEntry.message)
@@ -98,11 +98,11 @@ struct LogContentView: View {
         if lastLoggedCount > 0 {
             var numberEntry = lines.last?.numberLogEntry
             var opEntry = lines.last?.opLogEntry
-            let type = Rcl57.shared.logEntry(index: lastLoggedCount).type
+            let type = Rcl57.shared.logEntry(atIndex: lastLoggedCount).type
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = Rcl57.shared.logEntry(index: lastLoggedCount)
+                opEntry = Rcl57.shared.logEntry(atIndex: lastLoggedCount)
             } else {
-                numberEntry = Rcl57.shared.logEntry(index: lastLoggedCount)
+                numberEntry = Rcl57.shared.logEntry(atIndex: lastLoggedCount)
             }
             lines.removeLast()
             if let numberEntry, let opEntry {
@@ -114,7 +114,7 @@ struct LogContentView: View {
         if newLoggedCount > lastLoggedCount {
             let start = max(lastLoggedCount+1, newLoggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
             for i in start...newLoggedCount {
-                let entry = Rcl57.shared.logEntry(index: i)
+                let entry = Rcl57.shared.logEntry(atIndex: i)
                 let type = entry.type
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
                     let numberEntry = lines.last?.numberLogEntry

@@ -16,9 +16,23 @@ struct ProgramEditView: View {
     @State private var name: String
     @State private var help: String
 
-    var originalProgram: Prog57? = nil
+    private var originalProgram: Prog57? = nil
 
-    var context: ProgramEditContext = .create
+    private var context: ProgramEditContext
+
+    private var program: Prog57 {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
+        if context == .create {
+            return Prog57(name: trimmedName, description: trimmedHelp)
+        } else {
+            let program = Prog57(name: trimmedName, description: trimmedHelp)
+            if let rawState = originalProgram?.rawState {
+                program.rawState = rawState
+            }
+            return program
+        }
+    }
 
     @FocusState private var nameIsFocused: Bool
 
@@ -30,6 +44,7 @@ struct ProgramEditView: View {
     }
 
     init() {
+        self.context = .create
         name = ""
         help = ""
     }
@@ -49,30 +64,19 @@ struct ProgramEditView: View {
         }
     }
 
-    func getProgram() -> Prog57 {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
-        if context == .create {
-            return Prog57(name: trimmedName, description: trimmedHelp)
-        } else {
-            let program = Prog57(name: trimmedName, description: trimmedHelp)
-            if let rawState = originalProgram?.rawState {
-                program.rawState = rawState
-            }
-            return program
-        }
-    }
-
     var body: some View {
         UITextView.appearance().backgroundColor = .clear
 
         return ZStack {
-            if change.isPreviewInEditProgram {
-                ProgramSaveView(originalProgram: originalProgram, program: getProgram(), context: context)
-                    .transition(.move(edge: .trailing))
+            if change.isSavingProgram {
+                ProgramSaveView(originalProgram: originalProgram,
+                                program: self.program,
+                                context: context
+                )
+                .transition(.move(edge: .trailing))
             }
 
-            if !change.isPreviewInEditProgram {
+            if !change.isSavingProgram {
                 GeometryReader { proxy in
                     let width = proxy.size.width
 
@@ -83,7 +87,7 @@ struct ProgramEditView: View {
                                     name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty &&
                                     help.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty {
                                     withAnimation {
-                                        change.stateLocation = .view
+                                        change.stateLocation = .viewState
                                     }
                                 } else {
                                     isPresentingExit = true
@@ -98,12 +102,13 @@ struct ProgramEditView: View {
                                 Button("Exit", role: .destructive) {
                                     nameIsFocused = false
                                     withAnimation {
-                                        if context == .create {
-                                            change.stateLocation = .view
-                                        } else if context == .imported {
-                                            change.isImportProgramInLibrary = false
-                                        } else {
-                                            change.isEditInProgramView = false
+                                        switch context {
+                                        case .create:
+                                            change.stateLocation = .viewState
+                                        case .imported:
+                                            change.isImportingProgram = false
+                                        case .edit:
+                                            change.isEditingProgram = false
                                         }
                                     }
                                 }
@@ -114,7 +119,7 @@ struct ProgramEditView: View {
                             Button(action: {
                                 nameIsFocused = false
                                 withAnimation {
-                                    change.isPreviewInEditProgram = true
+                                    change.isSavingProgram = true
                                 }
                             }) {
                                 Text(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty

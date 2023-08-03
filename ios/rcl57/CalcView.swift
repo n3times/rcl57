@@ -7,18 +7,17 @@ private struct CalcNavigationBar: View {
     struct CalcNavigationButton: View {
         @EnvironmentObject private var change: Change
 
-        let text: String
+        let title: String
         let destination: AppLocation
-        let edge: Edge
 
         var body: some View {
             Button(action: {
-                change.previousAppLocation = destination
+                change.destinationAppLocation = destination
                 withAnimation {
                     change.appLocation = destination
                 }
             }) {
-                Text(text)
+                Text(title)
                     .font(Style.directionsFontLarge)
                     .frame(maxWidth: .infinity, maxHeight: Style.headerHeight)
                     .offset(y: -5)
@@ -29,15 +28,15 @@ private struct CalcNavigationBar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            CalcNavigationButton(text: Style.leftArrow, destination: .state, edge: .trailing)
+            CalcNavigationButton(title: Style.leftArrow, destination: .state)
                 .foregroundColor(.lightGray)
-            CalcNavigationButton(text: Style.square, destination: .manual, edge: .top)
+            CalcNavigationButton(title: Style.square, destination: .manual)
                 .foregroundColor(.deepishGreen)
-            CalcNavigationButton(text: Style.square, destination: .settings, edge: .top)
+            CalcNavigationButton(title: Style.square, destination: .settings)
                 .foregroundColor(.lightGray)
-            CalcNavigationButton(text: Style.square, destination: .library, edge: .top)
+            CalcNavigationButton(title: Style.square, destination: .library)
                 .foregroundColor(.deepishBlue)
-            CalcNavigationButton(text: Style.rightArrow, destination: .log, edge: .leading)
+            CalcNavigationButton(title: Style.rightArrow, destination: .log)
                 .foregroundColor(.lightGray)
         }
         .font(Style.directionsFont)

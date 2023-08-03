@@ -8,9 +8,20 @@ private struct FooterView: View {
     let context: ProgramEditContext
 
     var body: some View {
+        let confirmChangeString: String = {
+            switch context {
+            case .create:
+                return "CONFIRM CREATE"
+            case .edit:
+                return "CONFIRM EDIT"
+            case .imported:
+                return "CONFIRM IMPORT"
+            }
+        }()
+
         HStack(spacing: 0) {
             Spacer()
-            Button(context == .edit ? "CONFIRM EDIT" : context == .imported ? "CONFIRM IMPORT" : "CONFIRM CREATE") {
+            Button(confirmChangeString) {
                 var existingProgram = Lib57.userLib.programByName(program.name)
                 if existingProgram != nil {
                     if context == .edit && originalProgram?.name == existingProgram?.name {
@@ -26,32 +37,35 @@ private struct FooterView: View {
                     }
                     _ = Lib57.userLib.deleteProgram(existingProgram)
                 }
-                if context == .create || context == .imported {
+                switch context {
+                case .create:
                     _ = Lib57.userLib.addProgram(program)
-                } else {
+                    withAnimation {
+                        change.loadedProgram = program
+                        change.stateLocation = .viewState
+                        change.libraryBookmark = program
+                    }
+                case .edit:
                     if let originalProgram {
                         originalProgram.name = program.name
                         originalProgram.help = program.help
                     }
-                }
-                _ = program.save(filename: program.name)
-                withAnimation {
-                    if context == .create {
-                        change.loadedProgram = program
-                        change.stateLocation = .view
-                        change.libraryBookmark = program
-                    } else if context == .imported {
-                        change.isImportProgramInLibrary = false
-                        change.isPreviewInEditProgram = false
-                        change.isUserLibExpanded = true
-                    } else {
-                        change.isEditInProgramView = false
+                    withAnimation {
+                        change.isEditingProgram = false
                         change.libraryBookmark = program
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            change.isPreviewInEditProgram = false
+                            change.isSavingProgram = false
                         }
                     }
+                case .imported:
+                    _ = Lib57.userLib.addProgram(program)
+                    withAnimation {
+                        change.isImportingProgram = false
+                        change.isSavingProgram = false
+                        change.isUserLibExpanded = true
+                    }
                 }
+                _ = program.save(filename: program.name)
             }
             .font(Style.footerFont)
             .frame(width: 200, height: Style.footerHeight)
@@ -92,7 +106,7 @@ struct ProgramSaveView: View {
             NavigationBar(left: Style.leftArrow,
                           title: program.name + (overrides() ? "'" : ""),
                           right: nil,
-                          leftAction: { withAnimation { change.isPreviewInEditProgram = false } },
+                          leftAction: { withAnimation { change.isSavingProgram = false } },
                           rightAction: nil)
             .background(Color.deeperBlue)
 

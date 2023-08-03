@@ -11,8 +11,10 @@ private struct ActivityViewController: UIViewControllerRepresentable {
                                  applicationActivities: applicationActivities)
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController,
-                                context: UIViewControllerRepresentableContext<ActivityViewController>) {
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: UIViewControllerRepresentableContext<ActivityViewController>
+    ) {
         // Nothing to update.
     }
 }
@@ -73,9 +75,9 @@ private struct Footer: View {
                         Text("Delete")
                     }
                     Button(action: {
-                        change.isPreviewInEditProgram = false
+                        change.isSavingProgram = false
                         withAnimation {
-                            change.isEditInProgramView = true
+                            change.isEditingProgram = true
                         }
                     }) {
                         Text("Edit")
@@ -145,7 +147,7 @@ struct ProgramView: View {
             .background(Color.deepBlue)
             .foregroundColor(.ivory)
 
-            if change.isEditInProgramView {
+            if change.isEditingProgram {
                 ProgramEditView(program: program)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)

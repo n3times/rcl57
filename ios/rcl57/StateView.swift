@@ -6,7 +6,7 @@ private enum ProgramType {
     case readWrite
 }
 
-private func getProgramType(program: Prog57?) -> ProgramType {
+private func programType(forProgram program: Prog57?) -> ProgramType {
     if let program {
         return program.isReadOnly ? .readOnly : .readWrite
     } else {
@@ -19,7 +19,7 @@ private struct LibInfoView: View {
 
     var body: some View {
         let program = change.loadedProgram
-        let programType = getProgramType(program: program)
+        let programType = programType(forProgram: program)
 
         GeometryReader { proxy in
             let width = proxy.size.width
@@ -53,7 +53,7 @@ private struct FooterView: View {
 
     var body: some View {
         let program = change.loadedProgram
-        let programType = getProgramType(program: program)
+        let programType = programType(forProgram: program)
         let stateNeedsSaving: Bool = {
             guard let program else { return false }
             if programType != .readWrite { return false }
@@ -87,8 +87,8 @@ private struct FooterView: View {
                 }
                 .font(Style.footerFont)
                 .frame(width: width / 3, height: Style.footerHeight)
-                .disabled(change.stateViewMode == .steps ? Rcl57.shared.getProgramLastIndex() == -1
-                          : Rcl57.shared.getRegistersLastIndex() == -1)
+                .disabled(change.stateViewMode == .steps ? Rcl57.shared.programLastIndex == -1
+                          : Rcl57.shared.registersLastIndex == -1)
                 .buttonStyle(.plain)
                 .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                     if change.stateViewMode == .steps {
@@ -108,9 +108,9 @@ private struct FooterView: View {
                     if programType == .readWrite {
                         isPresentingSave = true
                     } else {
-                        change.isPreviewInEditProgram = false
+                        change.isSavingProgram = false
                         withAnimation {
-                            change.stateLocation = .create
+                            change.stateLocation = .createProgram
                         }
                     }
                 }
@@ -177,12 +177,17 @@ struct StateView: View {
                     LibInfoView()
                 }
 
-                StateContentView()
+                switch change.stateViewMode {
+                case .registers:
+                    RegistersView()
+                case .steps:
+                    StepsView()
+                }
                 FooterView(refreshCounter: $refreshCounter)
             }
             .id(refreshCounter)
 
-            if change.stateLocation == .create {
+            if change.stateLocation == .createProgram {
                 ProgramEditView()
                     .transition(.move(edge: .bottom))
                     .zIndex(1)

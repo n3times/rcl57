@@ -97,7 +97,7 @@ struct DisplayView: View {
     /// a dot. The string will be right-justified within the display.
     let displayString: String
 
-    private static func getDisplayPathRect() -> CGRect {
+    private static var displayPathRect: CGRect {
         let width = Double(maxLedCount - 1) * interLedX + ledWidth
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
     }
@@ -105,8 +105,8 @@ struct DisplayView: View {
 
     // MARK: Single-Segment Path
 
-    // Returns a rectangle path with the corners slightly clipped.
-    private func ledStraightSegmentPath(rect: CGRect) -> Path {
+    // Returns a rectangular path with the corners slightly clipped.
+    private func straightLedSegmentPath(rect: CGRect) -> Path {
         var path = Path()
         let d = 1.5
         path.move(to: CGPoint(x: rect.minX, y: rect.minY + d))
@@ -121,7 +121,7 @@ struct DisplayView: View {
         return path
     }
 
-    private func ledAngledSegmentPath(points: [CGPoint]) -> Path {
+    private func angledLedSegmentPath(points: [CGPoint]) -> Path {
         var path = Path()
         path.move(to: points[0])
         for i in 1..<points.count {
@@ -139,10 +139,12 @@ struct DisplayView: View {
 
     // MARK: Single-LED Path
 
-    private func getLedPath(c: Character,
-                            startX: CGFloat,
-                            hasDot: Bool,
-                            combineSegments:Bool) -> Path? {
+    private func ledPath(
+        forCharacter c: Character,
+        startX: CGFloat,
+        hasDot: Bool,
+        combineSegments:Bool) -> Path?
+    {
         let ampersandAsciiValue: UInt8 = 64
         let c = c.asciiValue != nil ? c : "@"
         let segments = leds57_get_segments(c.asciiValue ?? ampersandAsciiValue)
@@ -161,10 +163,10 @@ struct DisplayView: View {
                     : LedSegmentData.combinedData
                     switch combinedData[pair] {
                     case .straight(let rect):
-                        let segmentPath = ledStraightSegmentPath(rect: rect)
+                        let segmentPath = straightLedSegmentPath(rect: rect)
                         path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
                     case .angled(let points):
-                        let segmentPath = ledAngledSegmentPath(points: points)
+                        let segmentPath = angledLedSegmentPath(points: points)
                         path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
                     default:
                         break
@@ -182,9 +184,9 @@ struct DisplayView: View {
                 let segmentPath = {
                     switch LedSegmentData.segmentData[i] {
                     case .straight(let rect):
-                        return ledStraightSegmentPath(rect: rect)
+                        return straightLedSegmentPath(rect: rect)
                     case .angled(let points):
-                        return ledAngledSegmentPath(points: points)
+                        return angledLedSegmentPath(points: points)
                     }
                 }()
                 path.addPath(segmentPath.offsetBy(dx: startX, dy: 0))
@@ -207,7 +209,9 @@ struct DisplayView: View {
 
     // MARK: All-LEDs Path
 
-    private func getDisplayPath(displayString: String, boundingRect: CGRect) -> some Shape {
+    private func displayPath(
+        forDisplayString displayString: String, boundingRect: CGRect
+    ) -> some Shape {
         var path = Path()
         let displayCharacters = Array(displayString)
 
@@ -227,10 +231,10 @@ struct DisplayView: View {
             // Right justify.
             let position = index + (DisplayView.maxLedCount - ledCount)
             let hasDot = i < displayCharacters.count - 1 && displayCharacters[i + 1] == "."
-            let ledPath = getLedPath(c: displayCharacters[i],
-                                     startX: DisplayView.interLedX * CGFloat(position),
-                                     hasDot: hasDot,
-                                     combineSegments: true)
+            let ledPath = ledPath(forCharacter: displayCharacters[i],
+                                  startX: DisplayView.interLedX * CGFloat(position),
+                                  hasDot: hasDot,
+                                  combineSegments: true)
             if let ledPath { path.addPath(ledPath) }
             index += 1
         }
@@ -247,13 +251,13 @@ struct DisplayView: View {
     }
 
     var body: some View {
-        let displayRect = DisplayView.getDisplayPathRect()
+        let displayRect = DisplayView.displayPathRect
 
         GeometryReader { proxy in
             let width = proxy.size.width
             let height = proxy.size.height
             let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
-            getDisplayPath(displayString: displayString, boundingRect: boundingRect)
+            displayPath(forDisplayString: displayString, boundingRect: boundingRect)
                 .offset(x: (boundingRect.width - displayRect.width) / 2, y: (boundingRect.height - displayRect.height) / 2)
                 .scale(boundingRect.width / displayRect.width)
                 .fill(DisplayView.ledColor)

@@ -6,7 +6,7 @@ enum AppLocation {
 }
 
 enum StateLocation {
-    case view, create
+    case viewState, createProgram
 }
 
 enum StateViewMode {
@@ -21,9 +21,10 @@ class Change: ObservableObject {
 
     // We run the emulator by short bursts. Each burst emulates running the actual TI-57 for a
     // short period of time. In practice the emulator takes much less time to execute the burst.
-
     private static let burstMilliseconds = 20
+
     private var timerCancellable: AnyCancellable?
+
     private let timer = Timer.publish(
         every: Double(burstMilliseconds) / 1000,
         on: .main,
@@ -33,10 +34,13 @@ class Change: ObservableObject {
 
     // MARK: Emulator state
 
-    // The display and the log timestamp get updated once per burst, since SwiftUI can't observe
-    // directly changes to the emulator state.
+    // Note that SwiftUI can't observe directly changes to the C emulator state. The relevant
+    // state gets updated after every burst.
 
+    // Updated once per burst.
     @Published var displayString = Rcl57.shared.display
+
+    // Updated once per burst.
     @Published var logTimestamp = Rcl57.shared.logTimestamp
 
 
@@ -45,6 +49,7 @@ class Change: ObservableObject {
     // Persisted across launches.
 
     private let loadedProgramKey = "LOADED_PROGRAM_KEY"
+
     private let loadedLibraryKey = "LOADED_LIBRARY_KEY"
 
     @Published var loadedProgram: Prog57? {
@@ -55,24 +60,28 @@ class Change: ObservableObject {
     }
 
 
-    // MARK: Navigation
+    // MARK: General Navigation
 
+    /// The current app location.
     @Published var appLocation: AppLocation = .calc
-    @Published var previousAppLocation: AppLocation = .calc
 
+    /// Used to handle animations: state <-> calc <-> log.
+    @Published var destinationAppLocation: AppLocation = .calc
 
-    // MARK: Bookmarks
-
-    // Used for quick access to a page/view.
-
+    /// Used to access the manual page that was last viewed.
     @Published var manualBookmark: ManualContentView.PageData? = nil
+
+    /// Used to access the program that was last viewed.
     @Published var libraryBookmark: Prog57? = nil
 
 
     // MARK: State View
 
+    /// Whether the `StateView` should show the steps or the registers.
     @Published var stateViewMode: StateViewMode = .steps
-    @Published var stateLocation: StateLocation = .view
+
+    /// Whether the `StateView` should show the steps/registers or the create Program overlay.
+    @Published var stateLocation: StateLocation = .viewState
 
 
     // MARK: Library View
@@ -83,9 +92,9 @@ class Change: ObservableObject {
 
     // MARK: Program View
 
-    @Published var isPreviewInEditProgram = false
-    @Published var isEditInProgramView = false
-    @Published var isImportProgramInLibrary = false
+    @Published var isSavingProgram = false
+    @Published var isEditingProgram = false
+    @Published var isImportingProgram = false
 
 
     init() {

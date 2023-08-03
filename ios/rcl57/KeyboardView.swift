@@ -60,7 +60,7 @@ struct KeyboardView: View {
         }
     }
 
-    private func getTrigOffsetY(units: ti57_trig_t, scaleFactor: Double) -> Double {
+    private func trigOffsetY(forUnits units: ti57_trig_t, scaleFactor: Double) -> Double {
         switch units {
         case TI57_DEG: return 8.5 * scaleFactor
         case TI57_RAD: return 71 * scaleFactor
@@ -157,7 +157,7 @@ struct KeyboardView: View {
                     .fill(Color.brown)
                     .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                     .offset(x: 174 * scaleFactorH,
-                            y: getTrigOffsetY(units: Rcl57.shared.trigUnits, scaleFactor: scaleFactorV))
+                            y: trigOffsetY(forUnits: Rcl57.shared.trigUnits, scaleFactor: scaleFactorV))
             }
         }
     }

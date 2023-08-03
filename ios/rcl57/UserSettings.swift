@@ -23,7 +23,7 @@ class UserSettings: ObservableObject {
         UserDefaults.standard.set(value ? "Y" : "N", forKey: key)
     }
 
-    private static func getBoolValue(key: String, defaultValue: Bool) -> Bool {
+    private static func boolValue(forKey key: String, defaultValue: Bool) -> Bool {
         let value = UserDefaults.standard.string(forKey: key)
         if value == "Y" { return true }
         if value == "N" { return false }
@@ -56,9 +56,9 @@ class UserSettings: ObservableObject {
 
     init() {
         // Get the emulator option values from UserDefaults.
-        hasTurboSpeed = UserSettings.getBoolValue(key: UserSettings.isTurboKey, defaultValue: true)
-        hasAlphaDisplay = UserSettings.getBoolValue(key: UserSettings.isAlphaKey, defaultValue: true)
-        hasHpLrnMode = UserSettings.getBoolValue(key: UserSettings.isHpKey, defaultValue: true)
+        hasTurboSpeed = UserSettings.boolValue(forKey: UserSettings.isTurboKey, defaultValue: true)
+        hasAlphaDisplay = UserSettings.boolValue(forKey: UserSettings.isAlphaKey, defaultValue: true)
+        hasHpLrnMode = UserSettings.boolValue(forKey: UserSettings.isHpKey, defaultValue: true)
 
         // Inform the emulator.
         // The 2x speedup in the standard case makes the emulator more enjoyable to use.

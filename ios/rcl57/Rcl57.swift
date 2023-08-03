@@ -243,7 +243,7 @@ class Rcl57 {
      *
      * 'index' should be between max(1, logged_count - LOG57_MAX_ENTRY_COUNT + 1) and logged_count.
      */
-    func logEntry(index: Int) -> LogEntry {
+    func logEntry(atIndex index: Int) -> LogEntry {
         LogEntry(entry: log57_get_entry(&rcl57.ti57.log, index))
     }
 
@@ -257,7 +257,7 @@ class Rcl57 {
         rcl57.ti57.log.timestamp;
     }
 
-    func getRegister(index: Int) -> String {
+    func register(atIndex index: Int) -> String {
         let reg = ti57_get_user_reg(&rcl57.ti57, Int32(index))
         let str = utils57_user_reg_to_str(reg, false, 9)
         if let str {
@@ -267,7 +267,7 @@ class Rcl57 {
         }
     }
 
-    func getProgramOp(index: Int, isAlpha: Bool) -> String {
+    func programOp(atIndex index: Int, isAlpha: Bool) -> String {
         guard let op = ti57_get_program_op(&rcl57.ti57, Int32(index)) else { return "ERR" }
 
         let isInv = op.pointee.inv
@@ -287,13 +287,13 @@ class Rcl57 {
     }
 
     /// Returns the index of the last non-zero step, or -1 if none.
-    func getProgramLastIndex() -> Int {
+    var programLastIndex: Int {
         return Int(ti57_get_program_last_index(&rcl57.ti57))
     }
 
     /// Returns the index of the last non-zero user register, or -1 if none.
-    func getRegistersLastIndex() -> Int {
-        return Int(ti57_get_registers_last_index(&rcl57.ti57))
+    var registersLastIndex: Int {
+        Int(ti57_get_registers_last_index(&rcl57.ti57))
     }
 
     /**

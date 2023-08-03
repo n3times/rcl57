@@ -14,20 +14,15 @@ struct HelpView: UIViewRepresentable {
     }
 
     init(helpURL: URL) {
-        let helpString: String
-        do {
-            helpString = try String(contentsOf: helpURL)
-        } catch {
-            helpString = "Error"
-        }
-        self.init(helpString: helpString)
+        let helpString = try? String(contentsOf: helpURL)
+        self.init(helpString: helpString ?? "Error")
     }
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         let htmlString = Help57.hlpToHTML(helpString: helpString)
         webView
-            .loadHTMLString(HelpView.headerString + htmlString, baseURL: Bundle.main.bundleURL)
+            .loadHTMLString("\(HelpView.headerString)\(htmlString)", baseURL: Bundle.main.bundleURL)
         return webView
     }
 
