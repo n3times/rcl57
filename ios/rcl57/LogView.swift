@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Displays the operations keyed in by the user, and the results.
 struct LogView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     @State private var isPresentingClear = false
 
@@ -12,7 +12,7 @@ struct LogView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: "Log",
                               right: nil,
-                              leftAction: { withAnimation { change.appLocation = .calc } },
+                              leftAction: { withAnimation { appState.appLocation = .calc } },
                               rightAction: nil)
                 .background(Color.blackish)
 
@@ -32,8 +32,8 @@ struct LogView: View {
                         isPresentingClear = true
                     }) {
                         Text("CLEAR")
-                            .font(Style.footerFont)
-                            .frame(width: proxy.size.width * 2 / 3, height: Style.footerHeight)
+                            .font(Style.toolbarFont)
+                            .frame(width: proxy.size.width * 2 / 3, height: Style.toolbarHeight)
                             .contentShape(Rectangle())
                     }
                     .disabled(Rcl57.shared.loggedCount == 0)

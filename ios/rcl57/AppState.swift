@@ -1,26 +1,24 @@
 import SwiftUI;
 import Combine
 
+/// The different parts of the app the user can navigate to.
 enum AppLocation {
     case calc, log, state, settings, library, manual
 }
 
-enum StateLocation {
-    case viewState, createProgram
-}
-
+/// The different type of data the `StateView` can display.
 enum StateViewMode {
     case steps, registers
 }
 
-/// Properties that determine the state of the different views. They are monitored by SwiftUI and
-/// result in the Views being updated as needed.
-class Change: ObservableObject {
+/// The main properties that determine the state of the different views. They are monitored by
+/// SwiftUI and changes result in the Views being updated as needed.
+class AppState: ObservableObject {
 
-    // MARK: Timer
+    // MARK: Emulator timer
 
-    // We run the emulator by short bursts. Each burst emulates running the actual TI-57 for a
-    // short period of time. In practice the emulator takes much less time to execute the burst.
+    /// We run the emulator by short bursts. Each burst emulates running the actual TI-57 for a
+    /// short period of time. In practice the emulator takes much less time to execute the burst.
     private static let burstMilliseconds = 20
 
     private var timerCancellable: AnyCancellable?
@@ -37,10 +35,10 @@ class Change: ObservableObject {
     // Note that SwiftUI can't observe directly changes to the C emulator state. The relevant
     // state gets updated after every burst.
 
-    // Updated once per burst.
+    /// Updated once per burst.
     @Published var displayString = Rcl57.shared.display
 
-    // Updated once per burst.
+    /// Updated once per burst.
     @Published var logTimestamp = Rcl57.shared.logTimestamp
 
 
@@ -69,7 +67,7 @@ class Change: ObservableObject {
     @Published var destinationAppLocation: AppLocation = .calc
 
     /// Used to access the manual page that was last viewed.
-    @Published var manualBookmark: ManualContentView.PageData? = nil
+    @Published var manualBookmark: ManualView.PageData? = nil
 
     /// Used to access the program that was last viewed.
     @Published var libraryBookmark: Prog57? = nil
@@ -80,21 +78,23 @@ class Change: ObservableObject {
     /// Whether the `StateView` should show the steps or the registers.
     @Published var stateViewMode: StateViewMode = .steps
 
-    /// Whether the `StateView` should show the steps/registers or the create Program overlay.
-    @Published var stateLocation: StateLocation = .viewState
-
 
     // MARK: Library View
 
+    /// Whether the list of sample programs is expanded.
     @Published var isSamplesLibExpanded = false
+
+    /// Whether the list of user programs is expanded.
     @Published var isUserLibExpanded = false
 
 
     // MARK: Program View
 
-    @Published var isSavingProgram = false
-    @Published var isEditingProgram = false
-    @Published var isImportingProgram = false
+    /// Whether the user is in Program Editing screen.
+    @Published var isProgramEditing = false
+
+    /// Whether the user is in Program Saving screen.
+    @Published var isProgramSaving = false
 
 
     init() {
@@ -108,7 +108,7 @@ class Change: ObservableObject {
 
         self.timerCancellable = timer
             .sink { _ in
-                _ = Rcl57.shared.advance(milliseconds: Int32(Change.burstMilliseconds))
+                _ = Rcl57.shared.advance(milliseconds: Int32(AppState.burstMilliseconds))
                 if self.displayString != Rcl57.shared.display {
                     self.displayString = Rcl57.shared.display
                 }

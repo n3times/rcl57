@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// Used for exporting RCL-57 programs.
 private struct ActivityViewController: UIViewControllerRepresentable {
     var activityItems: [Any]
     var applicationActivities: [UIActivity]? = nil
@@ -20,8 +21,8 @@ private struct ActivityViewController: UIViewControllerRepresentable {
 }
 
 /// Lets the user delete, edit and share the program.
-private struct Footer: View {
-    @EnvironmentObject private var change: Change
+private struct ProgramViewToolbar: View {
+    @EnvironmentObject private var appState: AppState
 
     @State private var isPresentingDelete = false
     @State private var isPresentingShare = false
@@ -37,7 +38,7 @@ private struct Footer: View {
                 Image(systemName: "square.and.arrow.up")
                     .font(Style.directionsFont)
                     .offset(x: 15)
-                    .frame(width: width / 5, height: Style.footerHeight, alignment: .leading)
+                    .frame(width: width / 5, height: Style.toolbarHeight, alignment: .leading)
                     .contentShape(Rectangle())
             }
             .sheet(isPresented: $isPresentingShare) {
@@ -50,23 +51,23 @@ private struct Footer: View {
                 program.loadStepsIntoMemory()
                 program.loadRegistersIntoMemory()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    change.loadedProgram = program
+                    appState.loadedProgram = program
                 }
                 withAnimation {
-                    change.appLocation = .calc
+                    appState.appLocation = .calc
                 }
             }) {
-                let loadButtonText = program == change.loadedProgram ? "RELOAD" : "LOAD"
+                let loadButtonText = program == appState.loadedProgram ? "RELOAD" : "LOAD"
                 Text(loadButtonText)
-                    .font(Style.footerFont)
-                    .frame(width: width * 3 / 5, height: Style.footerHeight, alignment: .center)
+                    .font(Style.toolbarFont)
+                    .frame(width: width * 3 / 5, height: Style.toolbarHeight, alignment: .center)
                     .buttonStyle(.plain)
                     .contentShape(Rectangle())
             }
 
             if program.isReadOnly {
                 Spacer()
-                    .frame(width: width / 5, height: Style.footerHeight)
+                    .frame(width: width / 5, height: Style.toolbarHeight)
             } else {
                 Menu {
                     Button(action: {
@@ -75,9 +76,8 @@ private struct Footer: View {
                         Text("Delete")
                     }
                     Button(action: {
-                        change.isSavingProgram = false
                         withAnimation {
-                            change.isEditingProgram = true
+                            appState.isProgramEditing = true
                         }
                     }) {
                         Text("Edit")
@@ -85,22 +85,22 @@ private struct Footer: View {
                 } label: {
                     Image(systemName: "ellipsis")
                         .font(Style.directionsFont)
-                        .frame(width: width / 5, height: Style.footerHeight, alignment: .trailing)
+                        .frame(width: width / 5, height: Style.toolbarHeight, alignment: .trailing)
                         .offset(x: -15)
                         .contentShape(Rectangle())
                 }
-                .frame(width: width / 5, height: Style.footerHeight, alignment: .trailing)
+                .frame(width: width / 5, height: Style.toolbarHeight, alignment: .trailing)
                 .offset(x: -15)
                 .contentShape(Rectangle())
                 .confirmationDialog("Delete?", isPresented: $isPresentingDelete) {
                     Button("Delete \(program.name)", role: .destructive) {
                         _ = Lib57.userLib.deleteProgram(program)
-                        if program == change.loadedProgram {
-                            change.loadedProgram = nil
+                        if program == appState.loadedProgram {
+                            appState.loadedProgram = nil
                         }
-                        change.isUserLibExpanded = true
+                        appState.isUserLibExpanded = true
                         withAnimation {
-                            change.libraryBookmark = nil
+                            appState.libraryBookmark = nil
                         }
                     }
                 }
@@ -109,12 +109,10 @@ private struct Footer: View {
     }
 }
 
-/**
- * Displays the name and description of a program. Lets the user take different actions on the
- * program.
- */
+/// Displays the name and description of a program. Lets the user take different actions on the
+/// program.
 struct ProgramView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     let program: Prog57
 
@@ -126,8 +124,8 @@ struct ProgramView: View {
                 NavigationBar(left: Style.leftArrow,
                               title: program.name,
                               right: Style.downArrow,
-                              leftAction: { withAnimation { change.libraryBookmark = nil } },
-                              rightAction: { withAnimation { change.appLocation = .calc } })
+                              leftAction: { withAnimation { appState.libraryBookmark = nil } },
+                              rightAction: { withAnimation { appState.appLocation = .calc } })
                 .background(Color.deepBlue)
 
                 if program.help.isEmpty {
@@ -141,13 +139,13 @@ struct ProgramView: View {
                     HelpView(helpString: program.help)
                 }
 
-                Footer(program: program, width: width)
-                    .frame(maxHeight: Style.footerHeight)
+                ProgramViewToolbar(program: program, width: width)
+                    .frame(maxHeight: Style.toolbarHeight)
             }
             .background(Color.deepBlue)
             .foregroundColor(.ivory)
 
-            if change.isEditingProgram {
+            if appState.isProgramEditing {
                 ProgramEditView(program: program)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)
@@ -157,7 +155,7 @@ struct ProgramView: View {
 }
 
 struct ProgramView_Previews: PreviewProvider {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     static var previews: some View {
         ProgramView(program: Prog57(name: "", description: ""))

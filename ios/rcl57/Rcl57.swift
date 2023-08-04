@@ -1,5 +1,5 @@
 /**
- * Interface to the emulator.
+ * The interface to the emulator.
  */
 
 import Foundation

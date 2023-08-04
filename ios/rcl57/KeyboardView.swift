@@ -16,7 +16,7 @@ private struct TrigModeIndicator: Shape {
 
 /// Displays the keyboard view and handles key presses/releases.
 struct KeyboardView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var settings: UserSettings
 
     @Environment(\.scenePhase) private var scenePhase

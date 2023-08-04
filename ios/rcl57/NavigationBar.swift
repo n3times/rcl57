@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A generic navigation bar with a title and 2 optional controls, on the left and on the right.
 struct NavigationBar: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     let left: String?
     let title: String

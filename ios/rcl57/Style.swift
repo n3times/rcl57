@@ -38,10 +38,10 @@ struct Style {
     static let listLineHeight = isSmallScreen ? 22.0 : 27.0
 
 
-    // MARK: Footer
+    // MARK: Toolbar
 
-    static let footerFont = Font.system(size: 18, weight: .medium)
-    static let footerHeight = 44.0
+    static let toolbarFont = Font.system(size: 18, weight: .medium)
+    static let toolbarHeight = 44.0
 
 
     // MARK: Directions

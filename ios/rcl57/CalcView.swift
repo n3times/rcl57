@@ -5,16 +5,16 @@ private struct CalcNavigationBar: View {
 
     /// A button of the calc navigation bar.
     struct CalcNavigationButton: View {
-        @EnvironmentObject private var change: Change
+        @EnvironmentObject private var appState: AppState
 
         let title: String
         let destination: AppLocation
 
         var body: some View {
             Button(action: {
-                change.destinationAppLocation = destination
+                appState.destinationAppLocation = destination
                 withAnimation {
-                    change.appLocation = destination
+                    appState.appLocation = destination
                 }
             }) {
                 Text(title)
@@ -47,13 +47,13 @@ private struct CalcNavigationBar: View {
 
 /// Displays the program name and the current operation.
 private struct CalcInfoView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     var body: some View {
         GeometryReader { proxy in
             let width = proxy.size.width
             HStack(spacing: 0) {
-                Text(change.loadedProgram?.name ?? "")
+                Text(appState.loadedProgram?.name ?? "")
                     .font(Style.programFont)
                     .offset(x: 15, y: -3)
                     .frame(width: width / 2, height: 20, alignment: .leading)
@@ -75,12 +75,12 @@ private struct CalcInfoView: View {
 
 /// The calculator view with the navigation bar, info, display, and keyboard.
 struct CalcView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     var body: some View {
         let displayHeight = 4 * Style.listLineHeight
 
-        return GeometryReader { proxy in
+        GeometryReader { proxy in
             let width = proxy.size.width
 
             ZStack {
@@ -89,7 +89,7 @@ struct CalcView: View {
                 VStack(spacing: 0) {
                     CalcNavigationBar()
                     CalcInfoView()
-                    DisplayView(displayString: change.displayString)
+                    DisplayView(displayString: appState.displayString)
                         .frame(width: CGFloat(width * 0.85), height: displayHeight)
                         .frame(width: width, height: displayHeight)
                         .background(.black)

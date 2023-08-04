@@ -7,9 +7,85 @@ enum ProgramEditContext {
     case imported
 }
 
+/// A custom navigation bar to access the `ProgramSaveView`, and to cancel editing.
+private struct ProgramEditNavigationBar: View {
+    @EnvironmentObject private var appState: AppState
+
+    @State private var isPresentingExit = false
+
+    @Binding var name: String
+    @Binding var help: String
+
+    let context: ProgramEditContext
+
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            HStack(spacing: 0) {
+                Button(action: {
+                    if context == .create && name.isEmpty && help.isEmpty {
+                        withAnimation {
+                            appState.isProgramEditing = false
+                        }
+                    } else {
+                        UIApplication.shared.sendAction(
+                            #selector(UIResponder.resignFirstResponder),
+                            to: nil,
+                            from: nil,
+                            for: nil
+                        )
+                        isPresentingExit = true
+                    }
+                }) {
+                    Text(Style.downArrow)
+                        .frame(width: width / 5, height: Style.headerHeight)
+                        .font(Style.directionsFont)
+                        .contentShape(Rectangle())
+                }
+                .confirmationDialog("Exit?", isPresented: $isPresentingExit) {
+                    Button("Exit", role: .destructive) {
+                        withAnimation {
+                            appState.isProgramEditing = false
+                        }
+                    }
+                }
+
+                Text(context == .edit ? "Edit Program" : context == .imported ? "Import Program" : "Create Program")
+                    .frame(width: width * 3 / 5, height: Style.headerHeight)
+                    .font(Style.titleFont)
+
+                Button(action: {
+                    UIApplication.shared.sendAction(
+                        #selector(UIResponder.resignFirstResponder),
+                        to: nil,
+                        from: nil,
+                        for: nil
+                    )
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            appState.isProgramSaving = true
+                        }
+                    }
+                }) {
+                    Text(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty
+                         ? Style.rightArrow : Style.rightArrowFull)
+                    .frame(width: width / 5, height: Style.headerHeight)
+                    .font(Style.directionsFont)
+                    .contentShape(Rectangle())
+                }
+                .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty)
+                .buttonStyle(.plain)
+            }
+        }
+        .background(Color.deeperBlue)
+        .foregroundColor(.ivory)
+        .frame(height: Style.headerHeight)
+    }
+}
+
 /// Allows the user to edit the name and description of a program.
 struct ProgramEditView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     @State private var isPresentingExit = false
 
@@ -18,7 +94,7 @@ struct ProgramEditView: View {
 
     private var originalProgram: Prog57? = nil
 
-    private var context: ProgramEditContext
+    private let context: ProgramEditContext
 
     private var program: Prog57 {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -33,8 +109,6 @@ struct ProgramEditView: View {
             return program
         }
     }
-
-    @FocusState private var nameIsFocused: Bool
 
     init(program: Prog57) {
         self.context = .edit
@@ -57,7 +131,7 @@ struct ProgramEditView: View {
             self.originalProgram = program
         } else {
             let program = Prog57(name: "",
-                                 description: "Clipboard does not contain a legal program.")
+                                 description: "Clipboard does not contain a valid program.")
             self.name = program.name
             self.help = program.help
             self.originalProgram = program
@@ -68,7 +142,7 @@ struct ProgramEditView: View {
         UITextView.appearance().backgroundColor = .clear
 
         return ZStack {
-            if change.isSavingProgram {
+            if appState.isProgramSaving {
                 ProgramSaveView(originalProgram: originalProgram,
                                 program: self.program,
                                 context: context
@@ -76,80 +150,24 @@ struct ProgramEditView: View {
                 .transition(.move(edge: .trailing))
             }
 
-            if !change.isSavingProgram {
-                GeometryReader { proxy in
-                    let width = proxy.size.width
+            if !appState.isProgramSaving {
+                VStack(spacing: 0) {
+                    ProgramEditNavigationBar(name: $name, help: $help, context: context)
 
-                    VStack(spacing: 0) {
-                        HStack(spacing: 0) {
-                            Button(action: {
-                                if context == .create &&
-                                    name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty &&
-                                    help.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty {
-                                    withAnimation {
-                                        change.stateLocation = .viewState
-                                    }
-                                } else {
-                                    isPresentingExit = true
-                                }
-                            }) {
-                                Text(Style.downArrow)
-                                    .frame(width: width / 5, height: Style.headerHeight)
-                                    .font(Style.directionsFont)
-                                    .contentShape(Rectangle())
-                            }
-                            .confirmationDialog("Exit?", isPresented: $isPresentingExit) {
-                                Button("Exit", role: .destructive) {
-                                    nameIsFocused = false
-                                    withAnimation {
-                                        switch context {
-                                        case .create:
-                                            change.stateLocation = .viewState
-                                        case .imported:
-                                            change.isImportingProgram = false
-                                        case .edit:
-                                            change.isEditingProgram = false
-                                        }
-                                    }
-                                }
-                            }
-                            Text(context == .edit ? "Edit Program" : context == .imported ? "Import Program" : "Create Program")
-                                .frame(width: width * 3 / 5, height: Style.headerHeight)
-                                .font(Style.titleFont)
-                            Button(action: {
-                                nameIsFocused = false
-                                withAnimation {
-                                    change.isSavingProgram = true
-                                }
-                            }) {
-                                Text(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty
-                                     ? Style.rightArrow : Style.rightArrowFull)
-                                .frame(width: width / 5, height: Style.headerHeight)
-                                .font(Style.directionsFont)
-                                .contentShape(Rectangle())
-                            }
-                            .disabled(name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty)
-                            .buttonStyle(.plain)
-                        }
-                        .background(Color.deeperBlue)
-                        .foregroundColor(.ivory)
+                    TextField("Name", text: $name)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .frame(height: 52)
+                        .offset(x: 10)
 
-                        TextField("Name", text: $name)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .frame(height: 52)
-                            .offset(x: 10)
-                            .focused($nameIsFocused)
+                    Color.blackish
+                        .frame(height: 2)
 
-                        Color.blackish
-                            .frame(height: 2)
-
-                        TextEditor(text: $help)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .lineLimit(4)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            .offset(x: 5, y: 5)
-                    }
+                    TextEditor(text: $help)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .lineLimit(4)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .offset(x: 5, y: 5)
                 }
                 .transition(.move(edge: .leading))
             }

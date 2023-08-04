@@ -1,7 +1,7 @@
 import SwiftUI
 
-private struct FooterView: View {
-    @EnvironmentObject private var change: Change
+private struct ProgramSaveViewToolbar: View {
+    @EnvironmentObject private var appState: AppState
 
     let originalProgram: Prog57?
     let program: Prog57
@@ -29,46 +29,39 @@ private struct FooterView: View {
                     }
                 }
                 if let existingProgram {
-                    if existingProgram == change.loadedProgram {
-                        change.loadedProgram = nil
+                    if existingProgram == appState.loadedProgram {
+                        appState.loadedProgram = nil
                     }
-                    if existingProgram == change.libraryBookmark {
-                        change.libraryBookmark = nil
+                    if existingProgram == appState.libraryBookmark {
+                        appState.libraryBookmark = nil
                     }
                     _ = Lib57.userLib.deleteProgram(existingProgram)
                 }
                 switch context {
                 case .create:
                     _ = Lib57.userLib.addProgram(program)
-                    withAnimation {
-                        change.loadedProgram = program
-                        change.stateLocation = .viewState
-                        change.libraryBookmark = program
-                    }
+                    appState.loadedProgram = program
+                    appState.libraryBookmark = program
                 case .edit:
                     if let originalProgram {
                         originalProgram.name = program.name
                         originalProgram.help = program.help
                     }
-                    withAnimation {
-                        change.isEditingProgram = false
-                        change.libraryBookmark = program
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            change.isSavingProgram = false
-                        }
-                    }
+                    appState.libraryBookmark = program
                 case .imported:
                     _ = Lib57.userLib.addProgram(program)
-                    withAnimation {
-                        change.isImportingProgram = false
-                        change.isSavingProgram = false
-                        change.isUserLibExpanded = true
+                    appState.isUserLibExpanded = true
+                }
+                withAnimation {
+                    appState.isProgramEditing = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        appState.isProgramSaving = false
                     }
                 }
                 _ = program.save(filename: program.name)
             }
-            .font(Style.footerFont)
-            .frame(width: 200, height: Style.footerHeight)
+            .font(Style.toolbarFont)
+            .frame(width: 200, height: Style.toolbarHeight)
             .buttonStyle(.plain)
             Spacer()
         }
@@ -79,7 +72,7 @@ private struct FooterView: View {
 
 /// Displays the name and description of a program and saves it upon confirmation by the user.
 struct ProgramSaveView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     let originalProgram: Prog57?
     let program: Prog57
@@ -106,7 +99,7 @@ struct ProgramSaveView: View {
             NavigationBar(left: Style.leftArrow,
                           title: program.name + (overrides() ? "'" : ""),
                           right: nil,
-                          leftAction: { withAnimation { change.isSavingProgram = false } },
+                          leftAction: { withAnimation { appState.isProgramSaving = false } },
                           rightAction: nil)
             .background(Color.deeperBlue)
 
@@ -121,8 +114,8 @@ struct ProgramSaveView: View {
                 HelpView(helpString: program.help)
             }
 
-            FooterView(originalProgram: originalProgram, program: program, context: context)
-                .frame(height: Style.footerHeight)
+            ProgramSaveViewToolbar(originalProgram: originalProgram, program: program, context: context)
+                .frame(height: Style.toolbarHeight)
         }
     }
 }

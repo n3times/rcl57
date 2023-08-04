@@ -3,8 +3,8 @@ import Foundation
 /**
  * Manages user's settings.
  *
- * The user can control a few elements of the UI as well as elements of the emulator.
- * The settings are stored in `UserDefaults` so they can be preserved during version upgrades.
+ * The user can control a few elements of the UI as well as elements of the emulator. The settings
+ * are stored in `UserDefaults`.
  */
 class UserSettings: ObservableObject {
     // UI Settings.

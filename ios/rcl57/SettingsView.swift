@@ -1,7 +1,8 @@
 import SwiftUI
 
+/// Allows users to change the app settings.
 struct SettingsView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var settings: UserSettings
 
     let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
@@ -20,7 +21,7 @@ struct SettingsView: View {
                               title: "Settings",
                               right: Style.downArrow,
                               leftAction: nil,
-                              rightAction: { withAnimation { change.appLocation = .calc } })
+                              rightAction: { withAnimation { appState.appLocation = .calc } })
                 .background(Color.gray)
                 .frame(width: width)
 
@@ -40,7 +41,7 @@ struct SettingsView: View {
                         .confirmationDialog("Reset?", isPresented: $isPresentingReset) {
                             Button("Clear Steps, Registers and Log", role: .destructive) {
                                 Rcl57.shared.clearAll()
-                                change.loadedProgram = nil
+                                appState.loadedProgram = nil
                             }
                         }
                     }

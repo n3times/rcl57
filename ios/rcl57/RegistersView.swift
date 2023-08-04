@@ -24,7 +24,7 @@ private struct SingleRegisterView: View {
 
 /// Displays the 8 registers.
 struct RegistersView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     // Use a timer to refresh the registers in case they have changed. This is necessary because
     // those belong to the emulator and are not directly observed by SwifUI.

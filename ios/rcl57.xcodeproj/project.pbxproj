@@ -29,7 +29,7 @@
 		154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7827BC65C900AE38F1 /* utils57.c */; };
 		154B7A7F27BC65C900AE38F1 /* rom57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A7927BC65C900AE38F1 /* rom57.c */; };
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
-		1567D59F28832CA000273C3C /* Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D59E28832CA000273C3C /* Change.swift */; };
+		1567D59F28832CA000273C3C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D59E28832CA000273C3C /* AppState.swift */; };
 		1567D5A1288D9C7300273C3C /* ManualPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D5A0288D9C7300273C3C /* ManualPageView.swift */; };
 		158BF1B82A7C2041001B7F18 /* RegistersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158BF1B72A7C2040001B7F18 /* RegistersView.swift */; };
 		158BF1BA2A7C2054001B7F18 /* StepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158BF1B92A7C2054001B7F18 /* StepsView.swift */; };
@@ -91,7 +91,7 @@
 		154B7A7A27BC65C900AE38F1 /* ti57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ti57.h; sourceTree = "<group>"; };
 		154B7A8227BF667700AE38F1 /* leds57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leds57.h; sourceTree = "<group>"; };
 		154B7A8327BF667700AE38F1 /* leds57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = leds57.c; sourceTree = "<group>"; };
-		1567D59E28832CA000273C3C /* Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Change.swift; sourceTree = "<group>"; };
+		1567D59E28832CA000273C3C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		1567D5A0288D9C7300273C3C /* ManualPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualPageView.swift; sourceTree = "<group>"; };
 		158BF1B72A7C2040001B7F18 /* RegistersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistersView.swift; sourceTree = "<group>"; };
 		158BF1B92A7C2054001B7F18 /* StepsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsView.swift; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 				15B0861128680BB40018418A /* Lib57.swift */,
 				15B085E5286152C60018418A /* Prog57.swift */,
 				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
-				1567D59E28832CA000273C3C /* Change.swift */,
+				1567D59E28832CA000273C3C /* AppState.swift */,
 				15124F7628314DAE00F0208F /* UserSettings.swift */,
 				151EBA6E28238D62005DD283 /* Style.swift */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
@@ -371,7 +371,7 @@
 				15071C3B287B7EF10075D722 /* NavigationBar.swift in Sources */,
 				15DBBC4927CF2C5E00CD4131 /* log57.c in Sources */,
 				1567D5A1288D9C7300273C3C /* ManualPageView.swift in Sources */,
-				1567D59F28832CA000273C3C /* Change.swift in Sources */,
+				1567D59F28832CA000273C3C /* AppState.swift in Sources */,
 				15B085AE284F149B0018418A /* ManualView.swift in Sources */,
 				158BF1B82A7C2041001B7F18 /* RegistersView.swift in Sources */,
 				15B0861228680BB40018418A /* Lib57.swift in Sources */,

@@ -55,7 +55,7 @@ private struct LogLineView: View {
 
 /// Displays operations and results.
 struct LogContentView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     @State private var lines: [LogLineData] = []
     @State private var currentLineIndex = 0
@@ -69,7 +69,7 @@ struct LogContentView: View {
     }
 
     private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> LogLineData {
-        return LogLineData(numberEntry: numberEntry, opEntry: opEntry)
+        LogLineData(numberEntry: numberEntry, opEntry: opEntry)
     }
 
     private func clear() {
@@ -165,7 +165,7 @@ struct LogContentView: View {
                     proxy.scrollTo(lastLine.id, anchor: .bottom)
                 }
             }
-            .onReceive(change.$logTimestamp) { _ in
+            .onReceive(appState.$logTimestamp) { _ in
                 updateLog()
             }
         }

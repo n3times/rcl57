@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// The list of topics in the User Manual.
-struct ManualContentView: View {
-    @EnvironmentObject private var change: Change
+/// The list of manual pages.
+struct ManualView: View {
+    @EnvironmentObject private var appState: AppState
 
     struct PageData: Hashable {
         let title: String
@@ -22,56 +22,47 @@ struct ManualContentView: View {
                                        PageData(title: "Flow Control", resource: "flow")]
 
     var body: some View {
-        List {
-            Button("About") {
-                withAnimation {
-                    change.manualBookmark = aboutPageData
-                }
-            }
-            Section("The Emulator") {
-                ForEach(emulatorPagesData, id: \.self) { pageData in
-                    Button(pageData.title) {
-                        withAnimation {
-                            change.manualBookmark = pageData
-                        }
-                    }
-                }
-            }
-            Section("The Calculator") {
-                ForEach(calculatorPagesData, id: \.self) { pageData in
-                    Button(pageData.title) {
-                        withAnimation {
-                            change.manualBookmark = pageData
-                        }
-                    }
-                }
-            }
-        }
-        .background(Color(.systemBackground))
-        .foregroundColor(Color.black)
-    }
-}
-
-/// The list of manual pages and a navigation bar.
-struct ManualView: View {
-    @EnvironmentObject private var change: Change
-
-    var body: some View {
         ZStack {
-            if change.manualBookmark == nil {
+            if appState.manualBookmark == nil {
                 VStack(spacing: 0) {
                     NavigationBar(left: nil,
                                   title: "User Manual",
                                   right: Style.downArrow,
                                   leftAction: nil,
-                                  rightAction: { withAnimation { change.appLocation = .calc } })
+                                  rightAction: { withAnimation { appState.appLocation = .calc } })
                     .background(Color.deepGreen)
-                    ManualContentView()
+                    List {
+                        Button("About") {
+                            withAnimation {
+                                appState.manualBookmark = aboutPageData
+                            }
+                        }
+                        Section("The Emulator") {
+                            ForEach(emulatorPagesData, id: \.self) { pageData in
+                                Button(pageData.title) {
+                                    withAnimation {
+                                        appState.manualBookmark = pageData
+                                    }
+                                }
+                            }
+                        }
+                        Section("The Calculator") {
+                            ForEach(calculatorPagesData, id: \.self) { pageData in
+                                Button(pageData.title) {
+                                    withAnimation {
+                                        appState.manualBookmark = pageData
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .background(Color(.systemBackground))
+                    .foregroundColor(Color.black)
                 }
                 .transition(.move(edge: .leading))
             }
 
-            if let pageData = change.manualBookmark {
+            if let pageData = appState.manualBookmark {
                 ManualPageView(title: pageData.title, resource: pageData.resource)
                     .transition(.move(edge: .trailing))
             }

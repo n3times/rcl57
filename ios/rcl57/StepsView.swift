@@ -3,7 +3,7 @@ import SwiftUI
 /// Displays a single step.
 private struct SingleStepView: View {
     private let activeBackgroundColor = Color.ivory
-    private let inactiveBackgroundColor = Color.lightGray
+    private let inactiveBackgroundColor = Color.ivory
     private let foregroundColor = Color.blackish
     private let inactiveForegroundColor = Color.blackish
 

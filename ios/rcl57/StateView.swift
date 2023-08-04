@@ -14,11 +14,13 @@ private func programType(forProgram program: Prog57?) -> ProgramType {
     }
 }
 
+/// Displays the name of the library the program belongs too.
 private struct LibInfoView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
+
+    var program: Prog57
 
     var body: some View {
-        let program = change.loadedProgram
         let programType = programType(forProgram: program)
 
         GeometryReader { proxy in
@@ -42,8 +44,9 @@ private struct LibInfoView: View {
     }
 }
 
-private struct FooterView: View {
-    @EnvironmentObject private var change: Change
+/// Allows the user to clear and save the state.
+private struct StateViewToolbar: View {
+    @EnvironmentObject private var appState: AppState
 
     @State private var isPresentingClose = false
     @State private var isPresentingClear = false
@@ -52,12 +55,12 @@ private struct FooterView: View {
     @Binding var refreshCounter: Int64
 
     var body: some View {
-        let program = change.loadedProgram
+        let program = appState.loadedProgram
         let programType = programType(forProgram: program)
         let stateNeedsSaving: Bool = {
             guard let program else { return false }
             if programType != .readWrite { return false }
-            if change.stateViewMode == .steps {
+            if appState.stateViewMode == .steps {
                 return program.stepsNeedSaving()
             } else {
                 return program.registersNeedSaving()
@@ -70,14 +73,14 @@ private struct FooterView: View {
                 Button("CLOSE") {
                     isPresentingClose = true
                 }
-                .font(Style.footerFont)
-                .frame(width: width / 3, height: Style.footerHeight)
+                .font(Style.toolbarFont)
+                .frame(width: width / 3, height: Style.toolbarHeight)
                 .disabled(program == nil)
                 .buttonStyle(.plain)
                 .confirmationDialog("Close?", isPresented: $isPresentingClose) {
                     if let program {
                         Button("Close \(program.name)", role: .destructive) {
-                            change.loadedProgram = nil
+                            appState.loadedProgram = nil
                         }
                     }
                 }
@@ -85,13 +88,13 @@ private struct FooterView: View {
                 Button("CLEAR") {
                     isPresentingClear = true
                 }
-                .font(Style.footerFont)
-                .frame(width: width / 3, height: Style.footerHeight)
-                .disabled(change.stateViewMode == .steps ? Rcl57.shared.programLastIndex == -1
+                .font(Style.toolbarFont)
+                .frame(width: width / 3, height: Style.toolbarHeight)
+                .disabled(appState.stateViewMode == .steps ? Rcl57.shared.programLastIndex == -1
                           : Rcl57.shared.registersLastIndex == -1)
                 .buttonStyle(.plain)
                 .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
-                    if change.stateViewMode == .steps {
+                    if appState.stateViewMode == .steps {
                         Button("Clear Steps", role: .destructive) {
                             Rcl57.shared.clearProgram()
                             refreshCounter += 1
@@ -108,21 +111,20 @@ private struct FooterView: View {
                     if programType == .readWrite {
                         isPresentingSave = true
                     } else {
-                        change.isSavingProgram = false
                         withAnimation {
-                            change.stateLocation = .createProgram
+                            appState.isProgramEditing = true
                         }
                     }
                 }
-                .font(Style.footerFont)
-                .frame(width: width / 3, height: Style.footerHeight)
+                .font(Style.toolbarFont)
+                .frame(width: width / 3, height: Style.toolbarHeight)
                 .buttonStyle(.plain)
                 .disabled(programType == .readWrite && !stateNeedsSaving)
                 .confirmationDialog("Save?", isPresented: $isPresentingSave) {
                     if programType == .readWrite {
-                        Button("Save " + (change.stateViewMode == .steps ? "Steps" : "Registers"), role: .destructive) {
+                        Button("Save " + (appState.stateViewMode == .steps ? "Steps" : "Registers"), role: .destructive) {
                             if let program {
-                                if change.stateViewMode == .steps {
+                                if appState.stateViewMode == .steps {
                                     program.setStepsFromMemory()
                                 } else {
                                     program.setRegistersFromMemory()
@@ -137,23 +139,23 @@ private struct FooterView: View {
             .background(Color.blackish)
             .foregroundColor(.ivory)
         }
-        .frame(height: Style.footerHeight)
+        .frame(height: Style.toolbarHeight)
     }
 }
 
-/// The steps and registers of the calculator.
+/// Displays the steps and registers of the calculator.
 struct StateView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     /// Used to refresh the view when the steps/registers are saved or cleared. This is necessary
     /// because those belong to the emulator and are not directly observed by SwifUI.
     @State private var refreshCounter: Int64 = 0
 
     var body: some View {
-        let program = change.loadedProgram
+        let program = appState.loadedProgram
         let viewTitle: String = {
             guard let program else {
-                return change.stateViewMode == .steps ? "Steps" : "Registers"
+                return appState.stateViewMode == .steps ? "Steps" : "Registers"
             }
             if program.stepsNeedSaving() {
                 return "\(program.name)'"
@@ -164,30 +166,30 @@ struct StateView: View {
 
         ZStack {
             VStack(spacing: 0) {
-                NavigationBar(left: change.stateViewMode == .steps ? Style.yang : Style.ying,
+                NavigationBar(left: appState.stateViewMode == .steps ? Style.yang : Style.ying,
                               title: viewTitle,
                               right: Style.rightArrow,
                               leftAction: {
-                                  change.stateViewMode = change.stateViewMode == .registers ? .steps : .registers
+                                  appState.stateViewMode = appState.stateViewMode == .registers ? .steps : .registers
                               },
-                              rightAction: { withAnimation { change.appLocation = .calc } })
+                              rightAction: { withAnimation { appState.appLocation = .calc } })
                 .background(Color.blackish)
 
-                if program != nil {
-                    LibInfoView()
+                if let program {
+                    LibInfoView(program: program)
                 }
 
-                switch change.stateViewMode {
+                switch appState.stateViewMode {
                 case .registers:
                     RegistersView()
                 case .steps:
                     StepsView()
                 }
-                FooterView(refreshCounter: $refreshCounter)
+                StateViewToolbar(refreshCounter: $refreshCounter)
             }
             .id(refreshCounter)
 
-            if change.stateLocation == .createProgram {
+            if appState.isProgramEditing {
                 ProgramEditView()
                     .transition(.move(edge: .bottom))
                     .zIndex(1)

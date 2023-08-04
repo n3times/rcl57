@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A page of the User Manual.
 struct ManualPageView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     let title: String
     let resource: String
@@ -13,8 +13,8 @@ struct ManualPageView: View {
             NavigationBar(left: Style.leftArrow,
                           title: title,
                           right: Style.downArrow,
-                          leftAction: { withAnimation { change.manualBookmark = nil } },
-                          rightAction: { withAnimation { change.appLocation = .calc } })
+                          leftAction: { withAnimation { appState.manualBookmark = nil } },
+                          rightAction: { withAnimation { appState.appLocation = .calc } })
             .background(Color.deepGreen)
 
             if let helpURL {

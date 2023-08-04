@@ -8,19 +8,19 @@ import SwiftUI
  * - Above the CalcView: ManualView, SettingsView, and LibraryView
  */
 struct MainView: View {
-    @EnvironmentObject private var change: Change
+    @EnvironmentObject private var appState: AppState
 
     var body: some View {
         ZStack {
-            if change.appLocation != .state && change.appLocation != .log {
+            if appState.appLocation != .state && appState.appLocation != .log {
                 CalcView()
                     .transition(.move(
-                        edge: change.destinationAppLocation == .state ? .trailing : .leading
+                        edge: appState.destinationAppLocation == .state ? .trailing : .leading
                     ))
                     .zIndex(0)
             }
 
-            switch change.appLocation {
+            switch appState.appLocation {
             case .calc:
                 EmptyView()
             case .state:

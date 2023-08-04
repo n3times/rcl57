@@ -4,13 +4,13 @@ import SwiftUI
 struct Rcl57App: App {
     @Environment(\.scenePhase) private var scenePhase
 
-    @StateObject private var change = Change()
+    @StateObject private var appState = AppState()
     @StateObject private var settings = UserSettings()
 
     var body: some Scene {
         WindowGroup {
             MainView()
-                .environmentObject(change)
+                .environmentObject(appState)
                 .environmentObject(settings)
         }
         .onChange(of: scenePhase) { newScenePhase in
