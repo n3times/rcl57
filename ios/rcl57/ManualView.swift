@@ -23,7 +23,10 @@ struct ManualView: View {
 
     var body: some View {
         ZStack {
-            if appState.manualBookmark == nil {
+            if let pageData = appState.manualBookmark {
+                ManualPageView(title: pageData.title, resource: pageData.resource)
+                    .transition(.move(edge: .trailing))
+            } else {
                 VStack(spacing: 0) {
                     NavigationBar(left: nil,
                                   title: "User Manual",
@@ -60,11 +63,6 @@ struct ManualView: View {
                     .foregroundColor(Color.black)
                 }
                 .transition(.move(edge: .leading))
-            }
-
-            if let pageData = appState.manualBookmark {
-                ManualPageView(title: pageData.title, resource: pageData.resource)
-                    .transition(.move(edge: .trailing))
             }
         }
     }

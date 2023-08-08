@@ -6,28 +6,29 @@ enum AppLocation {
     case calc, log, state, settings, library, manual
 }
 
-/// The different type of data the `StateView` can display.
+/// The different types of data the `StateView` can display.
 enum StateViewMode {
     case steps, registers
 }
 
 /// The main properties that determine the state of the different views. They are monitored by
-/// SwiftUI and changes result in the Views being updated as needed.
+/// SwiftUI and changes result in the views being updated as needed.
 class AppState: ObservableObject {
-
     // MARK: Emulator timer
 
     /// We run the emulator by short bursts. Each burst emulates running the actual TI-57 for a
     /// short period of time. In practice the emulator takes much less time to execute the burst.
     private static let burstMilliseconds = 20
 
-    private var timerCancellable: AnyCancellable?
-
+    /// Timer that runs the emulator.
     private let timer = Timer.publish(
         every: Double(burstMilliseconds) / 1000,
         on: .main,
         in: .default
     ).autoconnect()
+
+    /// Used to cancel the timer.
+    private var timerCancellable: AnyCancellable?
 
 
     // MARK: Emulator state
@@ -36,20 +37,23 @@ class AppState: ObservableObject {
     // state gets updated after every burst.
 
     /// Updated once per burst.
-    @Published var displayString = Rcl57.shared.display
+    @Published private(set) var displayString = Rcl57.shared.display
 
     /// Updated once per burst.
-    @Published var logTimestamp = Rcl57.shared.logTimestamp
+    @Published private(set) var logTimestamp = Rcl57.shared.logTimestamp
 
 
     // MARK: Loaded program
 
     // Persisted across launches.
 
+    /// The loaded program key into `UserDefaults`.
     private let loadedProgramKey = "LOADED_PROGRAM_KEY"
 
+    /// The loaded library key into `UserDefaults`.
     private let loadedLibraryKey = "LOADED_LIBRARY_KEY"
 
+    /// The program currently in memory.
     @Published var loadedProgram: Prog57? {
         didSet {
             UserDefaults.standard.set(loadedProgram?.name, forKey: loadedProgramKey)
@@ -90,10 +94,10 @@ class AppState: ObservableObject {
 
     // MARK: Program View
 
-    /// Whether the user is in Program Editing screen.
+    /// Whether the user is in the Program Editing screen.
     @Published var isProgramEditing = false
 
-    /// Whether the user is in Program Saving screen.
+    /// Whether the user is in the Program Saving screen.
     @Published var isProgramSaving = false
 
 

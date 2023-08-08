@@ -90,13 +90,13 @@ private struct StateViewToolbar: View {
                 }
                 .font(Style.toolbarFont)
                 .frame(width: width / 3, height: Style.toolbarHeight)
-                .disabled(appState.stateViewMode == .steps ? Rcl57.shared.programLastIndex == -1
+                .disabled(appState.stateViewMode == .steps ? Rcl57.shared.stepsLastIndex == -1
                           : Rcl57.shared.registersLastIndex == -1)
                 .buttonStyle(.plain)
                 .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                     if appState.stateViewMode == .steps {
                         Button("Clear Steps", role: .destructive) {
-                            Rcl57.shared.clearProgram()
+                            Rcl57.shared.clearSteps()
                             refreshCounter += 1
                         }
                     } else {
@@ -125,11 +125,10 @@ private struct StateViewToolbar: View {
                         Button("Save " + (appState.stateViewMode == .steps ? "Steps" : "Registers"), role: .destructive) {
                             if let program {
                                 if appState.stateViewMode == .steps {
-                                    program.setStepsFromMemory()
+                                    _ = program.saveSteps()
                                 } else {
-                                    program.setRegistersFromMemory()
+                                    _ = program.saveRegisters()
                                 }
-                                _ = program.save(filename: program.name)
                                 refreshCounter += 1
                             }
                         }

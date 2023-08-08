@@ -45,7 +45,7 @@ private struct ProgramSaveViewToolbar: View {
                 case .edit:
                     if let originalProgram {
                         originalProgram.name = program.name
-                        originalProgram.help = program.help
+                        originalProgram.description = program.description
                     }
                     appState.libraryBookmark = program
                 case .imported:
@@ -58,7 +58,7 @@ private struct ProgramSaveViewToolbar: View {
                         appState.isProgramSaving = false
                     }
                 }
-                _ = program.save(filename: program.name)
+                _ = program.save()
             }
             .font(Style.toolbarFont)
             .frame(width: 200, height: Style.toolbarHeight)
@@ -103,7 +103,7 @@ struct ProgramSaveView: View {
                           rightAction: nil)
             .background(Color.deeperBlue)
 
-            if program.help.isEmpty {
+            if program.description.isEmpty {
                 Text("No description available")
                     .frame(maxWidth: .infinity,
                            maxHeight: .infinity,
@@ -111,10 +111,12 @@ struct ProgramSaveView: View {
                     .background(Color.ivory)
                     .foregroundColor(.blackish)
             } else {
-                HelpView(helpString: program.help)
+                HelpView(helpString: program.description)
             }
 
-            ProgramSaveViewToolbar(originalProgram: originalProgram, program: program, context: context)
+            ProgramSaveViewToolbar(originalProgram: originalProgram,
+                                   program: program,
+                                   context: context)
                 .frame(height: Style.toolbarHeight)
         }
     }

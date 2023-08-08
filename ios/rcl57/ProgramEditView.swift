@@ -14,7 +14,7 @@ private struct ProgramEditNavigationBar: View {
     @State private var isPresentingExit = false
 
     @Binding var name: String
-    @Binding var help: String
+    @Binding var description: String
 
     let context: ProgramEditContext
 
@@ -23,7 +23,7 @@ private struct ProgramEditNavigationBar: View {
             let width = proxy.size.width
             HStack(spacing: 0) {
                 Button(action: {
-                    if context == .create && name.isEmpty && help.isEmpty {
+                    if context == .create && name.isEmpty && description.isEmpty {
                         withAnimation {
                             appState.isProgramEditing = false
                         }
@@ -90,7 +90,7 @@ struct ProgramEditView: View {
     @State private var isPresentingExit = false
 
     @State private var name: String
-    @State private var help: String
+    @State private var description: String
 
     private var originalProgram: Prog57? = nil
 
@@ -98,13 +98,13 @@ struct ProgramEditView: View {
 
     private var program: Prog57 {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedHelp = help.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedDescription = description.trimmingCharacters(in: .whitespacesAndNewlines)
         if context == .create {
-            return Prog57(name: trimmedName, description: trimmedHelp)
+            return Prog57(name: trimmedName, description: trimmedDescription)
         } else {
-            let program = Prog57(name: trimmedName, description: trimmedHelp)
-            if let rawState = originalProgram?.rawState {
-                program.rawState = rawState
+            let program = Prog57(name: trimmedName, description: trimmedDescription)
+            if let rawData = originalProgram?.rawData {
+                program.rawData = rawData
             }
             return program
         }
@@ -113,27 +113,27 @@ struct ProgramEditView: View {
     init(program: Prog57) {
         self.context = .edit
         self.name = program.name
-        self.help = program.help
+        self.description = program.description
         self.originalProgram = program
     }
 
     init() {
         self.context = .create
         name = ""
-        help = ""
+        description = ""
     }
 
     init(rawText: String) {
         self.context = .imported
-        if let program = Prog57(text: rawText) {
+        if let program = Prog57(fromRawText: rawText) {
             self.name = program.name
-            self.help = program.help
+            self.description = program.description
             self.originalProgram = program
         } else {
             let program = Prog57(name: "",
                                  description: "Clipboard does not contain a valid program.")
             self.name = program.name
-            self.help = program.help
+            self.description = program.description
             self.originalProgram = program
         }
     }
@@ -152,7 +152,7 @@ struct ProgramEditView: View {
 
             if !appState.isProgramSaving {
                 VStack(spacing: 0) {
-                    ProgramEditNavigationBar(name: $name, help: $help, context: context)
+                    ProgramEditNavigationBar(name: $name, description: $description, context: context)
 
                     TextField("Name", text: $name)
                         .textFieldStyle(PlainTextFieldStyle())
@@ -162,7 +162,7 @@ struct ProgramEditView: View {
                     Color.blackish
                         .frame(height: 2)
 
-                    TextEditor(text: $help)
+                    TextEditor(text: $description)
                         .textFieldStyle(PlainTextFieldStyle())
                         .lineLimit(4)
                         .multilineTextAlignment(.leading)

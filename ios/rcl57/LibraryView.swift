@@ -21,7 +21,8 @@ private struct LibraryViewToolbar: View {
                 }) {
                     Text("IMPORT")
                         .font(Style.toolbarFont)
-                        .frame(width: width * 3 / 5, height: Style.toolbarHeight, alignment: .center)
+                        .frame(width: width * 3 / 5,
+                               height: Style.toolbarHeight, alignment: .center)
                         .buttonStyle(.plain)
                 }
                 .fileImporter(

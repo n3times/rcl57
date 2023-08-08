@@ -2,10 +2,10 @@ import SwiftUI
 
 /// Displays a single register.
 private struct SingleRegisterView: View {
-    let index: Int
-
     private let backgroundColor = Color.ivory
     private let foregroundColor = Color.blackish
+
+    let index: Int
 
     var body: some View {
         HStack {

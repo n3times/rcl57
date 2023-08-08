@@ -46,13 +46,13 @@ struct SettingsView: View {
                         }
                     }
                     Section("Emulator Options") {
-                        Toggle(isOn: $settings.hasTurboSpeed) {
+                        Toggle(isOn: $settings.isInTurboMode) {
                             Text("Turbo Speed")
                         }
-                        Toggle(isOn: $settings.hasAlphaDisplay) {
+                        Toggle(isOn: $settings.isDisplayAlpha) {
                             Text("Alpha Display")
                         }
-                        Toggle(isOn: $settings.hasHpLrnMode) {
+                        Toggle(isOn: $settings.isHpLnrMode) {
                             Text("HP LRN Mode")
                         }
                     }

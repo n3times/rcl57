@@ -7,11 +7,12 @@ private struct SingleStepView: View {
     private let foregroundColor = Color.blackish
     private let inactiveForegroundColor = Color.blackish
 
+    /// The index of the step into the program.
     let index: Int
 
     var body: some View {
-        let op = Rcl57.shared.programOp(atIndex: index, isAlpha: true)
-        let active = index <= Rcl57.shared.programLastIndex
+        let op = Rcl57.shared.stepOp(atIndex: index, isAlpha: true)
+        let active = index <= Rcl57.shared.stepsLastIndex
 
         HStack {
             Spacer(minLength: 10)

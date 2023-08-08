@@ -1,5 +1,5 @@
 /**
- * Utility to convert text in `hlp` format into HTML.
+ * Utility struct to convert text in `hlp` format into HTML.
  *
  * The `hlp` format is a markup language for writing RCL-57 help files.
  */
@@ -7,6 +7,7 @@ struct Help57 {
     private static let bufferSize = 4096
     private static let cssFilename = "help.css"
 
+    /// Converts a String in `hlp` format into a String in HTML format.
     static func hlpToHTML(helpString: String) -> String {
         var hlp2html = hlp2html_t()
         var html = ""

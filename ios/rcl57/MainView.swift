@@ -5,7 +5,7 @@ import SwiftUI
  *
  * The CalcView, at the center, is the initial view:
  * - StateView <-> CalcView <-> LogView
- * - Above the CalcView: ManualView, SettingsView, and LibraryView
+ * - From the CalcView, the user can also navigate to the ManualView, SettingsView, and LibraryView
  */
 struct MainView: View {
     @EnvironmentObject private var appState: AppState

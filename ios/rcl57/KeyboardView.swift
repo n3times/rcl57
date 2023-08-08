@@ -92,9 +92,9 @@ struct KeyboardView: View {
                                 let standardizedLocation =
                                     CGPoint(x: $0.location.x / CGFloat(scaleFactorH),
                                             y: $0.location.y / CGFloat(scaleFactorH))
-                                // Return if the user taps close to the bottom edge of the screen since
-                                // this probably means they are closing the app (by swiping) and not
-                                // tapping on a button.
+                                // Return if the user taps close to the bottom edge of the screen
+                                // since this probably means they are closing the app (by swiping)
+                                // and not tapping on a button.
                                 if standardizedLocation.y / CGFloat(scaleFactorV / scaleFactorH) > 490 {
                                     return
                                 }
@@ -150,14 +150,16 @@ struct KeyboardView: View {
                     RoundedRectangle(cornerRadius: 4, style: .continuous)
                         .strokeBorder(Color.brown, lineWidth: 4 * CGFloat(scaleFactorV))
                         .offset(x: -71 * CGFloat(scaleFactorH), y: -207 * CGFloat(scaleFactorV))
-                        .frame(width: 56 * CGFloat(scaleFactorH), height: 39 * CGFloat(scaleFactorV))
+                        .frame(width: 56 * CGFloat(scaleFactorH),
+                               height: 39 * CGFloat(scaleFactorV))
                 }
                 // Draw a yellow triangle indicating `deg`, `rad` or `grad`.
                 TrigModeIndicator()
                     .fill(Color.brown)
                     .frame(width: 10 * scaleFactorH, height: 9 * scaleFactorH)
                     .offset(x: 174 * scaleFactorH,
-                            y: trigOffsetY(forUnits: Rcl57.shared.trigUnits, scaleFactor: scaleFactorV))
+                            y: trigOffsetY(forUnits: Rcl57.shared.trigUnit,
+                                           scaleFactor: scaleFactorV))
             }
         }
     }

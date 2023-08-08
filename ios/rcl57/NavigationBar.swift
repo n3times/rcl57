@@ -21,7 +21,9 @@ struct NavigationBar: View {
                         }
                     }) {
                         Text(left)
-                            .frame(width: width / 5, height: Style.headerHeight, alignment: .leading)
+                            .frame(width: width / 5,
+                                   height: Style.headerHeight,
+                                   alignment: .leading)
                             .offset(x: 15)
                             .font(Style.directionsFont)
                             .contentShape(Rectangle())
@@ -40,7 +42,9 @@ struct NavigationBar: View {
                         }
                     }) {
                         Text(right)
-                            .frame(width: width / 5, height: Style.headerHeight, alignment: .trailing)
+                            .frame(width: width / 5,
+                                   height: Style.headerHeight,
+                                   alignment: .trailing)
                             .offset(x: -15)
                             .font(Style.directionsFont)
                             .contentShape(Rectangle())

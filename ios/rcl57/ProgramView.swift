@@ -42,14 +42,13 @@ private struct ProgramViewToolbar: View {
                     .contentShape(Rectangle())
             }
             .sheet(isPresented: $isPresentingShare) {
-                if let programUrl = program.url {
-                    ActivityViewController(activityItems: [programUrl])
+                if let programURL = program.url {
+                    ActivityViewController(activityItems: [programURL])
                 }
             }
 
             Button(action: {
-                program.loadStepsIntoMemory()
-                program.loadRegistersIntoMemory()
+                program.load()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     appState.loadedProgram = program
                 }
@@ -128,7 +127,7 @@ struct ProgramView: View {
                               rightAction: { withAnimation { appState.appLocation = .calc } })
                 .background(Color.deepBlue)
 
-                if program.help.isEmpty {
+                if program.description.isEmpty {
                     Text("No description available")
                         .frame(maxWidth: .infinity,
                                maxHeight: .infinity,
@@ -136,7 +135,7 @@ struct ProgramView: View {
                         .background(Color.ivory)
                         .foregroundColor(.blackish)
                 } else {
-                    HelpView(helpString: program.help)
+                    HelpView(helpString: program.description)
                 }
 
                 ProgramViewToolbar(program: program, width: width)

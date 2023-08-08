@@ -131,7 +131,7 @@ struct DisplayView: View {
         return path
     }
 
-    // Returns true if the segment of a given index is on.
+    /// Returns `true` if the segment of a given index is on.
     private func isSegmentOn(segments: Int32, i: Int) -> Bool {
         return segments & (1 << (DisplayView.segmentCount - 1 - i)) != 0
     }
@@ -258,7 +258,8 @@ struct DisplayView: View {
             let height = proxy.size.height
             let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
             displayPath(forDisplayString: displayString, boundingRect: boundingRect)
-                .offset(x: (boundingRect.width - displayRect.width) / 2, y: (boundingRect.height - displayRect.height) / 2)
+                .offset(x: (boundingRect.width - displayRect.width) / 2,
+                        y: (boundingRect.height - displayRect.height) / 2)
                 .scale(boundingRect.width / displayRect.width)
                 .fill(DisplayView.ledColor)
         }

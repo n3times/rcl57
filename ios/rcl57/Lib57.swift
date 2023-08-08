@@ -3,49 +3,57 @@ import Foundation
 /**
  * Represents the 2 libraries of RCL-57 programs:
  * - `samplesLib` contains a fixed set of sample programs
- * - `userLib` is for User programs
+ * - `userLib` contains User programs
  */
 class Lib57 {
+    /// A library that contains User programs.
     static let userLib: Lib57 = {
         let userLibURL =
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        return Lib57(folderURL: userLibURL, name: "User Programs", readonly: false)
+        return Lib57(directoryURL: userLibURL, name: "User Programs", readonly: false)
     }()
 
+    /// A library with a fixed set of sample programs.
     static let samplesLib: Lib57 = {
         let samplesLibURL =
             Bundle.main.bundleURL.appendingPathComponent("samplesLib")
-        return Lib57(folderURL: samplesLibURL, name: "Sample Programs", readonly: true)
+        return Lib57(directoryURL: samplesLibURL, name: "Sample Programs", readonly: true)
     }()
 
-    private let folderURL: URL?
+    /// The directory where the programs are stored.
+    private let directoryURL: URL?
 
+    /// The name of the library.
     let name: String
-    let readonly: Bool
 
-    var programs: [Prog57] = []
+    /// Whether the user can add, remove, and modify programs.
+    let isReadOnly: Bool
 
-    private init(folderURL: URL?, name: String, readonly: Bool) {
-        self.folderURL = folderURL
+    /// The programs the library contains.
+    private(set) var programs: [Prog57]
+
+    private init(directoryURL: URL?, name: String, readonly: Bool) {
+        self.directoryURL = directoryURL
         self.name = name
+        programs = []
 
-        guard let folderURL else {
+        guard let directoryURL else {
             // Being extra cautious but this should never happen with `userLib` or `samplesLib`.
-            self.readonly = true
+            self.isReadOnly = true
             return
         }
 
-        self.readonly = readonly
+        self.isReadOnly = readonly
 
         let enumerator =
-            FileManager.default.enumerator(at: folderURL, includingPropertiesForKeys: [])
+            FileManager.default.enumerator(at: directoryURL, includingPropertiesForKeys: [])
         if let enumerator {
             while let programURLObject = enumerator.nextObject() {
                 guard let programURL = programURLObject as? URL else {
                     continue
                 }
                 if programURL.path.hasSuffix(Prog57.programFileExtension) {
-                    if let program = Prog57(url: programURL, readOnly: readonly, library: self) {
+                    if let program = Prog57(fromURL: programURL, readOnly: readonly, library: self) {
                         programs.append(program)
                     }
                 }
@@ -57,14 +65,13 @@ class Lib57 {
     /// Returns `true` if the program was successfully added.
     /// Note that program names within the library must be unique.
     func addProgram(_ program: Prog57) -> Bool {
-        if readonly { return false }
+        if isReadOnly { return false }
         if programByName(program.name) != nil { return false }
-        guard let folderURL else { return false }
+        guard let directoryURL else { return false }
 
         do {
-            let text = program.asString()
-            let programURL = folderURL.appendingPathComponent(program.name)
-            try text.write(to: programURL, atomically: true, encoding: .utf8)
+            let programURL = directoryURL.appendingPathComponent(program.name)
+            try program.rawText.write(to: programURL, atomically: true, encoding: .utf8)
         } catch {
             return false
         }
@@ -77,7 +84,7 @@ class Lib57 {
 
     /// Returns `true` if the program was successfully deleted.
     func deleteProgram(_ program: Prog57) -> Bool {
-        if readonly { return false }
+        if isReadOnly { return false }
 
         do {
             var isProgramRemoved = false
@@ -102,6 +109,7 @@ class Lib57 {
         return true
     }
 
+    /// Returns the program in the library with given name.
     func programByName(_ programName: String) -> Prog57? {
         var lo = 0
         var hi = programs.count
