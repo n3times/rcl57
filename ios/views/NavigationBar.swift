@@ -34,7 +34,7 @@ struct NavigationBar: View {
                 }
                 Text(title)
                     .frame(width: width * 3 / 5, height: Style.headerHeight)
-                    .font(Style.titleFont)
+                    .font(Style.headerTitleFont)
                 if let right {
                     Button(action: {
                         if let rightAction {

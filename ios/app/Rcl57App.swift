@@ -15,7 +15,7 @@ struct Rcl57App: App {
         }
         .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .background {
-                _ = Rcl57.shared.save()
+                _ = Rcl57.shared.saveState()
             }
         }
     }

@@ -36,11 +36,11 @@ class AppState: ObservableObject {
     // Note that SwiftUI can't observe directly changes to the C emulator state. The relevant
     // state gets updated after every burst.
 
-    /// Updated once per burst.
+    /// The display, updated once per burst.
     @Published private(set) var displayString = Rcl57.shared.display
 
-    /// Updated once per burst.
-    @Published private(set) var logTimestamp = Rcl57.shared.logTimestamp
+    /// The log timestamp, updated once per burst.
+    @Published private(set) var logTimestamp = Log57.shared.logTimestamp
 
 
     // MARK: Loaded program
@@ -100,7 +100,6 @@ class AppState: ObservableObject {
     /// Whether the user is in the Program Saving screen.
     @Published var isProgramSaving = false
 
-
     init() {
         let loadedProgramName = UserDefaults.standard.string(forKey: loadedProgramKey)
         let loadedLibraryName = UserDefaults.standard.string(forKey: loadedLibraryKey)
@@ -116,8 +115,8 @@ class AppState: ObservableObject {
                 if self.displayString != Rcl57.shared.display {
                     self.displayString = Rcl57.shared.display
                 }
-                if self.logTimestamp != Rcl57.shared.logTimestamp {
-                    self.logTimestamp = Rcl57.shared.logTimestamp
+                if self.logTimestamp != Log57.shared.logTimestamp {
+                    self.logTimestamp = Log57.shared.logTimestamp
                 }
             }
     }

@@ -1,5 +1,5 @@
 /**
- * Utility struct to convert text in `hlp` format into HTML.
+ * Utility to convert text in `hlp` format into HTML.
  *
  * The `hlp` format is a markup language for writing RCL-57 help files.
  */

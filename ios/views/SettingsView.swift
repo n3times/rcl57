@@ -40,7 +40,7 @@ struct SettingsView: View {
                         .foregroundColor(Color.black)
                         .confirmationDialog("Reset?", isPresented: $isPresentingReset) {
                             Button("Clear Steps, Registers and Log", role: .destructive) {
-                                Rcl57.shared.clearAll()
+                                Rcl57.shared.clearState()
                                 appState.loadedProgram = nil
                             }
                         }

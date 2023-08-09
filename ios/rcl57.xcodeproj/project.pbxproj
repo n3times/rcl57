@@ -31,6 +31,7 @@
 		154B7A8427BF667700AE38F1 /* leds57.c in Sources */ = {isa = PBXBuildFile; fileRef = 154B7A8327BF667700AE38F1 /* leds57.c */; };
 		1567D59F28832CA000273C3C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D59E28832CA000273C3C /* AppState.swift */; };
 		1567D5A1288D9C7300273C3C /* ManualPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1567D5A0288D9C7300273C3C /* ManualPageView.swift */; };
+		158874872A8300FB008B7BD4 /* Log57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158874862A8300FB008B7BD4 /* Log57.swift */; };
 		158BF1B82A7C2041001B7F18 /* RegistersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158BF1B72A7C2040001B7F18 /* RegistersView.swift */; };
 		158BF1BA2A7C2054001B7F18 /* StepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158BF1B92A7C2054001B7F18 /* StepsView.swift */; };
 		158D172027E035E4003BC323 /* lrn57.c in Sources */ = {isa = PBXBuildFile; fileRef = 158D171E27E032EC003BC323 /* lrn57.c */; };
@@ -93,6 +94,7 @@
 		154B7A8327BF667700AE38F1 /* leds57.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = leds57.c; sourceTree = "<group>"; };
 		1567D59E28832CA000273C3C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		1567D5A0288D9C7300273C3C /* ManualPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualPageView.swift; sourceTree = "<group>"; };
+		158874862A8300FB008B7BD4 /* Log57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log57.swift; sourceTree = "<group>"; };
 		158BF1B72A7C2040001B7F18 /* RegistersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistersView.swift; sourceTree = "<group>"; };
 		158BF1B92A7C2054001B7F18 /* StepsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsView.swift; sourceTree = "<group>"; };
 		158D171827E01A89003BC323 /* op57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = op57.h; sourceTree = "<group>"; };
@@ -111,7 +113,7 @@
 		15B085E5286152C60018418A /* Prog57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prog57.swift; sourceTree = "<group>"; };
 		15B0860D286413260018418A /* samplesLib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = samplesLib; path = ../samplesLib; sourceTree = "<group>"; };
 		15B0861128680BB40018418A /* Lib57.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lib57.swift; sourceTree = "<group>"; };
-		15BFD68F289EE3A700EA7AD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		15BFD68F289EE3A700EA7AD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15DBBC4727CF1C4900CD4131 /* log57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log57.h; sourceTree = "<group>"; };
 		15DBBC4827CF2A7400CD4131 /* log57.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = log57.c; sourceTree = "<group>"; };
 		15DBBC4A27D6F8B000CD4131 /* key57.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key57.h; sourceTree = "<group>"; };
@@ -151,7 +153,9 @@
 				15F948F0283E060C00706BE5 /* hlp2html */,
 				15B085E1286152770018418A /* program */,
 				15F948FB283FACE400706BE5 /* user manual */,
-				150ED8A027B089EF00E01FC6 /* rcl57 */,
+				158874892A830BCF008B7BD4 /* app */,
+				150ED8A027B089EF00E01FC6 /* views */,
+				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				150ED89F27B089EF00E01FC6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -164,18 +168,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		150ED8A027B089EF00E01FC6 /* rcl57 */ = {
+		150ED8A027B089EF00E01FC6 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				15BFD68F289EE3A700EA7AD3 /* Info.plist */,
-				150ED8A127B089EF00E01FC6 /* Rcl57App.swift */,
-				15F948F9283F26B200706BE5 /* Help57.swift */,
-				15B0861128680BB40018418A /* Lib57.swift */,
-				15B085E5286152C60018418A /* Prog57.swift */,
-				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
-				1567D59E28832CA000273C3C /* AppState.swift */,
-				15124F7628314DAE00F0208F /* UserSettings.swift */,
-				151EBA6E28238D62005DD283 /* Style.swift */,
 				151EBA6C28179F87005DD283 /* CalcView.swift */,
 				150ED8EB27B09E6400E01FC6 /* DisplayView.swift */,
 				15B085B42852C6060018418A /* HelpView.swift */,
@@ -194,11 +189,10 @@
 				15124F74282F00E200F0208F /* SettingsView.swift */,
 				159E94D72814BBD400859F10 /* StateView.swift */,
 				158BF1B92A7C2054001B7F18 /* StepsView.swift */,
-				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				150ED8A527B089F000E01FC6 /* Assets.xcassets */,
 				150ED8A727B089F000E01FC6 /* Preview Content */,
 			);
-			path = rcl57;
+			path = views;
 			sourceTree = "<group>";
 		};
 		150ED8A727B089F000E01FC6 /* Preview Content */ = {
@@ -236,6 +230,23 @@
 			);
 			name = engine;
 			path = ../engine;
+			sourceTree = "<group>";
+		};
+		158874892A830BCF008B7BD4 /* app */ = {
+			isa = PBXGroup;
+			children = (
+				15BFD68F289EE3A700EA7AD3 /* Info.plist */,
+				1567D59E28832CA000273C3C /* AppState.swift */,
+				15F948F9283F26B200706BE5 /* Help57.swift */,
+				15B0861128680BB40018418A /* Lib57.swift */,
+				158874862A8300FB008B7BD4 /* Log57.swift */,
+				15B085E5286152C60018418A /* Prog57.swift */,
+				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
+				150ED8A127B089EF00E01FC6 /* Rcl57App.swift */,
+				151EBA6E28238D62005DD283 /* Style.swift */,
+				15124F7628314DAE00F0208F /* UserSettings.swift */,
+			);
+			path = app;
 			sourceTree = "<group>";
 		};
 		15B085E1286152770018418A /* program */ = {
@@ -377,6 +388,7 @@
 				15B0861228680BB40018418A /* Lib57.swift in Sources */,
 				15F948FA283F26B200706BE5 /* Help57.swift in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
+				158874872A8300FB008B7BD4 /* Log57.swift in Sources */,
 				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				15071C352873811C0075D722 /* LibraryView.swift in Sources */,
@@ -534,13 +546,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"rcl57/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "views/\"Preview Content\"";
 				DEVELOPMENT_TEAM = FVF2Q6V64F;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = rcl57/Info.plist;
+				INFOPLIST_FILE = app/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -560,7 +572,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "rcl57/rcl57-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "rcl57-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -574,13 +586,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"rcl57/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "views/\"Preview Content\"";
 				DEVELOPMENT_TEAM = FVF2Q6V64F;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = rcl57/Info.plist;
+				INFOPLIST_FILE = app/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -599,7 +611,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "rcl57/rcl57-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "rcl57-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

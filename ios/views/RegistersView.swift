@@ -8,21 +8,28 @@ private struct SingleRegisterView: View {
     let index: Int
 
     var body: some View {
-        HStack {
-            Spacer(minLength: 10)
-            Text("   R\(index)")
-                .frame(maxWidth: 100, idealHeight:10, alignment: .leading)
-            Text(Rcl57.shared.register(atIndex: index))
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-            Spacer(minLength: 20)
+        GeometryReader { proxy in
+            let leftMargin = 10.0
+            let rightMargin = 20.0
+            let width = proxy.size.width - leftMargin - rightMargin
+
+            HStack {
+                Spacer(minLength: leftMargin)
+                Text("   R\(index)")
+                    .frame(width: width * 0.4, height: Style.listLineHeight, alignment: .leading)
+                Text(Rcl57.shared.register(atIndex: index))
+                    .frame(width: width * 0.6, height: Style.listLineHeight, alignment: .trailing)
+                Spacer(minLength: rightMargin)
+            }
         }
         .font(Style.listLineFont)
         .listRowBackground(backgroundColor)
         .foregroundColor(foregroundColor)
+        .listRowSeparator(.hidden)
     }
 }
 
-/// Displays the 8 registers.
+/// Displays the registers.
 struct RegistersView: View {
     @EnvironmentObject private var appState: AppState
 
@@ -35,9 +42,8 @@ struct RegistersView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach(0...7, id: \.self) {
+                ForEach(0..<Rcl57.shared.registerCount, id: \.self) {
                     SingleRegisterView(index: $0)
-                        .listRowSeparator(.hidden)
                 }
                 .id(refreshCounter)
             }

@@ -32,13 +32,13 @@ private struct LibInfoView: View {
                 Text(programType == .readOnly ? "Samples" : programType == .readWrite ? "User" : "")
                     .offset(y: -3)
                     .frame(width: width / 3, height: 20)
+                    .foregroundColor(.ivory)
+                    .font(Style.programNameFont)
 
                 Spacer()
                     .frame(width: width / 3, height: 20)
             }
             .background(Color.blackish)
-            .foregroundColor(.ivory)
-            .font(Style.programFont)
         }
         .frame(height: 20)
     }

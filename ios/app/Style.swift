@@ -19,15 +19,20 @@ struct Style {
 
     // MARK: Header
 
-    static let titleFont = Font.system(size: 22, weight: .medium)
+    static let headerHeight = 44.0
+    static let headerTitleFont = Font.system(size: 22, weight: .medium)
     static let directionsFont = Font.system(size: 22, weight: .regular, design: .monospaced)
     static let directionsFontLarge = Font.system(size: 26, weight: .regular, design: .monospaced)
-    static let headerHeight = 44.0
-    static let programFont =
+    static let programNameFont =
         Font.system(size: isSmallScreen ? 12 : 14, weight:.medium, design: .default)
-    static let operationFont =
+    static let operationNameFont =
         Font.system(size: isSmallScreen ? 14 : 16, weight:.medium, design: .default)
 
+
+    // MARK: Calc
+
+    static let calcInfoHeight = 20.0
+    static let calcDisplayHeight = isSmallScreen ? 88.0 : 108.0
 
     // MARK: List
 
@@ -40,11 +45,11 @@ struct Style {
 
     // MARK: Toolbar
 
-    static let toolbarFont = Font.system(size: 18, weight: .medium)
     static let toolbarHeight = 44.0
+    static let toolbarFont = Font.system(size: 18, weight: .medium)
 
 
-    // MARK: Directions
+    // MARK: Directions Symbols
 
     static let leftArrow = "\u{25c1}"
     static let rightArrow = "\u{25b7}"

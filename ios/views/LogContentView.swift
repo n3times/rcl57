@@ -2,14 +2,17 @@ import SwiftUI
 
 /// Data for a LogLineView: a number and an operation.
 private struct LogLineData: Identifiable {
-    let numberLogEntry: LogEntry
-    let opLogEntry: LogEntry
+    let numberEntry: LogEntry?
+    let opLogEntry: LogEntry?
 
+    /// Incremented by 1 on each new instance.
     static var lineId = 0
+
+    /// Identifiable conformance.
     let id: Int
 
-    init(numberEntry: LogEntry, opEntry: LogEntry) {
-        self.numberLogEntry = numberEntry
+    init(numberEntry: LogEntry?, opEntry: LogEntry?) {
+        self.numberEntry = numberEntry
         self.opLogEntry = opEntry
 
         self.id = LogLineData.lineId
@@ -17,36 +20,36 @@ private struct LogLineData: Identifiable {
     }
 }
 
-/// A line in a LogView: a number on the left and an operation on the right.
+/// A single log line: a number on the left and an operation on the right.
 private struct LogLineView: View {
     let line: LogLineData
 
-    private let foregroundColor: Color
-    private let foregroundColorError: Color
+    /// Used for log entries that have an error associated to them.
+    private static let errorColor = Color(red: 0.5, green: 0.0, blue: 0.0)
 
-    init(line: LogLineData) {
-        self.line = line
-
-        self.foregroundColor = Color.black
-        self.foregroundColorError = Color(red: 0.5, green: 0.0, blue: 0.0)
-    }
-
-    private func color(forEntry entry: LogEntry) -> Color {
-        let isError = (entry.flags & LOG57_ERROR_FLAG) != 0
-
-        return isError ? foregroundColorError: foregroundColor
+    /// Returns the foregroundColor for a given entry.
+    private func foregroundColor(forEntry entry: LogEntry?) -> Color {
+        if let entry, (entry.flags & LOG57_ERROR_FLAG) != 0 {
+            return LogLineView.errorColor
+        } else {
+            return Color.black
+        }
     }
 
     var body: some View {
-        HStack {
-            Text(line.numberLogEntry.message)
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-                .foregroundColor(color(forEntry: line.numberLogEntry))
+        GeometryReader { proxy in
+            let leftWidth = proxy.size.width * 0.5
+            let spacerLength = 25.0
+            let rightWidth = proxy.size.width * 0.5 - spacerLength
+
             HStack {
-                Spacer(minLength: 25)
-                Text(line.opLogEntry.message)
-                    .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
-                    .foregroundColor(foregroundColor)
+                Text(line.numberEntry?.message ?? "")
+                    .frame(width: leftWidth, height: Style.listLineHeight, alignment: .trailing)
+                    .foregroundColor(foregroundColor(forEntry: line.numberEntry))
+                Spacer(minLength: spacerLength)
+                Text(line.opLogEntry?.message ?? "")
+                    .frame(width: rightWidth, height: Style.listLineHeight, alignment: .leading)
+                    .foregroundColor(Color.black)
             }
         }
         .font(Style.listLineFont)
@@ -61,15 +64,10 @@ struct LogContentView: View {
     @State private var currentLineIndex = 0
     @State private var lastTimestamp = 0
     @State private var lastLoggedCount = 0
-    private let maxLines: Int
+    private let maxLines = 500
 
     init() {
-        self.maxLines = 500
         updateLog()
-    }
-
-    private func makeLine(numberEntry: LogEntry, opEntry: LogEntry) -> LogLineData {
-        LogLineData(numberEntry: numberEntry, opEntry: opEntry)
     }
 
     private func clear() {
@@ -81,14 +79,14 @@ struct LogContentView: View {
 
     private func updateLog() {
         // Return right away if there are no changes.
-        let newTimestamp = Rcl57.shared.logTimestamp
+        let newTimestamp = Log57.shared.logTimestamp
         if newTimestamp == lastTimestamp {
             return
         }
         lastTimestamp = newTimestamp
 
         // Clear log and return if necessary.
-        let newLoggedCount = Rcl57.shared.loggedCount
+        let newLoggedCount = Log57.shared.loggedCount
         if newLoggedCount == 0 {
             clear();
             return
@@ -96,17 +94,17 @@ struct LogContentView: View {
 
         // Reevaluate the item that was last logged in case it has been updated.
         if lastLoggedCount > 0 {
-            var numberEntry = lines.last?.numberLogEntry
+            var numberEntry = lines.last?.numberEntry
             var opEntry = lines.last?.opLogEntry
-            let type = Rcl57.shared.logEntry(atIndex: lastLoggedCount).type
+            let type = Log57.shared.logEntry(atIndex: lastLoggedCount).type
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = Rcl57.shared.logEntry(atIndex: lastLoggedCount)
+                opEntry = Log57.shared.logEntry(atIndex: lastLoggedCount)
             } else {
-                numberEntry = Rcl57.shared.logEntry(atIndex: lastLoggedCount)
+                numberEntry = Log57.shared.logEntry(atIndex: lastLoggedCount)
             }
             lines.removeLast()
             if let numberEntry, let opEntry {
-                lines.append(makeLine(numberEntry: numberEntry, opEntry: opEntry))
+                lines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
             }
         }
 
@@ -114,31 +112,29 @@ struct LogContentView: View {
         if newLoggedCount > lastLoggedCount {
             let start = max(lastLoggedCount+1, newLoggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
             for i in start...newLoggedCount {
-                let entry = Rcl57.shared.logEntry(atIndex: i)
+                let entry = Log57.shared.logEntry(atIndex: i)
                 let type = entry.type
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
-                    let numberEntry = lines.last?.numberLogEntry
+                    let numberEntry = lines.last?.numberEntry
                     let opEntry = lines.last?.opLogEntry
                     if opEntry?.message == "" {
                         lines.removeLast()
                         if let numberEntry {
-                            lines.append(makeLine(numberEntry: numberEntry, opEntry: entry))
+                            lines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
                         }
                     } else {
                         currentLineIndex += 1
                         if lines.count == maxLines {
                             lines.removeFirst()
                         }
-                        lines.append(makeLine(numberEntry: LogEntry(entry: LOG57_BLANK_ENTRY),
-                                              opEntry: entry))
+                        lines.append(LogLineData(numberEntry: nil, opEntry: entry))
                     }
                 } else {
                     currentLineIndex += 1
                     if lines.count == maxLines {
                         lines.removeFirst()
                     }
-                    lines.append(makeLine(numberEntry: entry,
-                                          opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
+                    lines.append(LogLineData(numberEntry: entry, opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
                 }
             }
             lastLoggedCount = newLoggedCount

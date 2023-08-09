@@ -52,7 +52,7 @@ private struct ProgramEditNavigationBar: View {
 
                 Text(context == .edit ? "Edit Program" : context == .imported ? "Import Program" : "Create Program")
                     .frame(width: width * 3 / 5, height: Style.headerHeight)
-                    .font(Style.titleFont)
+                    .font(Style.headerTitleFont)
 
                 Button(action: {
                     UIApplication.shared.sendAction(

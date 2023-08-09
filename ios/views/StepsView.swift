@@ -14,27 +14,33 @@ private struct SingleStepView: View {
         let op = Rcl57.shared.stepOp(atIndex: index, isAlpha: true)
         let active = index <= Rcl57.shared.stepsLastIndex
 
-        HStack {
-            Spacer(minLength: 10)
-            Text(String(format: "   %02d", index))
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .leading)
-            Text(op)
-                .frame(maxWidth: .infinity, idealHeight:10, alignment: .trailing)
-            Spacer(minLength: 20)
+        GeometryReader { proxy in
+            let leftMargin = 10.0
+            let rightMargin = 20.0
+            let width = proxy.size.width - leftMargin - rightMargin
+
+            HStack {
+                Spacer(minLength: leftMargin)
+                Text(String(format: "   %02d", index))
+                    .frame(width: width * 0.4, height: Style.listLineHeight, alignment: .leading)
+                Text(op)
+                    .frame(width: width * 0.6, height: Style.listLineHeight, alignment: .trailing)
+                Spacer(minLength: rightMargin)
+            }
         }
         .font(Style.listLineFont)
-        .listRowBackground(active ? activeBackgroundColor : inactiveBackgroundColor)
         .foregroundColor(active ? foregroundColor: inactiveForegroundColor)
         .listRowSeparator(.hidden)
+        .listRowBackground(active ? activeBackgroundColor : inactiveBackgroundColor)
     }
 }
 
-/// Displays the 50 steps of the program in memory.
+/// Displays the steps of the program in memory.
 struct StepsView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-                ForEach(0...49, id: \.self) {
+                ForEach(0..<Rcl57.shared.stepCount, id: \.self) {
                     SingleStepView(index: $0)
                 }
             }

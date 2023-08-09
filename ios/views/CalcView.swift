@@ -7,7 +7,10 @@ private struct CalcNavigationBar: View {
     struct CalcNavigationButton: View {
         @EnvironmentObject private var appState: AppState
 
+        /// The title of the button.
         let title: String
+
+        /// The app location to transition to when the button is pressed.
         let destination: AppLocation
 
         var body: some View {
@@ -54,22 +57,22 @@ private struct CalcInfoView: View {
             let width = proxy.size.width
             HStack(spacing: 0) {
                 Text(appState.loadedProgram?.name ?? "")
-                    .font(Style.programFont)
+                    .font(Style.programNameFont)
                     .offset(x: 15, y: -3)
-                    .frame(width: width / 2, height: 20, alignment: .leading)
+                    .frame(width: width / 2, alignment: .leading)
 
                 Spacer()
-                    .frame(width: width / 6, height: 20, alignment: .leading)
+                    .frame(width: width / 6, alignment: .leading)
 
-                Text(Rcl57.shared.currentOp)
-                    .font(Style.operationFont)
+                Text(Log57.shared.currentOp)
+                    .font(Style.operationNameFont)
                     .offset(x: -25, y: -3)
-                    .frame(width: width / 3, height: 20, alignment: .trailing)
+                    .frame(width: width / 3, alignment: .trailing)
             }
-            .foregroundColor(.lightGray)
-            .background(Color.blackish)
         }
-        .frame(height: 20)
+        .frame(height: Style.calcInfoHeight)
+        .foregroundColor(.lightGray)
+        .background(Color.blackish)
     }
 }
 
@@ -78,8 +81,6 @@ struct CalcView: View {
     @EnvironmentObject private var appState: AppState
 
     var body: some View {
-        let displayHeight = 4 * Style.listLineHeight
-
         GeometryReader { proxy in
             let width = proxy.size.width
 
@@ -90,8 +91,7 @@ struct CalcView: View {
                     CalcNavigationBar()
                     CalcInfoView()
                     DisplayView(displayString: appState.displayString)
-                        .frame(width: CGFloat(width * 0.85), height: displayHeight)
-                        .frame(width: width, height: displayHeight)
+                        .frame(width: CGFloat(width * 0.85), height: Style.calcDisplayHeight)
                         .background(.black)
                     KeyboardView()
                     Spacer(minLength: 20)

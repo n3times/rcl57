@@ -16,7 +16,7 @@ struct LogView: View {
                               rightAction: nil)
                 .background(Color.blackish)
 
-                if Rcl57.shared.loggedCount == 0 {
+                if Log57.shared.loggedCount == 0 {
                     Text("Log is empty")
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         .background(Color.ivory)
@@ -36,11 +36,11 @@ struct LogView: View {
                             .frame(width: proxy.size.width * 2 / 3, height: Style.toolbarHeight)
                             .contentShape(Rectangle())
                     }
-                    .disabled(Rcl57.shared.loggedCount == 0)
+                    .disabled(Log57.shared.loggedCount == 0)
                     .buttonStyle(.plain)
                     .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                         Button("Clear Log", role: .destructive) {
-                            Rcl57.shared.clearLog()
+                            Log57.shared.clearLog()
                         }
                     }
                     Spacer()

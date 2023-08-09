@@ -9,12 +9,6 @@ import SwiftUI
  *  --   <- this represents 2 segments
  * |/\|
  *  __   <- this represents only 1 segment
- *
- * The shape of each segment is described in `segmentData`. For a smoother look, there are two
- * visual optimizations:
- * - `combinedData` combines two adjacent segments into one, with no gap.
- * - `combinedShoterData` is used for some characters (such as "X" or "+") that look better when the
- *   segments are a little shorter.
  */
 private struct LedSegmentData {
     struct Pair<T: Hashable>: Hashable {
@@ -27,11 +21,13 @@ private struct LedSegmentData {
         }
     }
 
+    /// Used to describe segment
     enum SegmentData {
         case straight(CGRect)
         case angled([CGPoint])
     }
 
+    /// Describes the shape of each one of the 14 segments.
     static let segmentData: [SegmentData] = [
         .straight(CGRect(x: 0, y: 0, width: 19, height: 3)),
         .straight(CGRect(x: 0, y: 0, width: 3, height: 15)),
@@ -53,6 +49,7 @@ private struct LedSegmentData {
         .straight(CGRect(x: 0, y: 26, width: 19, height: 3))
     ]
 
+    /// Combines 2 adjacent segments into one, with no gap.
     static let combinedData: [Pair<Int>: SegmentData] = [
         Pair(1, 8): .straight(CGRect(x: 0, y: 0, width: 3, height: 29)),
         Pair(3, 10): .straight(CGRect(x: 8, y: 0, width: 3, height: 29)),
@@ -64,6 +61,8 @@ private struct LedSegmentData {
                              CGPoint(x: 18, y: 1+3), CGPoint(x: 1+2, y: 28), CGPoint(x: 1, y: 28)]),
     ]
 
+    /// Used for some characters (such as "X" or "+") that look better when the combined segments
+    /// are a little shorter.
     static let combinedShoterData: [Pair<Int>: SegmentData] = [
         Pair(1, 8): .straight(CGRect(x: 0, y: 4, width: 3, height: 23)),
         Pair(3, 10): .straight(CGRect(x: 8, y: 4, width: 3, height: 23)),
@@ -75,6 +74,7 @@ private struct LedSegmentData {
                              CGPoint(x: 17, y: 5+3), CGPoint(x: 3+2, y: 25), CGPoint(x: 3, y: 25)]),
     ]
 
+    /// The data for the decimal dot.
     static let dotData = SegmentData.straight(CGRect(x: 22, y: 25, width: 4, height: 4))
 }
 
@@ -97,6 +97,8 @@ struct DisplayView: View {
     /// a dot. The string will be right-justified within the display.
     let displayString: String
 
+    /// A device independent rectangle where the display is drawn. The display is eventually
+    /// scaled to fit the device.
     private static var displayPathRect: CGRect {
         let width = Double(maxLedCount - 1) * interLedX + ledWidth
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
@@ -105,7 +107,7 @@ struct DisplayView: View {
 
     // MARK: Single-Segment Path
 
-    // Returns a rectangular path with the corners slightly clipped.
+    /// Returns a rectangular path with the corners slightly clipped.
     private func straightLedSegmentPath(rect: CGRect) -> Path {
         var path = Path()
         let d = 1.5
@@ -121,6 +123,7 @@ struct DisplayView: View {
         return path
     }
 
+    /// Returns a polygon path describing the angled LED segment.
     private func angledLedSegmentPath(points: [CGPoint]) -> Path {
         var path = Path()
         path.move(to: points[0])
@@ -139,6 +142,7 @@ struct DisplayView: View {
 
     // MARK: Single-LED Path
 
+    /// The path for a single LED.
     private func ledPath(
         forCharacter c: Character,
         startX: CGFloat,
@@ -209,6 +213,7 @@ struct DisplayView: View {
 
     // MARK: All-LEDs Path
 
+    /// The path that describes the display with all its LEDs.
     private func displayPath(
         forDisplayString displayString: String, boundingRect: CGRect
     ) -> some Shape {
@@ -257,6 +262,8 @@ struct DisplayView: View {
             let width = proxy.size.width
             let height = proxy.size.height
             let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
+
+            // Center and scale the display to fit the device.
             displayPath(forDisplayString: displayString, boundingRect: boundingRect)
                 .offset(x: (boundingRect.width - displayRect.width) / 2,
                         y: (boundingRect.height - displayRect.height) / 2)
