@@ -1,17 +1,17 @@
 import SwiftUI
 
-/// Allows users to change the app settings.
+/// Allows the user to change the app settings.
 struct SettingsView: View {
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var settings: UserSettings
+    @EnvironmentObject private var settingsState: SettingsState
 
-    let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
+    private let aboutText = "Please, send feedback to:\nrcl.ti.59@gmail.com"
 
     @State private var isPresentingReset = false
     @State private var isPresentingContact = false
 
-    @AppStorage(UserSettings.isHapticKey) private var hasHaptic = false
-    @AppStorage(UserSettings.isClickKey) private var hasKeyClick = false
+    @AppStorage(SettingsState.isHapticKey) private var hasHaptic = false
+    @AppStorage(SettingsState.isClickKey) private var hasKeyClick = false
 
     var body: some View {
         GeometryReader { proxy in
@@ -46,13 +46,13 @@ struct SettingsView: View {
                         }
                     }
                     Section("Emulator Options") {
-                        Toggle(isOn: $settings.isInTurboMode) {
+                        Toggle(isOn: $settingsState.isInTurboMode) {
                             Text("Turbo Speed")
                         }
-                        Toggle(isOn: $settings.isDisplayAlpha) {
+                        Toggle(isOn: $settingsState.isDisplayAlpha) {
                             Text("Alpha Display")
                         }
-                        Toggle(isOn: $settings.isHpLnrMode) {
+                        Toggle(isOn: $settingsState.isHpLnrMode) {
                             Text("HP LRN Mode")
                         }
                     }

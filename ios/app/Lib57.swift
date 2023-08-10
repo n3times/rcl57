@@ -1,12 +1,12 @@
 import Foundation
 
 /**
- * Represents the 2 libraries of RCL-57 programs:
+ * Represents the 2 libraries of programs in RCL-57:
  * - `samplesLib` contains a fixed set of sample programs
- * - `userLib` contains User programs
+ * - `userLib` contains user programs
  */
 class Lib57 {
-    /// A library that contains User programs.
+    /// A library that contains user programs.
     static let userLib: Lib57 = {
         let userLibURL =
             FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first

@@ -16,13 +16,10 @@ private struct TrigModeIndicator: Shape {
 
 /// Displays the keyboard view and handles key presses/releases.
 struct KeyboardView: View {
-    @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var settings: UserSettings
-
     @Environment(\.scenePhase) private var scenePhase
 
-    @AppStorage(UserSettings.isHapticKey) private var hasHaptic = false
-    @AppStorage(UserSettings.isClickKey) private var hasKeyClick = false
+    @AppStorage(SettingsState.isHapticKey) private var hasHaptic = false
+    @AppStorage(SettingsState.isClickKey) private var hasKeyClick = false
 
     private let imageName = "button_pad"
 

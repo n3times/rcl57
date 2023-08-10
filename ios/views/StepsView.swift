@@ -2,16 +2,17 @@ import SwiftUI
 
 /// Displays a single step.
 private struct SingleStepView: View {
+    // Note: currently we don't differentiate between active and inactive steps.
     private let activeBackgroundColor = Color.ivory
     private let inactiveBackgroundColor = Color.ivory
     private let foregroundColor = Color.blackish
     private let inactiveForegroundColor = Color.blackish
 
-    /// The index of the step into the program.
+    /// The index of the step in the program.
     let index: Int
 
     var body: some View {
-        let op = Rcl57.shared.stepOp(atIndex: index, isAlpha: true)
+        let step = Rcl57.shared.step(atIndex: index, isAlpha: true)
         let active = index <= Rcl57.shared.stepsLastIndex
 
         GeometryReader { proxy in
@@ -23,7 +24,7 @@ private struct SingleStepView: View {
                 Spacer(minLength: leftMargin)
                 Text(String(format: "   %02d", index))
                     .frame(width: width * 0.4, height: Style.listLineHeight, alignment: .leading)
-                Text(op)
+                Text(step)
                     .frame(width: width * 0.6, height: Style.listLineHeight, alignment: .trailing)
                 Spacer(minLength: rightMargin)
             }

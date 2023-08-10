@@ -58,92 +58,81 @@ private struct LogLineView: View {
 
 /// Displays operations and results.
 struct LogContentView: View {
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
-    @State private var lines: [LogLineData] = []
-    @State private var currentLineIndex = 0
-    @State private var lastTimestamp = 0
-    @State private var lastLoggedCount = 0
+    @State private var logLines: [LogLineData] = []
+    @State private var logTimestamp = 0
+    @State private var loggedCount = 0
+
     private let maxLines = 500
 
-    init() {
-        updateLog()
-    }
-
     private func clear() {
-        lines.removeAll()
-        currentLineIndex = 0
-        lastTimestamp = 0
-        lastLoggedCount = 0
+        logLines.removeAll()
+        logTimestamp = 0
+        loggedCount = 0
     }
 
     private func updateLog() {
         // Return right away if there are no changes.
-        let newTimestamp = Log57.shared.logTimestamp
-        if newTimestamp == lastTimestamp {
-            return
-        }
-        lastTimestamp = newTimestamp
+        if logTimestamp == Log57.shared.logTimestamp { return }
+        logTimestamp = Log57.shared.logTimestamp
 
         // Clear log and return if necessary.
-        let newLoggedCount = Log57.shared.loggedCount
-        if newLoggedCount == 0 {
+        if Log57.shared.entryCount == 0 {
             clear();
             return
         }
 
         // Reevaluate the item that was last logged in case it has been updated.
-        if lastLoggedCount > 0 {
-            var numberEntry = lines.last?.numberEntry
-            var opEntry = lines.last?.opLogEntry
-            let type = Log57.shared.logEntry(atIndex: lastLoggedCount).type
+        if loggedCount > 0 {
+            var numberEntry = logLines.last?.numberEntry
+            var opEntry = logLines.last?.opLogEntry
+            let type = Log57.shared.logEntry(atIndex: loggedCount).type
             if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = Log57.shared.logEntry(atIndex: lastLoggedCount)
+                opEntry = Log57.shared.logEntry(atIndex: loggedCount)
             } else {
-                numberEntry = Log57.shared.logEntry(atIndex: lastLoggedCount)
+                numberEntry = Log57.shared.logEntry(atIndex: loggedCount)
             }
-            lines.removeLast()
+            logLines.removeLast()
             if let numberEntry, let opEntry {
-                lines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
+                logLines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
             }
         }
 
         // Handle new log entries.
-        if newLoggedCount > lastLoggedCount {
-            let start = max(lastLoggedCount+1, newLoggedCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
-            for i in start...newLoggedCount {
+        if Log57.shared.entryCount > loggedCount {
+            let start = max(loggedCount+1, Log57.shared.entryCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
+            for i in start...Log57.shared.entryCount {
                 let entry = Log57.shared.logEntry(atIndex: i)
                 let type = entry.type
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
-                    let numberEntry = lines.last?.numberEntry
-                    let opEntry = lines.last?.opLogEntry
+                    let numberEntry = logLines.last?.numberEntry
+                    let opEntry = logLines.last?.opLogEntry
                     if opEntry?.message == "" {
-                        lines.removeLast()
+                        logLines.removeLast()
                         if let numberEntry {
-                            lines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
+                            logLines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
                         }
                     } else {
-                        currentLineIndex += 1
-                        if lines.count == maxLines {
-                            lines.removeFirst()
+                        if logLines.count == maxLines {
+                            logLines.removeFirst()
                         }
-                        lines.append(LogLineData(numberEntry: nil, opEntry: entry))
+                        logLines.append(LogLineData(numberEntry: nil, opEntry: entry))
                     }
                 } else {
-                    currentLineIndex += 1
-                    if lines.count == maxLines {
-                        lines.removeFirst()
+                    if logLines.count == maxLines {
+                        logLines.removeFirst()
                     }
-                    lines.append(LogLineData(numberEntry: entry, opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
+                    logLines.append(LogLineData(numberEntry: entry, opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
                 }
             }
-            lastLoggedCount = newLoggedCount
+            loggedCount = Log57.shared.entryCount
         }
     }
 
     var body: some View {
         ScrollViewReader { proxy in
-            List(lines) {
+            List(logLines) {
                 LogLineView(line: $0)
                     .listRowBackground(Color.ivory)
                     .listRowSeparator(.hidden)
@@ -152,16 +141,16 @@ struct LogContentView: View {
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
                 updateLog()
-                if let lastLine = lines.last {
+                if let lastLine = logLines.last {
                     proxy.scrollTo(lastLine.id, anchor: .bottom)
                 }
             }
-            .onChange(of: lastTimestamp) { _ in
-                if let lastLine = lines.last {
+            .onChange(of: logTimestamp) { _ in
+                if let lastLine = logLines.last {
                     proxy.scrollTo(lastLine.id, anchor: .bottom)
                 }
             }
-            .onReceive(appState.$logTimestamp) { _ in
+            .onReceive(emulatorState.$logTimestamp) { _ in
                 updateLog()
             }
         }

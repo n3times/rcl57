@@ -6,7 +6,7 @@ import Foundation
  * A program has steps, registers, a name, and a description.
  */
 class Prog57 : Hashable {
-    /// The type used by the emulator for the set of steps and user registers.
+    /// The type used by the emulator to represent the set of steps and user registers.
     typealias ProgramRawData = (ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
                                 ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,
                                 ti57_reg_t, ti57_reg_t, ti57_reg_t, ti57_reg_t,

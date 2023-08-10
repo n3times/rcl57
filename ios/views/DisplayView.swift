@@ -3,12 +3,12 @@ import SwiftUI
 /**
  * Describes the shapes of the LED segments.
  *
- * Each LED has 14 segments:
- *  --   <- this represents only 1 segment
- * |\/|
- *  --   <- this represents 2 segments
- * |/\|
- *  __   <- this represents only 1 segment
+ * Each LED has 14 segments: 8 are straight (4 vertical, 4 horizontal) and 4 are angled.
+ *  ---   <- this represents 1 horizontal segment
+ * |\|/|
+ *  ---   <- this represents 2 horizontal segments
+ * |/|\|
+ *  ___   <- this represents 1 horizontal segment
  */
 private struct LedSegmentData {
     struct Pair<T: Hashable>: Hashable {
@@ -21,9 +21,12 @@ private struct LedSegmentData {
         }
     }
 
-    /// Used to describe segment
+    /// Used to describe segments.
     enum SegmentData {
+        /// The rectangle used to draw a straight segment.
         case straight(CGRect)
+
+        /// The polygon used to draw an angled segment.
         case angled([CGPoint])
     }
 
@@ -82,7 +85,7 @@ private struct LedSegmentData {
  * The display, composed of 12 LEDs. In addition, each LED has an optional dot to the right (decimal
  * point).
  *
- * Note that the TI-57 has 7-segment LEDs but RCL-57 supports alpha mode.
+ * Note that the actual TI-57 has 7-segment LEDs but RCL-57 supports alpha mode.
  */
 struct DisplayView: View {
     private static let ledColor = Color.red
@@ -98,7 +101,7 @@ struct DisplayView: View {
     let displayString: String
 
     /// A device independent rectangle where the display is drawn. The display is eventually
-    /// scaled to fit the device.
+    /// scaled to fit the device resolution.
     private static var displayPathRect: CGRect {
         let width = Double(maxLedCount - 1) * interLedX + ledWidth
         return CGRect(x: 0, y: 0, width: width, height: ledHeight)
@@ -134,13 +137,13 @@ struct DisplayView: View {
         return path
     }
 
+
+    // MARK: Single-LED Path
+
     /// Returns `true` if the segment of a given index is on.
     private func isSegmentOn(segments: Int32, i: Int) -> Bool {
         return segments & (1 << (DisplayView.segmentCount - 1 - i)) != 0
     }
-
-
-    // MARK: Single-LED Path
 
     /// The path for a single LED.
     private func ledPath(
@@ -263,7 +266,7 @@ struct DisplayView: View {
             let height = proxy.size.height
             let boundingRect = CGRect(x: 0, y: 0, width: width, height: height)
 
-            // Center and scale the display to fit the device.
+            // Center and scale the display to fit the device resolution.
             displayPath(forDisplayString: displayString, boundingRect: boundingRect)
                 .offset(x: (boundingRect.width - displayRect.width) / 2,
                         y: (boundingRect.height - displayRect.height) / 2)

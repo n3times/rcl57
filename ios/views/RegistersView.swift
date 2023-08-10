@@ -31,13 +31,11 @@ private struct SingleRegisterView: View {
 
 /// Displays the registers.
 struct RegistersView: View {
-    @EnvironmentObject private var appState: AppState
-
     // Use a timer to refresh the registers in case they have changed. This is necessary because
     // those belong to the emulator and are not directly observed by SwifUI.
     private let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
 
-    @State private var refreshCounter: Int64 = 0
+    @State private var refreshID: Int64 = 0
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -45,14 +43,14 @@ struct RegistersView: View {
                 ForEach(0..<Rcl57.shared.registerCount, id: \.self) {
                     SingleRegisterView(index: $0)
                 }
-                .id(refreshCounter)
+                .id(refreshID)
             }
             .background(Color.ivory)
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
         }
         .onReceive(timer) { _ in
-            refreshCounter += 1
+            refreshID += 1
         }
     }
 }

@@ -2,7 +2,6 @@ import SwiftUI
 
 /// A specialized bar to navigate to the different views of the app.
 private struct CalcNavigationBar: View {
-
     /// A button of the calc navigation bar.
     struct CalcNavigationButton: View {
         @EnvironmentObject private var appState: AppState
@@ -78,7 +77,7 @@ private struct CalcInfoView: View {
 
 /// The calculator view with the navigation bar, info, display, and keyboard.
 struct CalcView: View {
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
     var body: some View {
         GeometryReader { proxy in
@@ -90,7 +89,7 @@ struct CalcView: View {
                 VStack(spacing: 0) {
                     CalcNavigationBar()
                     CalcInfoView()
-                    DisplayView(displayString: appState.displayString)
+                    DisplayView(displayString: emulatorState.displayString)
                         .frame(width: CGFloat(width * 0.85), height: Style.calcDisplayHeight)
                         .background(.black)
                     KeyboardView()

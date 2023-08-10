@@ -40,7 +40,7 @@ struct Style {
         Font.system(size: isSmallScreen ? 17 : 20, weight:.semibold, design: .monospaced)
     static let listLineFontBold =
         Font.system(size: isSmallScreen ? 15 : 18, weight:.medium, design: .default)
-    static let listLineHeight = isSmallScreen ? 22.0 : 27.0
+    static let listLineHeight = isSmallScreen ? 22.0 : 26.5
 
 
     // MARK: Toolbar

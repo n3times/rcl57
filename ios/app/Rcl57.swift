@@ -4,7 +4,7 @@ import Foundation
  * The main class for interfacing with the emulator.
  *
  * This includes accessing the display, the registers, and the program steps. From this class, one
- * can interact with the calculator through the keyboard.
+ * can interact with the calculator through its keyboard.
  */
 class Rcl57 {
     /// The Rcl57 singleton.
@@ -54,7 +54,7 @@ class Rcl57 {
         return bytePointer
     }
 
-    // Updates version if it has changed.
+    /// Updates `version` if it has changed.
     private func updateVersion(stateURL: inout URL?) {
         if let previousVersion = UserDefaults.standard.string(forKey: Rcl57.versionKey) {
             if previousVersion != Rcl57.version {
@@ -110,7 +110,7 @@ class Rcl57 {
     /// The number of registers.
     let registerCount = 8
 
-    /// The register at a given index, as a String.
+    /// The contents of the register at a given index.
     func register(atIndex index: Int) -> String {
         let reg = ti57_get_user_reg(&rcl57.ti57, Int32(index))
         let str = utils57_user_reg_to_str(reg, false, 9)
@@ -137,8 +137,8 @@ class Rcl57 {
     /// The number of program steps.
     let stepCount = 50
 
-    /// The operation at a given index, as a String.
-    func stepOp(atIndex index: Int, isAlpha: Bool) -> String {
+    /// The step at a given index, in numeric or alpha form.
+    func step(atIndex index: Int, isAlpha: Bool) -> String {
         guard let op = ti57_get_program_op(&rcl57.ti57, Int32(index)) else { return "ERR" }
 
         let isInv = op.pointee.inv

@@ -16,8 +16,6 @@ private func programType(forProgram program: Prog57?) -> ProgramType {
 
 /// Displays the name of the library the program belongs too.
 private struct LibInfoView: View {
-    @EnvironmentObject private var appState: AppState
-
     var program: Prog57
 
     var body: some View {
@@ -52,7 +50,7 @@ private struct StateViewToolbar: View {
     @State private var isPresentingClear = false
     @State private var isPresentingSave = false
 
-    @Binding var refreshCounter: Int64
+    @Binding var refreshID: Int64
 
     var body: some View {
         let program = appState.loadedProgram
@@ -97,12 +95,12 @@ private struct StateViewToolbar: View {
                     if appState.stateViewMode == .steps {
                         Button("Clear Steps", role: .destructive) {
                             Rcl57.shared.clearSteps()
-                            refreshCounter += 1
+                            refreshID += 1
                         }
                     } else {
                         Button("Clear Registers", role: .destructive) {
                             Rcl57.shared.clearRegisters()
-                            refreshCounter += 1
+                            refreshID += 1
                         }
                     }
                 }
@@ -129,7 +127,7 @@ private struct StateViewToolbar: View {
                                 } else {
                                     _ = program.saveRegisters()
                                 }
-                                refreshCounter += 1
+                                refreshID += 1
                             }
                         }
                     }
@@ -145,10 +143,11 @@ private struct StateViewToolbar: View {
 /// Displays the steps and registers of the calculator.
 struct StateView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
     /// Used to refresh the view when the steps/registers are saved or cleared. This is necessary
     /// because those belong to the emulator and are not directly observed by SwifUI.
-    @State private var refreshCounter: Int64 = 0
+    @State private var refreshID: Int64 = 0
 
     var body: some View {
         let program = appState.loadedProgram
@@ -184,9 +183,9 @@ struct StateView: View {
                 case .steps:
                     StepsView()
                 }
-                StateViewToolbar(refreshCounter: $refreshCounter)
+                StateViewToolbar(refreshID: $refreshID)
             }
-            .id(refreshCounter)
+            .id(refreshID)
 
             if appState.isProgramEditing {
                 ProgramEditView()

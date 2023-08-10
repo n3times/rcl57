@@ -1,13 +1,14 @@
 import Foundation
 
 /**
- * Manages user's settings.
+ * Manages user settings.
  *
  * The user can control elements of the UI as well as elements of the emulator. The settings are
  * stored in `UserDefaults`.
  */
-class UserSettings: ObservableObject {
+class SettingsState: ObservableObject {
     // MARK: UI Settings.
+
     // The app uses @AppStorage directly for these.
 
     /// The `UserDefaults` key to control haptic mode.
@@ -16,7 +17,9 @@ class UserSettings: ObservableObject {
     /// The `UserDefaults` key to control whether the keyboad has a clicking sound.
     static let isClickKey = "IS_CLICK_KEY"
 
+
     // MARK: Emulator Settings.
+
     // They require additional logic when set, so we use UserDefaults directly.
 
     /// The `UserDefaults` key for Turbo mode.
@@ -27,6 +30,7 @@ class UserSettings: ObservableObject {
 
     /// The `UserDefaults` key for HP LRN mode.
     private static let isHpKey = "IS_HP_KEY"
+
 
     /// We use a "Y" and "N" instead of a Bool to distinguish between false and the absence of
     /// value.
@@ -45,7 +49,7 @@ class UserSettings: ObservableObject {
     /// Whether the emulator is in Turbo mode.
     @Published var isInTurboMode: Bool {
         didSet {
-            UserSettings.setBoolValue(forKey: UserSettings.isTurboKey, value: isInTurboMode)
+            SettingsState.setBoolValue(forKey: SettingsState.isTurboKey, value: isInTurboMode)
 
             // The 2x speedup in the standard case makes the emulator more enjoyable to use.
             Rcl57.shared.speedupFactor = isInTurboMode ? 1000 : 2
@@ -56,7 +60,7 @@ class UserSettings: ObservableObject {
     /// Whether the display can show alpha characters.
     @Published var isDisplayAlpha: Bool {
         didSet {
-            UserSettings.setBoolValue(forKey: UserSettings.isAlphaKey, value: isDisplayAlpha)
+            SettingsState.setBoolValue(forKey: SettingsState.isAlphaKey, value: isDisplayAlpha)
             Rcl57.shared.setEmulatorOption(flag: RCL57_ALPHA_LRN_MODE_FLAG, value: isDisplayAlpha)
         }
     }
@@ -64,16 +68,16 @@ class UserSettings: ObservableObject {
     /// Whether the emulator shows, in LRN mode, the last operation entered.
     @Published var isHpLnrMode: Bool {
         didSet {
-            UserSettings.setBoolValue(forKey: UserSettings.isHpKey, value: isHpLnrMode)
+            SettingsState.setBoolValue(forKey: SettingsState.isHpKey, value: isHpLnrMode)
             Rcl57.shared.setEmulatorOption(flag: RCL57_HP_LRN_MODE_FLAG, value: isHpLnrMode)
         }
     }
 
     init() {
         // Get the emulator option values from UserDefaults.
-        isInTurboMode = UserSettings.boolValue(forKey: UserSettings.isTurboKey, defaultValue: true)
-        isDisplayAlpha = UserSettings.boolValue(forKey: UserSettings.isAlphaKey, defaultValue: true)
-        isHpLnrMode = UserSettings.boolValue(forKey: UserSettings.isHpKey, defaultValue: true)
+        isInTurboMode = SettingsState.boolValue(forKey: SettingsState.isTurboKey, defaultValue: true)
+        isDisplayAlpha = SettingsState.boolValue(forKey: SettingsState.isAlphaKey, defaultValue: true)
+        isHpLnrMode = SettingsState.boolValue(forKey: SettingsState.isHpKey, defaultValue: true)
 
         // Inform the emulator.
         // The 2x speedup in the standard case makes the emulator more enjoyable to use.

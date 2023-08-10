@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1502D2F82A8433E400EA529A /* EmulatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1502D2F72A8433E400EA529A /* EmulatorState.swift */; };
 		15071C352873811C0075D722 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C342873811C0075D722 /* LibraryView.swift */; };
 		15071C372874CEA90075D722 /* ProgramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C362874CEA90075D722 /* ProgramView.swift */; };
 		15071C392879F1160075D722 /* ProgramEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15071C382879F1160075D722 /* ProgramEditView.swift */; };
@@ -19,7 +20,7 @@
 		150ED8E927B08CC900E01FC6 /* Rcl57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8E827B08CC900E01FC6 /* Rcl57.swift */; };
 		150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150ED8EB27B09E6400E01FC6 /* DisplayView.swift */; };
 		15124F75282F00E200F0208F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F74282F00E200F0208F /* SettingsView.swift */; };
-		15124F7728314DAE00F0208F /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F7628314DAE00F0208F /* UserSettings.swift */; };
+		15124F7728314DAE00F0208F /* SettingsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15124F7628314DAE00F0208F /* SettingsState.swift */; };
 		151EBA6D28179F87005DD283 /* CalcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6C28179F87005DD283 /* CalcView.swift */; };
 		151EBA6F28238D62005DD283 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151EBA6E28238D62005DD283 /* Style.swift */; };
 		1533F65527F7DA0900DF3BAE /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533F65427F7DA0900DF3BAE /* KeyboardView.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1502D2F72A8433E400EA529A /* EmulatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorState.swift; sourceTree = "<group>"; };
 		15071C342873811C0075D722 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		15071C362874CEA90075D722 /* ProgramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramView.swift; sourceTree = "<group>"; };
 		15071C382879F1160075D722 /* ProgramEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramEditView.swift; sourceTree = "<group>"; };
@@ -76,7 +78,7 @@
 		150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rcl57-Bridging-Header.h"; sourceTree = "<group>"; };
 		150ED8EB27B09E6400E01FC6 /* DisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayView.swift; sourceTree = "<group>"; };
 		15124F74282F00E200F0208F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		15124F7628314DAE00F0208F /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		15124F7628314DAE00F0208F /* SettingsState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsState.swift; sourceTree = "<group>"; };
 		151EBA6C28179F87005DD283 /* CalcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcView.swift; sourceTree = "<group>"; };
 		151EBA6E28238D62005DD283 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		1533F65427F7DA0900DF3BAE /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
@@ -145,6 +147,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1502D2FA2A845B8900EA529A /* state */ = {
+			isa = PBXGroup;
+			children = (
+				1567D59E28832CA000273C3C /* AppState.swift */,
+				1502D2F72A8433E400EA529A /* EmulatorState.swift */,
+				15124F7628314DAE00F0208F /* SettingsState.swift */,
+			);
+			path = state;
+			sourceTree = "<group>";
+		};
 		150ED89527B089EF00E01FC6 = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +166,7 @@
 				15B085E1286152770018418A /* program */,
 				15F948FB283FACE400706BE5 /* user manual */,
 				158874892A830BCF008B7BD4 /* app */,
+				1502D2FA2A845B8900EA529A /* state */,
 				150ED8A027B089EF00E01FC6 /* views */,
 				150ED8EA27B09BB300E01FC6 /* rcl57-Bridging-Header.h */,
 				150ED89F27B089EF00E01FC6 /* Products */,
@@ -236,7 +249,6 @@
 			isa = PBXGroup;
 			children = (
 				15BFD68F289EE3A700EA7AD3 /* Info.plist */,
-				1567D59E28832CA000273C3C /* AppState.swift */,
 				15F948F9283F26B200706BE5 /* Help57.swift */,
 				15B0861128680BB40018418A /* Lib57.swift */,
 				158874862A8300FB008B7BD4 /* Log57.swift */,
@@ -244,7 +256,6 @@
 				150ED8E827B08CC900E01FC6 /* Rcl57.swift */,
 				150ED8A127B089EF00E01FC6 /* Rcl57App.swift */,
 				151EBA6E28238D62005DD283 /* Style.swift */,
-				15124F7628314DAE00F0208F /* UserSettings.swift */,
 			);
 			path = app;
 			sourceTree = "<group>";
@@ -387,13 +398,14 @@
 				158BF1B82A7C2041001B7F18 /* RegistersView.swift in Sources */,
 				15B0861228680BB40018418A /* Lib57.swift in Sources */,
 				15F948FA283F26B200706BE5 /* Help57.swift in Sources */,
+				1502D2F82A8433E400EA529A /* EmulatorState.swift in Sources */,
 				154B7A7D27BC65C900AE38F1 /* ti57.c in Sources */,
 				158874872A8300FB008B7BD4 /* Log57.swift in Sources */,
 				15F948F7283E060C00706BE5 /* hlp2html.c in Sources */,
 				150ED8A427B089EF00E01FC6 /* MainView.swift in Sources */,
 				15071C352873811C0075D722 /* LibraryView.swift in Sources */,
 				150ED8EC27B09E6400E01FC6 /* DisplayView.swift in Sources */,
-				15124F7728314DAE00F0208F /* UserSettings.swift in Sources */,
+				15124F7728314DAE00F0208F /* SettingsState.swift in Sources */,
 				154B7A7E27BC65C900AE38F1 /* utils57.c in Sources */,
 				154B7A7B27BC65C900AE38F1 /* rcl57.c in Sources */,
 				150DE99E28805BE6008E651B /* ProgramSaveView.swift in Sources */,
