@@ -111,6 +111,7 @@ class Rcl57 {
     let registerCount = 8
 
     /// The contents of the register at a given index.
+    /// Note: use `@Published var registers` from views instead. See `EmulatorState`.
     func register(atIndex index: Int) -> String {
         let reg = ti57_get_user_reg(&rcl57.ti57, Int32(index))
         let str = utils57_user_reg_to_str(reg, false, 9)
@@ -138,6 +139,7 @@ class Rcl57 {
     let stepCount = 50
 
     /// The step at a given index, in numeric or alpha form.
+    /// Note: use `@Published var steps` from views instead. See `EmulatorState`.
     func step(atIndex index: Int, isAlpha: Bool) -> String {
         guard let op = ti57_get_program_op(&rcl57.ti57, Int32(index)) else { return "ERR" }
 

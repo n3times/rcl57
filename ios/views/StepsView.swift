@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Displays a single step.
 private struct SingleStepView: View {
+    @EnvironmentObject private var emulatorState: EmulatorState
+
     // Note: currently we don't differentiate between active and inactive steps.
     private let activeBackgroundColor = Color.ivory
     private let inactiveBackgroundColor = Color.ivory
@@ -12,7 +14,7 @@ private struct SingleStepView: View {
     let index: Int
 
     var body: some View {
-        let step = Rcl57.shared.step(atIndex: index, isAlpha: true)
+        let step = emulatorState.steps[index]
         let active = index <= Rcl57.shared.stepsLastIndex
 
         GeometryReader { proxy in
@@ -28,6 +30,7 @@ private struct SingleStepView: View {
                     .frame(width: width * 0.6, height: Style.listLineHeight, alignment: .trailing)
                 Spacer(minLength: rightMargin)
             }
+            .offset(y: -4)
         }
         .font(Style.listLineFont)
         .foregroundColor(active ? foregroundColor: inactiveForegroundColor)

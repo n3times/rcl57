@@ -82,7 +82,7 @@ class SettingsState: ObservableObject {
         // Inform the emulator.
         // The 2x speedup in the standard case makes the emulator more enjoyable to use.
         Rcl57.shared.speedupFactor = isInTurboMode ? 1000 : 2
-        Rcl57.shared.setEmulatorOption(flag: RCL57_QUICK_STOP_FLAG, value: isInTurboMode)
+        Rcl57.shared.setEmulatorOption(flag: RCL57_SHOW_RUN_INDICATOR_FLAG, value: isInTurboMode)
         Rcl57.shared.setEmulatorOption(flag: RCL57_ALPHA_LRN_MODE_FLAG, value: isDisplayAlpha)
         Rcl57.shared.setEmulatorOption(flag: RCL57_HP_LRN_MODE_FLAG, value: isHpLnrMode)
 

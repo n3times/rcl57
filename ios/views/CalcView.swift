@@ -50,6 +50,7 @@ private struct CalcNavigationBar: View {
 /// Displays the program name and the current operation.
 private struct CalcInfoView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
     var body: some View {
         GeometryReader { proxy in
@@ -63,7 +64,7 @@ private struct CalcInfoView: View {
                 Spacer()
                     .frame(width: width / 6, alignment: .leading)
 
-                Text(Log57.shared.currentOp)
+                Text(emulatorState.currentOp)
                     .font(Style.operationNameFont)
                     .offset(x: -25, y: -3)
                     .frame(width: width / 3, alignment: .trailing)

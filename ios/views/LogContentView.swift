@@ -51,6 +51,7 @@ private struct LogLineView: View {
                     .frame(width: rightWidth, height: Style.listLineHeight, alignment: .leading)
                     .foregroundColor(Color.black)
             }
+            .offset(y: -4)
         }
         .font(Style.listLineFont)
     }
@@ -94,9 +95,7 @@ struct LogContentView: View {
                 numberEntry = Log57.shared.logEntry(atIndex: loggedCount)
             }
             logLines.removeLast()
-            if let numberEntry, let opEntry {
-                logLines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
-            }
+            logLines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
         }
 
         // Handle new log entries.
@@ -108,11 +107,11 @@ struct LogContentView: View {
                 if type == LOG57_OP || type == LOG57_PENDING_OP {
                     let numberEntry = logLines.last?.numberEntry
                     let opEntry = logLines.last?.opLogEntry
-                    if opEntry?.message == "" {
-                        logLines.removeLast()
-                        if let numberEntry {
-                            logLines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
+                    if opEntry == nil {
+                        if !logLines.isEmpty {
+                            logLines.removeLast()
                         }
+                        logLines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
                     } else {
                         if logLines.count == maxLines {
                             logLines.removeFirst()
@@ -123,7 +122,7 @@ struct LogContentView: View {
                     if logLines.count == maxLines {
                         logLines.removeFirst()
                     }
-                    logLines.append(LogLineData(numberEntry: entry, opEntry: LogEntry(entry: LOG57_BLANK_ENTRY)))
+                    logLines.append(LogLineData(numberEntry: entry, opEntry: nil))
                 }
             }
             loggedCount = Log57.shared.entryCount

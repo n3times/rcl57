@@ -76,8 +76,8 @@ class AppState: ObservableObject {
         let loadedLibraryName = UserDefaults.standard.string(forKey: loadedLibraryKey)
 
         let loadedLibrary =
-        [Lib57.samplesLib, Lib57.userLib].first(where: { $0.name == loadedLibraryName })
+            [Lib57.samplesLib, Lib57.userLib].first(where: { $0.name == loadedLibraryName })
         self.loadedProgram =
-        loadedLibrary?.programs.first(where: { $0.name == loadedProgramName })
+            loadedLibrary?.programs.first(where: { $0.name == loadedProgramName })
     }
 }

@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Displays a single register.
 private struct SingleRegisterView: View {
+    @EnvironmentObject private var emulatorState: EmulatorState
+
     private let backgroundColor = Color.ivory
     private let foregroundColor = Color.blackish
 
@@ -17,10 +19,11 @@ private struct SingleRegisterView: View {
                 Spacer(minLength: leftMargin)
                 Text("   R\(index)")
                     .frame(width: width * 0.4, height: Style.listLineHeight, alignment: .leading)
-                Text(Rcl57.shared.register(atIndex: index))
+                Text(emulatorState.registers[index])
                     .frame(width: width * 0.6, height: Style.listLineHeight, alignment: .trailing)
                 Spacer(minLength: rightMargin)
             }
+            .offset(y: -4)
         }
         .font(Style.listLineFont)
         .listRowBackground(backgroundColor)
@@ -31,26 +34,16 @@ private struct SingleRegisterView: View {
 
 /// Displays the registers.
 struct RegistersView: View {
-    // Use a timer to refresh the registers in case they have changed. This is necessary because
-    // those belong to the emulator and are not directly observed by SwifUI.
-    private let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
-
-    @State private var refreshID: Int64 = 0
-
     var body: some View {
         ScrollViewReader { proxy in
             List {
                 ForEach(0..<Rcl57.shared.registerCount, id: \.self) {
                     SingleRegisterView(index: $0)
                 }
-                .id(refreshID)
             }
             .background(Color.ivory)
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
-        }
-        .onReceive(timer) { _ in
-            refreshID += 1
         }
     }
 }

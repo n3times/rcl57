@@ -3,6 +3,7 @@ import SwiftUI
 /// Displays the operations keyed in by the user, and the results.
 struct LogView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
     @State private var isPresentingClear = false
 
@@ -16,7 +17,7 @@ struct LogView: View {
                               rightAction: nil)
                 .background(Color.blackish)
 
-                if Log57.shared.entryCount == 0 {
+                if emulatorState.isLogEmpty {
                     Text("Log is empty")
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         .background(Color.ivory)
@@ -36,7 +37,7 @@ struct LogView: View {
                             .frame(width: proxy.size.width * 2 / 3, height: Style.toolbarHeight)
                             .contentShape(Rectangle())
                     }
-                    .disabled(Log57.shared.entryCount == 0)
+                    .disabled(emulatorState.isLogEmpty)
                     .buttonStyle(.plain)
                     .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                         Button("Clear Log", role: .destructive) {

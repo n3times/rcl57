@@ -45,12 +45,11 @@ private struct LibInfoView: View {
 /// Allows the user to clear and save the state.
 private struct StateViewToolbar: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var emulatorState: EmulatorState
 
     @State private var isPresentingClose = false
     @State private var isPresentingClear = false
     @State private var isPresentingSave = false
-
-    @Binding var refreshID: Int64
 
     var body: some View {
         let program = appState.loadedProgram
@@ -88,19 +87,17 @@ private struct StateViewToolbar: View {
                 }
                 .font(Style.toolbarFont)
                 .frame(width: width / 3, height: Style.toolbarHeight)
-                .disabled(appState.stateViewMode == .steps ? Rcl57.shared.stepsLastIndex == -1
-                          : Rcl57.shared.registersLastIndex == -1)
+                .disabled(appState.stateViewMode == .steps ? emulatorState.isStepsAllClear
+                          : emulatorState.isRegistersAllClear)
                 .buttonStyle(.plain)
                 .confirmationDialog("Clear?", isPresented: $isPresentingClear) {
                     if appState.stateViewMode == .steps {
                         Button("Clear Steps", role: .destructive) {
                             Rcl57.shared.clearSteps()
-                            refreshID += 1
                         }
                     } else {
                         Button("Clear Registers", role: .destructive) {
                             Rcl57.shared.clearRegisters()
-                            refreshID += 1
                         }
                     }
                 }
@@ -127,7 +124,6 @@ private struct StateViewToolbar: View {
                                 } else {
                                     _ = program.saveRegisters()
                                 }
-                                refreshID += 1
                             }
                         }
                     }
@@ -143,11 +139,6 @@ private struct StateViewToolbar: View {
 /// Displays the steps and registers of the calculator.
 struct StateView: View {
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var emulatorState: EmulatorState
-
-    /// Used to refresh the view when the steps/registers are saved or cleared. This is necessary
-    /// because those belong to the emulator and are not directly observed by SwifUI.
-    @State private var refreshID: Int64 = 0
 
     var body: some View {
         let program = appState.loadedProgram
@@ -183,9 +174,8 @@ struct StateView: View {
                 case .steps:
                     StepsView()
                 }
-                StateViewToolbar(refreshID: $refreshID)
+                StateViewToolbar()
             }
-            .id(refreshID)
 
             if appState.isProgramEditing {
                 ProgramEditView()

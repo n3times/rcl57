@@ -112,7 +112,7 @@ class Lib57 {
     /// Returns the program in the library with given name.
     func programByName(_ programName: String) -> Prog57? {
         var lo = 0
-        var hi = programs.count
+        var hi = programs.count - 1
 
         // Do binary search on sorted `programs`.
         var res: Prog57? = nil
