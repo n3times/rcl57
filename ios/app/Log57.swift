@@ -1,7 +1,7 @@
 import Foundation
 
 /// A single entry in the log.
-struct LogEntry {
+struct LogEntry: Equatable {
     /// A String representing the input number, the operation, or the result.
     let message: String
 

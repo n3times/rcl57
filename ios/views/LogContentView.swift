@@ -22,7 +22,7 @@ private struct LogLineData: Identifiable {
 
 /// A single log line: a number on the left and an operation on the right.
 private struct LogLineView: View {
-    let line: LogLineData
+    let lineData: LogLineData
 
     /// Used for log entries that have an error associated to them.
     private static let errorColor = Color(red: 0.5, green: 0.0, blue: 0.0)
@@ -43,11 +43,11 @@ private struct LogLineView: View {
             let rightWidth = proxy.size.width * 0.5 - spacerLength
 
             HStack {
-                Text(line.numberEntry?.message ?? "")
+                Text(lineData.numberEntry?.message ?? "")
                     .frame(width: leftWidth, height: Style.listLineHeight, alignment: .trailing)
-                    .foregroundColor(foregroundColor(forEntry: line.numberEntry))
+                    .foregroundColor(foregroundColor(forEntry: lineData.numberEntry))
                 Spacer(minLength: spacerLength)
-                Text(line.opLogEntry?.message ?? "")
+                Text(lineData.opLogEntry?.message ?? "")
                     .frame(width: rightWidth, height: Style.listLineHeight, alignment: .leading)
                     .foregroundColor(Color.black)
             }
@@ -61,96 +61,108 @@ private struct LogLineView: View {
 struct LogContentView: View {
     @EnvironmentObject private var emulatorState: EmulatorState
 
-    @State private var logLines: [LogLineData] = []
-    @State private var logTimestamp = 0
-    @State private var loggedCount = 0
+    private static let maxLines = 500
 
-    private let maxLines = 500
+    @State private var logLinesData: [LogLineData] = []
+    @State private var logEntryCount = 0
 
-    private func clear() {
-        logLines.removeAll()
-        logTimestamp = 0
-        loggedCount = 0
-    }
-
-    private func updateLog() {
-        // Return right away if there are no changes.
-        if logTimestamp == Log57.shared.logTimestamp { return }
-        logTimestamp = Log57.shared.logTimestamp
-
-        // Clear log and return if necessary.
+    /// Update the log and scroll to the end.
+    private func updateLog(scrollViewProxy: ScrollViewProxy?) {
+        // See if log has been cleared.
         if Log57.shared.entryCount == 0 {
-            clear();
+            logLinesData.removeAll()
+            logEntryCount = 0
             return
         }
 
-        // Reevaluate the item that was last logged in case it has been updated.
-        if loggedCount > 0 {
-            var numberEntry = logLines.last?.numberEntry
-            var opEntry = logLines.last?.opLogEntry
-            let type = Log57.shared.logEntry(atIndex: loggedCount).type
-            if type == LOG57_OP || type == LOG57_PENDING_OP {
-                opEntry = Log57.shared.logEntry(atIndex: loggedCount)
-            } else {
-                numberEntry = Log57.shared.logEntry(atIndex: loggedCount)
+        // Reevaluate the last item in `logLinesData` in case it has changed.
+        if logEntryCount > 0 {
+            let logEntry = Log57.shared.logEntry(atIndex: logEntryCount)
+
+            switch logEntry.type {
+            case LOG57_PENDING_OP:
+                fallthrough
+            case LOG57_OP:
+                // For example: "STO _" -> "STO 2".
+                if logEntry != logLinesData.last?.opLogEntry {
+                    logLinesData[logLinesData.count - 1] =
+                        LogLineData(numberEntry: logLinesData.last?.numberEntry, opEntry: logEntry)
+                }
+            case LOG57_NUMBER_IN:
+                // For example: "3.1" -> "3.14".
+                if logEntry != logLinesData.last?.numberEntry {
+                    logLinesData[logLinesData.count - 1] =
+                        LogLineData(numberEntry: logEntry, opEntry: nil)
+                }
+            default:
+                break
             }
-            logLines.removeLast()
-            logLines.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
         }
 
-        // Handle new log entries.
-        if Log57.shared.entryCount > loggedCount {
-            let start = max(loggedCount+1, Log57.shared.entryCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
+        // Handle additional log entries.
+        if Log57.shared.entryCount > logEntryCount {
+            let start = max(logEntryCount + 1,
+                            Log57.shared.entryCount - Int(LOG57_MAX_ENTRY_COUNT) + 1)
             for i in start...Log57.shared.entryCount {
-                let entry = Log57.shared.logEntry(atIndex: i)
-                let type = entry.type
-                if type == LOG57_OP || type == LOG57_PENDING_OP {
-                    let numberEntry = logLines.last?.numberEntry
-                    let opEntry = logLines.last?.opLogEntry
-                    if opEntry == nil {
-                        if !logLines.isEmpty {
-                            logLines.removeLast()
+                if logLinesData.count == LogContentView.maxLines {
+                    logLinesData.removeFirst()
+                }
+
+                var numberEntry: LogEntry? = nil
+                var opEntry: LogEntry? = nil
+                let logEntry = Log57.shared.logEntry(atIndex: i)
+                var doReplace = false
+
+                switch logEntry.type {
+                case LOG57_OP:
+                    fallthrough
+                case LOG57_PENDING_OP:
+                    // Add log entry to the last log line if possible.
+                    if logLinesData.last?.opLogEntry == nil {
+                        numberEntry = logLinesData.last?.numberEntry
+                        if !logLinesData.isEmpty {
+                            doReplace = true
                         }
-                        logLines.append(LogLineData(numberEntry: numberEntry, opEntry: entry))
-                    } else {
-                        if logLines.count == maxLines {
-                            logLines.removeFirst()
-                        }
-                        logLines.append(LogLineData(numberEntry: nil, opEntry: entry))
                     }
+                    opEntry = logEntry
+                default:
+                    numberEntry = logEntry
+                }
+                if doReplace {
+                    logLinesData[logLinesData.count - 1] =
+                        LogLineData(numberEntry: numberEntry, opEntry: opEntry)
                 } else {
-                    if logLines.count == maxLines {
-                        logLines.removeFirst()
-                    }
-                    logLines.append(LogLineData(numberEntry: entry, opEntry: nil))
+                    logLinesData.append(LogLineData(numberEntry: numberEntry, opEntry: opEntry))
                 }
             }
-            loggedCount = Log57.shared.entryCount
+        }
+
+        logEntryCount = Log57.shared.entryCount
+
+        // Scroll to the end of the log.
+        if let scrollViewProxy {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let lastLine = logLinesData.last {
+                    scrollViewProxy.scrollTo(lastLine.id, anchor: .bottom)
+                }
+            }
         }
     }
 
     var body: some View {
         ScrollViewReader { proxy in
-            List(logLines) {
-                LogLineView(line: $0)
+            List(logLinesData) {
+                LogLineView(lineData: $0)
                     .listRowBackground(Color.ivory)
                     .listRowSeparator(.hidden)
             }
             .listStyle(PlainListStyle())
             .environment(\.defaultMinListRowHeight, Style.listLineHeight)
             .onAppear {
-                updateLog()
-                if let lastLine = logLines.last {
-                    proxy.scrollTo(lastLine.id, anchor: .bottom)
-                }
-            }
-            .onChange(of: logTimestamp) { _ in
-                if let lastLine = logLines.last {
-                    proxy.scrollTo(lastLine.id, anchor: .bottom)
-                }
+                updateLog(scrollViewProxy: proxy)
             }
             .onReceive(emulatorState.$logTimestamp) { _ in
-                updateLog()
+                updateLog(scrollViewProxy: proxy)
             }
         }
     }
