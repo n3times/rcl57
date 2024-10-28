@@ -222,7 +222,7 @@ int ti57_get_program_ret(ti57_t *ti57, int i)
 
 static op57_t ALL_OPS[256];
 
-static void init_ops()
+static void init_ops(void)
 {
     for (int i = 0; i <= 0xff; i++) {
         op57_t *op = &ALL_OPS[i];
