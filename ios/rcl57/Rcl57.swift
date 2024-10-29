@@ -32,7 +32,7 @@ class Rcl57 {
     // For minor changes, increment by 1 minorVersion. For non backward compatible changes,
     // increment by 1 majorVersion and reset to 0 minorVersion.
     static let majorVersion: Int = 1
-    static let minorVersion: Int = 1
+    static let minorVersion: Int = 2
     static let version = String(majorVersion) + "." + String(minorVersion)
 
     static let shared = Rcl57(filename: stateFilename)
